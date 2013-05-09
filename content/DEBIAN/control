@@ -1,0 +1,14 @@
+Origin: XBian
+Package: xbian-package-config-shell
+Version: 2.0
+Section: utils
+Essential: No
+Priority: optional
+Codename: wheezy
+Architecture: armhf
+Replaces: xbian-package-config
+Depends: wget, bc
+Conflicts: dialog, xbian-package-config
+Installed-Size: 1240
+Maintainer: CurlyMo <development@xbian.org>
+Description: Configuration utility for XBian.
