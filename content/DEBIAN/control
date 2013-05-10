@@ -1,6 +1,6 @@
 Origin: XBian
 Package: xbian-package-config-shell
-Version: 2.0
+Version: 2.1
 Section: utils
 Essential: No
 Priority: optional
@@ -10,5 +10,5 @@ Replaces: xbian-package-config
 Depends: wget, bc
 Conflicts: dialog, xbian-package-config
 Installed-Size: 1240
-Maintainer: CurlyMo <development@xbian.org>
+Maintainer: Koenkk <development@xbian.org>
 Description: Configuration utility for XBian.
