@@ -19,7 +19,7 @@
 
 # Shows rootpass successfully changed dialog
 function showUpdateAptDBDlg() {
-	wrapTxtFn "$_UPDATINGAPTDB" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.apt.update)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -27,7 +27,7 @@ function showUpdateAptDBDlg() {
 }
 
 function showUpdateAptDBFailedDlg() {
-	wrapTxtFn "$_UPDATEAPTDBFAILED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.apt.update_failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -35,7 +35,7 @@ function showUpdateAptDBFailedDlg() {
 }
 
 function showDownloadPackageListDlg() {
-	wrapTxtFn "$_DOWNLOADINGPACKAGELIST" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.list.download)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -43,7 +43,7 @@ function showDownloadPackageListDlg() {
 }
 
 function showFailedToRetrieveAptMirrosDlg() {
-	wrapTxtFn "$_FAILEDTORETRIEVEAPTMIRRORS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.mirrors.download_failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -51,7 +51,7 @@ function showFailedToRetrieveAptMirrosDlg() {
 }
 
 function showGettingLocalPackageInfoDlg() {
-	wrapTxtFn "$_LOADINGLOCALPACKAGEINFO" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.loading)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -59,7 +59,7 @@ function showGettingLocalPackageInfoDlg() {
 }
 
 function showConfirmInstallUpdateDlg() {
-	wrapTxtFn "$_CONFIRMPACKAGEINSTALLUPDATE" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.install.confirm)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showConfirmDlg "$ALIGNEDTXT" $HEIGHT
@@ -67,7 +67,7 @@ function showConfirmInstallUpdateDlg() {
 }
 
 function showConfirmRemoveDlg() {
-	wrapTxtFn "$_CONFIRMPACKAGEREMOVE" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.remove.confirm)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showConfirmDlg "$ALIGNEDTXT" $HEIGHT
@@ -75,7 +75,7 @@ function showConfirmRemoveDlg() {
 }
 
 function showPackageAlreadyInstalledDlg() {
-	wrapTxtFn "$_PACKAGEALREADYINSTALLED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.already_installed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -83,7 +83,7 @@ function showPackageAlreadyInstalledDlg() {
 }
 
 function showPackageVersionNotExistDlg() {
-	wrapTxtFn "$_PACKAGEVERSIONNOTEXISTS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.unavailable_version)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -91,7 +91,7 @@ function showPackageVersionNotExistDlg() {
 }
 
 function showPackageNotExistDlg() {
-	wrapTxtFn "$_PACKAGENOTEXISTS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.not_exists)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -99,7 +99,7 @@ function showPackageNotExistDlg() {
 }
 
 function showPackageInstallSuccessDlg() {
-	wrapTxtFn "$_PACKAGEINSTALLSUCCESS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.install.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -107,7 +107,7 @@ function showPackageInstallSuccessDlg() {
 }
 
 function showPackageNotInstalledDlg() {
-	wrapTxtFn "$_PACKAGENOTINSTALLED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.not_installed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -115,7 +115,7 @@ function showPackageNotInstalledDlg() {
 }
 
 function showPackageEssentialDlg() {
-	wrapTxtFn "$_PACKAGEESSENTIAL" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.essential)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -123,7 +123,7 @@ function showPackageEssentialDlg() {
 }
 
 function showPackageRemovedSuccessDlg() {
-	wrapTxtFn "$_PACKAGEREMOVED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.remove.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -131,7 +131,7 @@ function showPackageRemovedSuccessDlg() {
 }
 
 function showAskForLogDlg() {
-	wrapTxtFn "$_PACKAGESASKFORLOG" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.show_log)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showConfirmDlg "$ALIGNEDTXT" $HEIGHT
@@ -139,7 +139,7 @@ function showAskForLogDlg() {
 }
 
 function showPackageAdvErrorDlg() {
-	wrapTxtFn "$_PACKAGEADVERROR" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.error)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -147,7 +147,7 @@ function showPackageAdvErrorDlg() {
 }
 
 function showPackageDowngradeDlg() {
-	wrapTxtFn "$_PACKAGEDOWNGRADE" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.downgrade)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -155,7 +155,7 @@ function showPackageDowngradeDlg() {
 }
 
 function showInstallUpdatePackageDlg() {
-	wrapTxtFn "$_PACKAGEINSTALLINGUPDATING" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.installing)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -163,7 +163,7 @@ function showInstallUpdatePackageDlg() {
 }
 
 function showRemovingPackageDlg() {
-	wrapTxtFn "$_PACKAGEREMOVING" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.removing)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -171,7 +171,7 @@ function showRemovingPackageDlg() {
 }
 
 function showPackageNotExistsDlg() {
-	wrapTxtFn "$_PACKAGENOTEXISTS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.not_exists)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -179,7 +179,7 @@ function showPackageNotExistsDlg() {
 }
 
 function showPacakgeInstallRetryDlg() {
-	wrapTxtFn "$_PACKAGEINSTALLRETRY" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ packages.install.retry)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -214,7 +214,7 @@ function showPackageCategoryListDlg() {
 		MENU+=($I",\Zn"$VALUE",("$X"/"${#PACKAGES[@]}")");
 	done;
 	createTableFn "menu"\
-	"#,\Zb"$_PACKAGECATEGORIES","$_PACKAGES\
+	"#,\Zb"$(_ packages.label.categories)","$(_ packages.label.name)\
 	"${MENU[@]}";
 	
 	TBLCOLUMNCENTER=1;
@@ -240,13 +240,13 @@ function showPackagesListDlg() {
 		I=$(($I+1));
 		getPackageStatusFn $VALUE;
 		if [ $? -eq 1 ]; then
-			MENU+=($I",\Zn"$VALUE",\Z2"$_YES);
+			MENU+=($I",\Zn"$VALUE",\Z2"$(_ dialog.yes));
 		else
-			MENU+=($I",\Zn"$VALUE",\Z1"$_NO);
+			MENU+=($I",\Zn"$VALUE",\Z1"$(_ dialog.no));
 		fi
 	done;
 	createTableFn "menu"\
-	"#,\Zb"$_PACKAGES",\Zb"$_PACKAGEINSTALLED\
+	"#,\Zb"$(_ packages.label.name)",\Zb"$(_ packages.label.installed)\
 	"${MENU[@]}";
 	
 	TBLCOLUMNCENTER=1;
@@ -264,13 +264,15 @@ function showPackageOptionsDlg() {
 	IFS=$ORIGINALIFS;
 	TBLCOLUMNCENTER=0;
 	
-	MENU+=(1",\Zn"$_PACKAGEINFORMATION);
-	MENU+=(2",\Zn"$_PACKAGEINSTALLUPDATE);
-	MENU+=(3",\Zn"$_PACKAGEREMOVE);
-	createTableFn "menu"\
-	"#,\Zb"$_PACKAGEACTIONS\
-	"${MENU[@]}";
+	MENU+=(1",\Zn"$(_ packages.label.information));
+	MENU+=(2",\Zn"$(_ packages.label.install_update));
+	MENU+=(3",\Zn"$(_ packages.label.remove));
+	echo ${MENU[@]};
 	
+	createTableFn "menu"\
+	"#,\Zb"$(_ packages.label.actions)\
+	"${MENU[@]}";
+
 	TBLCOLUMNCENTER=1;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
 	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 11
@@ -286,14 +288,14 @@ function showPackageOptionsDlg() {
 # -  5: Dependencies
 function showPackageInfoDlg() {
 	PKGINFO=($1);
-	MSGTXT=$_PACKAGEFULLNAME" ${PKGINFO[0]}\n";
-	MSGTXT+=$_PACKAGEAVAILABLEVERSION" ${PKGINFO[1]}\n";
-	MSGTXT+=$_PACKAGEINSTALLEDVERSION" $(getPackageVersionFn $1)\n";
-	MSGTXT+=$_PACKAGEDOWNLOADSIZE" ${PKGINFO[3]}\n";
-	MSGTXT+=$_PACKAGEINSTALLEDSIZE" ${PKGINFO[2]}\n";
-	MSGTXT+=$_PACKAGEDESCRIPTION" ${PKGINFO[4]}\n";
-	MSGTXT+=$_PACKAGEDEPENDENCIES" ${PKGINFO[5]}\n";
-	wrapTxtFn "$MSGTXT" $(($DEFAULTWIDTH+10));
+	MSGTXT=$(_ packages.info.fullname)" ${PKGINFO[0]}\n";
+	MSGTXT+=$(_ packages.info.version.available)" ${PKGINFO[1]}\n";
+	MSGTXT+=$(_ packages.info.version.installed)" $(getPackageVersionFn $1)\n";
+	MSGTXT+=$(_ packages.info.size.download)" ${PKGINFO[3]}\n";
+	MSGTXT+=$(_ packages.info.size.installed)" ${PKGINFO[2]}\n";
+	MSGTXT+=$(_ packages.info.description)" ${PKGINFO[4]}\n";
+	MSGTXT+=$(_ packages.info.dependencies)" ${PKGINFO[5]}\n";
+	wrapTxtFn "$MSGTXT" $(($DEFAULTWIDTH+15));
 	valignTxtFn "$MSGTXT"
-	showMsgDlg "$ALIGNEDTXT" $(($HEIGHT+3)) $(($DEFAULTWIDTH+10))
+	showMsgDlg "$ALIGNEDTXT" $(($HEIGHT+3)) $(($DEFAULTWIDTH+15))
 }

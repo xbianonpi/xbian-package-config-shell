@@ -34,7 +34,7 @@ ARGUMENTS=();
 
 # Executes the GUI version of this module
 function showGUIFn() {
-	wrapTxtFn "$_INFORMATION" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ information.text)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT

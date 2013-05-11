@@ -1,0 +1,108 @@
+#!/bin/bash
+#
+#Copyright 2012 CurlyMo <development@xbian.org>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+
+# Get the current hostname
+function getLanguageByIdFn() {
+	LETTER=$1;
+	ID=$2;
+	getLanguagesByLetterFn $LETTER;
+	I=0;
+	LOCALE=();
+	for VALUE in ${LANGUAGES[@]}; do
+		IFS=$'\t';
+		LOCALE=($VALUE);
+		I=$(($I+1));
+		if [ $I -eq $ID ]; then
+			break;
+		fi
+	done;
+}
+
+function ISOLocaleExistsFn() {
+	if [ $(grep ^$1 $BASEPATH/config/languages | wc -l) -eq 1 ]; then
+		return 1;
+	else
+		return 0;
+	fi
+}
+
+function getLanguagesByLetterFn() {
+	LETTER=$1;
+	IFS=$'\n';
+	case "$LETTER" in
+		A) LANGUAGES=($(awk 'match($2, /^A.*/) {print;}' $BASEPATH/config/languages)) ;;
+		B) LANGUAGES=($(awk 'match($2, /^B.*/) {print;}' $BASEPATH/config/languages)) ;;
+		C) LANGUAGES=($(awk 'match($2, /^C.*/) {print;}' $BASEPATH/config/languages)) ;;
+		D) LANGUAGES=($(awk 'match($2, /^D.*/) {print;}' $BASEPATH/config/languages)) ;;
+		E) LANGUAGES=($(awk 'match($2, /^E.*/) {print;}' $BASEPATH/config/languages)) ;;
+		F) LANGUAGES=($(awk 'match($2, /^F.*/) {print;}' $BASEPATH/config/languages)) ;;
+		G) LANGUAGES=($(awk 'match($2, /^G.*/) {print;}' $BASEPATH/config/languages)) ;;
+		H) LANGUAGES=($(awk 'match($2, /^H.*/) {print;}' $BASEPATH/config/languages)) ;;
+		I) LANGUAGES=($(awk 'match($2, /^I.*/) {print;}' $BASEPATH/config/languages)) ;;
+		J) LANGUAGES=($(awk 'match($2, /^J.*/) {print;}' $BASEPATH/config/languages)) ;;
+		K) LANGUAGES=($(awk 'match($2, /^K.*/) {print;}' $BASEPATH/config/languages)) ;;
+		L) LANGUAGES=($(awk 'match($2, /^L.*/) {print;}' $BASEPATH/config/languages)) ;;
+		M) LANGUAGES=($(awk 'match($2, /^M.*/) {print;}' $BASEPATH/config/languages)) ;;
+		N) LANGUAGES=($(awk 'match($2, /^N.*/) {print;}' $BASEPATH/config/languages)) ;;
+		O) LANGUAGES=($(awk 'match($2, /^O.*/) {print;}' $BASEPATH/config/languages)) ;;
+		P) LANGUAGES=($(awk 'match($2, /^P.*/) {print;}' $BASEPATH/config/languages)) ;;
+		Q) LANGUAGES=($(awk 'match($2, /^Q.*/) {print;}' $BASEPATH/config/languages)) ;;
+		R) LANGUAGES=($(awk 'match($2, /^R.*/) {print;}' $BASEPATH/config/languages)) ;;
+		S) LANGUAGES=($(awk 'match($2, /^S.*/) {print;}' $BASEPATH/config/languages)) ;;
+		T) LANGUAGES=($(awk 'match($2, /^T.*/) {print;}' $BASEPATH/config/languages)) ;;
+		U) LANGUAGES=($(awk 'match($2, /^U.*/) {print;}' $BASEPATH/config/languages)) ;;
+		V) LANGUAGES=($(awk 'match($2, /^V.*/) {print;}' $BASEPATH/config/languages)) ;;
+		W) LANGUAGES=($(awk 'match($2, /^W.*/) {print;}' $BASEPATH/config/languages)) ;;
+		X) LANGUAGES=($(awk 'match($2, /^X.*/) {print;}' $BASEPATH/config/languages)) ;;
+		Y) LANGUAGES=($(awk 'match($2, /^Y.*/) {print;}' $BASEPATH/config/languages)) ;;
+		Z) LANGUAGES=($(awk 'match($2, /^Z.*/) {print;}' $BASEPATH/config/languages)) ;;
+	esac
+}
+
+function setLocaleFn() {
+	NAME=$(grep "$1.UTF-8"  /etc/locale.gen | head -n 1);
+	NAME=${NAME//# /};
+	LOCALE=${NAME% *};
+	INPUT=${LOCALE%.*}
+	CHARSET="UTF-8"
+	
+	if [ $(locale -a | grep $INPUT.utf8 | wc -l) -eq 0 ]; then
+		localedef -i $INPUT -c -f $CHARSET -A /usr/share/locale/locale.alias $LOCALE
+	fi
+	sed -i "s/# $LOCALE/$LOCALE/g" /etc/locale.gen
+	update-locale $LOCALE
+	export LANG="$LOCALE" &>/dev/null
+	export LC_ALL="$LOCALE" &>/dev/null
+	export LANGUAGE="$LOCALE" &>/dev/null
+	CURLANG=$(sed -ne 's/LANG=\(.*\)/\1/p' /etc/default/locale);
+	sed -i "s/$CURLANG/$LOCALE/g" /etc/default/locale
+	CURLANG=$(sed -ne 's/export LANG=\(.*\)/\1/p' /etc/profile);
+	sed -i "s/$CURLANG/$LOCALE/g" /etc/profile
+	CURLANG=$(sed '/<language>/!d;s//\n/;s/[^\n]*\n//;:a;$!{/<\/language/!N;//!ba};y/\n/ /;s/<\/language>/\n/;P;D' /home/xbian/.xbmc/userdata/guisettings.xml | sed -ne 's/\([A-Za-z]\{1,\}\)\([\ ](.*\|.*\)/\1/p'); #)
+	XBMCLANG=$(grep "^$1" $BASEPATH/config/languages | awk '{print $5}' | sed -e 's/_/ /g');
+	if [ ! -z $XBMCLANG ]; then
+		sed -i "s/$CURLANG/$XBMCLANG/g" /home/xbian/.xbmc/userdata/guisettings.xml
+	else
+		sed -i "s/$CURLANG/English/g" /home/xbian/.xbmc/userdata/guisettings.xml
+	fi
+	
+	if [ ! -f "/usr/share/locale/${INPUT//_/ }/LC_MESSAGES/xbian.mo" ]; then
+		LANGUAGE=en_EN
+	fi
+}

@@ -24,12 +24,12 @@
 #  - 1: Change
 #  - 0: Cancel
 function showLicenseVC1InputDlg() {
-	showInputDlg "$_VC1LICENSE:" $1
+	showInputDlg "$(_ licensevc1.name):" $1
 }
 
 #Shows the license successfully inserted dialog
 function showLicenseVC1InsertedDlg() {
-	wrapTxtFn "$_VC1INSERTED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_ license.inserted)" "$(_ licensevc1.name)")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT"
@@ -38,7 +38,16 @@ function showLicenseVC1InsertedDlg() {
 
 #Shows the license successfully updated dialog
 function showLicenseVC1UpdatedDlg() {
-	wrapTxtFn "$_VC1UPDATED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_ license.updated)" "$(_ licensevc1.name)")" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT"
+	return $?;
+}
+
+#Shows the license successfully removed dialog
+function showLicenseVC1DeletedDlg() {
+	wrapTxtFn "$(printf "$(_ license.deleted)" "$(_ licensevc1.name)")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT"
@@ -46,7 +55,7 @@ function showLicenseVC1UpdatedDlg() {
 }
 
 function showInvalidLicenseFormatDlg() {
-	wrapTxtFn "$_VC1LICENSEINVALID" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_ license.invalid)" "$(_ licensevc1.name)")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT"

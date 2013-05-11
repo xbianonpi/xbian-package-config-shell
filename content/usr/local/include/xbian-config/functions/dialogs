@@ -28,7 +28,7 @@ DEFAULTDELIMITER="%"
 #  $3 (optional) Width
 #  $4 (optional) OK Label
 showMsgDlg() {
-	OKLABEL="$_CLOSE"
+	OKLABEL="$(_ dialog.close)"
 
 	# Default width and height
 	HEIGHT=$DEFAULTHEIGHT
@@ -79,9 +79,9 @@ showInfoDlg() {
 #  $1 File
 #  $2 (optional) Height
 #  $3 (optional) Width
-#  $4 (optional) OK Label
+#  $4 (optional) Close label
 showTextDlg() {
-	OKLABEL="$_CLOSE"
+	CLOSELABEL="$(_ dialog.close)"
 
 	# Default width and height
 	HEIGHT=$DEFAULTHEIGHT
@@ -94,14 +94,14 @@ showTextDlg() {
 		WIDTH=$3
 	fi
 	if [ $# -gt 3 ]; then
-		OKLABEL=$4
+		CLOSELABEL=$4
 	fi
 	
 	# Show messagebox
 	dialog \
 		--backtitle "$BACKTITLE" \
 		--title "$TITLE" \
-		--ok-label "$OKLABEL" \
+		--ok-label "$CLOSELABEL" \
 		--textbox "$1" $HEIGHT $WIDTH
 }
 
@@ -110,10 +110,10 @@ showTextDlg() {
 #  $2 (optional) Height
 #  $3 (optional) Width
 #  $4 (optional) Yes label
-#  $5 (optional) No Label
+#  $5 (optional) No label
 showConfirmDlg() {
-	YESLABEL="$_YES"
-	NOLABEL="$_NO"
+	YESLABEL="$(_ dialog.yes)"
+	NOLABEL="$(_ dialog.no)"
 
 	# Default width and height
 	HEIGHT=$DEFAULTHEIGHT
@@ -147,11 +147,11 @@ showConfirmDlg() {
 #  $3 (optional) Rows
 #  $4 (optional) Height
 #  $5 (optional) Width
-#  $6 (optional) Yes label
-#  $7 (optional) No Label
+#  $6 (optional) Select label
+#  $7 (optional) Return Label
 function showMenuDlg() {
-	YESLABEL="$_SELECT"
-	NOLABEL="$_RETURN"	
+	YESLABEL="$(_ dialog.select)"
+	NOLABEL="$(_ dialog.return)"	
 	
 	if [ $# -gt 2 ]; then
 		ROWS=$3;
@@ -193,11 +193,11 @@ function showMenuDlg() {
 #  $3 Rows
 #  $4 (optional) Height
 #  $5 (optional) Width
-#  $6 (optional) Yes label
-#  $7 (optional) No Label
+#  $6 (optional) Select label
+#  $7 (optional) Return label
 function showRadioDlg() {
-	YESLABEL="$_SELECT"
-	NOLABEL="$_RETURN"
+	YESLABEL="$(_ dialog.select)"
+	NOLABEL="$(_ dialog.return)"
 	HEADER=$1;
 
 	if [ $# -gt 2 ]; then
@@ -210,7 +210,7 @@ function showRadioDlg() {
 		WIDTH=$5
 	fi
 	
-	centerTxtFn "$_SPACEOPTIONSELECT" $(($DEFAULTWIDTH+11))
+	centerTxtFn "$(_ dialog.space_option_select)" $(($DEFAULTWIDTH+11))
 	HEIGHT=$(($DEFAULTHEIGHT+5));
 	if [ $# -gt 3 ]; then
 		HEIGHT=$4
@@ -243,12 +243,12 @@ function showRadioDlg() {
 #  $3 Rows
 #  $4 (optional) Height
 #  $5 (optional) Width
-#  $6 (optional) Yes label
-#  $7 (optional) No Label
+#  $6 (optional) Select label
+#  $7 (optional) Return Label
 #  $8 (optional) Opt. label
 function showChecklistDlg() {
-	YESLABEL="$_SELECT"
-	NOLABEL="$_RETURN"
+	YESLABEL="$(_ dialog.select)"
+	NOLABEL="$(_ dialog.return)"
 	OPTLABEL=0;
 	HEADER=$1;
 
@@ -262,7 +262,7 @@ function showChecklistDlg() {
 		WIDTH=$5
 	fi
 	
-	centerTxtFn "$_SPACECHECKSELECT" $(($DEFAULTWIDTH+11));
+	centerTxtFn "$(_ dialog.space_check_select)" $(($DEFAULTWIDTH+11));
 	HEIGHT=$(($DEFAULTHEIGHT+5));
 	if [ $# -gt 3 ]; then
 		HEIGHT=$4
@@ -300,8 +300,8 @@ function showChecklistDlg() {
 #  $5 (optional) Change Label
 #  $6 (optional) Cancel Label
 function showInputDlg() {
-	CHANGELABEL="$_CHANGE"
-	CANCELLABEL="$_CANCEL"
+	CHANGELABEL="$(_ dialog.change)"
+	CANCELLABEL="$(_ dialog.cancel)"
 	VALUE=$2;
 	WIDTH=$DEFAULTWIDTH;
 	HEIGHT=$(($DEFAULTHEIGHT+1))
@@ -338,8 +338,8 @@ function showInputDlg() {
 function showPassDlg() {
 	WIDTH=$DEFAULTWIDTH;
 	HEIGHT=$(($DEFAULTHEIGHT+2))
-	CHANGELABEL=$_CHANGE
-	CANCELLABEL=$_CANCEL
+	CHANGELABEL=$(_ dialog.change)
+	CANCELLABEL=$(_ dialog.cancel)
 	
 	if [ $# -gt 2 ]; then
 		HEIGHT=$3
@@ -369,101 +369,61 @@ function showPassDlg() {
 
 # Standard error dialog
 function showErrorDlg() {
-	centerTxtFn "$_ERROR" $(($DEFAULTWIDTH-4))
+	centerTxtFn "$(_ dialog.unexpected_error)" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $DEFAULTHEIGHT;
 }
 
 function showLoadingDlg() {
-	centerTxtFn "$_LOADING" $(($DEFAULTWIDTH-4))
+	centerTxtFn "$(_ dialog.loading_module)" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $DEFAULTHEIGHT;
 }
 
-# Show an input form with 2 text fields
-# Arguments
+# Show an mixed form dialog
 #  $1 Descriptive text
-#  $2 Label 1
-#  $3 Value 1
-#  $4 Label 2
-#  $5 Value 2
-function showInputForm2Dlg() {
+#  $2 (optional) Height
+#  $3 (optional) Width
+#  $4 (optional) Change label
+#  $5 (optional) Cancel Label
+function showInputFormDlg() {
+	CHANGELABEL="$(_ dialog.change)"
+	CANCELLABEL="$(_ dialog.cancel)"
 
-	CHANGELABEL="$_CHANGE"
-	CANCELLABEL="$_CANCEL"
-
-        WIDTH=$DEFAULTWIDTH;
-        HEIGHT=$(($DEFAULTHEIGHT+3))
-
-        RETURN=$( \
-                dialog \
-                        --backtitle "$BACKTITLE" \
-                        --title "$TITLE" \
-                        --ok-label "$CHANGELABEL" \
-                        --cancel-label "$CANCELLABEL" \
-                        --form "$1" $HEIGHT $WIDTH 2 \
-                                "$2" 1 3 "$3" 1 16 32 0 \
-                                "$4" 2 3 "$5" 2 16 32 0 \
-                        3>&1 1>&2 2>&3);
-}
-
-
-# Show an input form with 5 text fields
-# Arguments
-#  $1 Descriptive text
-#  $2 Label 1
-#  $3 Value 1
-#  $4 Label 2
-#  $5 Value 2
-#  $6 Label 3
-#  $7 Value 3
-#  $8 Label 4
-#  $9 Value 4
-#  $10 Label 5
-#  $11 Value 5
-function showInputForm5Dlg() {
-
-	LABELW=16;
-	
-	LABEL1=$2;
-	LABEL2=$4;
-	LABEL3=$6;
-	LABEL4=$8;
-	LABEL5=${10};
-	if [ ${#LABEL1} -gt $LABELW ]; then
-		LABELW=${#LABEL1};
-	fi
-	if [ ${#LABEL2} -gt $LABELW ]; then
-		LABELW=${#LABEL2};
-	fi
-	if [ ${#LABEL3} -gt $LABELW ]; then
-		LABELW=${#LABEL3};
-	fi
-	if [ ${#LABEL4} -gt $LABELW ]; then
-		LABELW=${#LABEL4};
-	fi
-	if [ ${#LABEL5} -gt $LABELW ]; then
-		LABELW=${#LABEL5};
-	fi
-	LABELW=$(($LABELW+5));
-
-	CHANGELABEL="$_CHANGE"
-	CANCELLABEL="$_CANCEL"
-
+	HEIGHT=$(($DEFAULTHEIGHT+3))
 	WIDTH=$DEFAULTWIDTH;
-	HEIGHT=$(($DEFAULTHEIGHT+6))
 
-	RETURN=$( \
-			dialog \
-					--backtitle "$BACKTITLE" \
-					--title "$TITLE" \
-					--ok-label "$CHANGELABEL" \
-					--cancel-label "$CANCELLABEL" \
-					--form "$1" $HEIGHT $WIDTH 5 \
-							"$2" 1 3 "$3" 1 $LABELW 16 15 \
-							"$4" 2 3 "$5" 2 $LABELW 16 15 \
-							"$6" 3 3 "$7" 3 $LABELW 16 15 \
-							"$8" 4 3 "$9" 4 $LABELW 16 15 \
-							"${10}" 5 3 "${11}" 5 $LABELW 16 15 \
-					3>&1 1>&2 2>&3);
+	if [ $# -gt 1 ]; then
+		HEIGHT=$2
+	fi
+	if [ $# -gt 2 ]; then
+		WIDTH=$3
+	fi
+	if [ $# -gt 3 ]; then
+		CHANGELABEL=$4
+	fi
+	if [ $# -gt 4 ]; then
+		CANCELLABEL=$5
+	fi	
+
+	CONTENT=();
+	I=0;
+	X=0;
+	for VALUE in "${ELEMENTS[@]}"; do
+		IFS=",";
+		ELEMENT=($VALUE);
+		if [ $X -ne ${ELEMENT[0]} ]; then
+			X=${ELEMENT[0]}
+			I=$(($I+1));
+		fi
+		CONTENT+=("${ELEMENT[2]}" "${ELEMENT[0]}" "${ELEMENT[1]}" "${ELEMENT[3]}" "${ELEMENT[0]}" "${ELEMENT[4]}" "${ELEMENT[5]}" "${ELEMENT[6]}" "${ELEMENT[7]}");
+	done;
+
+	RETURN=$(dialog \
+			--backtitle "$BACKTITLE" \
+			--title "$TITLE" \
+			--ok-label "$CHANGELABEL" \
+			--cancel-label "$CANCELLABEL" \
+			--mixedform "$1" $HEIGHT $WIDTH $I "${CONTENT[@]}" \
+			3>&1 1>&2 2>&3);
 }

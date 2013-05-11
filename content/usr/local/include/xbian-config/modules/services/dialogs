@@ -19,7 +19,7 @@
 
 # Shows the dialog in which users can enter the new password
 function showLoadingServiceDlg() {
-	wrapTxtFn "$_LOADINGSERVICES" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.loading)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -27,35 +27,35 @@ function showLoadingServiceDlg() {
 }
 
 function showServiceConfirmationDlg() {
-	wrapTxtFn "$_SERVICEDELETECONFIRM" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.delete.confirm)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showConfirmDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showServiceDeletedDlg() {
-	wrapTxtFn "$_SERVICEDELETED" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.delete.success)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showServiceInsertedDlg() {
-	wrapTxtFn "$_SERVICEINSERTED" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.inserted)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showServiceUpdatedDlg() {
-	wrapTxtFn "$_SERVICEUPDATED" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.updated)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showRestartServiceDlg() {
-	wrapTxtFn "$_RESTARTINGSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.restarting)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -63,7 +63,7 @@ function showRestartServiceDlg() {
 }
 
 function showServiceNotExistsDlg() {
-	wrapTxtFn "$_UNEXISTINGSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.not_exists)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -71,7 +71,7 @@ function showServiceNotExistsDlg() {
 }
 
 function showFailedToRestartDlg() {
-	wrapTxtFn "$_FAILEDTORESTARTSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.restart_failed)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -79,7 +79,7 @@ function showFailedToRestartDlg() {
 }
 
 function showStartServiceDlg() {
-	wrapTxtFn "$_STARTINGSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.starting)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -87,7 +87,7 @@ function showStartServiceDlg() {
 }
 
 function showFailedToStartDlg() {
-	wrapTxtFn "$_FAILEDTOSTARTSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.start_failed)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -95,7 +95,7 @@ function showFailedToStartDlg() {
 }
 
 function showStopServiceDlg() {
-	wrapTxtFn "$_STOPPINGSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.stopping)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -103,7 +103,7 @@ function showStopServiceDlg() {
 }
 
 function showFailedToStopDlg() {
-	wrapTxtFn "$_FAILEDTOSTOPSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.stop_failed)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -111,7 +111,7 @@ function showFailedToStopDlg() {
 }
 
 function showDisableAutoStartServiceDlg() {
-	wrapTxtFn "$_DISABLEAUTOSTARTSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.autostart.disabling)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -119,7 +119,7 @@ function showDisableAutoStartServiceDlg() {
 }
 
 function showFailedToDisableAutoStartDlg() {
-	wrapTxtFn "$_FAILEDTODISABLEAUTOSTARTSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.autostart.disable_failed)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -127,7 +127,7 @@ function showFailedToDisableAutoStartDlg() {
 }
 
 function showEnableAutoStartServiceDlg() {
-	wrapTxtFn "$_ENABLEAUTOSTARTSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.autostart.enabling)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -135,7 +135,7 @@ function showEnableAutoStartServiceDlg() {
 }
 
 function showFailedToDisableAutoStartDlg() {
-	wrapTxtFn "$_FAILEDTOENABLEAUTOSTARTSERVICE" $(($DEFAULTWIDTH-4))
+	wrapTxtFn "$(_ services.autostart.enable_failed)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -149,25 +149,26 @@ function showServicesListDlg() {
 	RUNNING=$_NO
 	X=3;
 	for SERVICE in ${INSTSERV[@]}; do
-		if [ $(getServiceAutoStartStatusFn $SERVICE; echo $?) -eq 0 ]; then
-			AT="\Z1"$_OFF;
+		NAME=${SERVICE%:*};
+		if [ $(getServiceAutoStartStatusFn $NAME; echo $?) -eq 0 ]; then
+			AT="\Z1"$(_ dialog.no);
 		else
-			AT="\Z2"$_ON;
+			AT="\Z2"$(_ dialog.yes);
 		fi
-		if [ $(getServiceRunningStatusFn $SERVICE; echo $?) -eq 0 ]; then
-			RUNNING="\Z1"$_NO;
+		if [ $(getServiceRunningStatusFn $NAME; echo $?) -eq 0 ]; then
+			RUNNING="\Z1"$(_ dialog.no);
 		else
-			RUNNING="\Z2"$_YES;
+			RUNNING="\Z2"$(_ dialog.yes);
 		fi
 		if [ ${#SERVICE} -gt $X ]; then
 			X=${#SERVICE};
 		fi
-		MENU+=($I",\Zn"$SERVICE","$AT","$RUNNING);
+		MENU+=($I",\Zn"$NAME","$AT","$RUNNING);
 		I=$(($I+1))
 	done
 	MENU+=($I",\Zn...,\Zn...,\Zn...");
 	createTableFn "menu"\
-	"#,\Zb"$_SERVICE",\Zb"$_SERVICEAUTOSTART",\Zb"$_SERVICERUNNING\
+	"#,\Zb"$(_ services.label.service)",\Zb"$(_ services.label.autostart)",\Zb"$(_ services.label.running)\
 	"${MENU[@]}";
 	
 	
@@ -189,16 +190,16 @@ function showServiceManageDlg() {
 
 	TBLCOLUMNCENTER=0;
 	if [ $(getServiceAutoStartStatusFn $SERV; echo $?) -eq 0 ]; then
-		MENU+=("1,\Z1"$_SERVICEAUTOSTART);
+		MENU+=("1,\Z1"$(_ services.label.autostart));
 	else
-		MENU+=("1,\Z2"$_SERVICEAUTOSTART);
+		MENU+=("1,\Z2"$(_ services.label.autostart));
 	fi
-	MENU+=("2,\Zn"$_SERVICESTARTRESTART);
-	MENU+=("3,\Zn"$_SERVICESTOP);
-	MENU+=("4,\Zn"$_SERVICEEDIT);
-	MENU+=("5,\Zn"$_SERVICEDELETE);
+	MENU+=("2,\Zn"$(_ services.label.start_restart));
+	MENU+=("3,\Zn"$(_ services.label.stop));
+	MENU+=("4,\Zn"$(_ services.label.edit));
+	MENU+=("5,\Zn"$(_ services.label.delete));
 	createTableFn "menu"\
-	"#,\Zb"$_SERVICEACTION\
+	"#,\Zb"$(_ services.label.action)\
 	"${MENU[@]}";
 	
 	TBLCOLUMNCENTER=1;
@@ -207,20 +208,15 @@ function showServiceManageDlg() {
 }
 
 function showServiceEditDlg() {
-	IFS=" ";
-	DATA=($1)
-	IFS=$ORIGINALIFS;
-
-	VALUES=$(dialog \
-			--ok-label "$_CHANGE" \
-			--cancel-label "$_RETURN" \
-			--backtitle "$BACKTITLE" \
-			--title "$TITLE" \
-			--mixedform "" \
-			8 $DEFAULTWIDTH 2 \
-			"$_SERVICENAME:" 1 3 "${DATA[0]}" 1 16 20 19 0\
-			"$_SERVICEDAEMONS:" 2 3 "${DATA[1]}" 2 16 20 19 0\
-			3>&1 1>&2 2>&3);
+	SERVICE=($1);
+	DAEMONS=${SERVICE[1]#*:};
+	NAME=${SERVICE[0]%:*};
+	DAEMONS=${DAEMONS//,/ };
+	ELEMENTS=();
+	ELEMENTS+=("1,3,$(_ services.label.service),$NAME,16,20,19,0");
+	ELEMENTS+=("2,3,$(_ services.label.daemons),$DAEMONS,16,20,19,0");
+	
+	showInputFormDlg "" 8;
 }
 
 function showServiceInsertDlg() {
@@ -228,14 +224,9 @@ function showServiceInsertDlg() {
 	DATA=($1)
 	IFS=$ORIGINALIFS;
 
-	VALUES=$(dialog \
-			--ok-label "$_INSERT" \
-			--cancel-label "$_RETURN" \
-			--backtitle "$BACKTITLE" \
-			--title "$TITLE" \
-			--mixedform "" \
-			8 $DEFAULTWIDTH 2 \
-			"$_SERVICENAME:" 1 3 "${DATA[0]}" 1 16 20 19 0\
-			"$_SERVICEDAEMONS:" 2 3 "${DATA[1]}" 2 16 20 19 0\
-			3>&1 1>&2 2>&3);
+	ELEMENTS=();
+	ELEMENTS+=("1,3,$(_ services.label.service),,16,20,19,0");
+	ELEMENTS+=("2,3,$(_ services.label.daemons),,16,20,19,0");
+	
+	showInputFormDlg "" 8;
 } 

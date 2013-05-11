@@ -29,7 +29,9 @@ ARGUMENTS=(check resize);
 #|------------------------------------|
 
 source $BASEPATH/modules/resizesd/functions
-source $BASEPATH/modules/resizesd/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/resizesd/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |

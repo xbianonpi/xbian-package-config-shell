@@ -19,7 +19,7 @@
 
 # Shows the overclocking warning
 function showOCWarningDlg() {
-	wrapTxtFn "$_OCWARNING" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ overclocking.warning)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT"
 	showMsgDlg "$WRAPPEDTXT" $HEIGHT
 }
@@ -29,15 +29,16 @@ function showOCWarningDlg() {
 function showOCSettingsDlg() {
 	OCMENU=$1;
 	createTableFn "radio"\
-	"#,\Zb$_OCNAME,\ZbARM,\ZbCORE,\ZbSDRAM,\ZbOvervolt"\
+	"#,\Zb$(_ overclocking.label.preset),\ZbARM,\ZbCORE,\ZbSDRAM,\ZbOvervolt"\
 	"${OCMENU[@]}";
+
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7))
 	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#OCMENU[@]} 16	
 }
 
 # Shows the overclocking settings not changed dialog
 function showNoOCChangeDlg() {
-	wrapTxtFn "$_OCNOTCHANGED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ overclocking.alreadyset)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -45,7 +46,7 @@ function showNoOCChangeDlg() {
 
 # Shows the overclocking settings updated dialog
 function showUpdatedOCDlg() {
-	wrapTxtFn "$_OCCHANGED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ overclocking.changed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -58,27 +59,22 @@ function showCustomOCDlg() {
 	SETTINGS=($1)
 	IFS=$ORIGINALIFS;
 	
-	VALUES=$(dialog \
-			--ok-label "$_CHANGE" \
-			--cancel-label "$_RETURN" \
-			--backtitle "$BACKTITLE" \
-			--title "$TITLE" \
-			--mixedform "" \
-			10 $DEFAULTWIDTH 4 \
-			"ARM Freq:" 1 3 "${SETTINGS[0]}" 1 16 5 4 0\
-			"ARM Freq:" 1 3 "Mhz (700)" 1 22 11 10 2\
-			"Core Freq:" 2 3 "${SETTINGS[1]}" 2 16 4 3 0\
-			"Core Freq:" 2 3 "Mhz (250)" 2 21 22 11 2\
-			"SDRAM Freq:" 3 3 "${SETTINGS[2]}" 3 16 4 3 0\
-			"SDRAM Freq:" 3 3 "Mhz (400)" 3 21 11 10 2\
-			"Overvolt:" 4 3 "${SETTINGS[3]}" 4 16 2 1 0\
-			"Overvolt:" 4 3 "* .025V + 1.2V (0)" 4 19 22 21 2\
-			3>&1 1>&2 2>&3);
+	ELEMENTS=();
+	ELEMENTS+=("1,3,ARM Freq,${SETTINGS[0]},16,5,4,0");
+	ELEMENTS+=("1,3,ARM Freq,Mhz (700),22,11,10,2");
+	ELEMENTS+=("2,3,Core Freq,${SETTINGS[1]},16,4,3,0");
+	ELEMENTS+=("2,3,Core Freq,Mhz (250),21,22,11,2");
+	ELEMENTS+=("3,3,SDRAM Freq,${SETTINGS[2]},16,4,3,0");
+	ELEMENTS+=("3,3,ARM Freq,Mhz (700),21,11,10,2");
+	ELEMENTS+=("4,3,Overvolt,${SETTINGS[3]},16,2,1,0");
+	ELEMENTS+=("4,3,Overvolt,* .025V + 1.2V (0),19,22,21,2");
+	
+	showInputFormDlg "";
 }
 
 #Shows the empty fields dialog
 function showOCEmptyFieldsDlg() {
-	wrapTxtFn "$_OCEMPTYFIELDS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn $(_ overclocking.empty_fields) $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT $DEFAULTWIDTH $_RETRY

@@ -29,7 +29,9 @@ ARGUMENTS=(select insert delete update);
 #|------------------------------------|
 
 source $BASEPATH/modules/licensempg2/functions
-source $BASEPATH/modules/licensempg2/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/licensempg2/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |
@@ -41,7 +43,7 @@ function showGUIFn() {
 	CURRENTLICENSE=$LICENSE;
 	showLicenseMPG2InputDlg $CURRENTLICENSE;
 	CODE=$?
-	if [ $CODE -eq 1 ] || [ $CODE -eq 0 ]; then
+	if [ $CODE -eq 0 ]; then
 		if [ ! -z $RETURN ] && [ ! -z $CURRENTLICENSE ]; then
 			updateLicenseMPG2Fn $RETURN $CURRENTLICENSE
 			if [ $? -eq 1 ]; then

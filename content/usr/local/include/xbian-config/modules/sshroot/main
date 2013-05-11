@@ -29,7 +29,9 @@ ARGUMENTS=(status rootpass enable disable);
 #|------------------------------------|
 
 source $BASEPATH/modules/sshroot/functions
-source $BASEPATH/modules/sshroot/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/sshroot/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |

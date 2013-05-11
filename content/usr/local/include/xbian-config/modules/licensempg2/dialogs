@@ -24,12 +24,12 @@
 #  - 1: Change
 #  - 0: Cancel
 function showLicenseMPG2InputDlg() {
-	showInputDlg "$_MPG2LICENSE:" $1
+	showInputDlg "$(_ licensempg2.name):" $1
 }
 
 #Shows the license successfully inserted dialog
 function showLicenseMPG2InsertedDlg() {
-	wrapTxtFn "$_MPG2INSERTED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_ license.inserted)" "$(_ licensempg2.name)")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT"
@@ -38,7 +38,7 @@ function showLicenseMPG2InsertedDlg() {
 
 #Shows the license successfully updated dialog
 function showLicenseMPG2UpdatedDlg() {
-	wrapTxtFn "$_MPG2UPDATED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_ license.updated)" "$(_ licensempg2.name)")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT"
@@ -47,7 +47,7 @@ function showLicenseMPG2UpdatedDlg() {
 
 #Shows the license successfully removed dialog
 function showLicenseMPG2DeletedDlg() {
-	wrapTxtFn "$_MPG2DELETED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_ license.deleted)" "$(_ licensempg2.name)")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT"
@@ -55,7 +55,7 @@ function showLicenseMPG2DeletedDlg() {
 }
 
 function showInvalidLicenseFormatDlg() {
-	wrapTxtFn "$_MPG2LICENSEINVALID" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_ license.invalid)" "$(_ licensempg2.name)")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT"

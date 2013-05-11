@@ -29,7 +29,9 @@ ARGUMENTS=(select update list);
 #|------------------------------------|
 
 source $BASEPATH/modules/kernel/functions
-source $BASEPATH/modules/kernel/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/kernel/dialogs
+fi
 source $BASEPATH/functions/array
 
 #|------------------------------------|

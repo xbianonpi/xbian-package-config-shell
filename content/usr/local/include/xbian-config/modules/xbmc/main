@@ -30,7 +30,9 @@ GUIRES=(480 540 720 1080);
 #|------------------------------------|
 
 source $BASEPATH/modules/xbmc/functions
-source $BASEPATH/modules/xbmc/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/xbmc/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |
@@ -46,6 +48,7 @@ function showGUIFn() {
 				setXBMCGUIResFn ${GUIRES[$(($RETURN-1))]};
 				if [ $? -eq 1 ]; then
 					showXBMCGUIResSuccessDlg;
+					askForRebootFn;
 				else
 					showXBMCGUIResFailedDlg;
 				fi
@@ -63,6 +66,7 @@ function showGUIFn() {
 				else
 					showXBMCWebserverSuccessDisabledDlg;
 				fi
+				askForRebootFn;
 			else
 				if [ $STATE -eq 0 ]; then
 					showXBMCWebserverFailedEnableDlg;
@@ -118,7 +122,8 @@ function showCMDFn() {
 						done
 						if [ $MATCH -eq 1 ]; then
 							setXBMCGUIResFn $3
-							echo $?;
+							echo $?;							
+							askForRebootFn;
 						else
 							echo -3;
 						fi
@@ -140,9 +145,11 @@ function showCMDFn() {
 				elif [ "$2" == "enable" ]; then
 					setXBMCWebserverFn 1
 					echo $?
+					askForRebootFn;
 				elif [ "$2" == "disable" ]; then
 					setXBMCWebserverFn 0
 					echo $?
+					askForRebootFn;
 				else
 					echo -1
 				fi

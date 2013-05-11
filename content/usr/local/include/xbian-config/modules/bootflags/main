@@ -23,18 +23,17 @@
 
 # The arguments this module accepts
 ARGUMENTS=(list select update);
-VIDEOFLAGS=(hdmi_force_hotplug hdmi_ignore_hotplug hdmi_ignore_cec_init hdmi_ignore_cec disable_overscan);
-declare -A VIDEOSETTINGS;
+BOOTFLAGS=(splash);
+declare -A BOOTSETTINGS;
 
 #|------------------------------------|
 #|          Include files             |
 #|------------------------------------|
 
-source $BASEPATH/modules/videoflags/functions
+source $BASEPATH/modules/bootflags/functions
 if [ $GUIMODE -eq 1 ]; then
-	source $BASEPATH/modules/videoflags/dialogs
+	source $BASEPATH/modules/bootflags/dialogs
 fi
-source $BASEPATH/functions/config
 
 #|------------------------------------|
 #|           Main program             |
@@ -42,37 +41,41 @@ source $BASEPATH/functions/config
 
 # Executes the GUI version of this module
 function showGUIFn() {
-	getVideoFlagsFn;
-	showVideoFlagsDlg;
+	getBootFlagsFn;
+	showBootFlagsDlg;
 	if [ $? -eq 0 ]; then
-		updateVideoFlagsFn "$RETURN"
+		updateBootFlagsFn "$RETURN"
 		if [ $? -eq 0 ]; then
-			showVideoFlagsSuccessDlg;
+			showBootFlagsSuccessDlg;
 		else
 			showErrorDlg;
 		fi
+		askForRebootFn;
 	fi
 }
 
 # Executes the command line version of this module
+# *
 #  $1 Argument [String]
-#  $2 Password [String]
+# select|update
+#  $2 Bootflag [String]
+# update
+#  $3 Status [Integer]
 # Returns
-#  *Update [Integer]
-#  - 1: Success
-#  - 0: Failed
+#  - 1: Success | active
+#  - 0: Failed | not-active
 function showCMDFn() {
 	case $1 in
 		list)
-			for FLAG in ${VIDEOFLAGS[@]}; do
+			for FLAG in ${BOOTFLAGS[@]}; do
 				echo $FLAG;
 			done;
 		;;
 		select)
 			if [ $# -eq 2 ]; then
-				if [ $(echo ${VIDEOFLAGS[@]} | grep -o $2 | wc -l) -gt 0 ]; then
-					getVideoFlagsFn;
-					echo ${VIDEOSETTINGS[$2]};
+				if [ $(echo ${BOOTFLAGS[@]} | grep -o $2 | wc -l) -gt 0 ]; then
+					getBootFlagsFn;
+					echo ${BOOTSETTINGS[$2]};
 				else
 					echo 0;
 				fi
@@ -82,26 +85,30 @@ function showCMDFn() {
 		;;
 		update)
 			if [ $# -eq 3 ]; then
-				if [ $(echo ${VIDEOFLAGS[@]} | grep -o $2 | wc -l) -gt 0 ]; then
+				if [ $(echo ${BOOTFLAGS[@]} | grep -o $2 | wc -l) -gt 0 ]; then
 					if [[ $3 =~ ^[01] ]]; then
 						if [ $3 -eq 0 ]; then
-							deleteConfigVarFn $2
-							selectConfigVarFn $2
-							if [ -z $RETURN ]; then
-								echo 1;
-								askForRebootFn;
-							else
-								echo 0;
-							fi
+							getBootFlagsFn;
+							RETURN="";
+							for KEY in ${!BOOTFLAGS[@]}; do
+								FLAG=${BOOTFLAGS[$KEY]};
+								if [ ${BOOTSETTINGS[$FLAG]} -eq 1 ] && [ $FLAG != $2 ]; then
+									RETURN+="$(($KEY+1)) ";
+								fi
+							done;
+							updateBootFlagsFn "$RETURN";
+							echo $ERROR;
 						else
-							updateConfigVarFn $2 $3;
-							selectConfigVarFn $2
-							if [ $RETURN -eq $3 ]; then
-								echo 1;
-								askForRebootFn;
-							else
-								echo 0;
-							fi
+							getBootFlagsFn;
+							RETURN="";
+							for KEY in ${!BOOTFLAGS[@]}; do
+								FLAG=${BOOTFLAGS[$KEY]};
+								if [ ${BOOTSETTINGS[$FLAG]} -eq 0 ] || [ $FLAG == $2 ]; then
+									RETURN+="$(($KEY+1)) ";
+								fi
+							done;
+							updateBootFlagsFn "$RETURN";
+							echo $ERROR;
 						fi
 					else
 						echo 0;

@@ -19,25 +19,21 @@
 
 function showVideoFlagsDlg() {
 	MENU=();
-	
+
 	X=0;
 	for FLAG in ${VIDEOFLAGS[@]}; do
 		X=$(($X+1));
-		_LABEL="_"$(echo $FLAG | sed -e 's/_//g' | tr "[:lower:]" "[:upper:]");
-		if [ ! -z ${!_LABEL} ]; then
-			LABEL=${!_LABEL};
-		else
-			LABEL=$FLAG;
-		fi
-		
+		LABEL=$(_ videoflags.$FLAG);
 		if [ ${VIDEOSETTINGS[$FLAG]} -eq 0 ]; then
-			MENU+=($X",\Zn"$LABEL",off");
+			MENU+=($X",\Zn$LABEL,off");
 		else
-			MENU+=($X",\Zn"$LABEL",on");
+			MENU+=($X",\Zn$LABEL,on");
 		fi
 	done;
+	LABEL=$(_ videoflags.label.videoflags);
+	
 	createTableFn "radio" \
-	"#,\Zb$_VIDEOFLAGS" \
+	"#,\Zb$LABEL" \
 	"${MENU[@]}"
 	
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
@@ -45,7 +41,7 @@ function showVideoFlagsDlg() {
 }
 
 function showVideoFlagsSuccessDlg() {
-	wrapTxtFn "$_VIDEOFLAGSSUCCESS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ videoflags.update_success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT"

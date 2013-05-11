@@ -18,40 +18,12 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 #
 
-# XBMC language array
-declare -A LANGARRAY
-LANGARRAY[Dutch]=nl
-LANGARRAY[English]=en
-LANGARRAY[French]=fr
-LANGARRAY[Slovak]=sk
-LANGARRAY[Spanish]=es
-LANGARRAY[German]=de
-LANGARRAY[Danish]=dk
-LANGARRAY[Russian]=ru
+LANGUAGE=$(locale | sed -ne 's/LANG=\([a-z]\{2,3\}_[A-Z]\{2,3\}\).*/\1/p');
 
-# Language translations
-_DUTCH="Nederlands"
-_ENGLISH="English"
-_FRENCH="Français"
-_SLOVAK="Slovenčina"
-_SPANISH="Español"
-_GERMAN="Deutsch"
-_DANISH="Dansk"
-_RUSSIAN="Русский"
+if [ ! -f "/usr/share/locale/${LANGUAGE//_/ }/LC_MESSAGES/xbian.mo" ]; then
+	LANGUAGE=en_EN
+fi
 
-function getLanguageFn() {
-	# Get XBMC language setting
-	if [ -f $BASEPATH"/config/xbconfig" ]; then
-		USERLANG=$(cat $BASEPATH"/config/xbconfig" | grep language | cut -f2 -d":");
-	else
-		USERLANG="";
-	fi
-	XBMCLANG=$(cat /home/xbian/.xbmc/userdata/guisettings.xml | sed '/<language>/!d;s//\n/;s/[^\n]*\n//;:a;$!{/<\/language/!N;//!ba};y/\n/ /;s/<\/language>/\n/;P;D' | sed -ne 's/\([A-Za-z]\{1,\}\)\([\ ](.*\|.*\)/\1/p')
-
-	# Prefered language of xbian-config
-	if [ -z $USERLANG ]; then
-		LANGUAGE=${LANGARRAY[$XBMCLANG]};
-	else
-		LANGUAGE=${LANGARRAY[$USERLANG]};
-	fi
+function _() {
+	echo $(gettext -d "xbian" -s "xbian-config."$1);
 }

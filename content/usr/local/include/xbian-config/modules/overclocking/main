@@ -31,7 +31,7 @@ OCNAMES=(None Modest XBian Medium High Turbo);
 # Values of the overclock settings
 OCSETTINGS[0]="700 250 400 0";
 OCSETTINGS[1]="800 300 400 0";
-OCSETTINGS[2]="840 375 400 0";
+OCSETTINGS[2]="840 250 400 0";
 OCSETTINGS[3]="900 333 450 0";
 OCSETTINGS[4]="950 450 450 2";
 OCSETTINGS[5]="1000 500 500 6";
@@ -42,12 +42,17 @@ OCDANGEROUS=(Turbo)
 # Define the safe overclock settings
 OCSAFE=(None Modest XBian)
 
+# Did we already show the warning
+OCWARNING=0;
+
 #|------------------------------------|
 #|          Include files             |
 #|------------------------------------|
 
 source $BASEPATH/modules/overclocking/functions
-source $BASEPATH/modules/overclocking/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/overclocking/dialogs
+fi
 source $BASEPATH/functions/config
 
 #|------------------------------------|
@@ -56,7 +61,10 @@ source $BASEPATH/functions/config
 
 # Executes the GUI version of this module
 function showGUIFn() {
-	showOCWarningDlg;
+	if [ $OCWARNING -eq 0 ]; then
+		showOCWarningDlg;
+		OCWARNING=1;
+	fi
 	showLoadingDlg;
 	getCurrentOCSettingsFn;	
 	createOCDLGMenuFn $CURRENTOC;
@@ -64,6 +72,7 @@ function showGUIFn() {
 	if [ $? -eq 0 ]; then
 		if [ $RETURN -eq $(($CURRENTOC+1)) ]; then
 			showNoOCChangeDlg;
+			showGUIFn;
 		elif [ $RETURN -eq $((${#OCSETTINGS[@]}+1)) ]; then
 			if [ $CURRENTOC -eq -1 ]; then
 				SETTINGS="${OCOLDSETTINGS[@]}";
@@ -72,14 +81,20 @@ function showGUIFn() {
 			fi
 			showCustomOCDlg "${SETTINGS[@]}";
 			if [ $? -eq 0 ]; then
-				NEWSETTINGS=($(echo $VALUES | sed 's/Mhz //g'));
-				if [ "${NEWSETTINGS[0]} ${NEWSETTINGS[2]} ${NEWSETTINGS[4]} ${NEWSETTINGS[6]}" ==  "${SETTINGS[*]}" ]; then
+				IFS=$'\n';
+				VALUES=($RETURN);
+				NEWSETTINGS[0]=${VALUES[0]};
+				NEWSETTINGS[1]=${VALUES[2]};
+				NEWSETTINGS[2]=${VALUES[4]};
+				NEWSETTINGS[3]=${VALUES[6]};
+				if [ "${NEWSETTINGS[0]} ${NEWSETTINGS[1]} ${NEWSETTINGS[2]} ${NEWSETTINGS[3]}" ==  "${SETTINGS[*]}" ]; then
 					showNoOCChangeDlg;
 				elif [ ${#NEWSETTINGS[@]} -eq 4 ]; then
 					updateCustomOCSettingsFn "${NEWSETTINGS[*]}";
 					if [ $? -eq 1 ]; then
 						showUpdatedOCDlg;
 						askForRebootFn;
+						showGUIFn;
 					else
 						showErrorDlg;
 					fi
@@ -95,6 +110,7 @@ function showGUIFn() {
 			if [ $? -eq 1 ]; then
 				showUpdatedOCDlg;
 				askForRebootFn;
+				showGUIFn;
 			else
 				showErrorDlg;
 			fi

@@ -23,13 +23,14 @@
 #  $? [Integer]
 #  - 1: Change
 #  - 0: Cancel
+
 function showHostnameInputDlg() {
-	showInputDlg "$_HOSTNAME:" $1
+	showInputDlg "$(_ hostname.label.hostname)" "$1"
 }
 
 #Shows hostname successfully changed dialog
 function showHostnameSuccessDlg() {
-	wrapTxtFn "$_HOSTNAMECHANGED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ hostname.changed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT"

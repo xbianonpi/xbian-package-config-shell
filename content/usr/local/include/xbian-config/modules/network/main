@@ -29,7 +29,9 @@ ARGUMENTS=(list status dhcp static credentials scan restart progress type);
 #|------------------------------------|
 
 source $BASEPATH/modules/network/functions
-source $BASEPATH/modules/network/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/network/dialogs
+fi
 source $BASEPATH/functions/markup
 
 #|------------------------------------|
@@ -106,9 +108,12 @@ function showInterfaceStaticGUIFn() {
 	GATEWAY=$(echo "$2" | grep gateway | cut -f 2 -d" ")
 	NAMESERVER1=$(echo "$2" | grep nameserver1 | cut -f 2 -d" ")
 	NAMESERVER2=$(echo "$2" | grep nameserver2 | cut -f 2 -d" ")
+	
 	showInterfaceStaticDlg "$IP" "$NETMASK" "$GATEWAY" "$NAMESERVER1" "$NAMESERVER2"
 	if [ $? -eq 0 ]; then
+		IFS=$'\n';
 		STATICCONF=($(echo -e "$RETURN"))
+		IFS=$ORIGINALIFS;
 		if [ ${#STATICCONF[@]} -gt 2 ]; then
 			IP="${STATICCONF[0]}"
 			NETMASK="${STATICCONF[1]}"
@@ -125,7 +130,13 @@ function showInterfaceStaticGUIFn() {
 			RESULT=$(setInterfaceStaticFn "$1" "$IP" "$NETMASK" "$GATEWAY" "$NAMESERVER1" "$NAMESERVER2"; echo $?)
 			if [ $RESULT -eq 1 ]; then
 				showInterfaceStaticSuccessDlg
-				showGUIFn;
+				if [[ $1 =~ "wlan" ]]; then
+					showWlanScanGUIFn "$1" "$2"
+				else
+					showRestartAdapterDlg $1
+					restartLANAdapterFn;
+					showGUIFn;
+				fi
 			else
 				showInterfaceStaticErrorDlg
 				showInterfaceStaticGUIFn "$1" "$2"
@@ -141,8 +152,8 @@ function showInterfaceStaticGUIFn() {
 
 function showWlanScanGUIFn() {
 
-	SSID=$(echo -e "$2" | grep ssid | cut -f 2 -d" ")
-	WLANKEY=$(echo -e "$2" | grep key | cut -f 2 -d" ")
+	SSID=$(echo -e "$2" | sed -ne 's/ssid[\ ]\(.*\)/\1/p')
+	WLANKEY=$(echo -e "$2" | sed -ne 's/key[\ ]\(.*\)/\1/p')
 	PROTECTION=$(echo "$2" | grep protection | cut -f 2 -d" ")
 
 	showScanForWLANDlg;
@@ -212,7 +223,9 @@ function showWlanProtectionGUIFn() {
 	if [ $NEWPROTECTION -lt 3 ]; then
 		showInterfaceCredentialsDlg "$SSID" "$WLANKEY"
 		if [ $? -eq 0 ]; then
+			IFS=$'\n';
 			CREDENTIALS=($(echo -e "$RETURN"))
+			IFS=$ORIGINALIFS;
 			if [ ${#CREDENTIALS[@]} -eq 2 ];then
 				SSID=${CREDENTIALS[0]}
 				WLANKEY=${CREDENTIALS[1]}
@@ -261,7 +274,7 @@ function showWlanProtectionGUIFn() {
 }
 
 function showWlanRestartGUIFn() {
-	showRestartWLANDlg $1
+	showRestartAdapterDlg $1
 	restartWLANAdapterFn "$1"
 	LASTSTATUS=-1;
 	while [ $(kill -0 $PROCESSID 2>/dev/null >/dev/null; echo $?) -eq 0 ]; do

@@ -140,12 +140,14 @@ function createTableFn() {
 	NEWROW="";
 	IFS=$ORIGINALIFS;
 	KEY=-1;
-	for ROW in $@; do
+	for ROW in "$@"; do
 		if [[ "$ROW" =~ ^[0-9] ]]; then
 			KEY=$(($KEY+1));
 			OLDROWS[$KEY]+=$ROW;
 		else
-			OLDROWS[$KEY]+=" "$ROW;
+			if [ ${#OLDROWS} -lt $(($KEY+1)) ]; then
+				OLDROWS[$KEY]+=" "$ROW;
+			fi
 		fi
 	done;
 	NRCOLUMNS=0;

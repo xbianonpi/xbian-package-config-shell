@@ -23,12 +23,12 @@
 #  - 1: Change
 #  - 0: Cancel
 function showXbianPassInputDlg() {
-	showPassDlg "$_XBIANPASS"
+	showPassDlg "$(_ xbianpass.label.password)"
 }
 
 # Shows xbianpass successfully changed dialog
 function showXbianPassSuccessDlg() {
-	wrapTxtFn "$_XBIANPASSCHANGED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbianpass.changed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -37,7 +37,7 @@ function showXbianPassSuccessDlg() {
 
 # Shows xbianpass passwords didn't match dialog
 function showXbianPassNoMatchDlg() {
-	wrapTxtFn "$_XBIANPASSNOMATCH" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbianpass.no_match)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT $DEFAULTWIDTH $_RETRY
@@ -46,7 +46,7 @@ function showXbianPassNoMatchDlg() {
 
 # Shows xbianpass there where empty fields dialog
 function showXbianPassEmptyFieldsDlg() {
-	wrapTxtFn "$_XBIANPASSEMPTYFIELDS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbianpass.empty_fields)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT $DEFAULTWIDTH $_RETRY

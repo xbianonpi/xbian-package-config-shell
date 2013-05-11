@@ -29,7 +29,9 @@ ARGUMENTS=(list select update date);
 #|------------------------------------|
 
 source $BASEPATH/modules/timezone/functions
-source $BASEPATH/modules/timezone/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/timezone/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |
@@ -47,7 +49,7 @@ function showGUIFn() {
 	#Check if an actual selection was made.
 	if [ $? -eq 0 ]; then
 		if [ -z $RETURN ]; then
-			showTZNoCategorySelectedDlg;
+			showTZNoTimezoneSelectedDlg;
 			showGUIFn;
 		else
 			TZNEWTIMEZONE=${TZCATEGORIES[$(($RETURN-1))]};

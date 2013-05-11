@@ -28,6 +28,7 @@ if [ -f "$BASEPATH/config/services" ]; then
 else
 	SERVICES="";
 fi
+INSTSERV=();
 PROCESSES=$(ps -A);
 
 #|------------------------------------|
@@ -35,7 +36,9 @@ PROCESSES=$(ps -A);
 #|------------------------------------|
 
 source $BASEPATH/modules/services/functions
-source $BASEPATH/modules/services/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/services/dialogs;
+fi
 
 #|------------------------------------|
 #|           Main program             |
@@ -54,7 +57,8 @@ function showGUIFn() {
 			showServiceInsertDlg;
 			if [ $? -eq 0 ]; then
 				IFS=$'\n';
-				DATA=($(echo -e "$VALUES"));
+				DATA=($(echo -e "$RETURN"));
+				DATA[1]=${DATA[1]// /,};
 				IFS=$ORIGINALIFS;
 
 				if [ ! -z "${DATA[0]}" ] && [ $(checkServiceExistsFn "${DATA[0]}"; echo $?) -eq 1 ]; then
@@ -135,7 +139,8 @@ function showGUIFn() {
 					showServiceEditDlg "${DATA[*]}";
 					if [ $? -eq 0 ]; then
 						IFS=$'\n';
-						DATA=($(echo -e "$VALUES"));
+						DATA=($(echo -e "$RETURN"));
+						DATA[1]=${DATA[1]// /,};
 						IFS=$ORIGINALIFS;
 
 						if [ ! -z "${DATA[0]}" ] && [ $(checkServiceExistsFn "${DATA[0]}"; echo $?) -eq 1 ]; then
@@ -204,7 +209,7 @@ function showCMDFn() {
 			if [ $# -eq 1 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
 					for SERVICE in ${SERVICES[@]}; do
-						NAME=$(echo $SERVICE | cut -f 1 -d:);
+						NAME=${SERVICE%:*};
 						if [ -f "/etc/init.d/$NAME" ]; then
 							echo $NAME;
 						fi
@@ -219,7 +224,8 @@ function showCMDFn() {
 		select)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [ $(echo -e "$SERVICES" | grep -o "^$2" | wc -l) -ge 1 ]; then
+					if [[ "$SERVICES" =~ "$2" ]]; then
+						getInstalledServicesFn;
 						getServiceIDFn $2;
 						KEY=$?;
 						getServiceConfFn $KEY;
@@ -237,7 +243,8 @@ function showCMDFn() {
 		status)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [ $(echo -e "$SERVICES" | grep -o "^$2" | wc -l) -ge 1 ]; then
+					if [[ "$SERVICES" =~ "$2" ]]; then
+						getInstalledServicesFn;
 						RUNNING=$(getServiceRunningStatusFn $2; echo $?);
 						AUTOSTART=$(getServiceAutoStartStatusFn $2; echo $?);
 						if [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 0 ]; then
@@ -258,9 +265,10 @@ function showCMDFn() {
 			elif [ $# -eq 1 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
 					for SERVICE in ${SERVICES[@]}; do
-						NAME=$(echo $SERVICE | cut -f 1 -d:);
-						RUNNING=$(getServiceRunningStatusFn $NAME; echo $?);
-						AUTOSTART=$(getServiceAutoStartStatusFn $NAME; echo $?);
+						NAME=${SERVRAW%:*};
+						getInstalledServicesFn;
+						RUNNING=$(getServiceRunningStatusFn $2; echo $?);
+						AUTOSTART=$(getServiceAutoStartStatusFn $2; echo $?);
 						if [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 0 ]; then
 							echo $NAME 2;
 						elif [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 1 ]; then
@@ -281,9 +289,11 @@ function showCMDFn() {
 		start)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [ $(echo -e "$SERVICES" | grep -o "^$2" | wc -l) -ge 1 ] && [ -f "/etc/init.d/$2" ]; then
+					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" ]; then
+						getInstalledServicesFn;
 						if [ $(getServiceRunningStatusFn $2; echo $?) -eq 0 ]; then
-							ID=$(getServiceIDFn $2; echo $?);
+							getServiceIDFn $2;
+							ID=$?
 							startServiceFn $ID;
 							RETURN=$?;
 							if [ $RETURN -gt 0 ]; then
@@ -307,7 +317,8 @@ function showCMDFn() {
 		stop)
 			if [ $# -eq 2 ]; then		
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [ $(echo -e "$SERVICES" | grep -o "^$2" | wc -l) -ge 1 ] && [ -f "/etc/init.d/$2" ]; then
+					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" ]; then
+						getInstalledServicesFn;
 						if [ $(getServiceRunningStatusFn $2; echo $?) -eq 1 ]; then
 							ID=$(getServiceIDFn $2; echo $?);
 							stopServiceFn $ID;
@@ -333,7 +344,8 @@ function showCMDFn() {
 		restart)
 			if [ $# -eq 2 ]; then	
 				if [ -f "$BASEPATH/config/services" ]; then	
-					if [ $(echo -e "$SERVICES" | grep -o "^$2" | wc -l) -ge 1 ] && [ -f "/etc/init.d/$2" ]; then
+					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" ]; then
+						getInstalledServicesFn;
 						if [ $(getServiceRunningStatusFn $2; echo $?) -eq 1 ]; then
 							ID=$(getServiceIDFn $2; echo $?);
 							restartServiceFn $ID;
@@ -359,7 +371,7 @@ function showCMDFn() {
 		autostart)
 			if [ $# -eq 3 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [ $(echo -e "$SERVICES" | grep -o "^$2" | wc -l) -ge 1 ] && [ -f "/etc/init.d/$2" ]; then
+					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" ]; then
 						if [ $3 == "disable" ]; then
 							if [ $(getServiceAutoStartStatusFn $2; echo $?) -eq 1 ]; then
 								ID=$(getServiceIDFn $2; echo $?);
@@ -407,7 +419,8 @@ function showCMDFn() {
 				if [ ! -z "${DATA[0]}" ] && [ $(checkServiceExistsFn "${DATA[0]}"; echo $?) -eq 1 ]; then
 					DAEMONS=($@);
 					DAEMON=""
-					ID=$(getServiceIDFn $2; echo $?);
+					getServiceIDFn $2;
+					ID=$?
 					for VALUE in ${DAEMONS[@]}; do
 						DAEMON=$DAEMON$VALUE",";
 					done;
@@ -430,7 +443,7 @@ function showCMDFn() {
 		if [ $# -eq 2 ]; then
 			DATA=($2)
 			shift;
-			if [ $(echo -e "$SERVICES" | grep -o "^$1" | wc -l) -ge 1 ]; then
+			if [[ "$SERVICES" =~ "$2" ]]; then
 				ID=$(getServiceIDFn $2; echo $?);
 				deleteServiceFn $ID "${DATA[*]}"
 				if [ $? -eq 1 ]; then

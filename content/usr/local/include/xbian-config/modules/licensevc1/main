@@ -29,7 +29,9 @@ ARGUMENTS=(select insert delete update);
 #|------------------------------------|
 
 source $BASEPATH/modules/licensevc1/functions
-source $BASEPATH/modules/licensevc1/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/licensevc1/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |
@@ -40,9 +42,8 @@ function showGUIFn() {
 	getCurrentLicenseVC1Fn
 	CURRENTLICENSE=$LICENSE;
 	showLicenseVC1InputDlg $CURRENTLICENSE;
-	
 	CODE=$?
-	if [ $CODE -eq 1 ] || [ $CODE -eq 0 ]; then
+	if [ $CODE -eq 0 ]; then
 		if [ ! -z $RETURN ] && [ ! -z $CURRENTLICENSE ]; then
 			updateLicenseVC1Fn $RETURN $CURRENTLICENSE
 			if [ $? -eq 1 ]; then

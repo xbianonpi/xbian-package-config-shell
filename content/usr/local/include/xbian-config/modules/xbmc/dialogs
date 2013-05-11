@@ -19,10 +19,10 @@
 
 function showXBMCSettingsDlg() {
 	MENU=();
-	MENU+=(1,"\Zn"$_XBMCGUIRES);
-	MENU+=(2,"\Zn"$_XBMCWEBSERVER);
+	MENU+=(1,"\Zn"$(_ xbmc.label.guires));
+	MENU+=(2,"\Zn"$(_ xbmc.label.webserver));
 	createTableFn "menu"\
-	"#,\Zb"$_XBMCACTIONS\
+	"#,\Zb"$(_ xbmc.label.actions)\
 	"${MENU[@]}";
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11))
@@ -37,7 +37,7 @@ function showXBMCGUIResDlg() {
 		MENU+=($I",\Zn"$RES);
 	done
 	createTableFn "menu"\
-	"#,\Zb"$_XBMCGUIRES\
+	"#,\Zb"$(_ xbmc.label.guires)\
 	"${MENU[@]}";
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11))
@@ -45,7 +45,7 @@ function showXBMCGUIResDlg() {
 }
 
 function showXBMCWebserverDlg() {
-	wrapTxtFn "$_XBMCWEBSERVERENABLEDISABLE" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbmc.webserver.enable_disable)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showConfirmDlg "$ALIGNEDTXT" $HEIGHT 55 "$_ENABLE" "$_DISABLE"
@@ -53,42 +53,42 @@ function showXBMCWebserverDlg() {
 }
 
 function showXBMCWebserverSuccessEnabledDlg() {
-	wrapTxtFn "$_XBMCWEBSERVERSUCCESSENABLED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbmc.webserver.enable.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showXBMCWebserverSuccessDisabledDlg() {
-	wrapTxtFn "$_XBMCWEBSERVERSUCCESSDISABLED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbmc.webserver.disable.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showXBMCWebserverFailedEnableDlg() {
-	wrapTxtFn "$_XBMCWEBSERVERFAILEDENABLED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbmc.webserver.enable.failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;	
 }
 
 function showXBMCWebserverFailedDisableDlg() {
-	wrapTxtFn "$_XBMCWEBSERVERFAILEDDISABLED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbmc.webserver.disable.failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;	
 }
 
 function showXBMCGUIResSuccessDDlg() {
-	wrapTxtFn "$_XBMCGUIRESSUCCESS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbmc.guires.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showXBMCGUIResFailedDlg() {
-	wrapTxtFn "$_XBMCGUIRESFAILED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ xbmc.guires.failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;

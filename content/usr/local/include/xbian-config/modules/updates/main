@@ -29,7 +29,9 @@ ARGUMENTS=(list progress updatedb install installtest);
 #|------------------------------------|
 
 source $BASEPATH/modules/updates/functions
-source $BASEPATH/modules/updates/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/updates/dialogs
+fi
 source $BASEPATH/functions/packages
 
 #|------------------------------------|

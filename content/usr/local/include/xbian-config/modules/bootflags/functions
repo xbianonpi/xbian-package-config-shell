@@ -1,0 +1,163 @@
+#!/bin/bash
+#
+#Copyright 2012 CurlyMo <development@xbian.org>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+
+function getBootFlagsFn() {
+	SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+	LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\{1\}\).*/\1/p' /boot/cmdline.txt);
+	QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
+	LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+	CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\)[\ ].*/\1/p' /boot/cmdline.txt);
+
+	if [ ! -z $LOGLEVEL ] && [ $LOGLEVEL -ne 0 ]; then
+		BOOTSETTINGS['splash']=0;
+	elif [ -z $LOGLEVEL ]; then
+		BOOTSETTINGS['splash']=0;
+	elif [ $SPLASH -eq 0 ] || [ $QUIET -eq 0 ] || [ $LOGLEVEL -ne 0 ] || [ $LOGO -eq 0 ] || [ $CONSOLE != "tty2" ]; then
+		BOOTSETTINGS['splash']=0;
+	else
+		BOOTSETTINGS['splash']=1;
+	fi
+}
+
+function updateBootFlagsFn() {
+	for KEY in ${!BOOTFLAGS[*]}; do
+		FLAG=${BOOTFLAGS[$KEY]};
+		if [[ "$1" =~ "$(($KEY+1))" ]]; then 
+			case $FLAG in
+				splash)
+					SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+					LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\).*/\1/p' /boot/cmdline.txt);
+					QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
+					LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+					CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\).*/\1/p' /boot/cmdline.txt);
+					if [ $SPLASH -eq 0 ]; then
+						sed -i 's/$/ splash/g' /boot/cmdline.txt
+					fi
+					if [ ! -z $LOGLEVEL ]; then
+						if [ $LOGLEVEL -ne 0 ]; then
+							sed -i "s/loglevel=$LOGLEVEL/loglevel=0/g" /boot/cmdline.txt
+						fi
+					else
+						sed -i 's/$/ loglevel=0/g' /boot/cmdline.txt
+					fi
+					if [ $QUIET -eq 0 ]; then
+						sed -i 's/$/ quiet/g' /boot/cmdline.txt
+					fi
+					if [ $LOGO -eq 0 ]; then
+						sed -i 's/$/ logo.nologo/g' /boot/cmdline.txt
+					fi
+					if [ $CONSOLE != "tty2" ]; then
+						if [ $(grep console /boot/cmdline.txt | wc -l) -eq 0 ]; then
+							sed -i 's/$/ console=tty2/g' /boot/cmdline.txt
+						else
+							sed -i "s/console=$CONSOLE/console=tty2/g" /boot/cmdline.txt
+						fi
+					fi
+				;;
+			esac
+		else
+			case $FLAG in
+				splash)
+					SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+					LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\).*/\1/p' /boot/cmdline.txt);
+					QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
+					LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+					CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\).*/\1/p' /boot/cmdline.txt);
+					if [ $SPLASH -ge 1 ]; then
+						sed -i 's/ splash//g' /boot/cmdline.txt
+					fi
+					if [ ! -z $LOGLEVEL ] && [ $LOGLEVEL -eq 0 ]; then
+						sed -i "s/ loglevel=$LOGLEVEL//g" /boot/cmdline.txt
+					fi
+					if [ $QUIET -ge 0 ]; then
+						sed -i 's/ quiet//g' /boot/cmdline.txt
+					fi
+					if [ $LOGO -ge 0 ]; then
+						sed -i 's/ logo.nologo//g' /boot/cmdline.txt
+					fi
+					if [ $CONSOLE == "tty2" ]; then
+						if [ $(grep console /boot/cmdline.txt | wc -l) -eq 0 ]; then
+							sed -i 's/$/ console=tty1/g' /boot/cmdline.txt
+						else
+							sed -i "s/console=$CONSOLE/console=tty1/g" /boot/cmdline.txt
+						fi
+					fi
+				;;
+			esac	
+		fi
+	done;
+	ERROR=0;
+	for KEY in ${!BOOTFLAGS[*]}; do
+		FLAG=${BOOTFLAGS[$KEY]};
+		if [[ "$1" =~ "$(($KEY+1))" ]]; then 
+			case $FLAG in
+				splash)
+					SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+					LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\).*/\1/p' /boot/cmdline.txt);
+					QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
+					LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+					CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\).*/\1/p' /boot/cmdline.txt);
+					if [ $SPLASH -eq 0 ]; then
+						ERROR=1;
+					fi
+					if [ ! -z $LOGLEVEL ]; then
+						if [ $LOGLEVEL -ne 0 ]; then
+							ERROR=1;
+						fi
+					fi
+					if [ $QUIET -eq 0 ]; then
+						ERROR=1;
+					fi
+					if [ $LOGO -eq 0 ]; then
+						ERROR=1;
+					fi
+					if [ $CONSOLE != "tty2" ]; then
+						ERROR=1;
+					fi
+				;;
+			esac
+		else
+			case $FLAG in
+				splash)
+					SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+					LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\).*/\1/p' /boot/cmdline.txt);
+					QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
+					LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+					CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\).*/\1/p' /boot/cmdline.txt);
+					if [ $SPLASH -ge 1 ]; then
+						ERROR=1;
+					fi
+					if [ ! -z $LOGLEVEL ] && [ $LOGLEVEL -eq 0 ]; then
+						ERROR=1;
+					fi
+					if [ $QUIET -ge 1 ]; then
+						ERROR=1;
+					fi
+					if [ $LOGO -ge 1 ]; then
+						ERROR=1;
+					fi
+					if [ $CONSOLE == "tty2" ]; then
+						ERROR=1;
+					fi
+				;;
+			esac	
+		fi
+	done
+	return $ERROR;
+}

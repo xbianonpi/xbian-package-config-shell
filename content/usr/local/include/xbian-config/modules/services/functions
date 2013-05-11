@@ -22,10 +22,10 @@ function getInstalledServicesFn() {
 	INSTSERV=();
 	SERVLIST=($SERVICES);
 	for SERVRAW in ${SERVLIST[@]}; do
-		NAME=$(echo $SERVRAW | cut -f 1 -d:);
+		NAME=${SERVRAW%:*};
 		FOUND=$(ls /etc/init.d/ | grep -io "^$NAME*");
 		if [ ! -z "$FOUND" ]; then
-			INSTSERV+=($NAME);
+			INSTSERV+=($SERVRAW);
 		fi
 	done
 }
@@ -40,17 +40,16 @@ function getServiceAutoStartStatusFn() {
 
 function getServiceRunningStatusFn() {
 	SERVICE=$1;
-	SERVCONF=$(echo -e "$SERVICES" | grep "^$SERVICE*");
-	IFS=" ";
-	DAEMONS=($(echo $SERVCONF | cut -f 2 -d: | sed -e 's/,/ /g'));
+	SERVCONF=${SERVCONF#:*};
+	SERVCONF=${SERVCONF//,/ /};
 	RUNNING=0;
 	if [ ${#DAEMONS[@]} -eq 0 ]; then
-		if [ $(echo $PROCESSES | grep $SERVICE | wc -l) -ge 1 ]; then
+		if [[ "$PROCESSES" =~ "$SERVICE" ]]; then
 			RUNNING=1;
 		fi
 	else
 		for DAEMON in ${DAEMONS[@]}; do
-			if [ $(echo $PROCESSES | grep $DAEMON | wc -l) -ge 1 ]; then
+			if [[ "$PROCESSES" =~ "$DAEMON" ]]; then
 				RUNNING=$(($RUNNING+1));
 			fi
 		done
@@ -60,7 +59,6 @@ function getServiceRunningStatusFn() {
 			RUNNING=0;
 		fi
 	fi
-	IFS=$ORIGIGNALIFS;	
 	return $RUNNING;
 }
 
@@ -70,7 +68,7 @@ function getServiceNameFn() {
 	IFS=$ORIGINALIFS;
 	I=0;
 	for SERVRAW in ${SERVCONF[@]}; do
-		SERV=$(echo $SERVRAW | cut -f 1 -d:);
+		SERV=${SERVRAW%:*};
 		FOUND=$(ls /etc/init.d/ | grep -i "^$SERV*");
 		if [ ! -z "$FOUND" ]; then
 			if [ $I -eq $1 ]; then
@@ -83,19 +81,15 @@ function getServiceNameFn() {
 }
 
 function getServiceIDFn() {
-	IFS=$'\n';
-	SERVCONF=($(echo -e "$SERVICES"));
-	IFS=$ORIGINALIFS;
 	I=0;
-	for SERVRAW in ${SERVCONF[@]}; do
-		SERV=$(echo $SERVRAW | cut -f 1 -d:);
-		FOUND=$(ls /etc/init.d/ | grep -i "^$SERV*");
-		if [ ! -z "$FOUND" ]; then
-			if [ "$FOUND" == "$1" ]; then
-				break;
-			fi
-			I=$(($I+1));
-		fi 
+	
+	for SERVRAW in ${INSTSERV[@]}; do
+		SERV=${SERVRAW%:*};
+
+		if [ "$SERV" == "$1" ]; then
+			break;
+		fi
+		I=$(($I+1));
 	done
 	return $I;
 }
@@ -200,30 +194,22 @@ function enableAutoStartFn() {
 
 function getServiceConfFn() {
 	DATA=();
-	IFS=$'\n';
-	SERVCONF=($(echo -e "$SERVICES"));
-	IFS=$ORIGINALIFS;
 	I=0;
 
-	for SERVRAW in ${SERVCONF[@]}; do
-		SERV=$(echo $SERVRAW | cut -f 1 -d:);
-		FOUND=$(ls /etc/init.d/ | grep -i "^$SERV*");
-		if [ ! -z "$FOUND" ]; then
-			if [ $I -eq $1 ]; then
-				DAEMONS=$(echo $SERVRAW | cut -f 2 -d:);
-				DATA[0]=$SERV;
-				DATA[1]=$DAEMONS;
-				break;
-			fi
-			I=$(($I+1));
+	for SERVRAW in ${INSTSERV[@]}; do
+		if [ $I -eq $1 ]; then
+			DATA[0]=${SERVRAW%:*};
+			DATA[1]=${SERVRAW#*:}
+			break;
 		fi 
+		I=$(($I+1));
 	done
 }
 
 function updateServiceConfFn() {
 	DATA=($2);
 	if [ -f "$BASEPATH/config/services" ]; then
-		eval "sed -i '/${DATA[0]}:/d' $BASEPATH/config/services";
+		sed -i "/${DATA[0]}:/d" $BASEPATH/config/services;
 	fi
 	echo "${DATA[0]}:${DATA[1]}" >> $BASEPATH/config/services;
 	if [ -f "$BASEPATH/config/services" ] && [ $(cat $BASEPATH/config/services | grep "${DATA[0]}:${DATA[1]}" | wc -l) -eq 1 ]; then
@@ -236,7 +222,7 @@ function updateServiceConfFn() {
 function deleteServiceFn() {
 	DATA=($2);
 	if [ -f "$BASEPATH/config/services" ]; then
-		eval "sed -i '/${DATA[0]}:/d' $BASEPATH/config/services";
+		sed -i "/${DATA[0]}:/d" $BASEPATH/config/services;
 	fi
 	if [ -f "$BASEPATH/config/services" ] && [ $(cat $BASEPATH/config/services | grep "${DATA[0]}:" | wc -l) -eq 0 ]; then
 		return 1;

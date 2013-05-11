@@ -113,9 +113,9 @@ function createOCDLGMenuFn() {
 		STATUS="on";
 	fi
 	if [ $CURRENTOC -eq -1 ]; then
-		OCMENU+=($(($KEY+2)),"\Z1"$_OCCUSTOM,"\Z1"${OCOLDSETTINGS[0]},"\Z1"${OCOLDSETTINGS[1]},"\Z1"${OCOLDSETTINGS[2]},"\Z1"${OCOLDSETTINGS[3]},$STATUS)
+		OCMENU+=($(($KEY+2)),"\Z1"$(_ overclocking.label.custom),"\Z1"${OCOLDSETTINGS[0]},"\Z1"${OCOLDSETTINGS[1]},"\Z1"${OCOLDSETTINGS[2]},"\Z1"${OCOLDSETTINGS[3]},$STATUS)
 	else
-		OCMENU+=($(($KEY+2)),"\Z1"$_OCCUSTOM,"\Z1...","\Z1...","\Z1...","\Z1...",$STATUS)
+		OCMENU+=($(($KEY+2)),"\Z1"$(_ overclocking.label.custom),"\Z1...","\Z1...","\Z1...","\Z1...",$STATUS)
 	fi
 	IFS=$ORIGINALIFS;
 }

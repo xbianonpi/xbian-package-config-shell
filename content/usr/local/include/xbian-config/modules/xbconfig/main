@@ -35,7 +35,9 @@ IFS=$ORIGINALIFS;
 #|------------------------------------|
 
 source $BASEPATH/modules/xbconfig/functions
-source $BASEPATH/modules/xbconfig/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/xbconfig/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |
@@ -43,38 +45,20 @@ source $BASEPATH/modules/xbconfig/dialogs
 
 # Executes the GUI version of this module
 function showGUIFn() {
-	showXBConfigSettingsDlg;
+	showXBConfigAutoStartDlg;
 	if [ $? -eq 0 ]; then
-		if [ $RETURN -eq 1 ]; then
-			showXBConfigLanguageDlg;
-			if [ $? -eq 0 ]; then
-				if [ $RETURN -eq 1 ]; then
-					SELLANG="";
-				else
-					SELLANG=${LANGUAGES[$(($RETURN-2))]}
-				fi
-				setXBConfigLanguageFn $SELLANG;
-			fi
-			showGUIFn;
-		elif [ $RETURN -eq 2 ]; then
-			showXBConfigAutoStartDlg;
-			if [ $? -eq 0 ]; then
-				setXBConfigAutoStartFn 1;
-				if [ $? -eq 0 ]; then
-					showErrorDlg;
-				else
-					showXBConfigSuccessEnableAutoStartDlg;
-				fi
-				showGUIFn;
-			else
-				setXBConfigAutoStartFn 0;
-				if [ $? -eq 0 ]; then
-					showErrorDlg;
-				else
-					showXBConfigSuccessDisableAutoStartDlg;
-				fi
-				showGUIFn;
-			fi
+		setXBConfigAutoStartFn 1;
+		if [ $? -eq 0 ]; then
+			showErrorDlg;
+		else
+			showXBConfigSuccessEnableAutoStartDlg;
+		fi
+	else
+		setXBConfigAutoStartFn 0;
+		if [ $? -eq 0 ]; then
+			showErrorDlg;
+		else
+			showXBConfigSuccessDisableAutoStartDlg;
 		fi
 	fi
 }

@@ -29,7 +29,9 @@ ARGUMENTS=(update);
 #|------------------------------------|
 
 source $BASEPATH/modules/xbianpass/functions
-source $BASEPATH/modules/xbianpass/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/xbianpass/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |

@@ -18,11 +18,13 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 #
 
+# This will only allow xbian-config to be run as root
 if [ ! $(id -u) -eq 0 ]; then
 	echo "This program must be run as root.";
 	exit 0;
 fi
 
+# Disable [ctrl]-c and [ctrl]-z actions
 trap '' 2 20
 
 #|------------------------------------|
@@ -31,9 +33,6 @@ trap '' 2 20
 
 # Title at the top of the dialog windows
 BACKTITLE="XBian $(cat /etc/xbian_version)";
-
-# Debugging mode, when enable no actual changes are made to the system
-DEBUG=0;
 
 # Check if a reboot is needed
 ASKFORREBOOT=0;
@@ -55,16 +54,19 @@ BASEPATH="/usr/local/include/xbian-config"
 #Set GUI language
 LANGUAGE="en"
 
+#Check if xbian-config is run in GUI mode
+GUIMODE=1;
+
 #|------------------------------------|
 #|           Main program             |
 #|------------------------------------|	
 function showMainCloseDlg() {
 
 	DOREBOOT=0;
-
+	umount /boot
 	# Is a reboot needed for the changes to get effect
 	if [ $ASKFORREBOOT -eq 1 ]; then
-		wrapTxtFn "$_REBOOTREQUIRED"
+		wrapTxtFn "$(_ main.reboot_question)"
 		centerTxtFn "$WRAPPEDTXT"
 		valignTxtFn "$CENTEREDTXT"
 		showConfirmDlg "$ALIGNEDTXT";
@@ -77,10 +79,9 @@ function showMainCloseDlg() {
 			;;
 		esac
 	fi
+	
 	# Clear FS and MEM caches
-	if [ $DEBUG -eq 0 ]; then
-		clrFSCacheFn;
-	fi
+	clrFSCacheFn;
 	clrMemCacheFn;
 	if [ $DOREBOOT -eq 1 ]; then
 		reboot
@@ -89,10 +90,12 @@ function showMainCloseDlg() {
 }
 
 function showMainMenuDlg() {
+	mountpoint -q /boot || mount /boot
+
 	ITEMS="";
 	LEVEL="";
 	ADD=".";
-	CPATH="Config";
+	CPATH=$(_ main.title);
 	
 	# Do different things depending on which level we are
 	if [ $1 -gt 0 ]; then
@@ -130,14 +133,9 @@ function showMainMenuDlg() {
 
 		# Include the module we want to execute
 		source $BASEPATH/modules/$MODULE/main
-		if [ -f "$BASEPATH/modules/$MODULE/lang/$LANGUAGE" ]; then
-			source $BASEPATH/modules/$MODULE/lang/$LANGUAGE
-		else
-			source $BASEPATH/modules/$MODULE/lang/en
-		fi
 		
-		# Change the dialog title to reflect the right module
-		TITLE="[${CPATH% > *} > $_NAME]"
+		# Change the dialog title to reflect the current module
+		TITLE="[${CPATH% > *} > $(_ $MODULE.name)]"
 		
 		# Open the modules gui function
 		showGUIFn;
@@ -149,39 +147,23 @@ function showMainMenuDlg() {
 		MENU="";
 		I=1;
 		for ITEM in ${ITEMS[@]}; do
-			if [ -d $BASEPATH/modules/$ITEM ]; then
-				if [ -f $BASEPATH/modules/$ITEM/lang/$LANGUAGE ]; then
-					source $BASEPATH/modules/$ITEM/lang/$LANGUAGE
-				else
-					source $BASEPATH/modules/$ITEM/lang/en
-				fi
-				MENU+="$I%$_NAME!-!\"$_DESC\"%";
-			else
-				if [ -f $BASEPATH/lang/$LANGUAGE ]; then
-					source $BASEPATH/lang/$LANGUAGE
-				else
-					source $BASEPATH/lang/en
-				fi
-			
-			
-				_NAME="_ITEM"${ITEM^^}"NAME";
-				_DESC="_ITEM"${ITEM^^}"DESC";
-				MENU+="$I%${!_NAME}!-!\"${!_DESC}\"%";
-			fi
+			MENU+="$I%$(_ ${ITEM}.name)!-!\"$(_ $ITEM.description)\"%";
 			I=$(($I+1));
 		done;
 		
 		IFS="%";
 		# Set the title to the appropriate menu level we're in
 		TITLE="["$CPATH"]"
+
+		# Stop the loader
 		if [ $(ps -A | grep $LOADER | wc -l) -gt 0 ]; then
 			kill -9 $LOADER  > /dev/null 2>&1 &
 			wait $! 2>/dev/null
 		fi
+		
 		# Show the main menu
-
 		if [ $1 -eq 0 ]; then
-			showMenuDlg "" "$MENU" 7 11 $(($DEFAULTWIDTH+15)) $_SELECT $_EXIT
+			showMenuDlg "" "$MENU" 7 11 $(($DEFAULTWIDTH+15)) $(_ dialog.select) $(_ dialog.exit);
 		else
 			showMenuDlg "" "$MENU" 7
 		fi
@@ -204,20 +186,7 @@ function showMainMenuDlg() {
 			IFS=$'\n';
 			MODULE=$(grep "^$LEVEL$RETURN*:" $BASEPATH/struct | cut -f 2 -d:)
 			
-			if [ -d $BASEPATH/modules/$MODULE ]; then
-				if [ -f $BASEPATH/modules/$MODULE/lang/$LANGUAGE ]; then
-					source $BASEPATH/modules/$MODULE/lang/$LANGUAGE
-				else
-					source $BASEPATH/modules/$MODULE/lang/en
-				fi
-				showMainMenuDlg $(($1+1)) $LEVEL$RETURN$ADD  "$CPATH > $_NAME";
-			else
-				_NAME="_ITEM"${MODULE^^}"NAME";
-				_DESC="_ITEM"${MODULE^^}"DESC";
-				
-				showMainMenuDlg $(($1+1)) $LEVEL$RETURN$ADD  "$CPATH > ${!_NAME}";
-			fi
-			
+			showMainMenuDlg $(($1+1)) $LEVEL$RETURN$ADD  "$CPATH > $(_ $MODULE.name)";			
 		fi;
 	fi;
 }
@@ -246,13 +215,6 @@ if [ $# -eq 0 ]; then
 	#|          Include files             |
 	#|------------------------------------|
 
-	# Main language
-	if [ -f "$BASEPATH/lang/$LANGUAGE" ]; then
-		source $BASEPATH/lang/$LANGUAGE
-	else
-		source $BASEPATH/lang/en;
-	fi
-
 	# Common xbian-config functions
 	source $BASEPATH/functions/packages
 
@@ -278,9 +240,6 @@ if [ $# -eq 0 ]; then
 	# Current dialog title
 	TITLE="[$_TITLE]"
 
-	# Retrieve user set language
-	getLanguageFn;
-
 	#Run script inside screen, so it's doesn't fill the whole terminal history
 	#SCREEN=$(screen -r | grep "Attached" | wc -l);
 	#if [ $SCREEN -eq 0 ]; then
@@ -299,8 +258,10 @@ else
 	#|------------------------------------|
 
 	# System functions
-	source $BASEPATH/functions/system
-	clrMemCacheFn;
+	#source $BASEPATH/functions/system
+	#clrMemCacheFn;
+	
+	GUIMODE=0;
 	# Check xbian-config was opened using arguments
 	MODULE=$1;
 	if [ $MODULE == "reboot" ]; then
@@ -315,13 +276,16 @@ else
 		# If the module was called with arguments
 		if [ $# -gt 0 ]; then
 			# Check if it's a valid argument
-			if [ $(echo ${ARGUMENTS[@]} | grep $1 | wc -l) -eq 0 ]; then
-				echo "Available arguments for module '$MODULE' are:";
-				echo ${ARGUMENTS[@]};
-			else
-				# Quotation marks to preserve newlines
-				echo "$(showCMDFn $@)";
-			fi
+			case "${ARGUMENTS[@]}" in 
+				*"$1"*)
+					# Quotation marks to preserve newlines
+					showCMDFn "$@"
+				;;
+				*)
+					echo "Available arguments for module '$MODULE' are:";
+					echo ${ARGUMENTS[@]};
+				;;
+			esac
 		else
 			echo "Available arguments for module '$MODULE' are:";
 			echo ${ARGUMENTS[@]};

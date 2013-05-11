@@ -18,28 +18,28 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 function showRetrievingCurrentTZDlg() {
-	wrapTxtFn "$_TZLOADINGCURRENT" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ timezone.loading.timezone)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT" 
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
-function showTZNoCategorySelectedDlg() {
-	wrapTxtFn "$_TZNOCATEGORYSELECTED" $(($DEFAULTWIDTH-4));
+function showTZNoTimezoneSelectedDlg() {
+	wrapTxtFn "$(_ timezone.no_timezone_selected)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT" 
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showTZNoLocationSelectedDlg() {
-	wrapTxtFn "$_TZNOLOCATIONSELECTED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ timezone.no_location_selected)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT" 
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showTZLoadingLocationsDlg() {
-	wrapTxtFn "$_TZLOADINGLOCATIONS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ timezone.loading.location)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT" 
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT;
@@ -60,7 +60,7 @@ function showTZCategoryDlg() {
 	done;
 	TBLCOLUMNCENTER=0;
 	createTableFn "radio" \
-	"#,\Zb$_TIMEZONE" \
+	"#,\Zb"$(_ timezone.label.timezone) \
 	"${MENU[@]}"
 	TBLCOLUMNCENTER=1;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+5)); 
@@ -93,7 +93,7 @@ function showTZLocationDlg() {
 	fi
 	TBLCOLUMNCENTER=0;
 	createTableFn "radio" \
-	"$NRSIGN,\Zb$_TZLOCATION" \
+	"$NRSIGN,\Zb"$(_ timezone.label.location) \
 	"${MENU[@]}"
 	TBLCOLUMNCENTER=1;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+5));  
@@ -101,7 +101,11 @@ function showTZLocationDlg() {
 }
 
 function showCurrentDateTimeDlg() {
-	centerTxtFn "$_TZOLDANDNEW\n$2\n$1"  $(($DEFAULTWIDTH-4));
+	TEXT=$(printf "$(gettext -d "xbian" -s "xbian-config.timezone.old")" "$2")
+	TEXT+="\n";
+	TEXT+=$(printf "$(gettext -d "xbian" -s "xbian-config.timezone.new")" "$1")
+
+	centerTxtFn "$TEXT"  $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT" 
-	showMsgDlg "$ALIGNEDTXT" 9;
+	showMsgDlg "$ALIGNEDTXT" 8;
 }

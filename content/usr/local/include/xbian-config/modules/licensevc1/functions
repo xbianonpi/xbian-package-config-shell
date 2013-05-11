@@ -65,7 +65,6 @@ function updateLicenseVC1Fn() {
 	else
 		return 2;
 	fi
-}i
 }
 
 # Delete the current license

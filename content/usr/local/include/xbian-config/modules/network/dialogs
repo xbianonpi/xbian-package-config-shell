@@ -31,12 +31,12 @@ function showInterfacesSelectDlg() {
 	done
 	TBLCOLUMNCENTER=0;
 	createTableFn "menu"\
-	"#,\Zb$_NETWORKINTERFACES,\Zb$_NETWORKADDRESS,\Zb$_NETWORKMASK"\
+	"#,\Zb$(_ network.label.interfaces),\Zb$(_ network.label.ipaddress),\Zb$(_ network.label.netmask)"\
 	"${MENU[@]}";
 	TBLCOLUMNCENTER=1;
 	
 	# Show interface selector dialog
-	centerTxtFn "$_SELECTINTERFACE" $(($DEFAULTWIDTH+11));
+	centerTxtFn "$(_ network.interfaces.select)" $(($DEFAULTWIDTH+11));
 	HEADER1=$CENTEREDTXT;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
 	showMenuDlg "$HEADER1\n$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9))
@@ -58,15 +58,15 @@ function showIPModeConfigDlg() {
 		STATUSDHCP="on"
 	fi
 	IFS=$ORIGINALIFS;
-	MENU+=(1",\Zn"$_IPDHCP","$STATUSDHCP);
-	MENU+=(2",\Zn"$_IPSTATIC","$STATUSSTATIC);
+	MENU+=(1",\Zn$(_ network.label.dhcp),"$STATUSDHCP);
+	MENU+=(2",\Zn$(_ network.label.static),"$STATUSSTATIC);
 	
 	createTableFn "radio" \
-	"#,\Zb$_NETWORKTYPE"\
+	"#,\Zb$(_ network.label.type)"\
 	"${MENU[@]}"
 	
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
-	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+8))
+	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9))
 }
 
 # Show a radio dialog for selecting WLAN Protection mode
@@ -93,11 +93,11 @@ function showWlanModeConfigDlg() {
 	fi
 	
 	IFS=$ORIGINALIFS;
-	MENU+=(1",\Zn"$_WLANWPA","$STATUSWPA);
-	MENU+=(2",\Zn"$_WLANWEP","$STATUSWEP);
-	MENU+=(3",\Zn"$_WLANOPEN","$STATUSOPEN);
+	MENU+=(1",\Zn$(_ network.label.wpa),$STATUSWPA");
+	MENU+=(2",\Zn$(_ network.label.wep),$STATUSWEP");
+	MENU+=(3",\Zn$(_ network.label.open),$STATUSOPEN");
 	createTableFn "radio" \
-	"#,\Zb$_NETWORKPROTECTION"\
+	"#,\Zb$(_ network.label.protection)"\
 	"${MENU[@]}"
 	
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
@@ -106,21 +106,21 @@ function showWlanModeConfigDlg() {
 }
 
 function showInterfacesLoadingDlg() {
-	wrapTxtFn "$_LOADINGINTERFACES" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.interfaces.loading)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showNoInterfacesAvailableDlg() {
-	wrapTxtFn "$_NOINTERFACES" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.interfaces.unavailable)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showScanningForNetworksDlg() {
-	wrapTxtFn "$_SCANNINGFORWLAN" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.scanning)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
@@ -131,10 +131,14 @@ function showScanningForNetworksDlg() {
 #  $1 Current SSID
 #  $2 Current KEY
 function showInterfaceCredentialsDlg() {
-	wrapTxtFn "$_ENTERCREDENTIALS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.credentials.enter)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
-	showInputForm2Dlg "$ALIGNEDTXT" "$_SSID:" "$1" "$_KEY:" "$2"
+	
+	ELEMENTS=();
+	ELEMENTS+=("1,3,$(_ network.label.ssid):,$1,16,255,0,0");
+	ELEMENTS+=("2,3,$(_ network.label.key):,$2,16,255,0,0");
+	showInputFormDlg "$ALIGNEDTXT"
 }
 
 # Ask for static IP configuration
@@ -145,42 +149,49 @@ function showInterfaceCredentialsDlg() {
 #  $4 Current Nameserver 1
 #  $5 Current Nameserver 2
 function showInterfaceStaticDlg() {
-	wrapTxtFn "$_ENTERSTATICCONFIG" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.credentials.enter)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
-	showInputForm5Dlg "$ALIGNEDTXT" "$_NETWORKADDRESS*:" "$1" "$_NETWORKMASK*:" "$2" "$_NETWORKGATEWAY*:" "$3" "$_NAMESERVER:" "$4" "$_NAMESERVER:" "$5"
+	
+	ELEMENTS=();
+	ELEMENTS+=("1,3,$(_ network.label.ipaddress)*:,$1,24,16,15,0");
+	ELEMENTS+=("2,3,$(_ network.label.netmask)*:,$2,24,16,15,0");
+	ELEMENTS+=("3,3,$(_ network.label.gateway)*:,$3,24,16,15,0");
+	ELEMENTS+=("4,3,$(_ network.label.nameserver)*:,$4,24,16,15,0");
+	ELEMENTS+=("5,3,$(_ network.label.nameserver)*:,$5,24,16,15,0");
+	showInputFormDlg "$ALIGNEDTXT" 13;
 }
 
 function showInterfaceCredentialsErrorDlg() {
-	wrapTxtFn "$_INVALIDCREDENTIALS" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.credentials.wlan.invalid)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showInterfaceCredentialsSuccessDlg() {
-	wrapTxtFn "$_CREDENTIALSUPDATED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.credentials.wlan.updated)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showInterfaceStaticErrorDlg() {
-	wrapTxtFn "$_INVALIDSTATICCONFIG" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.credentials.lan.invalid)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showInterfaceStaticSuccessDlg() {
-	wrapTxtFn "$_STATICCONFIGUPDATED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.credentials.lan.updated)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showInterfaceDhcpSuccessDlg() {
-	wrapTxtFn "$_DHCPCONFIGUPDATED" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ network.dhcp_selected)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -208,9 +219,9 @@ function showAvailableWLANDlg() {
 		fi
 		SECURITY=${VALUES[2]};
 		if [ "$SECURITY" == "on" ]; then
-			SECURITY="$_YES"
+			SECURITY="$(_ dialog.yes)";
 		else
-			SECURITY="$_NO"
+			SECURITY="$(_ dialog.no)";
 		fi
 		SELECTED="off";
 		if [ "$NAME" == "$SSID" ]; then
@@ -232,7 +243,7 @@ function showAvailableWLANDlg() {
 	done
 	TBLCOLUMNCENTER=0;
 	createTableFn "radio" \
-	"#,\Zb"$_NETWORKNAME",\Zb"$_NETWORKPROTECTION",\Zb"$_NETWORKTYPE,"\Zb"$_WLANSIGNAL"" \
+	"#,\Zb$(_ network.label.name),\Zb$(_ network.label.protection),\Zb$(_ network.label.type),\Zb$(_ network.label.signal)" \
 	"${MENU[@]}"
 	TBLCOLUMNCENTER=1;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
@@ -244,9 +255,9 @@ function showScanForWLANDlg() {
 	
 	TBLCOLUMNCENTER=0;
 	createTableFn "menu" \
-	"#,\Zb"$_NETWORKWLAN"" \
-	"1,\Zn"$_NETWORKSCANAVAILABLE"" \
-	"2,\Zn"$_NETWORKCUSTOM""
+	"#,\Zb$(_ network.label.wlan)" \
+	"1,\Zn$(_ network.label.scan)" \
+	"2,\Zn$(_ network.label.custom)"
 	TBLCOLUMNCENTER=1;
 	
 	# Show interface selector dialog
@@ -258,32 +269,32 @@ function showScanForWLANDlg() {
 # Arguments
 #  $1 Current SSID
 function showInterfaceSSIDDlg() {
-	showInputDlg "$_SSID:" $1
+	showInputDlg "$(_ network.label.custom)" $1
 }
 
-function showRestartWLANDlg() {
-	wrapTxtFn "$_RESTARTINGADAPTER $1" $(($DEFAULTWIDTH-4));
+function showRestartAdapterDlg() {
+	wrapTxtFn "$(printf "$(_  network.connection.restart)" "$1")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showWLANConnectingDlg() {
-	wrapTxtFn "$_TRYINGCONNECTINGTO $1" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_  network.connection.updating)" "$1")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showWLANConnectionFailedDlg() {
-	wrapTxtFn "$_FAILEDTOCONNECTTO $1" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_  network.connection.failed)" "$1")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showWLANConnectionSuccessDlg() {
-	wrapTxtFn "$_SUCCESSFULLYCONNECTEDTO $1" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_  network.connection.success)" "$1")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT

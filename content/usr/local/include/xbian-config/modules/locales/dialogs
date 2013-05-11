@@ -1,0 +1,80 @@
+#!/bin/bash
+#
+#Copyright 2012 CurlyMo <development@xbian.org>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+
+function showAlphabetDlg() {
+	MENU=()
+	I=0;
+	while [ $I -lt 26 ]; do
+		IFS=$'\t';
+		I=$(($I+1));
+		X=$I;
+		# There are no locales with the letter Q
+		if [ $I -eq 17 ]; then
+			I=$(($I+1));
+		fi
+		MENU+=($I",\Zn"$(printf "\\$(printf "%03o" $(($I+64)))"));
+	done;
+	createTableFn "menu"\
+	"#,\Zb"$(_ locales.label.letter)\
+	"${MENU[@]}";
+	
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 12
+}
+
+function showLocalesDlg() {
+	LETTER=$1;
+	getLanguagesByLetterFn $1;
+	MENU=()
+	I=0;
+	XBMC="\Z2"$(_ dialog.no);
+	XBIAN="\Z2"$(_ dialog.no);
+	for VALUE in ${LANGUAGES[@]}; do
+		IFS=$'\t';
+		LANG=($VALUE);
+		I=$(($I+1));
+		if [ ${#LANG[@]} -eq 5 ]; then
+			XBMC="\Z2"$(_ dialog.yes);
+		else
+			XBMC="\Z1"$(_ dialog.no);
+		fi
+		TEMP=${LANG[0]};
+		ABBR=${TEMP%_*};
+		if [ -f "/usr/share/locale/$ABBR/LC_MESSAGES/xbian.mo" ]; then
+			XBIAN="\Z2"$(_ dialog.yes);
+		else
+			XBIAN="\Z1"$(_ dialog.no);
+		fi
+			
+		MENU+=($I",\Zn"${LANG[1]//_/ },$XBMC,$XBIAN);
+	done;
+	createTableFn "menu"\
+	"#,\Zb"$(_ locales.label.name)",\Zb"$(_ locales.label.xbmc)",\Zb"$(_ locales.label.xbian)\
+	"${MENU[@]}";
+	
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 12	
+}
+
+function showSettingLocaleSuccessFn() {
+	wrapTxtFn $(_ locales.updated) $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT"
+}

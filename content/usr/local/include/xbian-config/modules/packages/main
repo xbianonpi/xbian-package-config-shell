@@ -36,7 +36,9 @@ PKGNOTFOUND=0;
 #|------------------------------------|
 
 source $BASEPATH/modules/packages/functions
-source $BASEPATH/modules/packages/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/packages/dialogs
+fi
 source $BASEPATH/functions/packages
 
 #|------------------------------------|

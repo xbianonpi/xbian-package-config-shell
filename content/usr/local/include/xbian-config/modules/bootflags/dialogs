@@ -17,41 +17,32 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
-function getVideoFlagsFn() {
-	for FLAG in ${VIDEOFLAGS[@]}; do
-		selectConfigVarFn $FLAG;
-		if [ -z $RETURN ]; then
-			VIDEOSETTINGS[$FLAG]=0;
+function showBootFlagsDlg() {
+	MENU=();
+
+	X=0;
+	for FLAG in ${BOOTFLAGS[@]}; do
+		X=$(($X+1));
+		LABEL=$(_ bootflags.$FLAG);
+		if [ ${BOOTSETTINGS[$FLAG]} -eq 0 ]; then
+			MENU+=($X",\Zn$LABEL,off");
 		else
-			VIDEOSETTINGS[$FLAG]=1;
+			MENU+=($X",\Zn$LABEL,on");
 		fi
 	done;
+	LABEL=$(_ bootflags.label.bootflags);
+	
+	createTableFn "radio" \
+	"#,\Zb$LABEL" \
+	"${MENU[@]}"
+	
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
+	showChecklistDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9))
 }
 
-function updateVideoFlagsFn() {
-	for KEY in ${!VIDEOFLAGS[*]}; do
-		FLAG=${VIDEOFLAGS[$KEY]};
-		if [[ "$1" =~ "$(($KEY+1))" ]]; then
-			updateConfigVarFn "$FLAG" 1;
-			askForRebootFn;
-		else
-			deleteConfigVarFn "$FLAG";
-			askForRebootFn;
-		fi
-	done;
-	getVideoFlagsFn;
-	ERROR=0;
-	for KEY in ${!VIDEOFLAGS[*]}; do
-		FLAG=${VIDEOFLAGS[$KEY]};
-		if [[ "$1" =~ "$(($KEY+1))" ]]; then
-			if [ ${VIDEOSETTINGS[$FLAG]} -eq 0 ]; then
-				ERROR=1;
-			fi
-		else
-			if [[ ${VIDEOSETTINGS[$FLAG]} -eq 1 ]]; then
-				ERROR=1;
-			fi
-		fi
-	done;
-	return $ERROR;
+function showBootFlagsSuccessDlg() {
+	wrapTxtFn "$(_ bootflags.update_success)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT"
 }

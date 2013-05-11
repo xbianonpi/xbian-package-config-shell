@@ -29,7 +29,9 @@ ARGUMENTS=(select update);
 #|------------------------------------|
 
 source $BASEPATH/modules/hostname/functions
-source $BASEPATH/modules/hostname/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/hostname/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |

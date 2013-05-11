@@ -29,7 +29,9 @@ ARGUMENTS=(update);
 #|------------------------------------|
 
 source $BASEPATH/modules/rootpass/functions
-source $BASEPATH/modules/rootpass/dialogs
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/rootpass/dialogs
+fi
 
 #|------------------------------------|
 #|           Main program             |

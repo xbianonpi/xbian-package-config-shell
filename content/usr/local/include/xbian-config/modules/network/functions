@@ -326,13 +326,13 @@ function readNetworkConfigurationFn() {
 		WLANKEY=""
 		if [ ! -z "$PROTECTION" ]; then
 			if [ "$PROTECTION" == "WEP" ]; then
-				SSID=$(echo -e "$CONTENT" | grep wireless-essid | cut -f 2 -d" ")
-				WLANKEY=$(echo -e "$CONTENT" | grep wireless-key | cut -f 2 -d" ")
+				SSID=$(echo -e "$CONTENT" | sed -ne 's/wireless-essid[\ ]\(.*\)/\1/p')
+				WLANKEY=$(echo -e "$CONTENT" | sed -ne 's/wireless-key[\ ]\(.*\)/\1/p')
 			elif [ "$PROTECTION" == "WPA" ]; then
-				SSID=$(echo -e "$CONTENT" | grep wpa-ssid | cut -f 2 -d" " | sed 's/\"//g')
-				WLANKEY=$(echo -e "$CONTENT" | grep wpa-psk | cut -f 2 -d" " | sed "s/\"//g")				
+				SSID=$(echo -e "$CONTENT" | sed -ne 's/wpa-ssid[\ ]\"\(.*\)\"/\1/p')
+				WLANKEY=$(echo -e "$CONTENT" | sed -ne 's/wpa-psk[\ ]\"\(.*\)\"/\1/p')				
 			elif [ "$PROTECTION" == "open" ]; then
-				SSID=$(echo -e "$CONTENT" | grep wireless-essid | cut -f 2 -d" ")
+				SSID=$(echo -e "$CONTENT" | sed -ne 's/wireless-essid[\ ]\(.*\)/\1/p')
 			fi
 		fi
 
@@ -495,6 +495,18 @@ function restartWLANAdapterFn() {
 	else
 		PROCESSID="0";
 	fi
+	return $PROCESSID;
+}
+
+# Restart a lan adapter
+# Arguments
+#  $1 Interface name
+# Return
+#  @: Process id of the ifup process
+#  0: Process ifup not running
+function restartLANAdapterFn() {
+	ifdown eth0 &>/dev/null
+	ifup eth0 &>/dev/null
 	return $PROCESSID;
 }
 
