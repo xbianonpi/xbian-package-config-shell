@@ -33,5 +33,7 @@ if [ $1 == "configure" ]; then
 		echo "Notice: patch already applied" >> /home/xbian/xbian-config-update.log
 
 	fi
-
+	
+	echo "---UPDATE LOG---"
+        cat "/home/xbian/xbian-config-update.log"
 fi
