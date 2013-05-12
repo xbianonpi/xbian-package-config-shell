@@ -30,5 +30,5 @@ function setXBConfigAutoStartFn() {
 			;;
 	esac
 
-	return $(cat /home/xbian/.xbian-config-start)
+	return 1
 }
