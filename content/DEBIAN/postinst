@@ -2,27 +2,36 @@
 
 if [ $1 == "configure" ]; then
 
+	echo $(date) >> /home/xbian/xbian-config-update.log
+
 	msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.po 
 
 	. /etc/bash_completion.d/xbian-config.sh &>/dev/null
 
         echo "17) Changing /home/xbian/.bashrc"
 
-        if [ $(grep -c ^"#sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
-                echo 0 > /home/xbian/.xbian-config-start
-        else
-                echo 1 > /home/xbian/.xbian-config-start
-        fi
+        if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 0 ]; then
 
-        grep -v "sudo xbian-config" /home/xbian/.bashrc  > /home/xbian/.bashrc.new
-        echo "if [ \$(cat /home/xbian/.xbian-config-start) -eq '1' ]; then sudo xbian-config; fi" >> /home/xbian/.bashrc.new
-        mv /home/xbian/.bashrc.new /home/xbian/.bashrc
+	        if [ $(grep -c ^"#sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
+	                echo 0 > /home/xbian/.xbian-config-start
+	        else
+	                echo 1 > /home/xbian/.xbian-config-start
+	        fi
 
-        if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
-                echo "Success: changing .bashrc" >> /home/xbian/update.log;
-        else
-                echo "Error: changing .bashrc" >> /home/xbian/update.log;
-        fi
+	        grep -v "sudo xbian-config" /home/xbian/.bashrc  > /home/xbian/.bashrc.new
+	        echo "if [ \$(cat /home/xbian/.xbian-config-start) -eq '1' ]; then sudo xbian-config; fi" >> /home/xbian/.bashrc.new
+	        mv /home/xbian/.bashrc.new /home/xbian/.bashrc
 
+	        if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
+	                echo "Success: changing .bashrc" >> /home/xbian/xbian-config-update.log;
+	        else
+	                echo "Error: changing .bashrc" >> /home/xbian/xbian-config-update.log;
+		fi
+
+	else
+
+		echo "Notice: patch already applied" >> /home/xbian/xbian-config-update.log
+
+	fi
 
 fi

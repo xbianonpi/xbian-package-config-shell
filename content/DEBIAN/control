@@ -7,7 +7,7 @@ Priority: optional
 Codename: wheezy
 Architecture: armhf
 Replaces: xbian-package-config
-Depends: wget, bc
+Depends: wget, bc, gettext
 Conflicts: dialog, xbian-package-config
 Installed-Size: 1240
 Maintainer: Koenkk <development@xbian.org>
