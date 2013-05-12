@@ -2,6 +2,8 @@
 
 if [ $1 == "configure" ]; then
 
+	msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.po 
+
 	. /etc/bash_completion.d/xbian-config.sh &>/dev/null
 
 fi
