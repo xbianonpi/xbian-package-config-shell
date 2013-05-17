@@ -10,6 +10,14 @@ d1740aac45c28985ef656c40ae9b4c3e  ./content/usr/local/include/xbian-config/funct
 b23a1875d25d9861d44fc938f23a7ec0  ./content/usr/local/include/xbian-config/functions/packages
 5a3faaef47c7411244a72c17b77cf19e  ./content/usr/local/include/xbian-config/functions/system
 1e15cb8fb4dbbe099ab52cd531dc1ce1  ./content/usr/local/include/xbian-config/gettext/xbian.po
+79ed7fe884c96b543414846e71e58e8d  ./content/usr/local/include/xbian-config/lang/de
+75d134fa84fe67f4aba0c7ce86801c66  ./content/usr/local/include/xbian-config/lang/dk
+785da3f921a001e21e08e256eff68460  ./content/usr/local/include/xbian-config/lang/en
+6703d0ca0fd467baf7d53c18e62ec077  ./content/usr/local/include/xbian-config/lang/es
+a4e75054db39a59cbc267ba96f80bea7  ./content/usr/local/include/xbian-config/lang/fr
+d05c1e73ece1831a3dd3ce39f87e2e13  ./content/usr/local/include/xbian-config/lang/nl
+63902d25b80c40bf7bde3f47f366ff96  ./content/usr/local/include/xbian-config/lang/ru
+186b9707c813caedde4483e220657f93  ./content/usr/local/include/xbian-config/lang/sk
 6651996e18c4269085fb0c8e88aa99f6  ./content/usr/local/include/xbian-config/modules/bootflags/dialogs
 8cb6f5a90fd2dbbdc76c22fe7e74d3df  ./content/usr/local/include/xbian-config/modules/bootflags/functions
 df36dccb0cd2961527112906e46cfd6f  ./content/usr/local/include/xbian-config/modules/bootflags/main
