@@ -6,9 +6,9 @@ if [ $1 == "configure" ]; then
 
 	msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.po 
 
-	. /etc/bash_completion.d/xbian-config.sh &>/dev/null
+	. /etc/bash_completion.d/xbian-config.sh >/dev/null
 
-        echo "17) Changing /home/xbian/.bashrc"
+        echo "1) Changing /home/xbian/.bashrc"
 
         if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 0 ]; then
 
@@ -19,7 +19,7 @@ if [ $1 == "configure" ]; then
 	        fi
 
 	        grep -v "sudo xbian-config" /home/xbian/.bashrc  > /home/xbian/.bashrc.new
-	        echo "if [ \$(cat /home/xbian/.xbian-config-start) -eq '1' ]; then sudo xbian-config; fi" >> /home/xbian/.bashrc.new
+	        echo "if [ \"\$(cat /home/xbian/.xbian-config-start)\" -eq '1' ]; then sudo xbian-config; fi" >> /home/xbian/.bashrc.new
 	        mv /home/xbian/.bashrc.new /home/xbian/.bashrc
 
 	        if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
