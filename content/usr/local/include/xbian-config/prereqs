@@ -18,7 +18,7 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 # Enable CTRL-C, doesn't clear caches, doesn't install/executes anything
-if [ $(dpkg --get-selections | grep "^wget\|^dialog\|^screen\|^git\|^bc" | grep "[\ ]\{1,\}install"  | wc -l) -eq 5 ]; then
+if [ $(dpkg --get-selections | grep "^wget\|^dialog\|^screen\|^git\|^bc" | grep -c "[\ ]\{1,\}install" ) -eq 5 ]; then
 	echo $_REQUIREDPACKAGES" apt-get install dialog wget screen git bc";
 	exit 0;
 fi

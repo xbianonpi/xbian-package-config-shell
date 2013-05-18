@@ -18,10 +18,10 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 function getBootFlagsFn() {
-	SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+	SPLASH=$(grep -c splash /boot/cmdline.txt);
 	LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\{1\}\).*/\1/p' /boot/cmdline.txt);
-	QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
-	LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+	QUIET=$(grep -c quiet /boot/cmdline.txt);
+	LOGO=$(grep -c logo.nologo /boot/cmdline.txt);
 	CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\)[\ ].*/\1/p' /boot/cmdline.txt);
 
 	if [ ! -z $LOGLEVEL ] && [ $LOGLEVEL -ne 0 ]; then
@@ -41,10 +41,10 @@ function updateBootFlagsFn() {
 		if [[ "$1" =~ "$(($KEY+1))" ]]; then 
 			case $FLAG in
 				splash)
-					SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+					SPLASH=$(grep -c splash /boot/cmdline.txt);
 					LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\).*/\1/p' /boot/cmdline.txt);
-					QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
-					LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+					QUIET=$(grep -c quiet /boot/cmdline.txt);
+					LOGO=$(grep -c logo.nologo /boot/cmdline.txt);
 					CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\).*/\1/p' /boot/cmdline.txt);
 					if [ $SPLASH -eq 0 ]; then
 						sed -i 's/$/ splash/g' /boot/cmdline.txt
@@ -63,7 +63,7 @@ function updateBootFlagsFn() {
 						sed -i 's/$/ logo.nologo/g' /boot/cmdline.txt
 					fi
 					if [ $CONSOLE != "tty2" ]; then
-						if [ $(grep console /boot/cmdline.txt | wc -l) -eq 0 ]; then
+						if [ $(grep -c console /boot/cmdline.txt) -eq 0 ]; then
 							sed -i 's/$/ console=tty2/g' /boot/cmdline.txt
 						else
 							sed -i "s/console=$CONSOLE/console=tty2/g" /boot/cmdline.txt
@@ -74,10 +74,10 @@ function updateBootFlagsFn() {
 		else
 			case $FLAG in
 				splash)
-					SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+					SPLASH=$(grep -c splash /boot/cmdline.txt);
 					LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\).*/\1/p' /boot/cmdline.txt);
-					QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
-					LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+					QUIET=$(grep -c quiet /boot/cmdline.txt);
+					LOGO=$(grep -c logo.nologo /boot/cmdline.txt);
 					CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\).*/\1/p' /boot/cmdline.txt);
 					if [ $SPLASH -ge 1 ]; then
 						sed -i 's/ splash//g' /boot/cmdline.txt
@@ -92,7 +92,7 @@ function updateBootFlagsFn() {
 						sed -i 's/ logo.nologo//g' /boot/cmdline.txt
 					fi
 					if [ $CONSOLE == "tty2" ]; then
-						if [ $(grep console /boot/cmdline.txt | wc -l) -eq 0 ]; then
+						if [ $(grep -c console /boot/cmdline.txt) -eq 0 ]; then
 							sed -i 's/$/ console=tty1/g' /boot/cmdline.txt
 						else
 							sed -i "s/console=$CONSOLE/console=tty1/g" /boot/cmdline.txt
@@ -108,10 +108,10 @@ function updateBootFlagsFn() {
 		if [[ "$1" =~ "$(($KEY+1))" ]]; then 
 			case $FLAG in
 				splash)
-					SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+					SPLASH=$(grep -c splash /boot/cmdline.txt);
 					LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\).*/\1/p' /boot/cmdline.txt);
-					QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
-					LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+					QUIET=$(grep -c quiet /boot/cmdline.txt);
+					LOGO=$(grep -c logo.nologo /boot/cmdline.txt);
 					CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\).*/\1/p' /boot/cmdline.txt);
 					if [ $SPLASH -eq 0 ]; then
 						ERROR=1;
@@ -135,10 +135,10 @@ function updateBootFlagsFn() {
 		else
 			case $FLAG in
 				splash)
-					SPLASH=$(grep splash /boot/cmdline.txt | wc -l);
+					SPLASH=$(grep -c splash /boot/cmdline.txt);
 					LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\).*/\1/p' /boot/cmdline.txt);
-					QUIET=$(grep quiet /boot/cmdline.txt | wc -l);
-					LOGO=$(grep logo.nologo /boot/cmdline.txt | wc -l);
+					QUIET=$(grep -c quiet /boot/cmdline.txt );
+					LOGO=$(grep -c logo.nologo /boot/cmdline.txt);
 					CONSOLE=$(sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\).*/\1/p' /boot/cmdline.txt);
 					if [ $SPLASH -ge 1 ]; then
 						ERROR=1;

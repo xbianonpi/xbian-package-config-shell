@@ -67,7 +67,7 @@ function updatePackagesFn() {
 function findNextUpdateVersionFn() {
 	CMAJVERSION=$1;
 	CMINVERSION=$2;
-	ISALPHA=$(echo $CMINVERSION | grep "\." | wc -l);
+	ISALPHA=$(echo $CMINVERSION | grep -c "\.");
 	ISBETA=0;
 	ISSTABLE=0;
 	NEXTVERSION="";
@@ -96,7 +96,7 @@ function findNextUpdateVersionFn() {
 		NEXTALPHA=$CURBETA"."$NEXTALPHA;
 	fi
 
-	if [ $(cat "$BASEPATH/config/pkglist" | grep "xbian-update_"$CMAJVERSION"-"$NEXTALPHA"_" | wc -l) -eq 1 ]; then
+	if [ $(cat "$BASEPATH/config/pkglist" | grep -c "xbian-update_"$CMAJVERSION"-"$NEXTALPHA"_") -eq 1 ]; then
 		NEXTVERSION=$CMAJVERSION-$NEXTALPHA;
 	fi
 	
@@ -110,7 +110,7 @@ function findNextUpdateVersionFn() {
 			NEXTBETA=$(echo "$NEXTBETA+1" | bc);
 		fi
 	fi
-	if [ $(cat "$BASEPATH/config/pkglist" | grep "xbian-update_"$CMAJVERSION"-"$NEXTBETA"_" | wc -l) -eq 1 ]; then
+	if [ $(cat "$BASEPATH/config/pkglist" | grep -c "xbian-update_"$CMAJVERSION"-"$NEXTBETA"_") -eq 1 ]; then
 		NEXTVERSION=$CMAJVERSION-$NEXTBETA;
 	fi
 	if [ -z "$NEXTVERSION" ]; then
@@ -120,14 +120,14 @@ function findNextUpdateVersionFn() {
 			NEXTMINSTABLE=$CMAJVERSION;
 		fi
 	fi
-	if [ $(cat "$BASEPATH/config/pkglist" | grep "xbian-update_"$NEXTMINSTABLE"_" | wc -l) -eq 1 ]; then
+	if [ $(cat "$BASEPATH/config/pkglist" | grep -c "xbian-update_"$NEXTMINSTABLE"_") -eq 1 ]; then
 		NEXTVERSION=$NEXTMINSTABLE;
 	fi	
 	if [ -z "$NEXTVERSION" ]; then
 		CMAJVERSION=$(echo "$CMAJVERSION" | cut -f1 -d"." | bc);
 		NEXTMAJSTABLE=$(echo "$CMAJVERSION+1" | bc);
 	fi
-	if [ $(cat "$BASEPATH/config/pkglist" | grep "xbian-update_"$NEXTMINSTABLE"_" | wc -l) -eq 1 ]; then
+	if [ $(cat "$BASEPATH/config/pkglist" | grep -c "xbian-update_"$NEXTMINSTABLE"_") -eq 1 ]; then
 		NEXTVERSION=$NEXTMAJSTABLE;
 	fi
 }

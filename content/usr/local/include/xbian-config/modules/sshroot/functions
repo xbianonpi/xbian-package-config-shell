@@ -64,7 +64,7 @@ function disableSSHRootLoginFn() {
 #  - 1: Enabled
 #  - 0: Disabled
 function isSSHRootLoginEnabledFn() {
-	if [ $(cat /etc/ssh/sshd_config | grep "PermitRootLogin yes" | wc -l) -eq 0 ]; then
+	if [ $(cat /etc/ssh/sshd_config | grep -c "PermitRootLogin yes") -eq 0 ]; then
 		return 0;
 	else
 		return 1;

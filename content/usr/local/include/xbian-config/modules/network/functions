@@ -51,7 +51,7 @@ setInterfaceWlanCredentials() {
 			;;
 		esac
 
-	        if [ $(grep "^iface $1" /etc/network/interfaces | wc -l) -gt 0 ]; then
+	        if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
 
 			# Interface already present, store it + any subsequent ifaces in an buffer
 			IFACEBUFFER=$(grep -A100 "^iface $1" /etc/network/interfaces | sed '1d');
@@ -97,7 +97,7 @@ setInterfaceWlanCredentials() {
 setInterfaceDhcpFn() {
         isValidInterfaceFn "$1"
 	if [ $? -eq 1 ]; then
-	        if [ $(grep "^iface $1" /etc/network/interfaces | wc -l) -gt 0 ]; then
+	        if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
 
 			# Interface already present, store it + any subsequent ifaces in an buffer
 			IFACEBUFFER=$(grep -A100 "^iface $1" /etc/network/interfaces | sed '1d');
@@ -192,7 +192,7 @@ setInterfaceStaticFn() {
 		fi
 
 		# Process /etc/network/interfaces
-	        if [ $(grep "^iface $1" /etc/network/interfaces | wc -l) -gt 0 ]; then
+	        if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
 
 			# Interface already present, store it + any subsequent ifaces in an buffer
 			IFACETMP=$(grep -A100 "^iface $1" /etc/network/interfaces | sed '1d');
@@ -342,7 +342,7 @@ function readNetworkConfigurationFn() {
 	        # Read nameservers from /etc/resolv.conf
 	        NS1="";
 	        NS2="";
-	        if [ $(grep nameserver /etc/resolv.conf | wc -l) -gt 0 ]; then
+	        if [ $(grep -c nameserver /etc/resolv.conf) -gt 0 ]; then
 	           NS=($(grep nameserver /etc/resolv.conf | sed 's/nameserver //g' ))
 	           if [ ${#NS[@]} -gt 0 ]; then
 	              NS1=$(echo -e "${NS[0]}");
@@ -519,13 +519,13 @@ function restartLANAdapterFn() {
 function getWLANConnectStatusFn() {
 	STATUS=0;
 	if [ -f /tmp/wlanstatus ]; then
-		if [ $(grep "bound" /tmp/wlanstatus | wc -l) -gt 0 ]; then
+		if [ $(grep -c "bound" /tmp/wlanstatus) -gt 0 ]; then
 			STATUS=3;
-		elif [ $(grep 'RTNETLINK' /tmp/wlanstatus | wc -l) -gt 0 ]; then
+		elif [ $(grep -c 'RTNETLINK' /tmp/wlanstatus) -gt 0 ]; then
 			STATUS=3;
-		elif [ $(grep 'DHCPOFFERS\|Terminated' /tmp/wlanstatus | wc -l) -gt 0 ]; then
+		elif [ $(grep -c 'DHCPOFFERS\|Terminated' /tmp/wlanstatus) -gt 0 ]; then
 			STATUS=2;
-		elif [ $(grep "DHCPDISCOVER" /tmp/wlanstatus | wc -l) -gt 0 ]; then
+		elif [ $(grep -c "DHCPDISCOVER" /tmp/wlanstatus) -gt 0 ]; then
 			STATUS=1;
 		fi;
 	fi

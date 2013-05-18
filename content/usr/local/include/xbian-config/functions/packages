@@ -31,7 +31,7 @@ function updateAptMirrorsFn() {
 
 function localPackageDBOutdatedFn() {
 	if [ -f "/var/lib/apt/periodic/update-success-stamp" ]; then
-		if [ $(find /var/lib/apt/periodic/update-success-stamp -mtime +7 | wc -l) -gt 0 ]; then
+		if [ $(find /var/lib/apt/periodic/update-success-stamp -mtime +7 | grep -c .) -gt 0 ]; then
 			if [ -f "$BASEPATH/config/pkglist" ] && [ -f "/var/lib/apt/lists/apt.xbian.org*Packages" ]; then
 				if [ "$(md5sum /var/lib/apt/lists/apt.xbian.org*Packages | awk '{print $1}')" == "$(md5sum $BASEPATH/config/pkglist | awk '{print $1}')" ]; then
 					return 0;
@@ -87,19 +87,19 @@ function getAllPackagesForInstallFn() {
 }
 
 function getAptErrorCodeFn() {
-	if [ $(cat /tmp/aptstatus | grep "already the newest version" | wc -l) -eq 1 ]; then
+	if [ $(cat /tmp/aptstatus | grep -c "already the newest version") -eq 1 ]; then
 		return 1;
-	elif [ $(cat /tmp/aptstatus | grep "was not found" | wc -l) -eq 1 ]; then
+	elif [ $(cat /tmp/aptstatus | grep -c "was not found") -eq 1 ]; then
 		return 2;
-	elif [ $(cat /tmp/aptstatus | grep "Unable to locate package" | wc -l) -eq 1 ]; then
+	elif [ $(cat /tmp/aptstatus | grep -c "Unable to locate package") -eq 1 ]; then
 		return 3;
-	elif [ $(cat /tmp/aptstatus | grep "DOWNGRADED" | wc -l) -eq 1 ]; then
+	elif [ $(cat /tmp/aptstatus | grep -c "DOWNGRADED") -eq 1 ]; then
 		return 4;
-	elif [ $(cat /tmp/aptstatus | grep -i "size mismatch" | wc -l) -eq 1 ]; then
+	elif [ $(cat /tmp/aptstatus | grep -c -i "size mismatch") -eq 1 ]; then
 		return 5;
-	elif [ $(cat /tmp/aptstatus | grep -i "returned an error code" | wc -l) -eq 1 ]; then
+	elif [ $(cat /tmp/aptstatus | grep -c -i "returned an error code") -eq 1 ]; then
 		return 6;
-	elif [ $(cat /tmp/aptstatus | grep -i "impossible situation" | wc -l) -eq 1 ]; then
+	elif [ $(cat /tmp/aptstatus | grep -c -i "impossible situation") -eq 1 ]; then
 		return 6;
 	else
 		return 0;

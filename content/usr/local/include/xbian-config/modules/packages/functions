@@ -34,7 +34,7 @@ function getPackagesFromCategoryFn() {
 }
 
 function getPackageStatusFn() {
-	if [ $(echo -e "$ALLPKGLST" | grep -v "xbian-update" | grep "xbian[-A-Za-z]\{1,\}$1[[:space:]]\{1,\}install$" | wc -l) -ge 1 ]; then
+	if [ $(echo -e "$ALLPKGLST" | grep -v "xbian-update" | grep -c "xbian[-A-Za-z]\{1,\}$1[[:space:]]\{1,\}install$" ) -ge 1 ]; then
 		return 1;
 	else
 		return 0;
@@ -106,11 +106,11 @@ function removePackageFn() {
 		if [ $1 -eq 1 ]; then
 			apt-get purge -s $2 &>/tmp/aptstatus
 
-			if [ $(cat /tmp/aptstatus | grep "is not installed, so not removed" | wc -l) -eq 1 ]; then
+			if [ $(cat /tmp/aptstatus | grep -c "is not installed, so not removed") -eq 1 ]; then
 				return 1;
-			elif [ $(cat /tmp/aptstatus | grep "essential package" | wc -l) -eq 1 ]; then
+			elif [ $(cat /tmp/aptstatus | grep -c "essential package") -eq 1 ]; then
 				return 2;
-			elif [ $(cat /tmp/aptstatus | grep "Unable to locate" | wc -l) -eq 1 ]; then
+			elif [ $(cat /tmp/aptstatus | grep -c "Unable to locate" ) -eq 1 ]; then
 				return 3;
 			else
 				return 0;

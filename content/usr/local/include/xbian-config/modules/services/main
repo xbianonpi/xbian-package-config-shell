@@ -53,7 +53,7 @@ function showGUIFn() {
 	if [ $? -eq 0 ]; then
 		SERVICE=$(($RETURN-1));
 		getServiceNameFn $SERVICE;
-		if [ $RETURN -gt $(echo -e "$SERVICES" | wc -l) ] || [ -z "$(echo $SERVICES)" ]; then
+		if [ $RETURN -gt $(echo -e "$SERVICES" | grep -c .) ] || [ -z "$(echo $SERVICES)" ]; then
 			showServiceInsertDlg;
 			if [ $? -eq 0 ]; then
 				IFS=$'\n';

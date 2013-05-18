@@ -35,7 +35,7 @@ function getLanguageByIdFn() {
 }
 
 function ISOLocaleExistsFn() {
-	if [ $(grep ^$1 $BASEPATH/config/languages | wc -l) -eq 1 ]; then
+	if [ $(grep -c ^$1 $BASEPATH/config/languages) -eq 1 ]; then
 		return 1;
 	else
 		return 0;
@@ -82,7 +82,7 @@ function setLocaleFn() {
 	INPUT=${LOCALE%.*}
 	CHARSET="UTF-8"
 	
-	if [ $(locale -a | grep $INPUT.utf8 | wc -l) -eq 0 ]; then
+	if [ $(locale -a | grep -c $INPUT.utf8) -eq 0 ]; then
 		localedef -i $INPUT -c -f $CHARSET -A /usr/share/locale/locale.alias $LOCALE
 	fi
 	sed -i "s/# $LOCALE/$LOCALE/g" /etc/locale.gen

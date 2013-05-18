@@ -238,7 +238,7 @@ function showCMDFn() {
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					updateAllPackagesListFn;
 					getPackageCategoryListFn;
-					if [ $(echo ${CATEGORIES[*]} | grep -o $2 | wc -l) -eq 1 ]; then
+					if [ $(echo ${CATEGORIES[*]} | grep -c -o $2 ) -eq 1 ]; then
 						getPackagesFromCategoryFn "$2"
 						for PACKAGE in ${PACKAGES[@]}; do
 							getPackageStatusFn $PACKAGE;
@@ -262,9 +262,9 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					getAllPackagesFn;
-					if [ $(echo ${PACKAGES[*]} | grep -o $2 | wc -l) -eq 1 ]; then
+					if [ $(echo ${PACKAGES[*]} | grep -c -o $2) -eq 1 ]; then
 						updateAllPackagesListFn;
-						if [ $(echo ${ALLPKGLST[*]} | grep -o $2 | wc -l) -eq 1 ]; then
+						if [ $(echo ${ALLPKGLST[*]} | grep -c -o $2) -eq 1 ]; then
 							getPackageStatusFn $2;
 							if [ $? -eq 1 ]; then
 								echo 1;
@@ -288,7 +288,7 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					getAllPackagesFn;
-					if [ $(echo ${PACKAGES[*]} | grep -o $2 | wc -l) -eq 1 ]; then
+					if [ $(echo ${PACKAGES[*]} | grep -c -o $2) -eq 1 ]; then
 						getPackageInformationFn $2;
 						echo "name "${PKGINFO[0]} 
 						echo "versionl "$(getPackageVersionFn ${PKGINFO[0]});
@@ -311,7 +311,7 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					getAllPackagesFn;
-					if [ $(echo ${PACKAGES[*]} | grep -o $2 | wc -l) -eq 1 ]; then
+					if [ $(echo ${PACKAGES[*]} | grep -c -o $2) -eq 1 ]; then
 						getPackageInformationFn $2;
 						installPackageFn 1 ${PKGINFO[0]};
 						RETURN=$?;
@@ -337,7 +337,7 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					getAllPackagesFn;
-					if [ $(echo ${PACKAGES[*]} | grep -o $2 | wc -l) -eq 1 ]; then
+					if [ $(echo ${PACKAGES[*]} | grep -c -o $2) -eq 1 ]; then
 						getPackageInformationFn $2;
 						installPackageFn 2 ${PKGINFO[0]};
 						RETURN=$?;
@@ -363,7 +363,7 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					getAllPackagesFn;
-					if [ $(echo ${PACKAGES[*]} | grep -o $2 | wc -l) -eq 1 ]; then
+					if [ $(echo ${PACKAGES[*]} | grep -c -o $2) -eq 1 ]; then
 						getPackageInformationFn $2;
 						removePackageFn 1 ${PKGINFO[0]}
 						RETURN=$?;
@@ -389,7 +389,7 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					getAllPackagesFn;
-					if [ $(echo ${PACKAGES[*]} | grep -o $2 | wc -l) -eq 1 ]; then
+					if [ $(echo ${PACKAGES[*]} | grep -c -o $2 ) -eq 1 ]; then
 						getPackageInformationFn $2;
 						removePackageFn 2 ${PKGINFO[0]};
 						RETURN=$?;

@@ -73,7 +73,7 @@ function showCMDFn() {
 		;;
 		select)
 			if [ $# -eq 2 ]; then
-				if [ $(echo ${BOOTFLAGS[@]} | grep -o $2 | wc -l) -gt 0 ]; then
+				if [ $(echo ${BOOTFLAGS[@]} | grep -c -o $2) -gt 0 ]; then
 					getBootFlagsFn;
 					echo ${BOOTSETTINGS[$2]};
 				else
@@ -85,7 +85,7 @@ function showCMDFn() {
 		;;
 		update)
 			if [ $# -eq 3 ]; then
-				if [ $(echo ${BOOTFLAGS[@]} | grep -o $2 | wc -l) -gt 0 ]; then
+				if [ $(echo ${BOOTFLAGS[@]} | grep -c -o $2) -gt 0 ]; then
 					if [[ $3 =~ ^[01] ]]; then
 						if [ $3 -eq 0 ]; then
 							getBootFlagsFn;

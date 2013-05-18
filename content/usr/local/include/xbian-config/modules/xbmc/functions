@@ -26,7 +26,7 @@ function setXBMCGUIResFn() {
 	NEWRES=$1;
 	OLDRES=$(cat /home/xbian/.xbmc/userdata/advancedsettings.xml | sed -ne 's/\(.*<guires>\)\([0-9]\{1,4\}\)\(<\/guires>\)/\2/p');
 	if [ -z "$OLDRES" ]; then
-		if [ $(cat /home/xbian/.xbmc/userdata/advancedsettings.xml | grep "lookandfeel" | wc -l) -eq 2 ]; then
+		if [ $(cat /home/xbian/.xbmc/userdata/advancedsettings.xml | grep -c "lookandfeel" ) -eq 2 ]; then
 			sed -i "s/<\/lookandfeel>/     <guires>$NEWRES<\/guires>\n   <\/lookandfeel>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
 		else
 			sed -i "s/<\/advancedsettings>/   <lookandfeel>\n     <guires>$NEWRES<\/guires>\n   <\/lookandfeel>\n<\/advancedsettings>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
@@ -34,7 +34,7 @@ function setXBMCGUIResFn() {
 	else
 		sed -i "s/<guires>$OLDRES<\/guires>/<guires>$NEWRES<\/guires>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
 	fi
-	if [ $(cat /home/xbian/.xbmc/userdata/advancedsettings.xml | sed -ne 's/\(.*<guires>\)\([0-9]\{1,4\}\)\(<\/guires>\)/\2/p' | wc -l) -eq 1 ]; then
+	if [ $(cat /home/xbian/.xbmc/userdata/advancedsettings.xml | sed -ne 's/\(.*<guires>\)\([0-9]\{1,4\}\)\(<\/guires>\)/\2/p' | grep -c .) -eq 1 ]; then
 		return 1;
 	else
 		return 0;
@@ -67,7 +67,7 @@ function setXBMCWebserverFn() {
 	fi
 	OLDSET=$(cat /home/xbian/.xbmc/userdata/advancedsettings.xml | sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p');
 	if [ -z "$OLDSET" ]; then
-		if [ $(cat /home/xbian/.xbmc/userdata/advancedsettings.xml | grep "lookandfeel" | wc -l) -eq 2 ]; then
+		if [ $(cat /home/xbian/.xbmc/userdata/advancedsettings.xml | grep -c "lookandfeel") -eq 2 ]; then
 			sed -i "s/<\/lookandfeel>/     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
 		else
 			sed -i "s/<\/advancedsettings>/   <lookandfeel>\n     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>\n<\/advancedsettings>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml

@@ -32,7 +32,7 @@ function getInstalledServicesFn() {
 
 function getServiceAutoStartStatusFn() {
 	if [ ! -z "$1" ]; then
-		return $(ls /etc/rc2.d/ | grep -io "S[0-9]\{1,\}$1" | wc -l);
+		return $(ls /etc/rc2.d/ | grep -c -io "S[0-9]\{1,\}$1");
 	else
 		return 0;
 	fi
@@ -95,7 +95,7 @@ function getServiceIDFn() {
 }
 
 function checkServiceExistsFn() {
-	COMMAND="ls -Al /etc/init.d/ | awk '{print \$9}' | grep ^$1\$ | wc -l"
+	COMMAND="ls -Al /etc/init.d/ | awk '{print \$9}' | grep -c ^$1\$"
 	if [ $(eval $COMMAND) -ge 1 ]; then
 		return 1;
 	else
@@ -212,7 +212,7 @@ function updateServiceConfFn() {
 		sed -i "/${DATA[0]}:/d" $BASEPATH/config/services;
 	fi
 	echo "${DATA[0]}:${DATA[1]}" >> $BASEPATH/config/services;
-	if [ -f "$BASEPATH/config/services" ] && [ $(cat $BASEPATH/config/services | grep "${DATA[0]}:${DATA[1]}" | wc -l) -eq 1 ]; then
+	if [ -f "$BASEPATH/config/services" ] && [ $(cat $BASEPATH/config/services | grep -c "${DATA[0]}:${DATA[1]}" ) -eq 1 ]; then
 		return 1;
 	else
 		return 0;
@@ -224,7 +224,7 @@ function deleteServiceFn() {
 	if [ -f "$BASEPATH/config/services" ]; then
 		sed -i "/${DATA[0]}:/d" $BASEPATH/config/services;
 	fi
-	if [ -f "$BASEPATH/config/services" ] && [ $(cat $BASEPATH/config/services | grep "${DATA[0]}:" | wc -l) -eq 0 ]; then
+	if [ -f "$BASEPATH/config/services" ] && [ $(cat $BASEPATH/config/services | grep -c "${DATA[0]}:") -eq 0 ]; then
 		return 1;
 	else
 		return 0;
