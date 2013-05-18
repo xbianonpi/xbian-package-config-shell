@@ -2,7 +2,7 @@
 
 if [ $1 == "configure" ]; then
 
-	echo $(date) >> /home/xbian/xbian-config-update.log
+	echo $(date) > /home/xbian/xbian-config-update.log
 
 	msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.po 
 
