@@ -262,7 +262,7 @@ else
 	#clrMemCacheFn;
 	
 	GUIMODE=0;
-	mountpoint -q /boot || mount /boot
+	mountpoint -q /boot || { mount /boot; need_umount="yes"; }
 	# Check xbian-config was opened using arguments
 	MODULE=$1;
 	if [ $MODULE == "reboot" ]; then
@@ -292,5 +292,5 @@ else
 			echo ${ARGUMENTS[@]};
 		fi
 	fi
-	mountpoint -q /boot && umount /boot
+	test -n "$need_umount" && umount /boot
 fi
