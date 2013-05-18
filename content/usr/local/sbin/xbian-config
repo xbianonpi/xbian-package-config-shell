@@ -63,7 +63,7 @@ GUIMODE=1;
 function showMainCloseDlg() {
 
 	DOREBOOT=0;
-	umount /boot
+	test -n "$need_umount" && umount /boot
 	# Is a reboot needed for the changes to get effect
 	if [ $ASKFORREBOOT -eq 1 ]; then
 		wrapTxtFn "$(_ main.reboot_question)"
@@ -81,16 +81,16 @@ function showMainCloseDlg() {
 	fi
 	
 	# Clear FS and MEM caches
-	clrFSCacheFn;
-	clrMemCacheFn;
+	#clrFSCacheFn;
+	#clrMemCacheFn;
+	sync
 	if [ $DOREBOOT -eq 1 ]; then
 		reboot
-	fi;
+	fi
 	exit 0
 }
 
 function showMainMenuDlg() {
-	mountpoint -q /boot || mount /boot
 
 	ITEMS="";
 	LEVEL="";
@@ -120,7 +120,7 @@ function showMainMenuDlg() {
 	ITEMS=$(grep "^$LEVEL$ADD[0-9]*:" $BASEPATH/struct | cut -f 2 -d:);
 
 	# Clear caches need by previous function
-	clrMemCacheFn;
+	#clrMemCacheFn;
 	
 	# Create main menu
 	
@@ -156,7 +156,7 @@ function showMainMenuDlg() {
 		TITLE="["$CPATH"]"
 
 		# Stop the loader
-		if [ $(ps -A | grep $LOADER | wc -l) -gt 0 ]; then
+		if ps a | grep -v grep | grep -q $LOADER ; then
 			kill -9 $LOADER  > /dev/null 2>&1 &
 			wait $! 2>/dev/null
 		fi
@@ -193,21 +193,19 @@ function showMainMenuDlg() {
 
 
 if [ $# -eq 0 ]; then
+
+	mountpoint -q /boot || { mount /boot; need_umount="yes"; }
+
 	#|------------------------------------|
 	#|              GUI Mode              |
 	#|------------------------------------|
 	
 	LOADER=0;
-	while [ $(pgrep dialog | wc -l) -eq 0 ]; do 
+	while ! pgrep dialog > /dev/null; do 
 		for a in \\ \| \/ -; do
-			if [ $(pgrep dialog | wc -l) -eq 0 ]; then
-				echo -n $a; 
-				sleep 0.5; 
-				echo -n -e \\r; 
-			else
-				break;
-			fi
-		done; 
+			{ ! pgrep dialog > /dev/null && echo -n -e \\r$a; } \
+				|| break
+		done
 	done &
 	LOADER=$!
 
