@@ -76,6 +76,7 @@ function setKernelVersionFn() {
 			KERNEL=${KERNEL%.*}; 
 			KERNEL=$(echo $KERNEL | sed -e 's/kernel//g' | sed -e 's/\_/./g')
 			if [ $KERNEL == $CURRENTKERNEL ]; then
+				xbian-update-initramfs "$KERNEL+"
 				return 1;
 			else
 				return 0;
