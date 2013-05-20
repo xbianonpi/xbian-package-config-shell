@@ -100,11 +100,9 @@ function getServiceIDFn() {
 
 function checkServiceExistsFn() {
 	COMMAND="ls -Al /etc/init.d/ | awk '{print \$9}' | grep -c ^$1\$"
-	if [ $(eval $COMMAND) -ge 1 ]; then
-		return 1;
-	else
-		return 0;
-	fi
+	[ $(eval $COMMAND) -ge 1 ] && return 1;
+	[ -e "/etc/init/$1.conf" ] && return 1
+	return 0
 }
 
 function restartServiceFn() {
@@ -119,6 +117,9 @@ function restartServiceFn() {
 			X=$(($X+1));
 		done;
 		return $RETURN;
+	elif [ -f "/etc/init/$NAME.conf" ]; then
+		stop $NAME
+		start $NAME
 	else
 		return -1;
 	fi
@@ -136,9 +137,12 @@ function startServiceFn() {
 			X=$(($X+1));
 		done;
 		return $RETURN;
+	elif  [ -f "/etc/init/$NAME.conf" ]; then
+			start $NAME
 	else
-		return 1;
+			return -1;
 	fi
+
 }
 
 function stopServiceFn() {
@@ -153,8 +157,11 @@ function stopServiceFn() {
 			X=$(($X+1));
 		done;
 		return $RETURN;
+	elif  [ -f "/etc/init/$NAME.conf" ]; then
+			stop $NAME
+			return 0
 	else
-		return 1;
+			return -1;
 	fi
 }
 
@@ -172,8 +179,12 @@ function disableAutoStartFn() {
 			RETURN=0;
 		fi
 		return $RETURN;
+	elif  [ -f "/etc/init/$NAME.conf" ]; then
+			stop $NAME
+			echo "manual" > "/etc/init/$NAME.override"
+			return 0
 	else
-		return 1;
+			return -1;
 	fi
 }
 
@@ -191,8 +202,11 @@ function enableAutoStartFn() {
 			RETURN=0;
 		fi
 		return $RETURN;
+	elif  [ -f "/etc/init/$NAME.conf" ]; then
+			rm -fr "/etc/init/$NAME.override" > /dev/null 2>&1
+			return 0
 	else
-		return 1;
+			return -1;
 	fi
 }
 
