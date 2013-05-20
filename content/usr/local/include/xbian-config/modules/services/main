@@ -264,7 +264,6 @@ function showCMDFn() {
 				fi
 			elif [ $# -eq 1 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					echo ${SERVICES[@]}
 					for SERVICE in ${SERVICES[@]}; do
 						NAME=${SERVICE%:*}
 						RUNNING=$(getServiceRunningStatusFn $NAME; echo $?);
