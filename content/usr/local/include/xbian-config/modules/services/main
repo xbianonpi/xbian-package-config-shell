@@ -241,10 +241,10 @@ function showCMDFn() {
 			fi
 		;;
 		status)
+			getInstalledServicesFn;
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
 					if [[ "$SERVICES" =~ "$2" ]]; then
-						getInstalledServicesFn;
 						RUNNING=$(getServiceRunningStatusFn $2; echo $?);
 						AUTOSTART=$(getServiceAutoStartStatusFn $2; echo $?);
 						if [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 0 ]; then
@@ -264,11 +264,11 @@ function showCMDFn() {
 				fi
 			elif [ $# -eq 1 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
+					echo ${SERVICES[@]}
 					for SERVICE in ${SERVICES[@]}; do
-						NAME=${SERVRAW%:*};
-						getInstalledServicesFn;
-						RUNNING=$(getServiceRunningStatusFn $2; echo $?);
-						AUTOSTART=$(getServiceAutoStartStatusFn $2; echo $?);
+						NAME=${SERVICE%:*}
+						RUNNING=$(getServiceRunningStatusFn $NAME; echo $?);
+						AUTOSTART=$(getServiceAutoStartStatusFn $NAME; echo $?);
 						if [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 0 ]; then
 							echo $NAME 2;
 						elif [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 1 ]; then

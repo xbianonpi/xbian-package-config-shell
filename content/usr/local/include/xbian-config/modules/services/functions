@@ -23,19 +23,23 @@ function getInstalledServicesFn() {
 	SERVLIST=($SERVICES);
 	for SERVRAW in ${SERVLIST[@]}; do
 		NAME=${SERVRAW%:*};
-		FOUND=$(ls /etc/init.d/ | grep -io "^$NAME*");
-		if [ ! -z "$FOUND" ]; then
+		FOUNDsysv=$(ls /etc/init.d/ | grep -io "^$NAME*");
+		FOUNDupstart=$(ls /etc/init/ | grep -io "^$NAME*");
+		if [ ! -z "$FOUNDsysv" -o ! -z "$FOUNDupstart" ]; then
 			INSTSERV+=($SERVRAW);
 		fi
 	done
 }
 
 function getServiceAutoStartStatusFn() {
-	if [ ! -z "$1" ]; then
-		return $(ls /etc/rc2.d/ | grep -c -io "S[0-9]\{1,\}$1");
-	else
-		return 0;
+	[ -z "$1" ] && return 0
+	lsnr=$(ls /etc/rc2.d/ | grep -c -io "S[0-9]\{1,\}$1")
+	if [ "$lsnr" = '0' ]; then
+		lsnr=$(ls /etc/init/ | grep -c -io "$1.override")
+		[ "$lsnr" = '1' ] && return 0
+		lsnr=$(ls /etc/init/ | grep -c -io "$1.conf")
 	fi
+	return $lsnr
 }
 
 function getServiceRunningStatusFn() {
