@@ -55,7 +55,7 @@ BASEPATH="/usr/local/include/xbian-config"
 LANGUAGE="en"
 
 #Check if xbian-config is run in GUI mode
-GUIMODE=1;
+export GUIMODE=1;
 
 #|------------------------------------|
 #|           Main program             |
@@ -259,7 +259,7 @@ else
 	#source $BASEPATH/functions/system
 	#clrMemCacheFn;
 	
-	GUIMODE=0;
+	export GUIMODE=0;
 	mountpoint -q /boot || { mount /boot; export need_umount="yes"; }
 	# Check xbian-config was opened using arguments
 	MODULE=$1;

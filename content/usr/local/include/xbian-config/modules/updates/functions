@@ -18,7 +18,12 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 function retrieveUpdateListFn() {
-	apt-get dist-upgrade -s &>/tmp/aptupdates 2>/dev/null;
+	if [ $GUIMODE = '1' ]; then
+		apt-get update 2>&1 | dialog --progressbox "Please be patient! Window will close automatically after apt-get finishes." 20 80 
+	else
+		apt-get update >/dev/null 2>&1
+	fi 
+	apt-get upgrade -s -u >/tmp/aptupdates 2>/dev/null
 }
 
 function getAllPackagesLisFn() {
@@ -56,7 +61,12 @@ function updatePackagesFn() {
 	if [ $1 -eq 1 ]; then
 		apt-get install -s $LIST &>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		apt-get install -y $LIST
+		echo "" > /tmp/aptstatus
+		if [ $GUIMODE = '1' ]; then
+			eval apt-get install -y $LIST | dialog --progressbox 20 80
+		else
+			eval apt-get install -y $LIST
+		fi
 	elif [ $1 -eq 2 ]; then
 		nohup apt-get install -y $LIST &>/tmp/aptstatus &
 	fi
