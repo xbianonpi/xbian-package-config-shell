@@ -10,4 +10,4 @@ Depends: wget, bc, gettext, dialog
 Conflicts: xbian-package-config
 Maintainer: Koenkk <development@xbian.org>
 Description: Configuration utility for XBian.
-Installed-Size: 711
+Installed-Size: 632
