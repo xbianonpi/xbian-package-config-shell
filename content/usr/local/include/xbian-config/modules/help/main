@@ -1,0 +1,10 @@
+#!/bin/bash
+
+txt=no
+dir=$(dirname $0)
+ARGUMENTS=($(ls $dir/../include/xbian-config/modules))
+
+echo "
+Usage: xbian-config [module] [[command]] ...
+Available modules are:
+"

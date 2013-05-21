@@ -263,6 +263,7 @@ else
 	mountpoint -q /boot || { mount /boot; export need_umount="yes"; }
 	# Check xbian-config was opened using arguments
 	MODULE=$1;
+	[ $MODULE = "--help" -o $MODULE = "-h" ] && MODULE=help
 	if [ $MODULE == "reboot" ]; then
 		if [ -f /tmp/xbian-config-reboot ]; then
 			cat /tmp/xbian-config-reboot;
@@ -281,12 +282,12 @@ else
 					showCMDFn "$@"
 				;;
 				*)
-					echo "Available arguments for module '$MODULE' are:";
+					[ -z "txt" ] && echo "Available arguments for module '$MODULE' are:";
 					echo ${ARGUMENTS[@]};
 				;;
 			esac
 		else
-			echo "Available arguments for module '$MODULE' are:";
+			[ -z "txt" ] && echo "Available arguments for module '$MODULE' are:";
 			echo ${ARGUMENTS[@]};
 		fi
 	fi
