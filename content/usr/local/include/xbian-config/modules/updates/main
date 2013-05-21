@@ -104,6 +104,7 @@ function showGUIFn() {
 							fi
 						fi
 					fi
+					[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
 					LOG=1;
 					showSystemUpdateRebootDlg;
 					sudo reboot;
@@ -123,6 +124,7 @@ function showGUIFn() {
 	if [ $SYSTEMUPDATE -eq 0 ]; then
 		if [ ${#PACKAGES[@]} -eq 0 ]; then
 			showUpToDateDlg;
+			[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
 		else
 			showAvailableUpdatesDlg "${PACKAGES[*]}";
 			if [ $? -eq 0 ]; then
@@ -150,10 +152,12 @@ function showGUIFn() {
 						showUpdateLogDlg;
 					fi
 				fi
+				[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
 				showGUIFn; 
 			fi
 		fi
 	fi
+	APTUPDATELISTUPDATED=0
 }
 
 # Executes the command line version of this module

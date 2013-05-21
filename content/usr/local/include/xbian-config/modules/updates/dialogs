@@ -163,11 +163,8 @@ function showAvailableUpdatesDlg() {
 		IFS=";";
 		VALUE=($VALUE);
 		I=$(($I+1));
-		NAME=$(echo ${VALUE[0]} | rev | cut -f1 -d"-" | rev);
 		if ! [[ "${VALUE[0]}" =~ "xbian-update" ]]; then
-			if [ $(echo "${VALUE[1]} == ${VALUE[2]}" | bc) -eq 0 ]; then
-				MENU+=($I,"\Zb"$NAME",\Zb"${VALUE[1]}" ("${VALUE[2]}"),Off");
-			fi
+				MENU+=($I,"\Zb"${VALUE[0]}",\Zb"${VALUE[1]}" ("${VALUE[2]}"),Off");
 		fi
 	done;
 	IFS=$ORIGINALIFS;

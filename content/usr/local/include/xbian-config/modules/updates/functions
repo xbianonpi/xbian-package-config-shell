@@ -55,11 +55,11 @@ function updatePackagesFn() {
 		INDEX=${INDEX//\"/ };
 		NAME=$(echo ${PACKAGES[$((INDEX-1))]} | cut -f1 -d";");
 		VERSION=$(echo ${PACKAGES[$((INDEX-1))]} | cut -f3 -d";");
-		LIST+=$NAME"="$VERSION" ";
+		LIST+=" "$NAME"="$VERSION
 	done;
 
 	if [ $1 -eq 1 ]; then
-		apt-get install -s $LIST &>/tmp/aptstatus
+		eval apt-get install -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
 		echo "" > /tmp/aptstatus
 		if [ $GUIMODE = '1' ]; then
@@ -68,7 +68,7 @@ function updatePackagesFn() {
 			eval apt-get install -y $LIST
 		fi
 	elif [ $1 -eq 2 ]; then
-		nohup apt-get install -y $LIST &>/tmp/aptstatus &
+		eval nohup apt-get install -y $LIST >/tmp/aptstatus
 	fi
 	getAptErrorCodeFn;
 	return $?;

@@ -63,6 +63,7 @@ export GUIMODE=1;
 function showMainCloseDlg() {
 
 	DOREBOOT=0;
+	test -n "$need_umount" && umount /boot
 	# Is a reboot needed for the changes to get effect
 	if [ $ASKFORREBOOT -eq 1 ]; then
 		wrapTxtFn "$(_ main.reboot_question)"
@@ -83,7 +84,6 @@ function showMainCloseDlg() {
 	#clrFSCacheFn;
 	#clrMemCacheFn;
 	sync
-	test -n "$need_umount" && umount /boot
 	if [ $DOREBOOT -eq 1 ]; then
 		reboot
 	fi
