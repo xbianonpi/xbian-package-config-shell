@@ -77,7 +77,7 @@ function setKernelVersionFn() {
 			KERNEL=$(echo $KERNEL | sed -e 's/kernel//g' | sed -e 's/\_/./g')
 			if [ $KERNEL == $CURRENTKERNEL ]; then
 				echo "Updating initramfs, please wait…"
-				xbian-update-initramfs "$KERNEL+" 1>/dev/null 2>/dev/null >/dev/null
+				xbian-update-initramfs "$KERNEL+" >/dev/null
 				return 1;
 			else
 				return 0;
