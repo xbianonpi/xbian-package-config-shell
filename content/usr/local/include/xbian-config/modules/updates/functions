@@ -61,7 +61,6 @@ function updatePackagesFn() {
 	if [ $1 -eq 1 ]; then
 		eval apt-get install -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		echo "" > /tmp/aptstatus
 		if [ $GUIMODE = '1' ]; then
 			eval apt-get install -y $LIST | dialog --progressbox 20 80
 		else
