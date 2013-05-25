@@ -293,3 +293,5 @@ else
 	fi
 	test -n "$need_umount" && umount /boot
 fi
+
+exit 0
