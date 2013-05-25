@@ -17,6 +17,8 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
+exit 0
+
 function checkNeedToResizeFn() {
 	NEEDRESIZE=0;
 	PART_START=$(fdisk -l | grep mmcblk0p2 | awk '{print $2}');
