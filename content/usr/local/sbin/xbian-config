@@ -291,7 +291,7 @@ else
 			echo ${ARGUMENTS[@]};
 		fi
 	fi
-	test -n "$need_umount" && umount /boot
+	test -n "$need_umount" && mountpoint -q /boot && umount /boot
 fi
 
 exit 0
