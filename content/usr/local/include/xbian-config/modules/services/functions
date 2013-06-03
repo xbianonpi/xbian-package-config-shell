@@ -24,8 +24,8 @@ function getInstalledServicesFn() {
 	for SERVRAW in ${SERVLIST[@]}; do
 		NAME=${SERVRAW%:*};
 		FOUNDsysv=$(ls /etc/init.d/ | grep -io "^$NAME*");
-		FOUNDupstart=$(ls /etc/init/ | grep -io "^$NAME*");
-		if [ ! -z "$FOUNDsysv" -o ! -z "$FOUNDupstart" ]; then
+		FOUNDupstart=$(initctl list | grep -e "xbmc .*");
+		if [ -n "$FOUNDsysv" -o -n "$FOUNDupstart" ]; then
 			INSTSERV+=($SERVRAW);
 		fi
 	done
@@ -34,12 +34,12 @@ function getInstalledServicesFn() {
 function getServiceAutoStartStatusFn() {
 	[ -z "$1" ] && return 0
 	lsnr=$(ls /etc/rc2.d/ | grep -c -io "S[0-9]\{1,\}$1")
-	if [ "$lsnr" = '0' ]; then
+	if [ "$lsnr" -eq '0' ]; then
 		lsnr=$(ls /etc/init/ | grep -c -io "$1.override")
-		[ "$lsnr" = '1' ] && return 0
+		[ "$lsnr" -eq '1' ] && return 0
 		lsnr=$(ls /etc/init/ | grep -c -io "$1.conf")
 	fi
-	return $lsnr
+	return "$lsnr"
 }
 
 function getServiceRunningStatusFn() {
@@ -73,7 +73,7 @@ function getServiceNameFn() {
 	I=0;
 	for SERVRAW in ${SERVCONF[@]}; do
 		SERV=${SERVRAW%:*};
-		FOUND=$(ls /etc/init.d/ | grep -i "^$SERV*");
+		FOUND=$(ls /etc/init.d/ /etc/init/ | grep -i "^$SERV*");
 		if [ ! -z "$FOUND" ]; then
 			if [ $I -eq $1 ]; then
 				break;
@@ -82,6 +82,8 @@ function getServiceNameFn() {
 		fi 
 	done
 	NAME=$(ls -Al /etc/init.d/ | grep -m1 "$SERV" | awk '{print $9}');
+        [ -z "$NAME" ] && NAME=$(ls -Al /etc/init/ | grep -m1 "$SERV\." | awk '{print $9}');
+        NAME=${NAME%.conf}
 }
 
 function getServiceIDFn() {
@@ -99,8 +101,7 @@ function getServiceIDFn() {
 }
 
 function checkServiceExistsFn() {
-	COMMAND="ls -Al /etc/init.d/ | awk '{print \$9}' | grep -c ^$1\$"
-	[ $(eval $COMMAND) -ge 1 ] && return 1;
+	[ -e "/etc/init.d/$1" ] && return 1
 	[ -e "/etc/init/$1.conf" ] && return 1
 	return 0
 }
@@ -180,7 +181,7 @@ function disableAutoStartFn() {
 		fi
 		return $RETURN;
 	elif  [ -f "/etc/init/$NAME.conf" ]; then
-			stop $NAME
+			stop $NAME || true 
 			echo "manual" > "/etc/init/$NAME.override"
 			return 0
 	else
@@ -194,12 +195,12 @@ function enableAutoStartFn() {
 		update-rc.d $NAME defaults &>/dev/null
 		RETURN=$?;
 		X=0;
-		while [ $(getServiceAutoStartStatusFn $NAME; echo $?) -eq 0 ] && [ $X -lt 10 ]; do
+		while [ "$(getServiceAutoStartStatusFn $NAME; echo $?)" -eq '0' ] && [ "$X" -lt 10 ]; do
 			sleep 1;
-			X=$(($X+1));
-		done;
-		if [ $X -eq 9 ]; then
-			RETURN=0;
+			X=$(($X+1))
+		done
+		if [ "$X" -eq '9' ]; then
+			RETURN=0
 		fi
 		return $RETURN;
 	elif  [ -f "/etc/init/$NAME.conf" ]; then

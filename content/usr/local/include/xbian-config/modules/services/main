@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -x
 #
 #Copyright 2012 CurlyMo <development@xbian.org>
 #
@@ -210,7 +212,7 @@ function showCMDFn() {
 				if [ -f "$BASEPATH/config/services" ]; then
 					for SERVICE in ${SERVICES[@]}; do
 						NAME=${SERVICE%:*};
-						if [ -f "/etc/init.d/$NAME" ]; then
+						if [ -f "/etc/init.d/$NAME" -o -f "/etc/init/$NAME.conf" ]; then
 							echo $NAME;
 						fi
 					done;
@@ -288,7 +290,7 @@ function showCMDFn() {
 		start)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" ]; then
+					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" -o -f "/etc/init/$2.conf" ]; then
 						getInstalledServicesFn;
 						if [ $(getServiceRunningStatusFn $2; echo $?) -eq 0 ]; then
 							getServiceIDFn $2;
@@ -316,7 +318,7 @@ function showCMDFn() {
 		stop)
 			if [ $# -eq 2 ]; then		
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" ]; then
+					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" -o -f "/etc/init/$2.conf" ]; then
 						getInstalledServicesFn;
 						if [ $(getServiceRunningStatusFn $2; echo $?) -eq 1 ]; then
 							ID=$(getServiceIDFn $2; echo $?);
@@ -343,7 +345,7 @@ function showCMDFn() {
 		restart)
 			if [ $# -eq 2 ]; then	
 				if [ -f "$BASEPATH/config/services" ]; then	
-					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" ]; then
+					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" -o -f "/etc/init/$2.conf" ]; then
 						getInstalledServicesFn;
 						if [ $(getServiceRunningStatusFn $2; echo $?) -eq 1 ]; then
 							ID=$(getServiceIDFn $2; echo $?);
@@ -370,7 +372,7 @@ function showCMDFn() {
 		autostart)
 			if [ $# -eq 3 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" ]; then
+					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" -o -f "/etc/init/$2.conf" ]; then
 						if [ $3 == "disable" ]; then
 							if [ $(getServiceAutoStartStatusFn $2; echo $?) -eq 1 ]; then
 								ID=$(getServiceIDFn $2; echo $?);
