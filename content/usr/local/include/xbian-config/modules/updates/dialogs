@@ -155,7 +155,7 @@ function showSystemUpdateLogDlg() {
 }
 
 function showAvailableUpdatesDlg() {
-	IFS=' ';
+#	IFS=$'\n';
 	ARRAY=($1);
 	MENU=();
 	I=0;
@@ -164,13 +164,13 @@ function showAvailableUpdatesDlg() {
 		VALUE=($VALUE);
 		I=$(($I+1));
 		if ! [[ "${VALUE[0]}" =~ "xbian-update" ]]; then
-				MENU+=($I,"\Zb"${VALUE[0]}",\Zb"${VALUE[1]}" ("${VALUE[2]}"),Off");
+				MENU+=($I,"\Zb${VALUE[0]},\Zb${VALUE[1]} (${VALUE[2]}),Off");
 		fi
 	done;
 	IFS=$ORIGINALIFS;
 	TBLCOLUMNCENTER=0;
 	createTableFn "check" \
-	" #,\Zb"$(_ updates.label.updates)",\Zb"$(_ updates.label.version) \
+	" #;\Zb"$(_ updates.label.updates)";\Zb"$(_ updates.label.version) \
 	"${MENU[@]}";
 	TBLCOLUMNCENTER=1;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+5));

@@ -19,51 +19,51 @@
 #
 
 function updateAptMirrorsFn() {
-	if [ $(wget --spider http://apt.xbian.org/mirror.txt >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
-		URL=$APTBASE"mirror.txt"
-		wget -O - "$URL" > $BASEPATH/config/aptmirror 2>/dev/null
+#	if [ $(wget --spider http://apt.xbian.org/mirror.txt >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
+#		URL=$APTBASE"mirror.txt"
+#		wget -O - "$URL" > $BASEPATH/config/aptmirror 2>/dev/null
 		return 1;
-	else
-		return 0;
-	fi
+#	else
+#		return 0;
+#	fi
 	
 }
 
 function localPackageDBOutdatedFn() {
-	if [ -f "/var/lib/apt/periodic/update-success-stamp" ]; then
-		if [ $(find /var/lib/apt/periodic/update-success-stamp -mtime +7 | grep -c .) -gt 0 ]; then
-			if [ -f "$BASEPATH/config/pkglist" ] && [ -f "/var/lib/apt/lists/apt.xbian.org*Packages" ]; then
-				if [ "$(md5sum /var/lib/apt/lists/apt.xbian.org*Packages | awk '{print $1}')" == "$(md5sum $BASEPATH/config/pkglist | awk '{print $1}')" ]; then
-					return 0;
-				else
+#	if [ -f "/var/lib/apt/periodic/update-success-stamp" ]; then
+#		if [ $(find /var/lib/apt/periodic/update-success-stamp -mtime +7 | grep -c .) -gt 0 ]; then
+#			if [ -f "$BASEPATH/config/pkglist" ] && [ -f "/var/lib/apt/lists/apt.xbian.org*Packages" ]; then
+#				if [ "$(md5sum /var/lib/apt/lists/apt.xbian.org*Packages | awk '{print $1}')" == "$(md5sum $BASEPATH/config/pkglist | awk '{print $1}')" ]; then
+#					return 0;
+#				else
 					return 1;
-				fi
-			else
-				return 1;
-			fi
-		else
-			return 0;
-		fi
-	else
-		return 1;
-	fi
+#				fi
+#			else
+#				return 1;
+#			fi
+#		else
+#			return 0;
+#		fi
+#	else
+#		return 1;
+#	fi
 }
 
 function downloadPackageListFn() {
-	RETURN=0;
-	if [ -f "$BASEPATH/config/aptmirror" ]; then
-		IFS=$'\n';
-		MIRRORS=($(cat $BASEPATH/config/aptmirror));
-		for MIRROR in ${MIRRORS[@]}; do
-			URL=$MIRROR"/dists/wheezy/main/binary-armhf/Packages"
-			if [ $(wget --spider $URL >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
-				wget -O - $URL > $BASEPATH/config/pkglist 2>/dev/null
+#	RETURN=0;
+#	if [ -f "$BASEPATH/config/aptmirror" ]; then
+#		IFS=$'\n';
+#		MIRRORS=($(cat $BASEPATH/config/aptmirror));
+#		for MIRROR in ${MIRRORS[@]}; do
+#			URL=$MIRROR"/dists/wheezy/main/binary-armhf/Packages"
+#			if [ $(wget --spider $URL >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
+#				wget -O - $URL > $BASEPATH/config/pkglist 2>/dev/null
 				RETURN=1;
-				break;
-			fi
-		done
-		IFS=$ORIGINALIFS;
-	fi
+#				break;
+#			fi
+#		done
+#		IFS=$ORIGINALIFS;
+#	fi
 	return $RETURN;
 }
 
