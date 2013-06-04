@@ -18,7 +18,7 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 #Disable or enable table column
-TBLCOLUMNCENTER=1;
+TBLCOLUMNCENTER=1
 
 # Wrap text fit in dialog width
 #  $1 [String]		Text
@@ -133,7 +133,7 @@ function trimLnFn() {
 function createTableFn() {
 	TYPE=$1;
 	shift;
-	IFS=",";
+	IFS=";";
 	OLDHEADER=($1)
 	shift
 	OLDROWS=();
@@ -166,9 +166,9 @@ function createTableFn() {
 	done
 	IFS=$ORIGINALIFS;
 	
-	# if [ $TYPE == "radio" ]; then
+	 #if [ $TYPE == "radio" ]; then
 		# NRCOLUMNS=$(($NRCOLUMNS-1));
-	# fi
+	 #fi
 	
 	if [ $TYPE == "radio" ]; then
 		HEADER="  "${OLDHEADER[0]};
@@ -191,7 +191,7 @@ function createTableFn() {
 				CENTERED[$c]=1;
 			else
 				CENTERED[$c]=0;
-			fi	
+			fi
 			WORDLENGTH[$c]=${#OLDHEADER[$c]};
 		else
 			CENTERED[$c]=0;

@@ -153,6 +153,8 @@ function showGUIFn() {
 					fi
 				fi
 				[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
+                        
+                        	APTUPDATELISTUPDATED=1
 				showGUIFn; 
 			fi
 		fi

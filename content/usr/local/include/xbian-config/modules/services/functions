@@ -33,56 +33,29 @@ function getInstalledServicesFn() {
 
 function getServiceAutoStartStatusFn() {
 	[ -z "$1" ] && return 0
-	lsnr=$(ls /etc/rc2.d/ | grep -c -io "S[0-9]\{1,\}$1")
-	if [ "$lsnr" -eq '0' ]; then
-		lsnr=$(ls /etc/init/ | grep -c -io "$1.override")
-		[ "$lsnr" -eq '1' ] && return 0
-		lsnr=$(ls /etc/init/ | grep -c -io "$1.conf")
-	fi
-	return "$lsnr"
+        [ -e /etc/init/$1.override ] && return 0
+        [ ! -e /etc/rc2.d/S??$1 -a ! -e /etc/init/$1.conf ] && return 0
+	return 1
 }
 
 function getServiceRunningStatusFn() {
-	SERVICE=$1;
-	SERVCONF=${SERVCONF#:*};
-	SERVCONF=${SERVCONF//,/ /};
-	RUNNING=0;
-	if [ ${#DAEMONS[@]} -eq 0 ]; then
-		if [[ "$PROCESSES" =~ "$SERVICE" ]]; then
-			RUNNING=1;
-		fi
-	else
-		for DAEMON in ${DAEMONS[@]}; do
-			if [[ "$PROCESSES" =~ "$DAEMON" ]]; then
-				RUNNING=$(($RUNNING+1));
-			fi
-		done
-		if [ $RUNNING -eq ${#DAEMONS[@]} ]; then
-			RUNNING=1;
-		else
-			RUNNING=0;
-		fi
-	fi
-	return $RUNNING;
+	SERVICE=$1
+        getServiceIDFn $1
+        SERVCONF=${aSERVICES[$?]}
+	SERVCONF=${SERVCONF#*:}
+        DAEMONS=${SERVCONF//,/\\n}
+	DAEMONS=($(echo -e $DAEMONS))
+
+	[ ${#DAEMONS[@]} -eq 0 ] && { pgrep $SERVICE > /dev/null && return 1 || return 0; }
+	for pn in $DAEMONS; do pgrep $pn > /dev/null || return 0; done
+        return 1
 }
 
 function getServiceNameFn() {
-	IFS=$'\n';
-	SERVCONF=($(echo -e "$SERVICES"));
-	IFS=$ORIGINALIFS;
-	I=0;
-	for SERVRAW in ${SERVCONF[@]}; do
-		SERV=${SERVRAW%:*};
-		FOUND=$(ls /etc/init.d/ /etc/init/ | grep -i "^$SERV*");
-		if [ ! -z "$FOUND" ]; then
-			if [ $I -eq $1 ]; then
-				break;
-			fi
-			I=$(($I+1));
-		fi 
-	done
-	NAME=$(ls -Al /etc/init.d/ | grep -m1 "$SERV" | awk '{print $9}');
-        [ -z "$NAME" ] && NAME=$(ls -Al /etc/init/ | grep -m1 "$SERV\." | awk '{print $9}');
+        SERVRAW=${aSERVICES[$1]}
+        SERV=${SERVRAW%:*}
+	NAME=$(find /etc/init.d/ -iname $SERV\* -printf '%P') 
+        [ -z "$NAME" ] && NAME=$(find /etc/init/ -iname $SERV\. -printf '%P');
         NAME=${NAME%.conf}
 }
 
@@ -93,122 +66,56 @@ function getServiceIDFn() {
 		SERV=${SERVRAW%:*};
 
 		if [ "$SERV" == "$1" ]; then
-			break;
+			return $I
 		fi
 		I=$(($I+1));
 	done
-	return $I;
+        return -1
 }
 
 function checkServiceExistsFn() {
-	[ -e "/etc/init.d/$1" ] && return 1
-	[ -e "/etc/init/$1.conf" ] && return 1
+	[ -e "/etc/init.d/$1" -o -e "/etc/init/$1.conf" ] && return 1
 	return 0
 }
 
 function restartServiceFn() {
-	getServiceNameFn $1;
+	getServiceNameFn $1
+
+        test -z "$2" && c="restart" || c=$2
+
 	if [ -f "/etc/init.d/$NAME" ]; then
-		/etc/init.d/$NAME restart &>/dev/null
-		RETURN=$?;
-		X=0;
-		while [ $(getServiceRunningStatusFn $NAME; echo $?) -eq 0 ] || [ $X -lt 10 ]; do
-			sleep 1;
-			PROCESSES=$(ps -A);
-			X=$(($X+1));
-		done;
-		return $RETURN;
-	elif [ -f "/etc/init/$NAME.conf" ]; then
-		stop $NAME
-		start $NAME
-	else
-		return -1;
-	fi
+		service $NAME $c > /dev/null|| return $?
+	else 
+		$c -q $NAME || return $?
+        fi
+
+        return 0
 }
 
 function startServiceFn() {
-	getServiceNameFn $1;
-	if [ -f "/etc/init.d/$NAME" ]; then
-		/etc/init.d/$NAME start &>/dev/null
-		RETURN=$?;
-		X=0;
-		while [ $(getServiceRunningStatusFn $NAME; echo $?) -eq 0 ] && [ $X -lt 10 ]; do
-			sleep 1;
-			PROCESSES=$(ps -A);
-			X=$(($X+1));
-		done;
-		return $RETURN;
-	elif  [ -f "/etc/init/$NAME.conf" ]; then
-			start $NAME
-	else
-			return -1;
-	fi
-
+        restartServiceFn $1 start
 }
 
 function stopServiceFn() {
-	getServiceNameFn $1;
-	if [ -f "/etc/init.d/$NAME" ]; then
-		/etc/init.d/$NAME stop &>/dev/null
-		RETURN=$?;
-		X=0;
-		while [ $(getServiceRunningStatusFn $NAME; echo $?) -eq 1 ] && [ $X -lt 10 ]; do
-			sleep 1;
-			PROCESSES=$(ps -A);
-			X=$(($X+1));
-		done;
-		return $RETURN;
-	elif  [ -f "/etc/init/$NAME.conf" ]; then
-			stop $NAME
-			return 0
-	else
-			return -1;
-	fi
+        restartServiceFn $1 stop
 }
 
 function disableAutoStartFn() {
 	getServiceNameFn $1;
-	if [ -f "/etc/init.d/$NAME" ]; then	
-		update-rc.d $NAME remove &>/dev/null
-		RETURN=$?;
-		X=0;
-		while [ $(getServiceAutoStartStatusFn $NAME; echo $?) -eq 1 ] && [ $X -lt 10 ]; do
-			sleep 1;
-			X=$(($X+1));
-		done;
-		if [ $X -eq 9 ]; then
-			RETURN=0;
-		fi
-		return $RETURN;
-	elif  [ -f "/etc/init/$NAME.conf" ]; then
-			stop $NAME || true 
-			echo "manual" > "/etc/init/$NAME.override"
-			return 0
-	else
-			return -1;
-	fi
+	if [ -f "/etc/init.d/$NAME" ]; then
+		insserv -r "/etc/init.d/$NAME" || return $?
+        else
+		{ echo "manual" > "/etc/init/$NAME.override"; } || return $?
+        fi
 }
 
 function enableAutoStartFn() {
 	getServiceNameFn $1;
 	if [ -f "/etc/init.d/$NAME" ]; then
-		update-rc.d $NAME defaults &>/dev/null
-		RETURN=$?;
-		X=0;
-		while [ "$(getServiceAutoStartStatusFn $NAME; echo $?)" -eq '0' ] && [ "$X" -lt 10 ]; do
-			sleep 1;
-			X=$(($X+1))
-		done
-		if [ "$X" -eq '9' ]; then
-			RETURN=0
-		fi
-		return $RETURN;
-	elif  [ -f "/etc/init/$NAME.conf" ]; then
-			rm -fr "/etc/init/$NAME.override" > /dev/null 2>&1
-			return 0
-	else
-			return -1;
-	fi
+		insserv "/etc/init.d/$NAME" || return $?
+        else
+		rm -fr "/etc/init/$NAME.override" || return $?
+        fi
 }
 
 function getServiceConfFn() {
@@ -217,11 +124,11 @@ function getServiceConfFn() {
 
 	for SERVRAW in ${INSTSERV[@]}; do
 		if [ $I -eq $1 ]; then
-			DATA[0]=${SERVRAW%:*};
+			DATA[0]=${SERVRAW%:*}
 			DATA[1]=${SERVRAW#*:}
 			break;
 		fi 
-		I=$(($I+1));
+		I=$(($I+1))
 	done
 }
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #
 #Copyright 2012 CurlyMo <development@xbian.org>
 #
@@ -25,11 +26,13 @@
 ARGUMENTS=(list select status start restart stop autostart insert update delete);
 if [ -f "$BASEPATH/config/services" ]; then
 	SERVICES=$(cat $BASEPATH/config/services | sort);
+        for s in $SERVICES; do
+                aSERVICES=(${aSERVICES[@]} $s)
+        done
 else
 	SERVICES="";
 fi
 INSTSERV=();
-PROCESSES=$(ps -A);
 
 #|------------------------------------|
 #|          Include files             |
@@ -51,8 +54,8 @@ function showGUIFn() {
 	getInstalledServicesFn;
 	showServicesListDlg;
 	if [ $? -eq 0 ]; then
-		SERVICE=$(($RETURN-1));
-		getServiceNameFn $SERVICE;
+                SERVICE=$(($RETURN-1));
+        	getServiceNameFn $SERVICE;
 		if [ $RETURN -gt $(echo -e "$SERVICES" | grep -c .) ] || [ -z "$(echo $SERVICES)" ]; then
 			showServiceInsertDlg;
 			if [ $? -eq 0 ]; then
@@ -78,10 +81,11 @@ function showGUIFn() {
 				showGUIFn;
 			fi
 		else
-			showServiceManageDlg $SERVICE;
+                        SERVICE=$(($RETURN-1));
+			showServiceManageDlg $SERVICE
 			if [ $? -eq 0 ]; then
 				if [ $RETURN -eq 1 ]; then
-					if [ $(getServiceAutoStartStatusFn $NAME; echo $?) -eq 1 ]; then
+					if ! $(getServiceAutoStartStatusFn $NAME); then
 						showDisableAutoStartServiceDlg;
 						disableAutoStartFn $SERVICE;
 						RETURN=$?;
@@ -101,23 +105,19 @@ function showGUIFn() {
 						fi
 					fi
 				elif [ $RETURN -eq 2 ]; then
-					if [ $(getServiceRunningStatusFn $NAME; echo $?) -eq 1 ]; then
-						showRestartServiceDlg;
-						restartServiceFn $SERVICE;
-						RETURN=$?;
-						if [ $RETURN -gt 0 ]; then
-							showFailedToRestartDlg;
+					if [ $(getServiceRunningStatusFn $NAME) ]; then
+						showRestartServiceDlg
+						if ! restartServiceFn $SERVICE ; then
+							showFailedToRestartDlg
 						else
-							showGUIFn;
+							showGUIFn
 						fi
 					else
-						showStartServiceDlg;
-						startServiceFn $SERVICE;
-						RETURN=$?;
-						if [ $RETURN -gt 0 ]; then
-							showFailedToStartDlg;
+						showStartServiceDlg
+						if ! startServiceFn $SERVICE ; then
+							showFailedToStartDlg
 						else
-							showGUIFn;
+							showGUIFn
 						fi
 					fi
 				elif [ $RETURN -eq 3 ]; then

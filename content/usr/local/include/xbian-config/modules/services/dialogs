@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+
 #Copyright 2012 CurlyMo <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
@@ -149,13 +149,13 @@ function showServicesListDlg() {
 	RUNNING=$_NO
 	X=3;
 	for SERVICE in ${INSTSERV[@]}; do
-		NAME=${SERVICE%:*};
-		if [ $(getServiceAutoStartStatusFn $NAME; echo $?) -eq 0 ]; then
+		NAME=${SERVICE%:*}
+		if $(getServiceAutoStartStatusFn $NAME); then
 			AT="\Z1"$(_ dialog.no);
 		else
 			AT="\Z2"$(_ dialog.yes);
 		fi
-		if [ $(getServiceRunningStatusFn $NAME; echo $?) -eq 0 ]; then
+		if $(getServiceRunningStatusFn $NAME); then
 			RUNNING="\Z1"$(_ dialog.no);
 		else
 			RUNNING="\Z2"$(_ dialog.yes);
@@ -183,13 +183,10 @@ function showServicesListDlg() {
 function showServiceManageDlg() {
 	MENU=()
 
-	IFS=$'\n';
-	SERVCONF=($(echo -e "$SERVICES"));
-	SERV=$(echo ${SERVCONF[$1]} | cut -f 1 -d:);
-	IFS=$ORIGINALIFS;	
-
+        getServiceNameFn $1
+        
 	TBLCOLUMNCENTER=0;
-	if [ $(getServiceAutoStartStatusFn $SERV; echo $?) -eq 0 ]; then
+	if ! $(getServiceAutoStartStatusFn $NAME) ; then
 		MENU+=("1,\Z1"$(_ services.label.autostart));
 	else
 		MENU+=("1,\Z2"$(_ services.label.autostart));

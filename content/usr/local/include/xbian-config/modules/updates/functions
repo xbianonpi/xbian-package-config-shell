@@ -18,19 +18,12 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 function retrieveUpdateListFn() {
-	if [ $GUIMODE = '1' ]; then
-		apt-get update 2>&1 | dialog --progressbox "Please be patient! Window will close automatically after apt-get finishes." 20 80 
-	else
-		apt-get update >/dev/null 2>&1
-	fi 
-	apt-get upgrade -s -u >/tmp/aptupdates 2>/dev/null
+	apt-get upgrade -s >/tmp/aptupdates 2>/dev/null
 }
 
 function getAllPackagesLisFn() {
 	if [ -f "/tmp/aptupdates" ]; then
-		IFS=$'\n';
-		PACKAGES=($(cat /tmp/aptupdates | sed -ne 's/\(Inst.*\)\([\ ]\{1\}\)\(xbian-[A-Za-z0-9\.\-]\{1,\}\)\([\ ]\)\(\[\)\(.*\)\(\]\)\(.*[(]\)\([0-9A-Za-z\~\.\:\+\-]\{1,\}\)\([\ ].*\)/\3;\6;\9/p' | grep -v xbian-update | sort | uniq));
-		IFS=$ORIGINALIFS;
+		PACKAGES=($(cat /tmp/aptupdates | sed -ne 's/\(Inst.*\)\([\ ]\{1\}\)\([A-Za-z0-9\.\-]\{1,\}\)\([\ ]\)\(\[\)\(.*\)\(\]\)\(.*[(]\)\([0-9A-Za-z\~\.\:\+\-]\{1,\}\)\([\ ].*\)/\3;\6;\9/p' | grep -v xbian-update | sort | uniq));
 		return 1;
 	else
 		return 0;
@@ -39,9 +32,7 @@ function getAllPackagesLisFn() {
 
 function getAllUpdatesLisFn() {
 	if [ -f "/tmp/aptupdates" ]; then
-		IFS=$'\n';
-		UPDATES=($(cat /tmp/aptupdates | sed -ne 's/\(Inst.*\)\([\ ]\{1\}\)\(xbian-update\)\([\ ]\)\(\[\)\(.*\)\(\]\)\(.*[(]\)\([0-9A-Za-z\~\.\:\+\-]\{1,\}\)\([\ ].*\)/\3;\6;\9/p' | sort | uniq));
-		IFS=$ORIGINALIFS;
+		UPDATES=("$(cat /tmp/aptupdates | sed -ne 's/\(Inst.*\)\([\ ]\{1\}\)\(xbian-update\)\([\ ]\)\(\[\)\(.*\)\(\]\)\(.*[(]\)\([0-9A-Za-z\~\.\:\+\-]\{1,\}\)\([\ ].*\)/\3;\6;\9/p' | sort | uniq)");
 		return 1;
 	else
 		return 0;
