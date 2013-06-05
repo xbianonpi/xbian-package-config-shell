@@ -26,7 +26,7 @@
 ARGUMENTS=(list select status start restart stop autostart insert update delete);
 if [ -f "$BASEPATH/config/services" ]; then
 	SERVICES=$(cat $BASEPATH/config/services | sort);
-                aSERVICES=($(cat $BASEPATH/config/services | sort))
+        aSERVICES=($(cat $BASEPATH/config/services | sort))
 else
 	SERVICES="";
 fi

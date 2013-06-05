@@ -49,7 +49,7 @@ showMsgDlg() {
 		--backtitle "$BACKTITLE" \
 		--title "$TITLE" \
 		--ok-label "$OKLABEL" \
-		--msgbox "$1" $HEIGHT $WIDTH
+		--msgbox "$1" $HEIGHT $WIDTH 
 }
 
 # Show a information box
@@ -72,7 +72,7 @@ showInfoDlg() {
 	dialog \
 		--backtitle "$BACKTITLE" \
 		--title "$TITLE" \
-		--infobox "\n$1" $HEIGHT $WIDTH
+		--infobox "\n$1" $HEIGHT $WIDTH 
 }
 
 # Show a text dialog
@@ -102,7 +102,7 @@ showTextDlg() {
 		--backtitle "$BACKTITLE" \
 		--title "$TITLE" \
 		--ok-label "$CLOSELABEL" \
-		--textbox "$1" $HEIGHT $WIDTH
+		--textbox "$1" $HEIGHT $WIDTH 
 }
 
 # Show a yes/no dialog
@@ -138,7 +138,7 @@ showConfirmDlg() {
 		--title "$TITLE" \
 		--yes-label $YESLABEL \
 		--no-label $NOLABEL \
-		--yesno "$1" $HEIGHT $WIDTH
+		--yesno "$1" $HEIGHT $WIDTH 
 }
 
 #Show menu
