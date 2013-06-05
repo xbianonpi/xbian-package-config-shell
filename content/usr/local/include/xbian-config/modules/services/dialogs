@@ -163,13 +163,13 @@ function showServicesListDlg() {
 		if [ ${#SERVICE} -gt $X ]; then
 			X=${#SERVICE};
 		fi
-		MENU+=($I",\Zn"$NAME","$AT","$RUNNING);
+		MENU+=($I,"\Zn"$NAME","$AT","$RUNNING);
 		I=$(($I+1))
 	done
-	MENU+=($I",\Zn...,\Zn...,\Zn...");
-	createTableFn "menu"\
-	"#,\Zb"$(_ services.label.service)",\Zb"$(_ services.label.autostart)",\Zb"$(_ services.label.running)\
-	"${MENU[@]}";
+	MENU+=($I,"\Zn...,\Zn...,\Zn...");
+	createTableFn "menu" \
+        "#;\Zb"$(_ services.label.service)";\Zb"$(_ services.label.autostart)";\Zb"$(_ services.label.running)\
+        "${MENU[@]}";
 	
 	
 	HEIGHT=$((${#MENU[@]}+8));
@@ -177,14 +177,15 @@ function showServicesListDlg() {
 		HEIGHT=15;
 	fi
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
-	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $HEIGHT
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+8))
+#$HEIGHT
 }
 
 function showServiceManageDlg() {
-	MENU=()
-
-        getServiceNameFn $1
         
+        getServiceNameFn $1
+
+	MENU=()
 	TBLCOLUMNCENTER=0;
 	if ! $(getServiceAutoStartStatusFn $NAME) ; then
 		MENU+=("1,\Z1"$(_ services.label.autostart));
@@ -196,7 +197,7 @@ function showServiceManageDlg() {
 	MENU+=("4,\Zn"$(_ services.label.edit));
 	MENU+=("5,\Zn"$(_ services.label.delete));
 	createTableFn "menu"\
-	"#,\Zb"$(_ services.label.action)\
+	"#;\Zb"$(_ services.label.action)\
 	"${MENU[@]}";
 	
 	TBLCOLUMNCENTER=1;

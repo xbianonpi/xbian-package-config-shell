@@ -19,13 +19,13 @@
 #
 
 function updateAptMirrorsFn() {
-#	if [ $(wget --spider http://apt.xbian.org/mirror.txt >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
-#		URL=$APTBASE"mirror.txt"
-#		wget -O - "$URL" > $BASEPATH/config/aptmirror 2>/dev/null
+	if [ $(wget --spider http://apt.xbian.org/mirror.txt >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
+		URL=$APTBASE"mirror.txt"
+		wget -O - "$URL" > $BASEPATH/config/aptmirror 2>/dev/null
 		return 1;
-#	else
-#		return 0;
-#	fi
+	else
+		return 0;
+	fi
 	
 }
 
@@ -34,9 +34,9 @@ function localPackageDBOutdatedFn() {
 #		if [ $(find /var/lib/apt/periodic/update-success-stamp -mtime +7 | grep -c .) -gt 0 ]; then
 #			if [ -f "$BASEPATH/config/pkglist" ] && [ -f "/var/lib/apt/lists/apt.xbian.org*Packages" ]; then
 #				if [ "$(md5sum /var/lib/apt/lists/apt.xbian.org*Packages | awk '{print $1}')" == "$(md5sum $BASEPATH/config/pkglist | awk '{print $1}')" ]; then
-#					return 0;
+					return 0;
 #				else
-					return 1;
+#					return 1;
 #				fi
 #			else
 #				return 1;
@@ -74,12 +74,7 @@ function getPackageVersionFn() {
 }
 
 function updateAptFn() {
-	apt-get update &>/tmp/aptstatus
-	if [ $? -eq 0 ]; then
-		return 1;
-	else
-		return 0;
-	fi
+	apt-get update &>/tmp/aptstatus &
 }
 
 function getAllPackagesForInstallFn() {

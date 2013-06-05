@@ -186,8 +186,8 @@ function createTableFn() {
 	CENTERED=();
 	
 	for (( c=0; c<$NRCOLUMNS; c++ )); do
-		if [ ${WORDLENGTH[$c]} -lt ${#OLDHEADER[$c]} ]; then
-			if [ $TBLCOLUMNCENTER -eq 1 ]; then
+		if [[ ${WORDLENGTH[$c]} -lt ${#OLDHEADER[$c]} ]]; then
+			if [ "$TBLCOLUMNCENTER" -eq 1 ]; then
 				CENTERED[$c]=1;
 			else
 				CENTERED[$c]=0;

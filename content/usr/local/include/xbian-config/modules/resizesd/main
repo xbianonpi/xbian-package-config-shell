@@ -24,7 +24,7 @@ exit 0
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(check resize);
+ARGUMENTS=(info);
 
 #|------------------------------------|
 #|          Include files             |
@@ -41,20 +41,7 @@ fi
 
 # Executes the GUI version of this module
 function showGUIFn() {
-	showSDConfirmationDlg;
-	if [ $? -eq 0 ]; then
-		checkNeedToResizeFn;
-		if [ $? -eq 0 ]; then
 			showSDResizeNotNeededDlg;
-		else
-			resizeSDFn;
-			if [ $? -eq 1 ]; then
-				showSDRebootDlg;
-			else
-				showSDErrorDlg;
-			fi
-		fi
-	fi
 }
 
 # Executes the command line version of this module
@@ -75,23 +62,6 @@ function showCMDFn() {
 				checkNeedToResizeFn;
 				if [ $? -eq 1 ]; then
 					echo 1;
-				else
-					echo -1;
-				fi
-			else
-				echo -2;
-			fi
-		;;
-		resize)
-			if [ $# -eq 1 ]; then
-				checkNeedToResizeFn;
-				if [ $? -eq 1 ]; then
-					resizeSDFn;
-					if [ $? -eq 0 ]; then
-						echo 1;
-					else
-						echo 0;
-					fi
 				else
 					echo -1;
 				fi

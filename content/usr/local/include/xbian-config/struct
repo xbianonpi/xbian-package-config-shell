@@ -21,4 +21,7 @@
 2.6:xbconfig
 3:services
 4:packages
-5:updates
+5:updatemenu
+5.1:updatemirrors
+5.2:aptupdate
+5.3:updates

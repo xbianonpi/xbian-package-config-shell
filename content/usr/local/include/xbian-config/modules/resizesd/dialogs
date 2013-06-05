@@ -17,8 +17,6 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
-exit 0
-
 function showSDConfirmationDlg() {
 	wrapTxtFn "$(_ resizesd.confirm)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
@@ -27,7 +25,7 @@ function showSDConfirmationDlg() {
 }
 
 function showSDResizeNotNeededDlg() {
-	wrapTxtFn "$(_ resizesd.not_needed)" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "This part of code is currently (as of beta1) obsolete and is disabled. Resize is automatically provided by initramfs helpers. On this place we plan to provide easy, simple but fully universal partition manipulator / copy / resizer to cover needs of a RPI user." $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;

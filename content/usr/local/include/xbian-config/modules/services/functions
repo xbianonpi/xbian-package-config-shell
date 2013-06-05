@@ -55,22 +55,21 @@ function getServiceNameFn() {
         SERVRAW=${aSERVICES[$1]}
         SERV=${SERVRAW%:*}
 	NAME=$(find /etc/init.d/ -iname $SERV\* -printf '%P') 
-        [ -z "$NAME" ] && NAME=$(find /etc/init/ -iname $SERV\. -printf '%P');
-        NAME=${NAME%.conf}
+        [ -z "$NAME" ] && NAME=$(find /etc/init/ -iname "$SERV.conf" -printf '%P');
+        NAME=${NAME%'.conf'}
 }
 
 function getServiceIDFn() {
 	I=0;
-	
 	for SERVRAW in ${INSTSERV[@]}; do
-		SERV=${SERVRAW%:*};
+		SERV=${SERVRAW%:*}
 
 		if [ "$SERV" == "$1" ]; then
 			return $I
 		fi
 		I=$(($I+1));
 	done
-        return -1
+        return 999
 }
 
 function checkServiceExistsFn() {
@@ -81,12 +80,13 @@ function checkServiceExistsFn() {
 function restartServiceFn() {
 	getServiceNameFn $1
 
-        test -z "$2" && c="restart" || c=$2
+        test -z "$2" && c="restart" || c="$2"
 
 	if [ -f "/etc/init.d/$NAME" ]; then
-		service $NAME $c > /dev/null|| return $?
+		service $NAME $c > /dev/null || return $?
 	else 
-		$c -q $NAME || return $?
+		[ $c = restart ] && c=reload
+                $c -q $NAME || return $?
         fi
 
         return 0

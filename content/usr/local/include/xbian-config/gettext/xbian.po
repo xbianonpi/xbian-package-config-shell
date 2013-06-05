@@ -744,10 +744,24 @@ msgstr "You didn't select a location"
 # xbian-config modules updates
 #
 
+msgid "xbian-config.aptupdate.name"
+msgstr "apt-get update"
+
+msgid "xbian-config.aptupdate.description"
+msgstr "Run apt-get update"
 msgid "xbian-config.updates.name"
-msgstr "Updates"
+msgstr "Check deb upgrades"
 
 msgid "xbian-config.updates.description"
+msgstr "Run apt-get upgrade"
+
+msgid "xbian-config.updatemirrors.name"
+msgstr "Update mirrors"
+msgid "xbian-config.updatemirrors.description"
+msgstr "Update informations about mirror sites available"
+msgid "xbian-config.updatemenu.name"
+msgstr "Updates"
+msgid "xbian-config.updatemenu.description"
 msgstr "Check for system updates"
 
 msgid "xbian-config.updates.apt.update"

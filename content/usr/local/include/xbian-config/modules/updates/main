@@ -69,7 +69,7 @@ function showGUIFn() {
 		retrieveUpdateListFn;
 		APTUPDATELISTUPDATED=1;
 	fi
-	getAllUpdatesLisFn;
+	getAllUpdatesLisFn
 	getAllPackagesLisFn
 	SYSTEMUPDATE=0;
 

@@ -159,7 +159,7 @@ function showMenuDlg() {
 		ROWS=5;
 	fi
 	HEIGHT=$(($ROWS+5))
-	WIDTH=$(($DEFAULTWIDTH+15));
+	WIDTH=$(($DEFAULTWIDTH+11));
 
 	if [ $# -gt 3 ]; then
 		HEIGHT=$4
@@ -183,6 +183,7 @@ function showMenuDlg() {
 			--colors \
 			--cancel-label $NOLABEL \
 			--column-separator "$DEFAULTCOLSEP" \
+                        --no-collapse \
 			--menu "\n$1" $HEIGHT $WIDTH $ROWS \
 			$2 3>&1 1>&2 2>&3)
 }
