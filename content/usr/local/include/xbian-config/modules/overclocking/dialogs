@@ -29,7 +29,7 @@ function showOCWarningDlg() {
 function showOCSettingsDlg() {
 	OCMENU=$1;
 	createTableFn "radio"\
-	"#,\Zb$(_ overclocking.label.preset),\ZbARM,\ZbCORE,\ZbSDRAM,\ZbOvervolt"\
+	"#;\Zb$(_ overclocking.label.preset);\ZbARM;\ZbCORE;\ZbSDRAM;\ZbOvervolt"\
 	"${OCMENU[@]}";
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7))

@@ -23,17 +23,18 @@ function showVideoFlagsDlg() {
 	X=0;
 	for FLAG in ${VIDEOFLAGS[@]}; do
 		X=$(($X+1));
-		LABEL=$(_ videoflags.$FLAG);
-		if [ ${VIDEOSETTINGS[$FLAG]} -eq 0 ]; then
-			MENU+=($X",\Zn$LABEL,off");
-		else
+		LABEL=$(_ "videoflags.$FLAG");
+                LABEL=$(echo "$LABEL" | tr "," "'")
+		if [ ${VIDEOSETTINGS["|$FLAG|"]} -eq 1 ]; then
 			MENU+=($X",\Zn$LABEL,on");
+		else
+			MENU+=($X",\Zn$LABEL,off");
 		fi
 	done;
-	LABEL=$(_ videoflags.label.videoflags);
+	LABEL=$(_ "videoflags.label.videoflags");
 	
 	createTableFn "radio" \
-	"#,\Zb$LABEL" \
+	"#;\Zb$LABEL" \
 	"${MENU[@]}"
 	
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));

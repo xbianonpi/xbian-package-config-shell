@@ -165,7 +165,7 @@ function showMainMenuDlg() {
 		if [ $1 -eq 0 ]; then
 			showMenuDlg "" "$MENU" 7 11 $(($DEFAULTWIDTH+15)) $(_ dialog.select) $(_ dialog.exit);
 		else
-			showMenuDlg "" "$MENU" 7
+			showMenuDlg "" "$MENU" 7 11 $(($DEFAULTWIDTH+15))
 		fi
 			
 		# What there a button pressed?

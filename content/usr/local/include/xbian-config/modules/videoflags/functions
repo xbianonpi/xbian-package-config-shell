@@ -19,18 +19,18 @@
 
 function getVideoFlagsFn() {
 	for FLAG in ${VIDEOFLAGS[@]}; do
-		selectConfigVarFn $FLAG;
-		if [ -z $RETURN ]; then
-			VIDEOSETTINGS[$FLAG]=0;
+		selectConfigVarFn "$FLAG=";
+		if [ -z "$RETURN" ]; then
+			VIDEOSETTINGS["|$FLAG|"]=0;
 		else
-			VIDEOSETTINGS[$FLAG]=1;
+			VIDEOSETTINGS["|$FLAG|"]=1;
 		fi
 	done;
 }
 
 function updateVideoFlagsFn() {
 	for KEY in ${!VIDEOFLAGS[*]}; do
-		FLAG=${VIDEOFLAGS[$KEY]};
+		FLAG=${VIDEOFLAGS["$KEY"]};
 		if [[ "$1" =~ "$(($KEY+1))" ]]; then
 			updateConfigVarFn "$FLAG" 1;
 			askForRebootFn;
@@ -42,13 +42,13 @@ function updateVideoFlagsFn() {
 	getVideoFlagsFn;
 	ERROR=0;
 	for KEY in ${!VIDEOFLAGS[*]}; do
-		FLAG=${VIDEOFLAGS[$KEY]};
+		FLAG=${VIDEOFLAGS["$KEY"]};
 		if [[ "$1" =~ "$(($KEY+1))" ]]; then
-			if [ ${VIDEOSETTINGS[$FLAG]} -eq 0 ]; then
+			if [ ${VIDEOSETTINGS["|$FLAG|"]} -eq 0 ]; then
 				ERROR=1;
 			fi
 		else
-			if [[ ${VIDEOSETTINGS[$FLAG]} -eq 1 ]]; then
+			if [ ${VIDEOSETTINGS["|$FLAG|"]} -eq 1 ]; then
 				ERROR=1;
 			fi
 		fi

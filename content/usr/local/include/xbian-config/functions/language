@@ -25,5 +25,5 @@ if [ ! -f "/usr/share/locale/${LANGUAGE//_/ }/LC_MESSAGES/xbian.mo" ]; then
 fi
 
 function _() {
-	printf "%s" $(gettext -d "xbian" -s "xbian-config."$1);
+	printf "%s" $(gettext -d "xbian" -s xbian-config.$1);
 }

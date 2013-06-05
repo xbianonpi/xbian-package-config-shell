@@ -1,0 +1,395 @@
+Package: xbian-package-cec
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 9760
+Depends: xbian-package-xbmc (>=2.2), udev (>=175-7.1), liblockdev1 (>=1.0.3-1.5)
+Filename: pool/main/x/xbian-package-cec/xbian-package-cec_1.0_armhf.deb
+Size: 3347056
+MD5sum: 31c4515921562bc5c8df47466a43c878
+SHA1: dd55e4e2e25b60f03f6dcd2a2f2696d02f48ab48
+SHA256: f411f3cec05605425fe2d334539e5faf005ee8d9e43305c901bb07feb2f7b182
+Section: utils
+Priority: optional
+Description: cec for XBian.
+Codename: wheezy
+
+Package: xbian-package-config-shell
+Version: 2.0
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 1240
+Depends: wget, bc
+Conflicts: dialog, xbian-package-config
+Replaces: xbian-package-config
+Filename: pool/main/x/xbian-package-config-shell/xbian-package-config-shell_2.0_armhf.deb
+Size: 308496
+MD5sum: 96234694e7dbf74484457003fe27c1de
+SHA1: e203f1928821b3cf77147438146f32c3e48aba8d
+SHA256: 3bc5632609286ff8a72b2e845a3d7be65158fef4d05796298816e052727f8f5b
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+Codename: wheezy
+
+Package: xbian-package-config-xbmc
+Version: 1.0
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Belese <development@xbian.org>
+Installed-Size: 200
+Depends: xbian-package-config-shell (>=2.0)
+Filename: pool/main/x/xbian-package-config-xbmc/xbian-package-config-xbmc_1.0_armhf.deb
+Size: 50922
+MD5sum: f21eb9bc3fc98e645af1a87ea09a073d
+SHA1: c4f4775be6ce381e2bdb977c711f8a33b8ba9df0
+SHA256: b54a8ec1590be327b22d582bc005822cefc2c2ed7fc84d2acd8fbe451cb81f3b
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+Codename: wheezy
+
+Package: xbian-package-couchpotato
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 20720
+Filename: pool/main/x/xbian-package-couchpotato/xbian-package-couchpotato_1.0_armhf.deb
+Size: 11138632
+MD5sum: 5e1375e247b8136ab99fe7e2d20ed135
+SHA1: d7f9a50d71701e40bcefcc3bfc2c24e4411081a6
+SHA256: b5bebf555c724074f40748144a097fbdf6b97672c3f08a40f478b05df349fe70
+Section: net
+Priority: optional
+Description: Couchpotato compiled, patched and configured for XBian
+Codename: wheezy
+
+Package: xbian-package-development
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 2400
+Depends: git-core, python-setuptools, make, gcc, build-essential, libftdipp1, libconfuse-dev, python-dev, i2c-tools
+Filename: pool/main/x/xbian-package-development/xbian-package-development_1.0_armhf.deb
+Size: 784660
+MD5sum: befeeff0f296f990ce502309b3f2d388
+SHA1: 131b6280e91760f07271b3cc15c2e6c55599cc93
+SHA256: 731f636e78b5f7d7241794e308e971ebaa4798ef46daf5db8ac2fc2df9932c39
+Section: devel
+Priority: optional
+Description: Common development tools for the RPi.
+Codename: wheezy
+
+Package: xbian-package-download
+Version: 2.0
+Architecture: armhf
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 1
+Depends: xbian-package-nzbget (>=1.0), xbian-package-transmission (>=1.0), xbian-package-headphones (>=1.0), xbian-package-sickbeard (>=1.0), xbian-package-couchpotato (>=1.0)
+Conflicts: xbian-package-download (=1.0)
+Filename: pool/main/x/xbian-package-download/xbian-package-download_2.0_armhf.deb
+Size: 70992
+MD5sum: d16bbf447fd1132f935b5e23ae3798d5
+SHA1: 40438790caefee81323da78ba67121ccf25e9e42
+SHA256: 3d28221b4c35d5d00a3c83dd962f37ff45af2dbea25e3377419ae40ec9bd5f4a
+Section: web
+Priority: optional
+Description: Torrent + Newserver download managers.
+Codename: wheezy
+
+Package: xbian-package-firmware
+Version: 1.2
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 15200
+Recommends: xbian-package-kernel3.6.11 (>=1.2)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/main/x/xbian-package-firmware/xbian-package-firmware_1.2_armhf.deb
+Size: 3261722
+MD5sum: 0b3b7ffb3a7213aa04dc00faaed26240
+SHA1: 682687b744ffdf7182806dbc0c61d87943512aea
+SHA256: cfb0c46171d26a49e3ff82d5b43e7a03c016fecd39df83113d9fff2a4c887f0f
+Section: firmware
+Priority: optional
+Description: Firmware for XBian.
+Codename: wheezy
+Replacing: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+
+Package: xbian-package-firmware
+Version: 1.3
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 7760
+Recommends: xbian-package-kernel3.6.11 (>=1.2)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/main/x/xbian-package-firmware/xbian-package-firmware_1.3_armhf.deb
+Size: 3328836
+MD5sum: 3f6da189e37577445cf4f2c33b15bc6a
+SHA1: 456221f3fe3f5853ddad99af1f4605da47d92929
+SHA256: 1e6cd172016d09f6ead9d7b5c5ef837b507bdea90ca3790cafa15afa94c00370
+Section: firmware
+Priority: optional
+Description: Firmware for XBian.
+Codename: wheezy
+Replacing: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+
+Package: xbian-package-headphones
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 17530
+Filename: pool/main/x/xbian-package-headphones/xbian-package-headphones_1.0_armhf.deb
+Size: 9557876
+MD5sum: 4230148ff8909213ea5e867b7aad28d4
+SHA1: 4a17205a70a6dc38f3c73eb07b332eb851cdb3b1
+SHA256: cafb8d6fa8a7e401ba1911ad09a19e1b65bf1d1246d45fead3627026bf5308ba
+Section: net
+Priority: optional
+Description: Headphones compiled, patched and configured for XBian
+Codename: wheezy
+
+Package: xbian-package-kernel3.6.11
+Version: 1.2
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 36150
+Depends: xbian-package-firmware (>=1.2)
+Filename: pool/main/x/xbian-package-kernel3.6.11/xbian-package-kernel3.6.11_1.2_armhf.deb
+Size: 13664868
+MD5sum: 8821ae448c53abf5522070b3fccb0587
+SHA1: 5419a3cbcf21f28ed346c1683e14a39d257e2b80
+SHA256: 148feec94270836ae1bec27c3f32c0719e2bc193c04a5c71cd368851d1bff501
+Section: kernel
+Priority: optional
+Description: Kernel 3.6.11 for the Raspberry Pi.
+Codename: wheezy
+
+Package: xbian-package-lirc
+Version: 1.3
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 2190
+Conflicts: lirc
+Replaces: xbian-package-lirc (<=1.2)
+Filename: pool/main/x/xbian-package-lirc/xbian-package-lirc_1.3_armhf.deb
+Size: 881762
+MD5sum: 8685906b60f3c8ecfe6afc550a69f79a
+SHA1: 0ab573c9054a11735e753f430ecff86262047ada
+SHA256: 1abf47bc33954a0e82e37831be4fcf66de0ef2a2497e2804e32b9cb3198abb58
+Section: utils
+Priority: optional
+Description: Remote controller deamon.
+Codename: wheezy
+
+Package: xbian-package-maraschino
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: Trinket
+Installed-Size: 33280
+Filename: pool/main/x/xbian-package-maraschino/xbian-package-maraschino_1.0_armhf.deb
+Size: 28057904
+MD5sum: bf4c11fc61b6eefa144d16651c01acbf
+SHA1: 59838cfbdb3d9e8cdbe41f645b963268cadc886f
+SHA256: 1b0836f99626276c87001dab9a4d4acaf9dff92917e0af25d7658edf9643457e
+Section: net
+Priority: optional
+Description: Maraschino compiled, patched and configured for XBian
+Codename: wheezy
+
+Package: xbian-package-nzbget
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 5080
+Depends: libpar2-0
+Filename: pool/main/x/xbian-package-nzbget/xbian-package-nzbget_1.0_armhf.deb
+Size: 1960926
+MD5sum: ccaf4648bcc7b620852aefda34904941
+SHA1: 782fc9fd7f5f0580a2a13d8509ed25dd9563f763
+SHA256: d870761387dc7dc5928adf72fdc5f2923787f338dd043f20d51718db34ed7365
+Section: net
+Priority: optional
+Description: NZBGet compiled, patched and configured for XBian
+Codename: wheezy
+
+Package: xbian-package-samba
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 1
+Depends: samba, samba-client, samba-common-bin
+Conflicts: xbian-package-networkfs
+Replaces: xbian-package-networkfs
+Filename: pool/main/x/xbian-package-samba/xbian-package-samba_1.0_armhf.deb
+Size: 1076
+MD5sum: bf92d002dfb9ee073ad354648c1be54a
+SHA1: a68d62bf5ac7081583663c8d0df5824930c8d593
+SHA256: 7a0ddffe0ee95e0c4292509748a2a8d0ed3cd30dc73c7abfc84fc3b1f73f52cb
+Section: net
+Priority: optional
+Description: Windows <--> linux filesharing.
+Codename: wheezy
+
+Package: xbian-package-sickbeard
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 15670
+Depends: python-cheetah
+Filename: pool/main/x/xbian-package-sickbeard/xbian-package-sickbeard_1.0_armhf.deb
+Size: 11250580
+MD5sum: eaa7829e2d8c8ffeef713bc33aaa2b3f
+SHA1: 1db8df9372cc6e91ab73efbe1d4e8b64784011e6
+SHA256: 567fde5e11a7b12a386026d7bbb2a4c63fa360f5f82e8111f564d27938b20612
+Section: net
+Priority: optional
+Description: Sickbeard compiled, patched and configured for XBian
+Codename: wheezy
+
+Package: xbian-package-sickbeard
+Version: 1.1
+Architecture: armhf
+Origin: XBian
+Maintainer: Faaz0 <development@xbian.org>
+Installed-Size: 12250
+Depends: python-cheetah
+Filename: pool/main/x/xbian-package-sickbeard/xbian-package-sickbeard_1.1_armhf.deb
+Size: 7907898
+MD5sum: 7d5cb53309d1db9bbfd27b1ff7802fb2
+SHA1: e43588a959eb725ce9aeccbc5677c44f479c699b
+SHA256: 8b6ac31c426204b794c4499646425a8c1d489d0916fca0cb92590c1fa8b592bb
+Section: net
+Priority: optional
+Description: Sickbeard compiled, patched and configured for XBian
+Codename: wheezy
+
+Package: xbian-package-transmission
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 56220
+Depends: libevent-dev, libcurl3
+Conflicts: transmission-cli, transmission-daemon
+Filename: pool/main/x/xbian-package-transmission/xbian-package-transmission_1.0_armhf.deb
+Size: 15863840
+MD5sum: 0fd7f49ba90fde7956fbffbd52d393be
+SHA1: ff9e1d7bbca5a39d6803333366b361ad06f3d4d3
+SHA256: 6baef5619f6d1ffccec7abbef5b3d55069cc475f03f3f04a5579871033b959dd
+Section: net
+Priority: optional
+Description: Transmission compiled, patched and configured for XBian
+Codename: wheezy
+
+Package: xbian-package-webserver
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 1
+Depends: apache2, php5
+Conflicts: xbian-package-web
+Replaces: xbian-package-web
+Filename: pool/main/x/xbian-package-webserver/xbian-package-webserver_1.0_armhf.deb
+Size: 806
+MD5sum: 217015e9e76c90f2972691b247dd07e0
+SHA1: 8061c8a7c13a76b556520495b7bf74459668b804
+SHA256: e2d55a7a75da3681e36567fde307fbb159960b810dc27cb77c108bacbdc7ee4f
+Section: web
+Priority: optional
+Description: PHP + Apache webserver.
+Codename: wheezy
+
+Package: xbian-package-xbmc
+Version: 2.1
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 131150
+Depends: xbian-package-firmware (>=1.3), libbluetooth3
+Filename: pool/main/x/xbian-package-xbmc/xbian-package-xbmc_2.1_armhf.deb
+Size: 66315734
+MD5sum: 4ee3003b5f6447bc951bfb2c3dc3ae8c
+SHA1: 21b51d6c2e1e2e92961797dbd2e4945742c03ad3
+SHA256: f6aa294b1fc8cc5f7ca5b7722708e914bfb58e16fa578f8e5437608a2f508d08
+Section: video
+Priority: optional
+Description: XBMC for XBian.
+Codename: wheezy
+
+Package: xbian-package-xbmc
+Version: 2.2
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 79190
+Depends: xbian-package-firmware (>=1.3), libbluetooth3, xbian-package-cec (>= 1.0)
+Filename: pool/main/x/xbian-package-xbmc/xbian-package-xbmc_2.2_armhf.deb
+Size: 39579710
+MD5sum: b30a507964d7eabc0a2ceff02a77c632
+SHA1: ec072318b79d77b5c6cc58c80a969bc99c622406
+SHA256: 78a6c46d7d11683a4a3b3ecaef2549e081db431c501e4dc3709d27563af923ee
+Section: video
+Priority: optional
+Description: XBMC for XBian.
+Codename: wheezy
+
+Package: xbian-package-xbmc
+Version: 2.0
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 77750
+Depends: xbian-package-firmware (>=1.2)
+Conflicts: libc-bin (>=2.13-38), libc-dev-bin (>=2.13-38), libc6 (>=2.13-38), libc6-dev (>=2.13-38)
+Replaces: xbian-package-xbmc (<=1.4)
+Filename: pool/main/x/xbian-package-xbmc/xbian-package-xbmc_2.0_armhf.deb
+Size: 39329780
+MD5sum: 4559ffe6d507fbf5ee81427decbdb3db
+SHA1: ad4a2341d967a364340e78a9d865ebe93262217c
+SHA256: 5d0e04d99bfec755f08f616d3dbbfefaa29200e2b966aaad7645deb2ce86902d
+Section: video
+Priority: optional
+Description: XBMC for XBian.
+Codename: wheezy
+
+Package: xbian-update
+Version: 1.0-0.5
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: CurlyMo <development@xbian.org>
+Installed-Size: 12890
+Depends: xbian-package-firmware (>=1.2), xbian-package-config-shell (>=2.0), xbian-package-config-xbmc (>=1.0), xbian-package-xbmc (>=2.0), xbian-package-kernel3.6.11 (>=1.2), xbian-package-lirc (>=1.3), udisks, libnfs-dev, nfs-common, samba-common-bin, avahi-daemon, usbmount, git-core, ntfs-3g, wireless-tools, libjasper-dev, libass-dev, fbset, libplist1, pv, exfat-fuse, bc, usbutils, libbluray-dev, watchdog, libcurl3, hfsplus, hfsprogs, hfsutils, klogd, sysklogd, libva1, console-tools
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, libc-bin (>=2.13-38), libc-dev-bin (>=2.13-38), libc6 (>=2.13-38), libc6-dev (>=2.13-38)
+Filename: pool/main/x/xbian-update/xbian-update_1.0-0.5_armhf.deb
+Size: 5915804
+MD5sum: 0f4f919d86cb7795489e8b0ba0ab7223
+SHA1: be1712919d693554768c82b72db04a2c8826907a
+SHA256: be1f5ca121a494e147852189d39f04567f8b8d2609e11e11fec1be2f1d5c1945
+Section: update
+Priority: optional
+Description: Updates XBian 1.0 Alpha 4 to Alpha 5.
+Codename: wheezy
+Replacing: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
+

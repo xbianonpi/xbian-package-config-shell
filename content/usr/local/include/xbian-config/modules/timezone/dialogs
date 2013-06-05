@@ -60,7 +60,7 @@ function showTZCategoryDlg() {
 	done;
 	TBLCOLUMNCENTER=0;
 	createTableFn "radio" \
-	"#,\Zb"$(_ timezone.label.timezone) \
+	"#;\Zb"$(_ timezone.label.timezone) \
 	"${MENU[@]}"
 	TBLCOLUMNCENTER=1;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+5)); 

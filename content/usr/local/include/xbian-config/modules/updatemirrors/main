@@ -1,0 +1,42 @@
+#!/bin/bash
+
+_module_=$MODULE
+#|------------------------------------|
+#|          Global variables          |
+#|------------------------------------|
+
+# The arguments this module accepts
+ARGUMENTS=(list);
+
+#|------------------------------------|
+#|          Include files             |
+#|------------------------------------|
+
+. $BASEPATH/modules/$_module_/functions
+if [ $GUIMODE -eq 1 ]; then
+        . $BASEPATH/modules/$_module_/dialogs
+fi
+
+function showGUIFn() 
+{
+
+case $MODULE in
+        updatemirrors)
+#                showDownloadPackageListDlg
+                updateAptMirrorsFn
+                if [ $? -eq 0 ]; then
+                        showFailedToRetrieveAptMirrosDlg
+                else
+                        downloadPackageListFn
+                        #REMOTEPKGDBUPDATED=$?
+                fi
+                ;;
+        aptupdate)
+                updateAptFn speak | dialog --programbox 30 70 
+                ;;
+                *)
+                ;;
+esac
+
+}
+

@@ -33,7 +33,7 @@ function showBootFlagsDlg() {
 	LABEL=$(_ bootflags.label.bootflags);
 	
 	createTableFn "radio" \
-	"#,\Zb$LABEL" \
+	"#;\Zb$LABEL" \
 	"${MENU[@]}"
 	
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));

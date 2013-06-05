@@ -22,7 +22,7 @@ function showXBMCSettingsDlg() {
 	MENU+=(1,"\Zn"$(_ xbmc.label.guires));
 	MENU+=(2,"\Zn"$(_ xbmc.label.webserver));
 	createTableFn "menu"\
-	"#,\Zb"$(_ xbmc.label.actions)\
+	"#;\Zb"$(_ xbmc.label.actions)\
 	"${MENU[@]}";
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11))
@@ -37,7 +37,7 @@ function showXBMCGUIResDlg() {
 		MENU+=($I",\Zn"$RES);
 	done
 	createTableFn "menu"\
-	"#,\Zb"$(_ xbmc.label.guires)\
+	"#;\Zb"$(_ xbmc.label.guires)\
 	"${MENU[@]}";
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11))
