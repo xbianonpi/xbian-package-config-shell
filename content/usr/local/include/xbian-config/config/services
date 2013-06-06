@@ -10,7 +10,6 @@ sabnzbd:
 sysklogd:syslogd
 klogd:
 nzbget:
-samba:smbd,nmbd
 dbus:
 ntp:ntpd
 iguanaIR:
@@ -21,3 +20,5 @@ smartmontools:smartd
 wd_keepalive:
 smartd:
 atd:
+samba:nmbd,smbd
+ifplugd:

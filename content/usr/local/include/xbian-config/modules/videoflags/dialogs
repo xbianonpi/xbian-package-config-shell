@@ -19,12 +19,11 @@
 
 function showVideoFlagsDlg() {
 	MENU=();
-
 	X=0;
 	for FLAG in ${VIDEOFLAGS[@]}; do
 		X=$(($X+1));
 		LABEL=$(_ "videoflags.$FLAG");
-                LABEL=$(echo "$LABEL" | tr "," "'")
+		LABEL=$(echo "$LABEL" | tr "," "'")
 		if [ ${VIDEOSETTINGS["|$FLAG|"]} -eq 1 ]; then
 			MENU+=($X",\Zn$LABEL,on");
 		else

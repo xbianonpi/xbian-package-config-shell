@@ -38,7 +38,7 @@ setInterfaceWlanCredentials() {
 		WLANBUFFER=""
 		case $2 in
 			"WEP")
-				WLANBUFFER+="\nwireless-essid $3\nwireless-key $4"
+				WLANBUFFER+="\nwireless-essid \"$3\"\nnwireless-key \"$4\""
 			;;
 			"WPA")
 				WLANBUFFER+="\nwpa-ssid \"$3\"\nwpa-psk \"$4\""

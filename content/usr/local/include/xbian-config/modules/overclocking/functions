@@ -44,7 +44,7 @@ function getCurrentOCSettingsFn() {
 		SETTINGS=(${OCSETTINGS[$KEY]});
 		I=0;
 		for KEY1 in ${!SETTINGS[@]}; do
-			if [ ! -z ${OCOLDSETTINGS[$KEY1]} ] && [ ${SETTINGS[$KEY1]} -eq ${OCOLDSETTINGS[$KEY1]} ]; then
+			if [ ! -z ${OCOLDSETTINGS[$KEY1]} ] && [ ${SETTINGS[$KEY1]} = ${OCOLDSETTINGS[$KEY1]} ]; then
 				I=$(($I+1));
 			fi
 			if [ $I -eq ${#SETTINGS[@]} ]; then

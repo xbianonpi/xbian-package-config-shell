@@ -31,7 +31,7 @@ function showInterfacesSelectDlg() {
 	done
 	TBLCOLUMNCENTER=0;
 	createTableFn "menu"\
-	"#,\Zb$(_ network.label.interfaces),\Zb$(_ network.label.ipaddress),\Zb$(_ network.label.netmask)"\
+	"#;\Zb$(_ network.label.interfaces);\Zb$(_ network.label.ipaddress);\Zb$(_ network.label.netmask)"\
 	"${MENU[@]}";
 	TBLCOLUMNCENTER=1;
 	
@@ -62,7 +62,7 @@ function showIPModeConfigDlg() {
 	MENU+=(2",\Zn$(_ network.label.static),"$STATUSSTATIC);
 	
 	createTableFn "radio" \
-	"#,\Zb$(_ network.label.type)"\
+	"#;\Zb$(_ network.label.type)"\
 	"${MENU[@]}"
 	
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
@@ -97,7 +97,7 @@ function showWlanModeConfigDlg() {
 	MENU+=(2",\Zn$(_ network.label.wep),$STATUSWEP");
 	MENU+=(3",\Zn$(_ network.label.open),$STATUSOPEN");
 	createTableFn "radio" \
-	"#,\Zb$(_ network.label.protection)"\
+	"#;\Zb$(_ network.label.protection)"\
 	"${MENU[@]}"
 	
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
@@ -243,7 +243,7 @@ function showAvailableWLANDlg() {
 	done
 	TBLCOLUMNCENTER=0;
 	createTableFn "radio" \
-	"#,\Zb$(_ network.label.name),\Zb$(_ network.label.protection),\Zb$(_ network.label.type),\Zb$(_ network.label.signal)" \
+	"#;\Zb$(_ network.label.name);\Zb$(_ network.label.protection);\Zb$(_ network.label.type);\Zb$(_ network.label.signal)" \
 	"${MENU[@]}"
 	TBLCOLUMNCENTER=1;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
