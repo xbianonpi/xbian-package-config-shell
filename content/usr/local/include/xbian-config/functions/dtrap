@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+#Copyright 2012 CurlyMo <development@xbian.org>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+set -E
+
+function killLoader()
+{
+
+                # Stop the loader
+                if ps a | grep -v grep | grep -q $LOADER ; then
+                        kill -9 $LOADER  > /dev/null 2>&1 &
+                        wait $! 2>/dev/null
+                fi
+}
+
+show_error()
+{
+
+        echo "TRAP on $(date)" >> /tmp/$(basename $0).err
+#        echo "Line numbers: ${BASH_LINENO[@]}" >> /tmp/$(basename $0).err
+#        echo "In ${BASH_SOURCE[@]}" >> /tmp/$(basename $0).err
+#        echo "with CMDs ${BASH_CMDS[@]}" >> /tmp/$(basename $0).err
+        echo "in $0 on line $1 at $2 exit $3" >> /tmp/$(basename $0).err
+#        echo $(env) >> /tmp/$(basename $0).err
+#        echo "trap err ocurred, look at /tmp/$(basename $0).err"
+
+        killLoader
+
+}
+trap 'show_error ${LINENO} ${FUNCNAME} $?' ERR
+

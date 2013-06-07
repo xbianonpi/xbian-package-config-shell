@@ -1,6 +1,7 @@
 #!/bin/bash
+
 #
-#Copyright 2012 Hexagon & CurlyMo <development@xbian.org>
+#Copyright 2012 Hexagon & CurlyMo & mk01 <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -297,16 +298,9 @@ function readNetworkConfigurationFn() {
 
 		# Extract DHCP or Static
 		MODE=$(echo -e "$TFILEIFACES" | grep "iface $1" | cut -f 4 -d " ");
-		CIP=$(ifconfig $1 | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet addr:\([0-9.]\+\).*/\1/gp');
-		if [ $MODE == "dhcp" ]; then
-			# Extract ip address given by dhcp server
-			CSM=$(ifconfig $1 | grep Mask | awk '{print $4}' | cut -f2 -d:);
-			CGW=$(grep dhcp-server-identifier /var/lib/dhcp/dhclient.eth0.leases | tail -1 | awk '{print $3}' | awk '{print substr($0,0,length)}');
-		else
-			# Extract manual ip configuration
-			CSM=$(echo -e "$CONTENT" | grep netmask | cut -f 2 -d " ");
-			CGW=$(echo -e "$CONTENT" | grep gateway | cut -f 2 -d " ");
-		fi
+		CIP=$(ifconfig -a $1 | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet addr:\([0-9.]\+\).*/\1/gp');
+		CSM=$(ifconfig -a $1 | grep Mask | awk '{print $4}' | cut -f2 -d:);
+		CGW=$(netstat -rn | grep -m1 0.0.0.0 | awk '{print $2}');
 
 		# Extract wlan configuration
 		PROTECTION=""
@@ -358,7 +352,7 @@ function readNetworkConfigurationFn() {
 		echo "netmask $CSM"
 		echo "gateway $CGW"
 		echo "nameserver1 $NS1"
-		echo "namserver2 $NS2"
+		echo "nameserver2 $NS2"
 		if [ ! -z "$PROTECTION" ]; then
 			echo "protection $PROTECTION"
 			echo "ssid $SSID"
@@ -445,17 +439,15 @@ function scanWLANNetworksFn() {
 		if [[ $LINE =~ "ESSID" ]]; then
 			WLAN[0]=$(echo $LINE | cut -f2 -d":");
 		fi
-		if [ ${#WLAN[0]} -gt 2 ]; then
-			if [[ $LINE =~ "WPA" ]]; then
-				WLAN[1]="WPA"
-			fi
-			if [[ $LINE =~ "Encryption key" ]]; then
-				WLAN[2]=$(echo $LINE | cut -f2 -d":");
-			fi
-			if [[ $LINE =~ "Signal level" ]]; then
-				WLAN[3]=$(echo $LINE | sed -ne 's/.*Signal level[^\s]\([0-9]\{1,3\}\).*/\1/p');
-			fi
+		if [[ $LINE =~ "WPA" ]]; then
+			WLAN[1]="WPA"
 		fi
+		if [[ $LINE =~ "Encryption key" ]]; then
+			WLAN[2]=$(echo $LINE | cut -f2 -d":");
+		fi
+		if [[ $LINE =~ "Signal level" ]]; then
+			WLAN[3]=$(echo $LINE | sed -ne 's/.*Signal level=[^\s]\([0-9]\{1,3\}\).*/\1/p');
+                fi
 	done;
 	X=$(($X+1));
 	if [ ${#WLAN[0]} -gt 2 ]; then

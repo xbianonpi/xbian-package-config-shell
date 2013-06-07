@@ -33,6 +33,7 @@ if [ $GUIMODE -eq 1 ]; then
 	source $BASEPATH/modules/network/dialogs
 fi
 source $BASEPATH/functions/markup
+[ "$DEBUG" = yes ] && . $BASEPATH/functions/dtrap
 
 #|------------------------------------|
 #|           Main program             |
