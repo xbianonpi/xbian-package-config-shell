@@ -421,13 +421,13 @@ function showCMDFn() {
 		updatedb)
 			STATUS=0;
 			updateAptMirrorsFn;
-			if [ $? -eq 1 ]; then
+			if [ $? -eq 0 ]; then
 				downloadPackageListFn;
-				if [ $? -eq 1 ]; then
+				if [ $? -eq 0 ]; then
 					localPackageDBOutdatedFn;
-					if [ $? -eq 1 ]; then
+					if [ $? -eq 0 ]; then
 						updateAptFn;
-						if [ $? -eq 1 ]; then
+						if [ $? -eq 0 ]; then
 							STATUS=1;
 						else
 							STATUS=0;
