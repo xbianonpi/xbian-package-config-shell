@@ -17,7 +17,7 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 #
-
+set -o history
 # This will only allow xbian-config to be run as root
 if [ ! $(id -u) -eq 0 ]; then
 	echo "This program must be run as root.";
@@ -137,6 +137,8 @@ function showMainMenuDlg() {
 		# Change the dialog title to reflect the current module
 		TITLE="[${CPATH% > *} > $(_ $MODULE.name)]"
 		
+                killLoader
+
 		# Open the modules gui function
 		showGUIFn;
 		
@@ -155,11 +157,6 @@ function showMainMenuDlg() {
 		# Set the title to the appropriate menu level we're in
 		TITLE="["$CPATH"]"
 
-		# Stop the loader
-		if ps a | grep -v grep | grep -q $LOADER ; then
-			kill -9 $LOADER  > /dev/null 2>&1 &
-			wait $! 2>/dev/null
-		fi
 		
 		# Show the main menu
 		if [ $1 -eq 0 ]; then
@@ -192,7 +189,7 @@ function showMainMenuDlg() {
 }
 
 
-if [ $# -eq 0 ]; then
+if [ $# -eq 0 -o $1 = goto ]; then
 
 	mountpoint -q /boot || { mount /boot; export need_umount="yes"; }
 
@@ -234,6 +231,12 @@ if [ $# -eq 0 ]; then
 	#|------------------------------------|
 	#|          Global variables          |
 	#|------------------------------------|
+        if [ $1 == goto ]; then
+                . $BASEPATH/modules/$2/main
+                showGUIFn
+                killLoader
+                exit 
+        fi
 
 	# Current dialog title
 	TITLE="[$_TITLE]"
@@ -256,7 +259,7 @@ else
 	#|------------------------------------|
 
 	# System functions
-	#source $BASEPATH/functions/system
+	source $BASEPATH/functions/system
 	#clrMemCacheFn;
 	
 	export GUIMODE=0;

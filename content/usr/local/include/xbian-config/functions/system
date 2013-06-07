@@ -17,6 +17,16 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
+function killLoader()
+{
+
+                # Stop the loader
+                if ps a | grep -v grep | grep -q $LOADER ; then
+                        kill -9 $LOADER  > /dev/null 2>&1 &
+                        wait $! 2>/dev/null
+                fi
+}
+
 # Clear the systems memory
 function clrMemCacheFn() {
 	echo 1 | sudo tee /proc/sys/vm/drop_caches >/dev/null
