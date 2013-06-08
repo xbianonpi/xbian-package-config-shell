@@ -192,12 +192,15 @@ function showCMDFn() {
 		list)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
-					retrieveUpdateListFn;
+                                        limit=10; i=1
+					[ -z "$(find /tmp/aptupdates -cmin -60)" ] && retrieveUpdateListFn;
 					if [ "$2" == "packages" ]; then
 						getAllPackagesLisFn;
 						if [ ${#PACKAGES[@]} -ge 1 ]; then
 							for KEY in ${!PACKAGES[@]}; do
-								echo $(($KEY+1))";"${PACKAGES[$KEY]};
+								test $i -gt $limit && break
+                                                                echo $(($KEY+1))";"${PACKAGES[$KEY]};
+                                                                i=$(($i+1))
 							done
 						else
 							echo -2;
@@ -206,8 +209,10 @@ function showCMDFn() {
 						getAllUpdatesLisFn;
 						if [ ${#UPDATES[@]} -ge 1 ]; then
 							for KEY in ${!UPDATES[@]}; do
-								echo $(($KEY+1))";"${UPDATES[$KEY]};
-							done
+								test $i -gt $limit && break
+                                                                echo $(($KEY+1))";"${UPDATES[$KEY]};
+							        i=$(($i+1))
+                                                        done
 						else
 							echo -2;
 						fi
@@ -275,7 +280,7 @@ function showCMDFn() {
 						RETURN=$?;
 						case $RETURN in
 							0)
-								echo 1;
+                                                                echo 1;
 							;;
 							*)
 								echo $(($RETURN+1));
@@ -316,22 +321,14 @@ function showCMDFn() {
 			STATUS=0;
 			updateAptMirrorsFn;
 			if [ $? -eq 0 ]; then
-				downloadPackageListFn;
-				if [ $? -eq 0 ]; then
-					localPackageDBOutdatedFn;
-					if [ $? -eq 0 ]; then
-						updateAptFn;
+						updateAptFn
+                                                retrieveUpdateListFn
+                                                grep -q ^Inst /tmp/aptupdates 
 						if [ $? -eq 0 ]; then
 							STATUS=1;
 						else
 							STATUS=0;
 						fi
-					else
-						STATUS=1;
-					fi
-				else
-					STATUS=1;
-				fi
 			else
 				STATUS=0;
 			fi

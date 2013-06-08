@@ -23,7 +23,7 @@ function showVideoFlagsDlg() {
 	for FLAG in ${VIDEOFLAGS[@]}; do
 		X=$(($X+1));
 		LABEL=$(_ "videoflags.$FLAG");
-		LABEL=$(echo "$LABEL" | tr "," "'")
+                LABEL=$(echo "$LABEL" | tr "," "'")
 		if [ ${VIDEOSETTINGS["|$FLAG|"]} -eq 1 ]; then
 			MENU+=($X",\Zn$LABEL,on");
 		else
@@ -31,11 +31,9 @@ function showVideoFlagsDlg() {
 		fi
 	done;
 	LABEL=$(_ "videoflags.label.videoflags");
-	
 	createTableFn "radio" \
 	"#;\Zb$LABEL" \
 	"${MENU[@]}"
-	
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
 	showChecklistDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9))
 }

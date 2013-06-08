@@ -189,7 +189,7 @@ function showMainMenuDlg() {
 }
 
 
-if [ $# -eq 0 -o $1 = goto ]; then
+if [ $# -eq 0 -o "$1" = goto ]; then
 
 	mountpoint -q /boot || { mount /boot; export need_umount="yes"; }
 
@@ -231,7 +231,7 @@ if [ $# -eq 0 -o $1 = goto ]; then
 	#|------------------------------------|
 	#|          Global variables          |
 	#|------------------------------------|
-        if [ $1 == goto ]; then
+        if [ "$1" == goto ]; then
                 . $BASEPATH/modules/$2/main
                 showGUIFn
                 killLoader
@@ -274,7 +274,7 @@ else
 			echo 0;
 		fi;
 	elif [ -f $BASEPATH/modules/$MODULE/main ]; then
-		source $BASEPATH/modules/$MODULE/main
+                source $BASEPATH/modules/$MODULE/main
 		shift;
 		# If the module was called with arguments
 		if [ $# -gt 0 ]; then
@@ -282,7 +282,7 @@ else
 			case "${ARGUMENTS[@]}" in 
 				*"$1"*)
 					# Quotation marks to preserve newlines
-					showCMDFn "$@"
+                                        showCMDFn "$@"
 				;;
 				*)
 					[ -z "txt" ] && echo "Available arguments for module '$MODULE' are:";

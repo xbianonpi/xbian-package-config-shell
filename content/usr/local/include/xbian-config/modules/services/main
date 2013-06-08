@@ -55,13 +55,12 @@ fi
 
 # Executes the GUI version of this module
 function showGUIFn() {
-	refreshProcessesFn
+        refreshProcessesFn
 	showLoadingServiceDlg;
-	getInstalledServicesFn;
 	showServicesListDlg;
 	if [ $? -eq 0 ]; then
-		SERVICE=$(($RETURN-1));
-		getServiceNameFn $SERVICE
+                SERVICE=$(($RETURN-1));
+        	getServiceNameFn $SERVICE
 		if [ $RETURN -gt "$(echo ${#SERVICES[@]} )" -o -z "$(echo ${#SERVICES[@]})" ]; then
 			showServiceInsertDlg;
 			if [ $? -eq 0 ]; then
@@ -69,11 +68,12 @@ function showGUIFn() {
 				DATA=($(echo -e "$RETURN"));
 				DATA[1]=${DATA[1]// /,};
 				IFS=$ORIGINALIFS;
+
 				if checkServiceExistsFn "${DATA[0]}" ; then
 					updateServiceConfFn ${DATA[0]} ${DATA[1]} 
 					if [ $? -eq 0 ]; then
 						showServiceInsertedDlg;
-						readServiceFn
+                                                readServiceFn
 					else
 						showErrorDlg;
 					fi
@@ -86,23 +86,23 @@ function showGUIFn() {
 				showGUIFn;
 			fi
 		else
-			SERVICE=$(($RETURN-1));
-			getServiceNameFn $SERVICE
+                        SERVICE=$(($RETURN-1));
+                        getServiceNameFn $SERVICE
 			showServiceManageDlg $NAME
 			if [ $? -eq 0 ]; then
 				if [ $RETURN -eq 1 ]; then
 					if getServiceAutoStartStatusFn $NAME; then
 						showDisableAutoStartServiceDlg;
 						if disableAutoStartFn $NAME; then
-							showGUIFn
-						else
+                                                        showGUIFn
+                                                else
 							showFailedToDisableAutoStartDlg;
 						fi
 					else
 						showEnableAutoStartServiceDlg;
 						if enableAutoStartFn $NAME; then
-							showGUIFn
-						else
+                                                        showGUIFn
+                                                else
 							showFailedToEnableAutoStartDlg;
 						fi
 					fi
@@ -223,7 +223,6 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
 					if [[ "${!SERVICES[@]}" =~ "$2" ]]; then
-						getInstalledServicesFn;
 						getServiceConfFn $2;
 						echo ${DATA[1]//,/ };
 					else
@@ -237,45 +236,32 @@ function showCMDFn() {
 			fi
 		;;
 		status)
-			getInstalledServicesFn;
-			if [ $# -eq 2 ]; then
-				if [ -f "$BASEPATH/config/services" ]; then
-					if [[ ${!SERVICES[@]} =~ "$2" ]]; then
-						RUNNING=$(getServiceRunningStatusFn $2; echo $?);
-						AUTOSTART=$(getServiceAutoStartStatusFn $2; echo $?);
-						if [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 0 ]; then
-							echo $2 2;
-						elif [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 1 ]; then
-							echo $2 3;
-						elif [ $RUNNING -eq 1 ] && [ $AUTOSTART -eq 0 ]; then
-							echo $2 4;
-						elif [ $RUNNING -eq 1 ] && [ $AUTOSTART -eq 1 ]; then
-							echo $2 5;
-						fi
-					else
-						echo -2;
-					fi
-				else
-					echo -7;
-				fi
-			elif [ $# -eq 1 ]; then
-				if [ -f "$BASEPATH/config/services" ]; then
+                        refreshProcessesFn
+                        filter=''
+			if [ $# -eq 1 -o $# -eq 2 ]; then
+                                [ -n "$2" ] && filter="$2"
+				if [ -n "$filter" ] && [[ ${!SERVICES[@]} =~ "$2" ]] || [ -z "$filter" ]; then
+                                    if [ -f "$BASEPATH/config/services" ]; then
 					for NAME in ${!SERVICES[@]}; do
+                                                [ -n "$filter" -a "$NAME" != "$filter" ] && continue
 						RUNNING=$(getServiceRunningStatusFn $NAME; echo $?);
 						AUTOSTART=$(getServiceAutoStartStatusFn $NAME; echo $?);
-						if [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 0 ]; then
-							echo $NAME 2;
-						elif [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 1 ]; then
-							echo $NAME 3;
+                                                if [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 0 ]; then
+							echo $NAME 5;
 						elif [ $RUNNING -eq 1 ] && [ $AUTOSTART -eq 0 ]; then
+							echo $NAME 3;
+						elif [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 1 ]; then
 							echo $NAME 4;
 						elif [ $RUNNING -eq 1 ] && [ $AUTOSTART -eq 1 ]; then
-							echo $NAME 5;
-						fi
+							echo $NAME 2;
+                                                fi
 					done;
-				else
+				    else
 					echo -7;
-				fi
+				    fi
+                                else
+                                    echo -2
+                                fi
 			else
 				echo -1;
 			fi
@@ -283,15 +269,12 @@ function showCMDFn() {
 		start)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [[ ${!SERVICES[@]} =~ "$2" ]] && [ -f "/etc/init.d/$2" -o -f "/etc/init/$2.conf" ]; then
-						getInstalledServicesFn;
-						if [ $(getServiceRunningStatusFn $2; echo $?) -eq 0 ]; then
-							startServiceFn $2;
-							RETURN=$?;
-							if [ $RETURN -gt 0 ]; then
-								echo 0;
-							else
+					if [[ ${!SERVICES[@]} =~ "$2" ]]; then
+						if ! getServiceRunningStatusFn $2; then
+							if startServiceFn $2; then
 								echo 1;
+							else
+								echo 0;
 							fi;
 						else
 							echo -3
@@ -307,18 +290,14 @@ function showCMDFn() {
 			fi
 		;;
 		stop)
-			if [ $# -eq 2 ]; then		
+			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" -o -f "/etc/init/$2.conf" ]; then
-						getInstalledServicesFn;
-						if [ $(getServiceRunningStatusFn $2; echo $?) -eq 1 ]; then
-							ID=$(getServiceIDFn $2; echo $?);
-							stopServiceFn $ID;
-							RETURN=$?;
-							if [ $RETURN -gt 0 ]; then
-								echo 0;
-							else
+					if [[ "$SERVICES" =~ "$2" ]]; then
+						if getServiceRunningStatusFn; then
+							if stopServiceFn $2; then
 								echo 1;
+							else
+								echo 0;
 							fi;
 						else
 							echo -4
@@ -334,18 +313,14 @@ function showCMDFn() {
 			fi
 		;;
 		restart)
-			if [ $# -eq 2 ]; then	
-				if [ -f "$BASEPATH/config/services" ]; then	
-					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" -o -f "/etc/init/$2.conf" ]; then
-						getInstalledServicesFn;
-						if [ $(getServiceRunningStatusFn $2; echo $?) -eq 1 ]; then
-							ID=$(getServiceIDFn $2; echo $?);
-							restartServiceFn $ID;
-							RETURN=$?;
-							if [ $RETURN -gt 0 ]; then
-								echo 0;
-							else
+			if [ $# -eq 2 ]; then
+				if [ -f "$BASEPATH/config/services" ]; then
+					if [[ "$SERVICES" =~ "$2" ]]; then
+						if getServiceRunningStatusFn $2; then
+							if restartServiceFn $2; then
 								echo 1;
+							else
+								echo 0;
 							fi;
 						else
 							echo -4
