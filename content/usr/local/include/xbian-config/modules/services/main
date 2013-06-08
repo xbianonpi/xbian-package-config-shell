@@ -292,8 +292,8 @@ function showCMDFn() {
 		stop)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [[ "$SERVICES" =~ "$2" ]]; then
-						if getServiceRunningStatusFn; then
+					if [[ ${!SERVICES[@]} =~ "$2" ]]; then
+						if getServiceRunningStatusFn $2; then
 							if stopServiceFn $2; then
 								echo 1;
 							else
@@ -315,7 +315,7 @@ function showCMDFn() {
 		restart)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [[ "$SERVICES" =~ "$2" ]]; then
+					if [[ ${!SERVICES[@]} =~ "$2" ]]; then
 						if getServiceRunningStatusFn $2; then
 							if restartServiceFn $2; then
 								echo 1;
@@ -338,29 +338,23 @@ function showCMDFn() {
 		autostart)
 			if [ $# -eq 3 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					if [[ "$SERVICES" =~ "$2" ]] && [ -f "/etc/init.d/$2" -o -f "/etc/init/$2.conf" ]; then
+					if [[ ${!SERVICES[@]} =~ "$2" ]]; then
 						if [ $3 == "disable" ]; then
-							if [ $(getServiceAutoStartStatusFn $2; echo $?) -eq 1 ]; then
-								ID=$(getServiceIDFn $2; echo $?);
-								disableAutoStartFn $ID;
-								RETURN=$?;
-								if [ $RETURN -gt 0 ]; then
-									echo 0;
-								else
+							if getServiceAutoStartStatusFn $2; then
+								if disableAutoStartFn $2; then
 									echo 1;
+								else
+									echo 0;
 								fi
 							else
 								echo -5;
 							fi
 						elif [ $3 == "enable" ]; then
-							if [ $(getServiceAutoStartStatusFn $2; echo $?) -eq 0 ]; then
-								ID=$(getServiceIDFn $2; echo $?);
-								enableAutoStartFn $ID;
-								RETURN=$?;
-								if [ $RETURN -gt 0 ]; then
-									echo 0;
-								else
+							if ! getServiceAutoStartStatusFn $2; then
+								if enableAutoStartFn $2; then
 									echo 1;
+								else
+									echo 0;
 								fi
 							else
 								echo -6;
@@ -383,18 +377,16 @@ function showCMDFn() {
 				DATA=($2)
 				shift;
 				shift;
-				if [ ! -z "${DATA[0]}" ] && [ $(checkServiceExistsFn "${DATA[0]}"); echo $? ]; then
+				if [ ! -z "${DATA[0]}" ] && checkServiceExistsFn "${DATA[0]}"; then
 					DAEMONS=($@);
 					DAEMON=""
-					getServiceIDFn $2;
-					ID=$?
 					for VALUE in ${DAEMONS[@]}; do
 						DAEMON=$DAEMON$VALUE",";
 					done;
 					DAEMON=$(echo $DAEMON | awk '{print substr($0,0,length)}');
 					DATA+=($DAEMON);
-					updateServiceConfFn $ID ${DATA[*]}
-					if [ $? -eq 1 ]; then
+					updateServiceConfFn "${DATA[0]}" "${DATA[1]}"
+					if [ $? -eq 0 ]; then
 						echo 1
 					else
 						echo 0
@@ -408,12 +400,9 @@ function showCMDFn() {
 		;;
 		delete)
 		if [ $# -eq 2 ]; then
-			DATA=($2)
 			shift;
-			if [[ "$SERVICES" =~ "$2" ]]; then
-				ID=$(getServiceIDFn $2; echo $?);
-				deleteServiceFn $ID ${DATA[*]}
-				if [ $? -eq 1 ]; then
+			if [[ ${!SERVICES[@]} =~ "$1" ]]; then
+				if deleteServiceFn "$1"; then
 					echo 1
 				else
 					echo 0

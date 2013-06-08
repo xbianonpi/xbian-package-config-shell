@@ -53,6 +53,7 @@ refreshProcessesFn()
         PROCESSES=$(ps -e | awk 'ORS="\n"{print $4}')
 }
 function getServiceRunningStatusFn() {
+        [ -z "$1" ] && return 2
         p=${SERVICES[$1]}
 
 	[ -z "$p" ] && { $(echo "$PROCESSES" | grep -q "$1") && return 0 || return 1; }
@@ -132,6 +133,7 @@ function getServiceConfFn() {
 }
 
 function updateServiceConfFn() {
+        [ -z "$1" ] && return 1
 	if [ -f "$BASEPATH/config/services" ]; then
 		sed -i "/$1:/d" $BASEPATH/config/services 
 	fi
@@ -144,11 +146,11 @@ function updateServiceConfFn() {
 }
 
 function deleteServiceFn() {
-	DATA=($2);
+        [ -z "$1" ] && return 1
 	if [ -f "$BASEPATH/config/services" ]; then
-		sed -i "/${DATA[0]}:/d" $BASEPATH/config/services;
+		sed -i "/$1:/d" $BASEPATH/config/services;
 	fi
-	if [ -f "$BASEPATH/config/services" ] && [ $(cat $BASEPATH/config/services | grep -c "${DATA[0]}:") -eq 0 ]; then
+	if [ -f "$BASEPATH/config/services" ] && [ $(cat $BASEPATH/config/services | grep -c "$1:") -eq 0 ]; then
 		return 0
 	else
 		return 1
