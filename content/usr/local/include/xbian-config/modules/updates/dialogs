@@ -173,6 +173,6 @@ function showAvailableUpdatesDlg() {
 	createTableFn "check" " #;\Zb"$(_ updates.label.updates)";\Zb"$(_ updates.label.version) \
         "${MENU[@]}";
 	TBLCOLUMNCENTER=1;
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+1));
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+16));
 	showChecklistDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9)) 
 }

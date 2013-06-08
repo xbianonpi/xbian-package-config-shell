@@ -43,15 +43,15 @@ function showGUIFn() {
 	if [ $REMOTEPKGDBUPDATED -eq 0 ]; then
 		showDownloadPackageListDlg;
 		updateAptMirrorsFn;
-		if [ $? -eq 0 ]; then
+		if [ $? -eq 1 ]; then
 			showFailedToRetrieveAptMirrosDlg;
 		else
-			downloadPackageListFn;
-			REMOTEPKGDBUPDATED=$?
+#			downloadPackageListFn;
+			REMOTEPKGDBUPDATED=0
 		fi;
 	fi
-	if [ $LOCALPKGDBUPDATED -eq 0 ]; then
-		if [ $REMOTEPKGDBUPDATED -eq 1 ]; then
+	if [ "$LOCALPKGDBUPDATED" -eq 0 ]; then
+		if [ "$REMOTEPKGDBUPDATED" -eq 1 ]; then
 			localPackageDBOutdatedFn;
 			if [ $? -eq 1 ]; then
 				showUpdateAptDBDlg;
@@ -64,7 +64,7 @@ function showGUIFn() {
 			fi
 		fi
 	fi
-	if [ $APTUPDATELISTUPDATED -eq 0 ] || [ ! -f "/tmp/aptupdates" ]; then
+	if [ "$APTUPDATELISTUPDATED" -eq 0 ] || [ ! -f "/tmp/aptupdates" ]; then
 		showRetrievingUpdateListDlg;
 		retrieveUpdateListFn;
 		APTUPDATELISTUPDATED=1;

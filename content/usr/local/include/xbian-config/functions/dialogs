@@ -258,12 +258,12 @@ function showChecklistDlg() {
 	else
 		ROWS=5;
 	fi
-	WIDTH=$(($DEFAULTWIDTH+15))
+	WIDTH=$(($DEFAULTWIDTH+20))
 	if [ $# -gt 4 ]; then
 		WIDTH=$5
 	fi
 	
-	centerTxtFn "$(_ dialog.space_check_select)" $(($DEFAULTWIDTH+11));
+	centerTxtFn "$(_ dialog.space_check_select)" $(($DEFAULTWIDTH+16));
 	HEIGHT=$(($DEFAULTHEIGHT+5));
 	if [ $# -gt 3 ]; then
 		HEIGHT=$4
