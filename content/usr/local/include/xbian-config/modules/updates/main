@@ -173,6 +173,7 @@ function showGUIFn() {
 #  -  1: Success
 #  -  0: Failed
 #  - -1: Wrong number of arguments
+#  - -2: No updates available
 #  - -3: You need to run an updatedb first
 #  *list
 #  -  [index];[package name];[install version];[available version]
