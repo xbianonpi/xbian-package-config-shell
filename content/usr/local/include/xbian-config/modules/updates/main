@@ -194,7 +194,7 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
                                         limit=15; i=1
-					[ -z "$(find /tmp/aptupdates -cmin -60)" ] && retrieveUpdateListFn;
+					[ -z "$(find /tmp/aptupdates -cmin -60 2>/dev/null)" ] && retrieveUpdateListFn;
 					if [ "$2" == "packages" ]; then
 						getAllPackagesLisFn;
 						if [ ${#PACKAGES[@]} -ge 1 ]; then
