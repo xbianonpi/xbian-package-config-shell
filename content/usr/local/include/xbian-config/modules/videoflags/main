@@ -72,7 +72,7 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ $(printf "%s\n" ${VIDEOFLAGS[@]} | grep -c -o "$2") -gt 0 ]; then
 					getVideoFlagsFn;
-					echo ${VIDEOSETTINGS["$2"]};
+					echo ${VIDEOSETTINGS["|$2|"]};
 				else
 					echo 0;
 				fi
@@ -96,7 +96,7 @@ function showCMDFn() {
 						else
 							updateConfigVarFn "$2" "$3";
 							selectConfigVarFn "$2"
-							if [ "$RETURN" -eq "$3" ]; then
+							if [[ "$RETURN" =~ "=$3" ]]; then
 								echo 1;
 								askForRebootFn;
 							else
