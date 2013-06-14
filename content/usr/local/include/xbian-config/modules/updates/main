@@ -97,7 +97,7 @@ function showGUIFn() {
 					if [ -f "/tmp/aptstatus" ] || [ -f "/home/xbian/update" ]; then
 						showAskForLogDlg;
 						if [ $? -eq 0 ]; then
-							if [ -f "/home/xbian/update.log" ]; then
+							if [ -f "/home/xbian/xbian-update.log" ]; then
 								showSystemUpdateLogDlg;
 							elif [ -f "/tmp/aptstatus" ]; then
 								showUpdateLogDlg;
@@ -311,7 +311,7 @@ function showCMDFn() {
 			fi
 		;;		
 		progress)
-			if [ $(kill -0 $(pgrep apt-get) 2>/dev/null; echo $?) -eq 0 ]; then
+			if pgrep apt-get >/dev/null; then
 				echo 1;
 			else
 				echo 0;

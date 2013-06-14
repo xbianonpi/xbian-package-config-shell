@@ -54,13 +54,9 @@ function updatePackagesFn() {
 	if [ $1 -eq 1 ]; then
 		eval apt-get install -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		if [ $GUIMODE = '1' ]; then
-			eval apt-get install -y $LIST | dialog --progressbox 20 80
-		else
-			eval apt-get install -y $LIST
-		fi
+		eval apt-get install -y $LIST | dialog --progressbox 20 80
 	elif [ $1 -eq 2 ]; then
-		eval nohup apt-get install -y $LIST >/tmp/aptstatus
+		eval nohup apt-get install -y $LIST >/tmp/aptstatus &
 	fi
         getAptErrorCodeFn
         r=$?
@@ -160,11 +156,11 @@ function updateSystemFn() {
 		return 2;
 	else 
 		if [ $1 -eq 1 ]; then
-			eval apt-get install -s ${VERSIONS[0]}"="$NEXTVERSION &>/tmp/aptstatus
+			eval apt-get install -s ${VERSIONS[0]}"="$NEXTVERSION >/tmp/aptstatus
 		elif [ $1 -eq 0 ]; then
-			eval apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION &>/tmp/aptstatus
+			eval apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION  | dialog --progressbox 20 80 
 		elif [ $1 -eq 2 ]; then
-			eval nohup apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION &>/tmp/aptstatus &
+			eval nohup apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION >/tmp/aptstatus &
 		fi
                 getAptErrorCodeFn
                 r=$?

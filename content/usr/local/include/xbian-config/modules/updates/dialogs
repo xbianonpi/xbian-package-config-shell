@@ -151,7 +151,7 @@ function showUpdateLogDlg() {
 }
 
 function showSystemUpdateLogDlg() {
-	showTextDlg "/home/xbian/update" 15 $(($DEFAULTWIDTH+11));
+	showTextDlg "/home/xbian/xbian-update.log" 15 $(($DEFAULTWIDTH+11));
 }
 
 function showAvailableUpdatesDlg() {
