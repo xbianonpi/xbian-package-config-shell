@@ -54,18 +54,12 @@ function updatePackagesFn() {
 	if [ $1 -eq 1 ]; then
 		eval apt-get install -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		eval apt-get install -y $LIST | dialog --progressbox 20 80
+		{ rm -f /tmp/aptupdates; eval apt-get install -y $LIST; } | dialog --progressbox 20 80
 	elif [ $1 -eq 2 ]; then
-		eval nohup apt-get install -y $LIST >/tmp/aptstatus &
+		{ eval nohup apt-get install -y $LIST; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
 	fi
         getAptErrorCodeFn
-        r=$?
-	if [ $r == 0 ]; then
-                retrieveUpdateListFn
-                return 0
-        else
-                return r
-        fi
+        return $?
 }
 
 function findNextUpdateVersionFn() {
@@ -158,17 +152,11 @@ function updateSystemFn() {
 		if [ $1 -eq 1 ]; then
 			eval apt-get install -s ${VERSIONS[0]}"="$NEXTVERSION >/tmp/aptstatus
 		elif [ $1 -eq 0 ]; then
-			eval apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION  | dialog --progressbox 20 80 
+			{ rm -f /tmp/aptupdates; eval apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION; } | dialog --progressbox 20 80 
 		elif [ $1 -eq 2 ]; then
-			eval nohup apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION >/tmp/aptstatus &
+			{ eval nohup apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
 		fi
                 getAptErrorCodeFn
-                r=$?
-        	if [ $r == 0 ]; then
-                        retrieveUpdateListFn
-                        return 0
-                else
-                        return r
-                fi
+                return $?
 	fi
 }

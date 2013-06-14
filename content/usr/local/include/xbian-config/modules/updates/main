@@ -107,7 +107,7 @@ function showGUIFn() {
 					[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
 					LOG=1;
 					showSystemUpdateRebootDlg;
-					sudo reboot;
+					sleep 10; sudo reboot;
 				else
 					showUpdateAdvErrorDlg;
 				fi
@@ -154,7 +154,7 @@ function showGUIFn() {
 				fi
 				[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
                         
-                        	APTUPDATELISTUPDATED=1
+				APTUPDATELISTUPDATED=0
 				showGUIFn; 
 			fi
 		fi
