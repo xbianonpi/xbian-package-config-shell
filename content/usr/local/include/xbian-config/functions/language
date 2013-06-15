@@ -21,9 +21,9 @@
 LANGUAGE=$(locale | sed -ne 's/LANG=\([a-z]\{2,3\}_[A-Z]\{2,3\}\).*/\1/p');
 
 if [ ! -f "/usr/share/locale/${LANGUAGE//_/ }/LC_MESSAGES/xbian.mo" ]; then
-	LANGUAGE=en_EN
+	LANG=en_US.UTF-8
 fi
 
 function _() {
-	printf "%s" $(LANGUAGE=$LANGUAGE gettext -d "xbian" -s xbian-config.$1);
+	printf "%s" $(env LANG=$LANG gettext -d "xbian" -s xbian-config.$1);
 }
