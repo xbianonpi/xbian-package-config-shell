@@ -73,7 +73,7 @@ function showGUIFn() {
 					updateServiceConfFn ${DATA[0]} ${DATA[1]} 
 					if [ $? -eq 0 ]; then
 						showServiceInsertedDlg;
-                                                readServiceFn
+                                                readServicesFn
 					else
 						showErrorDlg;
 					fi
