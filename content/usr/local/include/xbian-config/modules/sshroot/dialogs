@@ -26,7 +26,7 @@ function enableDisableSSHRootLoginDlg() {
 	wrapTxtFn "$(_ sshroot.enable_confirm)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
-	showConfirmDlg "$ALIGNEDTXT" $HEIGHT 55 "$(_ dialog.enable)" "$(_ dialog_disable)"
+	showConfirmDlg "$ALIGNEDTXT" $HEIGHT 55 "$(_ dialog.enable)" "$(_ dialog.disable)"
 	return $?;
 }
 

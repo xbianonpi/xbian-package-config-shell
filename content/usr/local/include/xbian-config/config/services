@@ -22,3 +22,5 @@ smartd:
 atd:
 samba:nmbd,smbd
 ifplugd:
+nslcd:
+nscd:

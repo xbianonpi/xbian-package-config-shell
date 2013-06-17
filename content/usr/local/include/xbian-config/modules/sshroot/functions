@@ -23,7 +23,7 @@
 #  - 1: No root password is set
 #  - 0: Root password is set
 function rootPasswordSetFn() {
-	if [ -z $(cat /etc/shadow | grep root | cut -f 2 -d:) ]; then
+	if [ "$(cat /etc/shadow | grep root | cut -f 2 -d:)" = "*" ]; then
 		return 0;
 	else
 		return 1;

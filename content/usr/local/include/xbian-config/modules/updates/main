@@ -107,7 +107,7 @@ function showGUIFn() {
 					[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
 					LOG=1;
 					showSystemUpdateRebootDlg;
-					sudo reboot;
+					sleep 10; sudo reboot;
 				else
 					showUpdateAdvErrorDlg;
 				fi
@@ -154,7 +154,7 @@ function showGUIFn() {
 				fi
 				[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
                         
-                        	APTUPDATELISTUPDATED=1
+				APTUPDATELISTUPDATED=0
 				showGUIFn; 
 			fi
 		fi
@@ -173,6 +173,7 @@ function showGUIFn() {
 #  -  1: Success
 #  -  0: Failed
 #  - -1: Wrong number of arguments
+#  - -2: No updates available
 #  - -3: You need to run an updatedb first
 #  *list
 #  -  [index];[package name];[install version];[available version]
@@ -193,7 +194,7 @@ function showCMDFn() {
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
                                         limit=15; i=1
-					[ -z "$(find /tmp/aptupdates -cmin -60)" ] && retrieveUpdateListFn;
+					[ -z "$(find /tmp/aptupdates -cmin -60 2>/dev/null)" ] && retrieveUpdateListFn;
 					if [ "$2" == "packages" ]; then
 						getAllPackagesLisFn;
 						if [ ${#PACKAGES[@]} -ge 1 ]; then
