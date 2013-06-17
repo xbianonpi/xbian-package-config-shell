@@ -876,6 +876,8 @@ msgstr "Disable CEC"
 msgid "xbian-config.videoflags.disable_overscan"
 msgstr "Disable overscan"
 
+msgid "xbian-config.videoflags.disable_splash"
+msgstr "Disable the 'rainbow' screen at really start of RPI"
 #
 # xbian-config module xbconfig
 #

@@ -23,7 +23,7 @@
 
 # The arguments this module accepts
 ARGUMENTS=(list select update);
-VIDEOFLAGS=("hdmi_force_hotplug" "hdmi_ignore_hotplug" "hdmi_ignore_cec_init" "hdmi_ignore_cec" "disable_overscan");
+VIDEOFLAGS=("hdmi_force_hotplug" "hdmi_ignore_hotplug" "hdmi_ignore_cec_init" "hdmi_ignore_cec" "disable_overscan" "disable_splash");
 declare -A VIDEOSETTINGS;
 
 #|------------------------------------|
