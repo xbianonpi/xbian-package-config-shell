@@ -54,9 +54,9 @@ function updatePackagesFn() {
 	if [ $1 -eq 1 ]; then
 		eval apt-get install -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		{ rm -f /tmp/aptupdates; eval apt-get install -y $LIST; } | dialog --progressbox 20 80
+		{ rm -f /tmp/aptupdates; eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; } | dialog --progressbox 20 80
 	elif [ $1 -eq 2 ]; then
-		{ eval nohup apt-get install -y $LIST; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
+		{ eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
 	fi
         getAptErrorCodeFn
         return $?

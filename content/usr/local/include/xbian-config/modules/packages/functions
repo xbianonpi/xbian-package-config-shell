@@ -84,9 +84,9 @@ function installPackageFn() {
 		if [ $1 -eq 1 ]; then
 			apt-get install -s $2 &>/tmp/aptstatus
 		elif [ $1 -eq 0 ]; then
-			apt-get install -y $2 &>/tmp/aptstatus
+			apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus
 		elif [ $1 -eq 2 ]; then
-			nohup apt-get install -y $2 &>/tmp/aptstatus &
+			nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus &
 		fi
 		getAptErrorCodeFn;
 		return $?;
