@@ -82,11 +82,11 @@ function installPackageFn() {
 		return 1;
 	else
 		if [ $1 -eq 1 ]; then
-			apt-get install -s $2 &>/tmp/aptstatus
+			eval apt-get install -s $2 &>/tmp/aptstatus
 		elif [ $1 -eq 0 ]; then
-			apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus
+			eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus
 		elif [ $1 -eq 2 ]; then
-			nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus &
+			eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus &
 		fi
 		getAptErrorCodeFn;
 		return $?;
@@ -104,7 +104,7 @@ function removePackageFn() {
 		return 1;
 	else
 		if [ $1 -eq 1 ]; then
-			apt-get purge -s $2 &>/tmp/aptstatus
+			eval apt-get purge -s $2 &>/tmp/aptstatus
 
 			if [ $(cat /tmp/aptstatus | grep -c "is not installed, so not removed") -eq 1 ]; then
 				return 1;
@@ -116,9 +116,9 @@ function removePackageFn() {
 				return 0;
 			fi
 		elif [ $1 -eq 0 ]; then
-			apt-get purge -y $2 &>/tmp/aptstatus
+			eval apt-get purge -y $2 &>/tmp/aptstatus
 		elif [ $1 -eq 2 ]; then
-			nohup apt-get purge -y $2 &>/tmp/aptstatus &
+			eval nohup apt-get purge -y $2 &>/tmp/aptstatus &
 		fi
 	fi
 }
