@@ -137,8 +137,7 @@ function showPackageListFn() {
 function showGUIFn() {
 	if [ $REMOTEPKGDBUPDATED -eq 0 ]; then
 		showDownloadPackageListDlg;
-		updateAptMirrorsFn;
-		if [ $? -eq 0 ]; then
+		if ! updateAptMirrorsFn; then
 			showFailedToRetrieveAptMirrosDlg;
 		else
 			downloadPackageListFn;

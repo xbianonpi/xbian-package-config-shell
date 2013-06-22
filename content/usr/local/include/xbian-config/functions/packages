@@ -55,7 +55,7 @@ function downloadPackageListFn() {
 		IFS=$'\n';
 		MIRRORS=($(cat $BASEPATH/config/aptmirror));
 		for MIRROR in ${MIRRORS[@]}; do
-        		URL=$MIRROR"/dists/wheezy/main/binary-armhf/Packages"
+			URL=$MIRROR"/dists/wheezy/main/binary-armhf/Packages"
 			if [ $(wget --spider $URL >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
 				wget -O - $URL > $BASEPATH/config/pkglist 2>/dev/null
 				RETURN=0;
