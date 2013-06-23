@@ -65,7 +65,7 @@ function showCustomOCDlg() {
 	ELEMENTS+=("2,3,Core Freq,${SETTINGS[1]},16,4,3,0");
 	ELEMENTS+=("2,3,Core Freq,Mhz (250),21,22,11,2");
 	ELEMENTS+=("3,3,SDRAM Freq,${SETTINGS[2]},16,4,3,0");
-	ELEMENTS+=("3,3,ARM Freq,Mhz (700),21,11,10,2");
+	ELEMENTS+=("3,3,ARM Freq,Mhz (400),21,11,10,2");
 	ELEMENTS+=("4,3,Overvolt,${SETTINGS[3]},16,2,1,0");
 	ELEMENTS+=("4,3,Overvolt,* .025V + 1.2V (0),19,22,21,2");
 	
