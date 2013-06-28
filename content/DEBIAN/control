@@ -1,12 +1,12 @@
 Origin: XBian
 Package: xbian-package-config-shell
-Version: 2.1.3
+Version: 2.1.3-1
 Section: utils
 Essential: No
 Priority: optional
 Architecture: armhf
 Replaces: xbian-package-config
-Depends: wget, bc, gettext, dialog
-Conflicts: xbian-package-config
+Depends: wget, bc, gettext
+Conflicts: xbian-package-config, dialog
 Maintainer: Koenkk <development@xbian.org>
 Description: Configuration utility for XBian.
