@@ -24,3 +24,6 @@ samba:nmbd,smbd
 ifplugd:
 nslcd:
 nscd:
+rpcbind:
+mysql:mysqld
+
