@@ -26,6 +26,7 @@ fi
 
 # Disable [ctrl]-c and [ctrl]-z actions
 trap '' 2 20
+trap "{ test -n "$need_umount" && mountpoint -q /boot && umount /boot; rm -fr /run/xbian-config.$$; }" EXIT INT ERR
 
 #|------------------------------------|
 #|          Global variables          |
@@ -63,7 +64,6 @@ export GUIMODE=1;
 function showMainCloseDlg() {
 
 	DOREBOOT=0;
-	test -n "$need_umount" && mountpoint -q /boot && umount /boot
 	# Is a reboot needed for the changes to get effect
 	if [ $ASKFORREBOOT -eq 1 ]; then
 		wrapTxtFn "$(_ main.reboot_question)"
@@ -294,7 +294,6 @@ else
 			echo ${ARGUMENTS[@]};
 		fi
 	fi
-	test -n "$need_umount" && mountpoint -q /boot && umount /boot
 fi
 
 exit 0
