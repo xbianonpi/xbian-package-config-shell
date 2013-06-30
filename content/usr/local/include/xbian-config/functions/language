@@ -18,12 +18,34 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 #
 
-LANGUAGE=$(locale | sed -ne 's/LANG=\([a-z]\{2,3\}_[A-Z]\{2,3\}\).*/\1/p');
+check_locale()
+{
+    echo $(locale 2>/dev/null) > /tmp/xbian-config.lang
+    . /tmp/xbian-config.lang 2>/dev/null
 
-if [ ! -f "/usr/share/locale/${LANGUAGE//_/ }/LC_MESSAGES/xbian.mo" ]; then
-	LANGUAGE=en
-fi
+    if [ -n "$LC_ALL" ]; then
+        lsetting=$LC_ALL
+    elif [ -n "$LC_MESSAGES" ]; then
+        lsetting=$LC_MESSAGES
+    elif [ -n "$LANGUAGES" ]; then
+        lsetting=$LANGUAGES
+    elif [ -n "$LANG" ]; then
+        lsetting=$LANG
+    fi
+
+    [ -z "$lsetting" ] && return 1
+    ldir="${lsetting##*=}"
+    ldir="${ldir}_."
+    ldir="${ldir%%_*.*}"
+    [ ! -e "/usr/share/locale/$ldir/LC_MESSAGES/xbian.mo" ] && return 1
+    
+    return 0
+
+}
 
 function _() {
-	printf "%s" $(gettext -d "xbian" -s xbian-config.$1);
+	[ ! -e /run/xbian-config.$$ ] && { check_locale || echo  "LANG=en_US.UTF-8" > /run/xbian-config.$$; }
+	[ -e /run/xbian-config.$$ ] && { . /run/xbian-config.$$; export LANG; }
+
+	printf "%s" $(LANG=$LANG gettext -d "xbian" -s xbian-config.$1);
 }

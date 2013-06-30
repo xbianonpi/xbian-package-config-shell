@@ -83,17 +83,10 @@ function setLocaleFn() {
 	CHARSET="UTF-8"
 	
 	if [ $(locale -a | grep -c $INPUT.utf8) -eq 0 ]; then
-		localedef -i $INPUT -c -f $CHARSET -A /usr/share/locale/locale.alias $LOCALE
+		localedef -i $INPUT -c -f $CHARSET -A /etc/locale.alias $LOCALE
 	fi
 	sed -i "s/# $LOCALE/$LOCALE/g" /etc/locale.gen
-	update-locale $LOCALE
-	export LANG="$LOCALE" &>/dev/null
-	export LC_ALL="$LOCALE" &>/dev/null
-	export LANGUAGE="$LOCALE" &>/dev/null
-	CURLANG=$(sed -ne 's/LANG=\(.*\)/\1/p' /etc/default/locale);
-	sed -i "s/$CURLANG/$LOCALE/g" /etc/default/locale
-	CURLANG=$(sed -ne 's/export LANG=\(.*\)/\1/p' /etc/profile);
-	sed -i "s/$CURLANG/$LOCALE/g" /etc/profile
+	update-locale LANG=$LOCALE
 	CURLANG=$(sed '/<language>/!d;s//\n/;s/[^\n]*\n//;:a;$!{/<\/language/!N;//!ba};y/\n/ /;s/<\/language>/\n/;P;D' /home/xbian/.xbmc/userdata/guisettings.xml | sed -ne 's/\([A-Za-z]\{1,\}\)\([\ ](.*\|.*\)/\1/p'); #)
 	XBMCLANG=$(grep "^$1" $BASEPATH/config/languages | awk '{print $5}' | sed -e 's/_/ /g');
 	if [ ! -z $XBMCLANG ]; then
@@ -102,7 +95,5 @@ function setLocaleFn() {
 		sed -i "s/$CURLANG/English/g" /home/xbian/.xbmc/userdata/guisettings.xml
 	fi
 	
-	if [ ! -f "/usr/share/locale/${INPUT//_/ }/LC_MESSAGES/xbian.mo" ]; then
-		LANGUAGE=en_EN
-	fi
+	rm -fr /run/xbian-config.$$
 }
