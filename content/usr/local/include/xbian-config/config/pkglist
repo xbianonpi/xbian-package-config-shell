@@ -1,3 +1,43 @@
+Package: unrar
+Source: unrar-nonfree
+Version: 1:4.1.4-1
+Architecture: armhf
+Maintainer: Martin Meredith <mez@debian.org>
+Installed-Size: 213
+Depends: libc6 (>= 2.13-28), libgcc1 (>= 1:4.4.0), libstdc++6 (>= 4.4.0)
+Conflicts: rar (<= 2.60-1)
+Filename: pool/main/u/unrar/unrar_4.1.4-1_armhf.deb
+Size: 104082
+MD5sum: 054c71df33270852fb3a7cb79c5e74cf
+SHA1: 683c9c7604ac3232d5d01b4677163bea969bc295
+SHA256: 940ce04113bd83ba19b1b6470a67e66fc26e418586acc6087ddd111ce23d89e9
+Section: non-free/utils
+Priority: optional
+Homepage: http://www.rarlabs.com/
+Description: Unarchiver for .rar files (non-free version)
+Unrar can extract files from .rar archives. If you want to create .rar
+archives, install package rar.
+
+Package: xbian-package-cec
+Version: 1.1-0.2
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 11448
+Depends: xbian-package-xbmc (>=2.3), udev (>=175-7.1), liblockdev1 (>=1.0.3-1.5)
+Conflicts: libcec1
+Breaks: xbian-package-xbmc (<< 2.3)
+Replaces: xbian-update (<< 1.0-1)
+Provides: libcec1
+Filename: pool/main/x/xbian-package-cec/xbian-package-cec_1.1-0.2_armhf.deb
+Size: 3646936
+MD5sum: 0bbedc561879f4df331ff0ab06046aa6
+SHA1: 1ad2cc243eba29fbf1389c7e4d7a2268cde98aeb
+SHA256: ea934ba21df4bcc34054c7235a4c3fa58a98fe02e0f19c9ff5c4e7c571b2429e
+Section: utils
+Priority: optional
+Description: cec for XBian.
+
 Package: xbian-package-cec
 Version: 1.0
 Architecture: armhf
@@ -14,6 +54,25 @@ Section: utils
 Priority: optional
 Description: cec for XBian.
 Codename: wheezy
+
+Package: xbian-package-config-shell
+Version: 2.1.3
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 680
+Depends: wget, bc, gettext, dialog
+Conflicts: xbian-package-config
+Replaces: xbian-package-config
+Filename: pool/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.3_armhf.deb
+Size: 63830
+MD5sum: d486a89722c7617ab98019b94a8cad58
+SHA1: 4189b6c8b846242ebd26cb1bc4ef7d7755ef6616
+SHA256: 46a0e5d656c41118c32d8fa411251b83f396c4a55ae480139f664cfc6c9fcc49
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
 
 Package: xbian-package-config-shell
 Version: 2.0
@@ -53,6 +112,39 @@ Priority: optional
 Description: Configuration utility for XBian.
 Codename: wheezy
 
+Package: xbian-package-config-xbmc
+Version: 1.1
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Belese <development@xbian.org>
+Installed-Size: 392
+Depends: xbian-package-config-shell (>=2.1)
+Filename: pool/main/x/xbian-package-config-xbmc/xbian-package-config-xbmc_1.1_armhf.deb
+Size: 81486
+MD5sum: 925a8063b3d1291ae696df5e4b4d1041
+SHA1: b29704be624ea0b6d8469ccb2424541076b72afa
+SHA256: bcb885624f00416671e19fe6f15fdd753d9989d10d5fb8f3cf03dcd6808906c6
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-couchpotato
+Version: 2.0.7
+Architecture: armhf
+Origin: XBian
+Maintainer: sjengfred <sjengfred@home.nl>
+Installed-Size: 29096
+Depends: xbian-update, git-core
+Filename: pool/main/x/xbian-package-couchpotato/xbian-package-couchpotato_2.0.7_armhf.deb
+Size: 15020192
+MD5sum: 9ca962e1f577d2d85550594fef46a132
+SHA1: dcfecabc7bf08f68fcbe71727d133c33d0729b34
+SHA256: 4311b21d9e635032aac9ebbb90ee4c67db6c345b5729fe6c15fc5b13663804f3
+Section: net
+Priority: optional
+Description: CouchPotato 2.0.7 compiled, patched and configured for XBian
+
 Package: xbian-package-couchpotato
 Version: 1.0
 Architecture: armhf
@@ -85,6 +177,22 @@ Section: devel
 Priority: optional
 Description: Common development tools for the RPi.
 Codename: wheezy
+
+Package: xbian-package-download
+Version: 3.0
+Architecture: armhf
+Origin: XBian
+Maintainer: sjengfred <sjengfred@home.nl>
+Installed-Size: 36
+Depends: xbian-package-nzbget (>=10.2), xbian-package-transmission (>=2.76), xbian-package-headphones (>=1.1), xbian-package-sickbeard (>=1.2), xbian-package-couchpotato (>=2.0.7)
+Filename: pool/main/x/xbian-package-download/xbian-package-download_3.0_armhf.deb
+Size: 946
+MD5sum: 3f8545bb3ce6f41485991f20982e3222
+SHA1: b04d3a6dab1c8f4b4bc52ada1e260e2bd5132c97
+SHA256: 97b0ea6e6d45503367c80e0b2da0cc9f83d299589913be5d447417fa51bc2ac8
+Section: web
+Priority: optional
+Description: Torrent + Newserver download managers.
 
 Package: xbian-package-download
 Version: 2.0
@@ -144,6 +252,40 @@ Description: Firmware for XBian.
 Codename: wheezy
 Replacing: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
 
+Package: xbian-package-firmware
+Version: 1.4-0.1
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 8388
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/main/x/xbian-package-firmware/xbian-package-firmware_1.4-0.1_armhf.deb
+Size: 3428576
+MD5sum: 9129a77a929d7f3207e9f4ca233911d4
+SHA1: e59d807c1f085f5fbb74aafe2a355b80c603b2c0
+SHA256: 9ed3fc332830cc9b71495067229ee318d3d852757254780cb5576b4cd17c2b67
+Section: firmware
+Priority: optional
+Description: Firmware for XBian.
+
+Package: xbian-package-headphones
+Version: 1.1
+Architecture: armhf
+Origin: XBian
+Maintainer: sjengfred <sjengfred@home.nl>
+Installed-Size: 19368
+Depends: xbian-update, git-core
+Filename: pool/main/x/xbian-package-headphones/xbian-package-headphones_1.1_armhf.deb
+Size: 9573216
+MD5sum: 2fa53aa2a6d02180d36f94c010067ac9
+SHA1: f40bb757524d4c58f8ceda9144c5d1b30452a434
+SHA256: f43a372d8fb57ec8a445ceb6e00db19fc8938d8320d4075d1bfe52b44b5d5883
+Section: net
+Priority: optional
+Description: Headphones compiled, patched and configured for XBian
+
 Package: xbian-package-headphones
 Version: 1.0
 Architecture: armhf
@@ -159,6 +301,64 @@ Section: net
 Priority: optional
 Description: Headphones compiled, patched and configured for XBian
 Codename: wheezy
+
+Package: xbian-package-initramfs-tools
+Version: 1.0-0.4
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 168
+Pre-Depends: initramfs-tools
+Depends: xbian-package-splash, busybox, udhcpc, udev, parted, btrfs-tools, klibc-utils
+Filename: pool/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.0-0.4_armhf.deb
+Size: 14236
+MD5sum: be71d87b14ec6627e75b017a5363122e
+SHA1: c89645ec087b044c9aed8bbdaf84622b15593c81
+SHA256: ac10fc13a2e0042357550e744dc2c4366aed7e923be66bbba73757177ace8af0
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-kernel
+Version: 1.1
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 44856
+Depends: xbian-package-initramfs-tools (>=1.0), xbian-package-firmware (>=1.4), xbian-package-splash (>=1.0)
+Suggests: xbian-package-kernel-headers
+Conflicts: linux-firmware-image, linux-image, linux-modules-3.8.13+
+Replaces: xbian-package-kernel3.6.11
+Provides: linux-image, linux-firmware-image, linux-modules-3.8.13+
+Filename: pool/main/x/xbian-package-kernel/xbian-package-kernel_1.1_armhf.deb
+Size: 17059150
+MD5sum: 2cd717ba0ad19725b76843c85d709579
+SHA1: 0711a4e883316d3f39aa5a1d5c4e29e60b7f8ef0
+SHA256: baaa8b84e4e152cc8a61f5571e808fc4e23ad3f6e443d39340beee2d9cfb280b
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel for the Raspberry Pi (3.8.13)
+
+Package: xbian-package-kernel-headers
+Version: 1.1-0.3
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 58620
+Depends: xbian-package-kernel (>=1.1)
+Conflicts: linux-headers
+Provides: linux-headers
+Filename: pool/main/x/xbian-package-kernel-headers/xbian-package-kernel-headers_1.1-0.3_armhf.deb
+Size: 7824634
+MD5sum: 5c55feb49b8a4dc884024215ff9b2a68
+SHA1: ee503902af628f3423af7c42f9a7268fc26829c4
+SHA256: 0823b5ef781a33bfe79ff7a82b24ddf8408f9fd2e972bbf66f015ffcb89c0f1a
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel for the Raspberry Pi.
 
 Package: xbian-package-kernel3.6.11
 Version: 1.2
@@ -178,6 +378,60 @@ Priority: optional
 Description: Kernel 3.6.11 for the Raspberry Pi.
 Codename: wheezy
 
+Package: xbian-package-kernel3.6.11
+Version: 1.3
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 39480
+Depends: xbian-update (>=1.0-1)
+Filename: pool/main/x/xbian-package-kernel3.6.11/xbian-package-kernel3.6.11_1.3_armhf.deb
+Size: 15902138
+MD5sum: 8ef0f76b2c2f92b50306bc001013bf10
+SHA1: f696ae1f4e7f4b3114588bd51f5cec57bd29fa53
+SHA256: 26f4ff67c438c5ce3e421683ec98deb1edd65cdc7bf6b59fda1feb3a7a2089ef
+Section: kernel
+Priority: optional
+Description: Kernel 3.6.11 for the Raspberry Pi.
+Codename: wheezy
+
+Package: xbian-package-libshairport
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 208
+Conflicts: libshairport1, libshairport-dev
+Breaks: xbian-package-xbmc (<<2.3)
+Provides: libshairport1, libshairport-dev
+Filename: pool/main/x/xbian-package-libshairport/xbian-package-libshairport_1.0_armhf.deb
+Size: 65458
+MD5sum: e088ef28ebe6c5f63a66c8d17338af86
+SHA1: 9a60329a3046a7975821ecb9823a5f48a496e1be
+SHA256: 22e383c74284fb170f5c644c7ce9668b581125c8f10473a745807dac216c9d42
+Section: utils
+Priority: optional
+Description: libshairport for XBian
+
+Package: xbian-package-libtag
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 2272
+Conflicts: libtag1-dev, libtag1-vanilla, libtag1c2a, libtag1-rusxmms
+Breaks: xbian-package-xbmc (<< 2.3)
+Provides: libtag1-dev, libtag1-vanilla, libtag1c2a
+Filename: pool/main/x/xbian-package-libtag/xbian-package-libtag_1.0_armhf.deb
+Size: 514008
+MD5sum: 3a0c4b5872bf4b73b8b47703c0cff8d1
+SHA1: 47b20648c859191ffe0df1be8b277bea286494df
+SHA256: 71d07a12d0d99a800b10f472a66755a647d864ae49d204854fa3c6d0d9dfdd64
+Section: utils
+Priority: optional
+Description: libtag for XBian
+
 Package: xbian-package-lirc
 Version: 1.3
 Architecture: armhf
@@ -196,6 +450,24 @@ Section: utils
 Priority: optional
 Description: Remote controller deamon.
 Codename: wheezy
+
+Package: xbian-package-lirc
+Version: 1.4
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 2688
+Conflicts: lirc
+Replaces: xbian-package-lirc (<=1.3)
+Filename: pool/main/x/xbian-package-lirc/xbian-package-lirc_1.4_armhf.deb
+Size: 998916
+MD5sum: c987e8accabb6c22c67ccd94d2a9b96c
+SHA1: 14f1cd780bdcd728c8cb958f193e7d8085b22496
+SHA256: 22e67a74857407bcc4f6f303ab5a7bb32622c9e8942a02a89f0a701174dda68d
+Section: utils
+Priority: optional
+Description: Remote controller deamon.
 
 Package: xbian-package-maraschino
 Version: 1.0
@@ -230,6 +502,22 @@ Priority: optional
 Description: NZBGet compiled, patched and configured for XBian
 Codename: wheezy
 
+Package: xbian-package-nzbget
+Version: 10.2
+Architecture: armhf
+Origin: XBian
+Maintainer: sjengfred <sjengfred@home.nl>
+Installed-Size: 1640
+Depends: xbian-update, libsigc++-dev, libncurses5, libpar2-0, libssl1.0.0, gnutls-bin, libxml2, unrar
+Filename: pool/main/x/xbian-package-nzbget/xbian-package-nzbget_10.2_armhf.deb
+Size: 546798
+MD5sum: e9bf25152027a871352ca90d5d6ae9fa
+SHA1: f04eb716beaaed82be45ce1726f8b0465b2a4cdc
+SHA256: a0bf95f980889ec333f4075eb2c58f65433668d3bb1fbd3b741a64bc6750d5f1
+Section: net
+Priority: optional
+Description: NZBGet 10.2 compiled, patched and configured for XBian
+
 Package: xbian-package-samba
 Version: 1.0
 Architecture: armhf
@@ -248,6 +536,22 @@ Section: net
 Priority: optional
 Description: Windows <--> linux filesharing.
 Codename: wheezy
+
+Package: xbian-package-sickbeard
+Version: 1.2
+Architecture: armhf
+Origin: XBian
+Maintainer: sjengfred <sjengfred@home.nl>
+Installed-Size: 64
+Depends: xbian-package-sickbeard-tpb
+Filename: pool/main/x/xbian-package-sickbeard/xbian-package-sickbeard_1.2_armhf.deb
+Size: 2564
+MD5sum: ec84c4410df032351cee7df23b660a42
+SHA1: e59cbbfeb6c6733386b5886e8634ed0f2daca06f
+SHA256: 6afce91d66585a0407ea93bb1ec5e371501725dd513bf29d7d2db33026c26b18
+Section: net
+Priority: optional
+Description: Dummy package to update from sickbeard to sickbeard-tpb
 
 Package: xbian-package-sickbeard
 Version: 1.0
@@ -283,6 +587,40 @@ Priority: optional
 Description: Sickbeard compiled, patched and configured for XBian
 Codename: wheezy
 
+Package: xbian-package-sickbeard-tpb
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: sjengfred <sjengfred@home.nl>
+Installed-Size: 32412
+Depends: xbian-update, python-cheetah, git-core
+Replaces: xbian-package-sickbeard
+Filename: pool/main/x/xbian-package-sickbeard-tpb/xbian-package-sickbeard-tpb_1.0_armhf.deb
+Size: 16985228
+MD5sum: 4980d42105b4c41b151475e7d4dda4e9
+SHA1: 27b91429f2d0df46a31aff877e435c663140cd1a
+SHA256: 86fa5f10b9271e5009ca1fce692ce2430e7464ed1362bafe34cc85b2a478adf3
+Section: net
+Priority: optional
+Description: SickBeard TPB compiled, patched and configured for XBian
+
+Package: xbian-package-splash
+Version: 1.0-0.5
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 1008
+Depends: xbian-package-initramfs-tools (>=1.0)
+Replaces: xbian-update (<=1.0-0.5)
+Filename: pool/main/x/xbian-package-splash/xbian-package-splash_1.0-0.5_armhf.deb
+Size: 451928
+MD5sum: a9c157c485445a9fae952c6f4c1e2e20
+SHA1: 3c64db1ec8466740ffe0bc995fc6ab8a82b446cb
+SHA256: cb2d2d6f6c003b119f0fc62a188e98bf9319591e0d4be941981492607cb818dd
+Priority: standard
+Description: Splash screen.
+
 Package: xbian-package-transmission
 Version: 1.0
 Architecture: armhf
@@ -300,6 +638,43 @@ Section: net
 Priority: optional
 Description: Transmission compiled, patched and configured for XBian
 Codename: wheezy
+
+Package: xbian-package-transmission
+Version: 2.76
+Architecture: armhf
+Origin: XBian
+Maintainer: sjengfred <sjengfred@home.nl>
+Installed-Size: 3368
+Depends: xbian-update, libevent-dev, libcurl3, unrar
+Conflicts: transmission-cli, transmission-daemon, transmission-common
+Filename: pool/main/x/xbian-package-transmission/xbian-package-transmission_2.76_armhf.deb
+Size: 1467864
+MD5sum: 2e58f61dd762628c5f083c4d5f498e35
+SHA1: af43d403a192ffe76d6674c06b9e76e4a27bf332
+SHA256: c4ee364cac7f5e79d6e8fdd733974af4b03a1de802b0a3ddf78b3b95e4fd7e1f
+Section: net
+Priority: optional
+Description: Transmission 2.76 compiled, patched and configured for XBian
+
+Package: xbian-package-usbmount
+Version: 1.0-0.1
+Architecture: all
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 116
+Depends: lockfile-progs, udev, util-linux (>> 2.16)
+Conflicts: usbmount
+Replaces: usbmount
+Provides: usbmount
+Filename: pool/main/x/xbian-package-usbmount/xbian-package-usbmount_1.0-0.1_armhf.deb
+Size: 17086
+MD5sum: aa5fa53d0fe9521cf730e77da8a23f9f
+SHA1: 45efc74ac6d4222d6c17051f9955d5a33519cbdf
+SHA256: 087763a08e261d892bcf4545156e81a53f8e46500a7e46c54677ae8f88afb69c
+Section: utils
+Priority: extra
+Description: automatically mount and unmount USB mass storage devices
 
 Package: xbian-package-webserver
 Version: 1.0
@@ -372,6 +747,39 @@ Section: video
 Priority: optional
 Description: XBMC for XBian.
 Codename: wheezy
+
+Package: xbian-package-xbmc
+Version: 2.3-0.1
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 89352
+Depends: xbian-package-libtag, xbian-package-libshairport, xbian-package-firmware (>=1.4), libbluetooth3, xbian-package-cec (>= 1.0), upstart, libtiff4, libcurl3-gnutls
+Filename: pool/main/x/xbian-package-xbmc/xbian-package-xbmc_2.3-0.1_armhf.deb
+Size: 39768772
+MD5sum: 4b6368ff82ee0f5128b2ee6bfac06e42
+SHA1: 749649e7146e82bd09f4a16ac499f959fb858699
+SHA256: b6d433b748bb071722ed94abc0e8c4d53b72fce0aa4d5a2fec5201d0630ae464
+Section: video
+Priority: optional
+Description: XBMC for XBian.
+
+Package: xbian-package-zram-swap
+Version: 1.0
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 52
+Depends: upstart, xbian-package-kernel
+Filename: pool/main/x/xbian-package-zram-swap/xbian-package-zram-swap_1.0_armhf.deb
+Size: 1834
+MD5sum: b13abe12227d68e415d2874718580370
+SHA1: b8bf8ef018103b4b6bc481d423deb529b7c13e38
+SHA256: ac46ff5dadf94e1c1021f85f718d8225095fc2748e4ca05a894c03354c2e4b1a
+Section: base
+Priority: optional
+Description: zram-swap custom xbian package
 
 Package: xbian-update
 Version: 1.0-0.5

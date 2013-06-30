@@ -28,8 +28,6 @@ if [ -f "$BASEPATH/config/pkglist" ]; then
 else
 	CONTENT="";
 fi
-ALLPKGLST=$(dpkg --get-selections xbian*);
-PKGNOTFOUND=0;
 
 #|------------------------------------|
 #|          Include files             |
@@ -41,6 +39,8 @@ if [ $GUIMODE -eq 1 ]; then
 fi
 source $BASEPATH/functions/packages
 
+updateAllPackagesListFn
+PKGNOTFOUND=0;
 #|------------------------------------|
 #|           Main program             |
 #|------------------------------------|
