@@ -47,5 +47,5 @@ function _() {
 	[ ! -e /run/xbian-config.$$ ] && { check_locale || echo  "LANG=en_US.UTF-8" > /run/xbian-config.$$; }
 	[ -e /run/xbian-config.$$ ] && { . /run/xbian-config.$$; export LANG; }
 
-	printf "%s" $(LANG=$LANG gettext -d "xbian" -s xbian-config.$1);
+	LANG=$LANG gettext xbian xbian-config.$1
 }
