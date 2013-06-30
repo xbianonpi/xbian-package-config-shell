@@ -10,7 +10,7 @@ sabnzbd:
 sysklogd:syslogd
 klogd:
 nzbget:
-dbus:
+dbus:dbus-daemon
 ntp:ntpd
 iguanaIR:
 cron:

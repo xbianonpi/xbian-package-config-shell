@@ -23,7 +23,7 @@ function getInstalledServicesFn() {
 		[ -z "$(find /etc/init.d -iname $s)" ] && [ ! -e /etc/init/$s.conf ] && unset SERVICES[$s]
 	done
         X=$((${#SERVICES[@]}-1))
-        I=($(printf "%s\n" ${!SERVICES[@]} | sort))
+        IDX=($(printf "%s\n" ${!SERVICES[@]} | sort))
 }
 
 in_list() 
@@ -43,7 +43,7 @@ in_list()
 function getServiceAutoStartStatusFn() {
 	[ -z "$1" ] && return 1
         [ -e /etc/init/$1.override ] && return 1
-        [ ! -e /etc/rc2.d/S??$1 -a ! -e /etc/init/$1.conf ] && return 1
+        [ ! -e /etc/rc2.d/S??$1 -a ! -e /etc/rcS.d/S??$1 ] && [ ! -e /etc/init/$1.conf ] && return 1
 	return 0
 }
 
@@ -65,7 +65,7 @@ function getServiceRunningStatusFn() {
 }
 
 function getServiceNameFn() {
-        NAME=${I[$1]}
+        NAME=$(echo ${IDX[$1]})
 }
 
 function getServiceIDFn() {
@@ -87,11 +87,11 @@ function restartServiceFn() {
         echo "$NAME" $2 >> /run/xbian-config
         test -z "$2" && c="restart" || c="$2"
 
-	if [ -f "/etc/init.d/$1" ]; then
-		service $1 $c > /dev/null
-	else 
+	if [ -f "/etc/init/$1.conf" ]; then
 		[ $c = restart ] && c=reload
                 $c -q $1
+	else 
+		/etc/init.d/$1 $c > /dev/null
         fi
         r=$?
         refreshProcessesFn
@@ -107,19 +107,18 @@ function stopServiceFn() {
 }
 
 function disableAutoStartFn() {
-        echo $1 >> /run/xbian-config
-	if [ -f "/etc/init.d/$1" ]; then
-		insserv -r "/etc/init.d/$1" || return $?
+	if [ -f "/etc/init/$1.conf" ]; then
+		echo "manual" > "/etc/init/$1.override" || return $?
         else
-		{ echo "manual" > "/etc/init/$1.override"; } || return $?
+		insserv -r "/etc/init.d/$1" || return $?
         fi
 }
 
 function enableAutoStartFn() {
-	if [ -f "/etc/init.d/$1" ]; then
-		insserv "/etc/init.d/$1" || return $?
-        else
+	if [ -f "/etc/init/$1.conf" ]; then
 		rm -fr "/etc/init/$1.override" || return $?
+        else
+		insserv "/etc/init.d/$1" || return $?
         fi
 }
 

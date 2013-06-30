@@ -32,7 +32,7 @@ fi
 
 readServicesFn()
 {
-        SERVICES=(); I=()
+        SERVICES=(); IDX=()
         for s in $(cat $BASEPATH/config/services | sort); do 
                 SERVICES[${s%:*}]="$(echo ${s#*:})" 
         done
@@ -47,7 +47,6 @@ if [ -f "$BASEPATH/config/services" ]; then
         typeset -A  SERVICES; typeset -a I
         readServicesFn
 fi
-
 
 #|------------------------------------|
 #|           Main program             |
