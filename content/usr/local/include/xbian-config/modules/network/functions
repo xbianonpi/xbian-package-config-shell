@@ -446,7 +446,7 @@ function scanWLANNetworksFn() {
 			WLAN[2]=$(echo $LINE | cut -f2 -d":");
 		fi
 		if [[ $LINE =~ "Signal level" ]]; then
-			WLAN[3]=$(echo $LINE | sed -ne 's/.*Signal level=[^\s]\([0-9]\{1,3\}\).*/\1/p');
+			WLAN[3]=$(echo $LINE | awk -F"Signal level=" '{print $2}' | cut -d'/' -f1);
                 fi
 	done;
 	X=$(($X+1));
