@@ -23,11 +23,11 @@ function showGUIFn()
 case $MODULE in
         updatemirrors)
 #                showDownloadPackageListDlg
-                updateAptMirrorsFn
-                if [ $? -eq 0 ]; then
+                if ! updateAptMirrorsFn; then
                         showFailedToRetrieveAptMirrosDlg
                 else
-                        downloadPackageListFn
+                        showDownloadPackageListDlg
+			downloadPackageListFn
                         #REMOTEPKGDBUPDATED=$?
                 fi
                 ;;

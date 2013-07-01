@@ -19,14 +19,11 @@
 #
 
 function updateAptMirrorsFn() {
-	if [ $(wget --spider http://apt.xbian.org/mirror.txt >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
-		URL=$APTBASE"mirror.txt"
-		wget -O - "$URL" > $BASEPATH/config/aptmirror 2>/dev/null
-		return 0;
-	else
-		return 1;
-	fi
-	
+	wget --spider http://apt.xbian.org/mirror.txt >/dev/null 2>&1 || return 1
+	URL=$APTBASE"mirror.txt"
+	wget -O - "$URL" > $BASEPATH/config/aptmirror 2>/dev/null
+
+	return 0
 }
 
 function localPackageDBOutdatedFn() {
@@ -60,6 +57,8 @@ function downloadPackageListFn() {
 				wget -O - $URL > $BASEPATH/config/pkglist 2>/dev/null
 				RETURN=0;
 				break;
+			else
+				RETURN=1
 			fi
 		done
 		IFS=$ORIGINALIFS;

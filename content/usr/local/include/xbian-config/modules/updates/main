@@ -42,11 +42,10 @@ source $BASEPATH/functions/packages
 function showGUIFn() {
 	if [ $REMOTEPKGDBUPDATED -eq 0 ]; then
 		showDownloadPackageListDlg;
-		updateAptMirrorsFn;
-		if [ $? -eq 1 ]; then
+		if ! updateAptMirrorsFn; then
 			showFailedToRetrieveAptMirrosDlg;
 		else
-#			downloadPackageListFn;
+			downloadPackageListFn;
 			REMOTEPKGDBUPDATED=0
 		fi;
 	fi
