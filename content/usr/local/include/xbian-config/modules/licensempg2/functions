@@ -22,7 +22,7 @@
 # Returns
 #  $LICENSE [String]
 function getCurrentLicenseMPG2Fn() {
-	LICENSE=$(cat /boot/config.txt | grep 'decode_MPG2' | cut -f 2 -d=); 
+	LICENSE=$(sed -ne 's/\(decode_MPG2=\)\(.*\)/\2/p' /boot/config.txt); 
 }
 
 # Insert the current license
@@ -35,7 +35,7 @@ function insertLicenseMPG2Fn() {
 	NEWLICENSE=$1;
 	if [ "${NEWLICENSE:0:2}" == "0x" ] && [[ "${NEWLICENSE:2:8}" =~ ^[0-9a-f]{1,8}$ ]] && [ ${#NEWLICENSE} -le 10 ] && [ ${#NEWLICENSE} -ge 9 ]; then
 		echo "decode_MPG2=$1" >> /boot/config.txt 
-		if [ $(cat /boot/config.txt | grep -c $1) -eq 1 ]; then
+		if [ $(grep -c $1 /boot/config.txt) -eq 1 ]; then
 			return 1;
 		else
 			return 0;
@@ -57,7 +57,7 @@ function updateLicenseMPG2Fn() {
 	NEWLICENSE=$1;
 	if [ "${NEWLICENSE:0:2}" == "0x" ] && [[ "${NEWLICENSE:2:8}" =~ ^[0-9a-f]{1,8}$ ]] && [ ${#NEWLICENSE} -le 10 ] && [ ${#NEWLICENSE} -ge 9 ]; then
 		sed -i "s/decode_MPG2=$2/decode_MPG2=$1/g" /boot/config.txt
-		if [ $(cat /boot/config.txt | grep -c $1) -eq 1 ]; then
+		if [ $(grep -c $1 /boot/config.txt) -eq 1 ]; then
 			return 1;
 		else
 			return 0;
@@ -75,7 +75,7 @@ function updateLicenseMPG2Fn() {
 #  - 0: Failed
 function deleteLicenseMPG2Fn() {
 	sed -i "/decode_MPG2=$1/d" /boot/config.txt;
-	if [ $(cat /boot/config.txt | grep -c $1) -eq 0 ]; then
+	if [ $(grep -c $1 /boot/config.txt) -eq 0 ]; then
 		return 1;
 	else
 		return 0;
