@@ -24,6 +24,7 @@
 # The arguments this module accepts
 ARGUMENTS=(list select update);
 BOOTFLAGS=(splash);
+CMDLINE=(cat /boot/cmdline.txt);
 declare -A BOOTSETTINGS;
 
 #|------------------------------------|
