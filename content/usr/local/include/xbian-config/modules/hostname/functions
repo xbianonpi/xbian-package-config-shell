@@ -23,7 +23,6 @@
 #  $HOSTNAME [String]
 function getCurrentHostnameFn() {
 	HOSTNAME=$(cat /etc/hostname);
-	eval "$1=$HOSTNAME";
 }
 
 # Get the current hostname
@@ -36,7 +35,7 @@ function getCurrentHostnameFn() {
 function setHostnameFn() {
 	echo "$1" > /etc/hostname
 	hostname $1
-	eval "sed -i 's/$2/$1/g' /etc/hosts";
+	sed -i "s/$2/$1/g" /etc/hosts";
 	if [ $(hostname) == $1 ]; then
 		return 1;
 	else
