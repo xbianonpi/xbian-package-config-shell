@@ -20,7 +20,7 @@
 
 check_locale()
 {
-    echo $(locale 2>/dev/null) > /tmp/xbian-config.lang
+    locale > /tmp/xbian-config.lang 2>/dev/null
     . /tmp/xbian-config.lang 2>/dev/null
 
     if [ -n "$LC_ALL" ]; then
