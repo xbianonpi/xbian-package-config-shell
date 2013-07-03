@@ -18,21 +18,14 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 function getBootFlagsFn() {
-	[[ "$CMDLINE" =~ "splash" ]] && SPLASH=1 || SPLASH=0;
-	LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\{1\}\).*/\1/p' $CMDLINE);
-	[[ "$CMDLINE" =~ "quiet" ]] && QUIET=1 || QUIET=0;
-	[[ "$CMDLINE" =~ "logo.nologo" ]] && LOGO=1 || LOGO=0;
+	[[ "$CMDLINE" =~ "splash" ]] && BOOTSETTINGS['splash']=1 || BOOTSETTINGS['splash']=0
+	LOGLEVEL=$(echo $CMDLINE | sed -ne 's/.*loglevel=\([0-9]\{1\}\).*/\1/p' );
+	[[ "$CMDLINE" =~ "quiet" ]] && BOOTSETTINGS['quiet']=1 || BOOTSETTINGS['quiet']=0
+	[[ "$CMDLINE" =~ "logo.nologo" ]] && BOOTSETTINGS['logo']=1 || BOOTSETTINGS['logo']=0
 	CONSOLE=$(echo $CMDLINE | sed -ne 's/.*console=\([a-zA-Z0-9]\{3,\}\)[\ ].*/\1/p');
 
-	if [ ! -z $LOGLEVEL ] && [ $LOGLEVEL -ne 0 ]; then
-		BOOTSETTINGS['splash']=0;
-	elif [ -z $LOGLEVEL ]; then
-		BOOTSETTINGS['splash']=0;
-	elif [ $SPLASH -eq 0 ] || [ $QUIET -eq 0 ] || [ $LOGLEVEL -ne 0 ] || [ $LOGO -eq 0 ] || [ $CONSOLE != "tty2" ]; then
-		BOOTSETTINGS['splash']=0;
-	else
-		BOOTSETTINGS['splash']=1;
-	fi
+	[ -n "$LOGLEVEL" ] && BOOTSETTINGS['loglevel']=$LOGLEVEL || BOOTSETTINGS['loglevel']=3
+        BOOTSETTINGS['console']=$CONSOLE
 }
 
 function updateBootFlagsFn() {
