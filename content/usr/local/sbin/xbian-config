@@ -26,7 +26,7 @@ fi
 
 # Disable [ctrl]-c and [ctrl]-z actions
 trap '' 2 20
-trap "{ test -n "$need_umount" && mountpoint -q /boot && umount /boot; rm -fr /run/xbian-config.$$; showMainCloseDlg; }" EXIT INT ERR
+trap "{ test -e /run/xbian-config.umount && mountpoint -q /boot && umount /boot; rm -fr /run/xbian-config.$$ /run/xbian-config.umount; showMainCloseDlg; }" EXIT INT ERR
 
 #|------------------------------------|
 #|          Global variables          |
@@ -186,10 +186,9 @@ function showMainMenuDlg() {
 	fi;
 }
 
+mountpoint -q /boot || { mount /boot; touch /run/xbian-config.umount; }
 
 if [ $# -eq 0 -o "$1" = goto ]; then
-
-	mountpoint -q /boot || { mount /boot; export need_umount="yes"; }
 
 	#|------------------------------------|
 	#|              GUI Mode              |
@@ -261,7 +260,6 @@ else
 	#clrMemCacheFn;
 	
 	export GUIMODE=0;
-	mountpoint -q /boot || { mount /boot; export need_umount="yes"; }
 	# Check xbian-config was opened using arguments
 	MODULE=$1;
 	[ $MODULE = "--help" -o $MODULE = "-h" ] && MODULE=help
