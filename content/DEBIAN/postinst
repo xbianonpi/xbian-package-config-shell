@@ -34,6 +34,6 @@ if [ $1 == "configure" ]; then
 
 	fi
 	
-	echo "---UPDATE LOG---"
-        cat "/home/xbian/xbian-config-update.log"
+	# echo "---UPDATE LOG---"
+        # cat "/home/xbian/xbian-config-update.log"
 fi
