@@ -18,7 +18,7 @@ if [ $1 == "configure" ]; then
 	                echo 1 > /home/xbian/.xbian-config-start
 	        fi
 
-	        sed -i '/sudo xbian-config/' /home/xbian/.bashrc
+	        sed -i '/sudo xbian-config/d' /home/xbian/.bashrc
 	        echo "if [ \"\$(cat /home/xbian/.xbian-config-start)\" -eq '1' ]; then sudo xbian-config; fi" >> /home/xbian/.bashrc
 
 	        if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
