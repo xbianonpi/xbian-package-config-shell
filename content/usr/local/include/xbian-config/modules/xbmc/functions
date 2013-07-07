@@ -60,26 +60,26 @@ function getXBMCGUIResFn() {
 # - 0: Failed
 # - 1: Success
 function setXBMCWebserverFn() {
-	if [ $1 -eq 0 ]; then
-		NEWSET="false";
-	else
-		NEWSET="true";
-	fi
-	OLDSET=$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' /home/xbian/.xbmc/userdata/advancedsettings.xml);
-	if [ -z "$OLDSET" ]; then
-		if [ $(grep -c "lookandfeel" /home/xbian/.xbmc/userdata/advancedsettings.xml) -eq 2 ]; then
-			sed -i "s/<\/lookandfeel>/     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
-		else
-			sed -i "s/<\/advancedsettings>/   <lookandfeel>\n     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>\n<\/advancedsettings>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
-		fi
-	else
-		sed -i "s/<webserver>$OLDSET<\/webserver>/<webserver>$NEWSET<\/webserver>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
-	fi
-	if [ "$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' /home/xbian/.xbmc/userdata/advancedsettings.xml)" == "$NEWSET" ]; then
-		return 1;
-	else
-		return 0;
-	fi
+        if [ $1 -eq 1 ]; then
+                NEWSET="false";
+        else
+                NEWSET="true";
+        fi
+        OLDSET=$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' /home/xbian/.xbmc/userdata/advancedsettings.xml);
+        if [ -z "$OLDSET" ]; then
+                if [ $(grep -c "lookandfeel" /home/xbian/.xbmc/userdata/advancedsettings.xml) -eq 2 ]; then
+                        sed -i "s/<\/lookandfeel>/     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
+                else
+                        sed -i "s/<\/advancedsettings>/   <lookandfeel>\n     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>\n<\/advancedsettings>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
+                fi
+        else
+                sed -i "s/<webserver>$OLDSET<\/webserver>/<webserver>$NEWSET<\/webserver>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
+        fi
+        if [ "$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' /home/xbian/.xbmc/userdata/advancedsettings.xml)" == "$NEWSET" ]; then
+                return 1;
+        else
+                return 0;
+        fi
 }
 
 # Gets the webserver setting XBMC
