@@ -80,7 +80,7 @@ function showXBMCWebserverFailedDisableDlg() {
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;	
 }
 
-function showXBMCGUIResSuccessDDlg() {
+function showXBMCGUIResSuccessDlg() {
 	wrapTxtFn "$(_ xbmc.guires.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
