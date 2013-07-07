@@ -5,6 +5,7 @@ Section: utils
 Essential: No
 Priority: optional
 Architecture: armhf
+Pre-Depends: anacron
 Replaces: xbian-package-config
 Depends: wget, bc, gettext, dialog
 Conflicts: xbian-package-config

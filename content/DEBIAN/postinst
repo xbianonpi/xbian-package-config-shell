@@ -6,9 +6,8 @@ if [ $1 == "configure" ]; then
 
 	msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.po 
 
+        insserv -r /etc/init.d/anacron
 	. /etc/bash_completion.d/xbian-config.sh >/dev/null
-
-        echo "1) Changing /home/xbian/.bashrc"
 
         if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 0 ]; then
 
@@ -36,4 +35,8 @@ if [ $1 == "configure" ]; then
 	
 	# echo "---UPDATE LOG---"
         # cat "/home/xbian/xbian-config-update.log"
+
+	# non xbian-update relevant
+	insserv /etc/init.d/cron; insserv /etc/init.d/anacron
+	/etc/init.d/cron restart; /etc/init.d/anacron restart
 fi
