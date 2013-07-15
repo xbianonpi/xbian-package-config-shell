@@ -28,13 +28,10 @@ function getAllPackagesFn() {
 }
 
 function getPackagesFromCategoryFn() {
-        IFS=$'\n';
-        NAME=$1;
-        NAME=${NAME/\//\\\/};
-        PACKAGES=($(echo -e "$CONTENT" | grep -v "xbian-update" | awk -vRS='' "/Section: $NAME/"'{print $0"\n"}' | grep "Package:" | sed -ne 's/\(Package: xbian-package-\)\([a-z-]\{1,\}\)/\2/p' | sort | uniq));
-        IFS=$ORIGINALIFS;
+	IFS=$'\n';
+	PACKAGES=($(echo -e "$CONTENT" | grep -v "xbian-update" | awk -vRS='' "/Section: $1/"'{print $0"\n"}' | grep "Package:" | sed -ne 's/\(Package: xbian-package-\)\([a-z-]\{1,\}\)/\2/p' | sort | uniq));
+	IFS=$ORIGINALIFS;
 }
-
 
 function getPackageStatusFn() {
 	if [ $(echo -e "$ALLPKGLST" | grep -v "xbian-update" | grep -c "xbian[-A-Za-z]\{1,\}$1[[:space:]]\{1,\}install$" ) -ge 1 ]; then
@@ -102,12 +99,12 @@ function installPackageFn() {
 function removePackageFn() {
 	NAME=$2;
 	NAME=${NAME/xbian-package-/}
-	NAME=${NAME#*=}
+	NAME=${NAME%=*}
 	if [ $(getPackageStatusFn $NAME; echo $?) -eq 0 ]; then
 		return 1;
 	else
 		if [ $1 -eq 1 ]; then
-			apt-get purge -s $2 &>/tmp/aptstatus
+			eval apt-get purge -s $2 &>/tmp/aptstatus
 
 			if [ $(grep -c "is not installed, so not removed" /tmp/aptstatus) -eq 1 ]; then
 				return 1;
@@ -119,9 +116,9 @@ function removePackageFn() {
 				return 0;
 			fi
 		elif [ $1 -eq 0 ]; then
-			apt-get purge -y $2 &>/tmp/aptstatus
+			eval apt-get purge -y $2 &>/tmp/aptstatus
 		elif [ $1 -eq 2 ]; then
-			nohup apt-get purge -y $2 &>/tmp/aptstatus &
+			eval nohup apt-get purge -y $2 &>/tmp/aptstatus &
 		fi
 	fi
 }
