@@ -23,7 +23,7 @@
 #  - 1: No root password is set
 #  - 0: Root password is set
 function rootPasswordSetFn() {
-	if [ "$(cat /etc/shadow | grep root | cut -f 2 -d:)" = "*" ]; then
+	if [ "$(sed -ne 's/root:\([\$A-Za-z0-9*]\{1,\}\).*/\1/p' /etc/shadow)" = "*" ]; then
 		return 0;
 	else
 		return 1;
@@ -64,7 +64,7 @@ function disableSSHRootLoginFn() {
 #  - 1: Enabled
 #  - 0: Disabled
 function isSSHRootLoginEnabledFn() {
-	if [ $(cat /etc/ssh/sshd_config | grep -c "PermitRootLogin yes") -eq 0 ]; then
+	if [ $(grep -c "PermitRootLogin yes" /etc/ssh/sshd_config) -eq 0 ]; then
 		return 0;
 	else
 		return 1;
