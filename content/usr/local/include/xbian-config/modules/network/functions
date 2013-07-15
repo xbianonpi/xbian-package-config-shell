@@ -58,7 +58,7 @@ setInterfaceWlanCredentials() {
 			IFACEBUFFER=$(grep -A100 "^iface $1" /etc/network/interfaces | sed '1d');
 
 			# Extract DHCP or Static
-			MODE=$(grep "iface $1" /etc/network/interfaces | cut -f 4 -d " ");
+			MODE=$(sed -ne "s/\(iface $1 \)\([a-z]\{1,\}\)[\ ]\([a-z]\{1,\}\)/\3/p" /etc/network/interfaces);
 
 			# Remove what's now in the buffer from the file
 			sed -i "/^iface $1/,+100d" /etc/network/interfaces
@@ -297,7 +297,7 @@ function readNetworkConfigurationFn() {
 		CONTENT=$(echo -e "$CONTENT" | sed '/iface/,$d');
 
 		# Extract DHCP or Static
-		MODE=$(echo -e "$TFILEIFACES" | grep "iface $1" | cut -f 4 -d " ");
+		MODE=$(echo -e "$TFILEIFACES" | sed -ne "s/\(iface $1 \)\([a-z]\{1,\}\)[\ ]\([a-z]\{1,\}\)/\3/p");
 		CIP=$(ifconfig -a $1 | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet addr:\([0-9.]\+\).*/\1/gp');
 		CSM=$(ifconfig -a $1 | grep Mask | awk '{print $4}' | cut -f2 -d:);
 		CGW=$(netstat -rn | grep -m1 0.0.0.0 | awk '{print $2}');
