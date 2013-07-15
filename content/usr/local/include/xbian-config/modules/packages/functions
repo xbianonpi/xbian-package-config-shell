@@ -102,7 +102,7 @@ function installPackageFn() {
 function removePackageFn() {
 	NAME=$2;
 	NAME=${NAME/xbian-package-/}
-	NAME=${NAME#*=}
+	NAME=${NAME%=*}
 	if [ $(getPackageStatusFn $NAME; echo $?) -eq 0 ]; then
 		return 1;
 	else
