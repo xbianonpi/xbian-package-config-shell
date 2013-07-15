@@ -39,7 +39,7 @@ fi
 
 # Executes the GUI version of this module
 function showGUIFn() {
-	getCurrentHostnameFn HOSTNAME
+	getCurrentHostnameFn
 	CURRENTHOSTNAME=$HOSTNAME;
 	showHostnameInputDlg $CURRENTHOSTNAME;
 	
