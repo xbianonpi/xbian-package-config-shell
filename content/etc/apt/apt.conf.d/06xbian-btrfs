@@ -1,0 +1,1 @@
+dpkg::Pre-Invoke {"if [ -x /usr/sbin/btrfs-auto-snapshot ]; then btrfs-auto-snapshot snapshot -k 10 -l apt-run root ; fi "; };

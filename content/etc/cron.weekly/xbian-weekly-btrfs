@@ -1,0 +1,3 @@
+#!/bin/sh
+
+btrfs-auto-snapshot -l weekly -k 5 -v //
