@@ -101,9 +101,9 @@ function showTZLocationDlg() {
 }
 
 function showCurrentDateTimeDlg() {
-	TEXT=$(printf "$(gettext -d "xbian" -s "xbian-config.timezone.old")" "$2")
+	TEXT=$(printf "$(_ timezone.timezone.old")" "$2")
 	TEXT+="\n";
-	TEXT+=$(printf "$(gettext -d "xbian" -s "xbian-config.timezone.new")" "$1")
+	TEXT+=$(printf "$(_ timezone.timezone.new")" "$1")
 
 	centerTxtFn "$TEXT"  $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT" 
