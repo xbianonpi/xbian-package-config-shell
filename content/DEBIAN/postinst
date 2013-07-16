@@ -8,6 +8,7 @@ if [ $1 == "configure" ]; then
 
 	. /etc/bash_completion.d/xbian-config.sh >/dev/null
 
+        [ -e /home/xbian/.bashrc ] || touch /home/xbian/.bashrc
         if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 0 ]; then
 
 	        if [ $(grep -c ^"#sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
