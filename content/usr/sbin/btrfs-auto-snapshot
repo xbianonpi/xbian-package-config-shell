@@ -395,7 +395,8 @@ case $opt_command in
 			exit 134
 		fi
 
-		BTRFS_LIST=$(btrfs sub list ${opt_mountpoint} | sort -k9 | grep -v ${opt_delim} | awk '{print $9}')  \
+#		BTRFS_LIST=$(btrfs sub list ${opt_mountpoint} | sort -k9 | grep -v ${opt_delim} | awk '{print $9}')  \
+		BTRFS_LIST=$(btrfs sub list ${opt_mountpoint} | grep -v "/" | awk '{print $9}' | sort)  \
 			|| { print_log error "unable to get list of volumes"; exit 102; }
 
 		BTRFS_LIST=$(printf "%s\n" "$BTRFS_LIST")
