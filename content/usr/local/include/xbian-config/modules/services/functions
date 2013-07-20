@@ -119,7 +119,7 @@ function enableAutoStartFn() {
 	if [ -f "/etc/init/$1.conf" ]; then
 		grep -xv manual "/etc/init/$1.override" > "/etc/init/$1.override.new"
 		mv "/etc/init/$1.override.new" "/etc/init/$1.override"
-		test $(grep -cvx manual "/etc/init/$1.override") -eq 0 && rm /etc/init/$1.override
+		test $(grep -cvx manual "/etc/init/$1.override") -eq 0 && rm -f /etc/init/$1.override && return 0
 		return $(grep -cx manual "/etc/init/$1.override")
         else
 		insserv -f "/etc/init.d/$1" > /dev/null 2>&1; return $?
