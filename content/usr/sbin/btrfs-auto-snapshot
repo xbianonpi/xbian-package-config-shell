@@ -59,6 +59,7 @@ print_usage ()
                              list, snapshot 
                              rename, destroy
                              listvol, rollback
+                             createvol
                             
                        If not given, snapshot is assumed.
     --dev              Device which is part of the btrfs filesystem (by default
@@ -440,6 +441,9 @@ fi
 case $opt_command in
         (listvol)
                 printf "%s\n" $BTRFS_LIST
+                ;;
+        (createvol)
+                btrfs sub create ${opt_mountpoint}/$1
                 ;;
         (list)
                 for t in $TARGETS; do

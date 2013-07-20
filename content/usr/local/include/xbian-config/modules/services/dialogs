@@ -134,7 +134,7 @@ function showEnableAutoStartServiceDlg() {
 	return $?;
 }
 
-function showFailedToDisableAutoStartDlg() {
+function showFailedToEnableAutoStartDlg() {
 	wrapTxtFn "$(_ services.autostart.enable_failed)" $(($DEFAULTWIDTH-4))
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
 	valignTxtFn "$CENTEREDTXT"
