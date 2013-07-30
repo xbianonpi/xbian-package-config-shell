@@ -7,7 +7,7 @@ Priority: optional
 Architecture: armhf
 Pre-Depends: anacron
 Replaces: xbian-package-config
-Depends: wget, bc, gettext, dialog, btrfs-tools (>=0.19+20120328-7.1)
+Depends: wget, bc, gettext, dialog, btrfs-tools (>=0.19+20130131-3+really20121004-1)
 Conflicts: xbian-package-config
 Maintainer: Koenkk <development@xbian.org>
 Description: Configuration utility for XBian.
