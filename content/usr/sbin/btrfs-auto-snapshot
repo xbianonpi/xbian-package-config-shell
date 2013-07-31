@@ -33,7 +33,7 @@ opt_label='regular'
 opt_prefix='btrfs-auto-snap'
 opt_recursive=''
 opt_sep='_'
-opt_rootvolid='0'
+opt_rootvolid='5'
 opt_createdirs=''
 opt_mountpoint=${tmp_dir}
 #opt_snapdir='.btrfs/snapshot/'
@@ -369,7 +369,7 @@ while true; do
         sleep 5
         COUNTER=$(( $COUNTER + 1 ))
 done
-trap "sync; umount ${opt_mountpoint} ; rmdir '${tmp_dir}'" INT TERM EXIT
+trap "sync ; btrfs  fi sync ${opt_mountpoint} > /dev/null; umount ${opt_mountpoint};rmdir '${tmp_dir}'" INT TERM EXIT
 
 test -d $opt_mountpoint/$opt_snapdir && test -n "$opt_snapdir" && opt_vroot='1'
 
