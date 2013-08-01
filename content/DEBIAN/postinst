@@ -4,6 +4,7 @@ if [ $1 == "configure" ]; then
 
 	echo $(date) > /home/xbian/xbian-config-update.log
 
+	[ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
 	msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.po 
 
 	. /etc/bash_completion.d/xbian-config.sh >/dev/null
