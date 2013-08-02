@@ -1,1 +1,1 @@
-dpkg::Pre-Invoke {"if [ -x /usr/sbin/btrfs-auto-snapshot ]; then btrfs-auto-snapshot snapshot -k 10 -l apt-run root ; fi "; };
+dpkg::Pre-Invoke {"z=$(findmnt | grep -m1 $(readlink /dev/root) | awk '{print $2}'); z=${z#*\[\/}; export z=${z%%\/*}; if [ -x /usr/sbin/btrfs-auto-snapshot ]; then btrfs-auto-snapshot snapshot -k 10 -l apt-run $z ;  fi ;" };

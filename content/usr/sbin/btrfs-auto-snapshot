@@ -179,7 +179,10 @@ do_snapshot ()
                         mkdir -p $opt_mountpoint/$ii/$opt_snapdir
                 fi
                 if [ ! -d "$opt_mountpoint/$ii/$opt_snapdir$SNAPNAME" ]; then
-                        if do_run "btrfs sub snapshot $opt_mountpoint/$ii/$opt_runningcopyin $opt_mountpoint/$ii/$opt_snapdir$SNAPNAME"; then
+                        tmp_runningcopyin=$opt_runningcopyin
+                        z=$(findmnt | grep /$ii/ | awk '{print $2}'); z=${z##*\/}; z=${z%%]}
+                        [ -n "$z" ] && tmp_runningcopyin=$z 
+                        if do_run "btrfs sub snapshot $opt_mountpoint/$ii/$tmp_runningcopyin $opt_mountpoint/$ii/$opt_snapdir$SNAPNAME"; then
                                 SNAPSHOT_COUNT=$(( $SNAPSHOT_COUNT + 1 ))
                         else
                                 WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
@@ -331,7 +334,7 @@ done
 print_log debug "Using command $opt_command."
 
 if [ "$#" -eq '0' ]; then
-        if [ "$opt_command" != 'list' -a "$opt_command" != 'listvol' ]; then
+        if [ "$opt_command" != 'list' -a "$opt_command" != 'listvol' -a "$opt_command" != 'xbiancopy' ]; then
                 print_log error "The filesystem argument list is empty."
                 exit 133
         else
@@ -356,20 +359,23 @@ DATE=$(date +%F-%H%M)
 
 COUNTER='0'
 while true; do
-        if $(mkdir "${tmp_dir}"); then 
+        if $(mkdir "${tmp_dir}" > /dev/null 2>&1); then 
                 if ! $(mount -t btrfs -o subvolid=$opt_rootvolid $opt_dev $opt_mountpoint); then
                         print_log error "unable to mount the filesystem"
                         rmdir ${tmp_dir}
                         exit 100
                 fi
+                trap "btrfs  fi sync ${opt_mountpoint} > /dev/null; umount ${opt_mountpoint};rmdir '${tmp_dir}'" INT TERM EXIT
                 break
-        fi  
+        elif [ $opt_command = listvol ]; then
+                break
+        fi
+
         print_log error "another copy is running ... $COUNTER"
         test "$COUNTER" -gt '11' && exit 99
         sleep 5
         COUNTER=$(( $COUNTER + 1 ))
 done
-trap "sync ; btrfs  fi sync ${opt_mountpoint} > /dev/null; umount ${opt_mountpoint};rmdir '${tmp_dir}'" INT TERM EXIT
 
 test -d $opt_mountpoint/$opt_snapdir && test -n "$opt_snapdir" && opt_vroot='1'
 
@@ -470,6 +476,41 @@ case $opt_command in
 		do_rename $1 $(dirname $1)/@
 		do_rename $(dirname $1)/@$tmpd $1_rollback
                 ;;
+	(xbiancopy)
+		[ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
+		if [ $opt_dev != $1 ]; then
+		    [ ! -b $1 ] && { echo "non existend source device"; exit 5; }
+		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 )
+		fi
+		mkdir /tmp/btrfs-source
+		if [ $opt_dev != $1 ]; then
+		    mount -t btrfs -o subvol=/ $1 /tmp/btrfs-source
+		else
+		    mount -o bind ${tmp_dir} /tmp/btrfs-source
+		fi
+		findmnt $2 >/dev/null && { umount $2 || { echo "can not umount destination partition"; exit 5; }; }
+		mkfs.btrfs -L xbian-copy -f $2 && mkdir /tmp/btrfs-dest && mount -t btrfs -o subvol=/,compress=lzo,thread_pool=1 $2 /tmp/btrfs-dest
+		for v in $BTRFS_LIST; do
+		    btrfs sub create /tmp/btrfs-dest/$v
+		    btrfs sub snap -r /tmp/btrfs-source/$v/@ /tmp/btrfs-source/$v/@_ro
+		    btrfs send -v /tmp/btrfs-source/$v/@_ro | btrfs receive -v /tmp/btrfs-dest/$v
+		    btrfs sub snap /tmp/btrfs-dest/$v/@_ro /tmp/btrfs-dest/$v/@
+		    btrfs sub delete /tmp/btrfs-dest/$v/@_ro
+		    btrfs sub delete /tmp/btrfs-source/$v/@_ro
+		done
+		btrfs fi sync /tmp/btrfs-dest; umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest
+		umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
+		echo ""
+		echo "for users on xbian version below beta2 (beta1.1, beta1). beta2 handles this automaticaly."
+		echo "/etc/fstab file needs to be adapted for /home to be mounted properly on the new xbian copy."
+		echo "do the following steps:"
+		echo "1) mount -t btrfs -o subvol=root/@ LABEL=xbian-copy /mnt"
+		echo "2) nano /mnt/etc/fstab"
+		echo "3) change all lines starting with LABEL=xbian-root-btrfs to LABEL=xbian-copy ....... "
+		echo "4) umount /mnt"
+		echo ""
+		echo "for all users - change /boot/cmdline.txt if you want to boot from the copy just created. change root=LABEL=xbian-root-btrfs to root=LABEL=xbian-copy"
+		;;
         (*)
                 print_log error "Wrong command."
                 exit 200
