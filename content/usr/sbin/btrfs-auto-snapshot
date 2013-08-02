@@ -45,6 +45,7 @@ opt_runningcopyin='@'
 opt_delim='@'
 opt_command='snapshot'
 opt_vroot=''
+opt_nocreate=''
 
 SNAPSHOT_COUNT='0'
 DESTROY_COUNT='0'
@@ -60,6 +61,8 @@ print_usage ()
                              rename, destroy
                              listvol, rollback
                              createvol
+
+                             xbiancopy
                             
                        If not given, snapshot is assumed.
     --dev              Device which is part of the btrfs filesystem (by default
@@ -80,6 +83,7 @@ print_usage ()
                        volume tree (default is 0)
     -m, --mountpoint   Dir used to mount rootvolid. By default ${tmp_dir}
     -t,--dirs          Create snapshot directories if needed.
+    --no-create        Doesn't auto create fs on 'xbiancopy'.
 
       name           Filesystem and volume names, or '//' for all subvolumes.
 " 
@@ -259,7 +263,7 @@ else
 fi
 
 GETOPT=$(getopt \
-        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name: \
+        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create \
         --options=p:dvl:i:m:nhtsk:e: \
         -- "$@" ) \
         || exit 128
@@ -269,6 +273,10 @@ eval set -- ${GETOPT}
 while [ "$#" -gt '0' ]
 do
         case "$1" in
+                (--no-create)
+                        opt_nocreate='1'
+                        shift 1
+                        ;;
                 (--dev)
                         opt_dev="$2"
                         shift 2
@@ -387,6 +395,12 @@ SNAPNAME="$opt_delim$opt_prefix${opt_label:+$opt_sep$opt_label-$DATE}"
 # The expression for matching old snapshots.  -YYYY-MM-DD-HHMM
 SNAPGLOB="$opt_delim$opt_prefix${opt_label:+?$opt_label}????????????????"
 
+BTRFS_LIST=$(btrfs sub list ${opt_mountpoint} | grep -v "/" | awk '{print $9}' | sort)  \
+	|| { print_log error "unable to get list of volumes"; exit 102; }
+
+BTRFS_LIST=$(printf "%s\n" "$BTRFS_LIST")
+	test -n "$opt_vroot" && BTRFS_LIST=$(printf ".\n%s\n" "$BTRFS_LIST") 
+
 case $opt_command in 
 	(listvol|list|snapshot)
 		# Count the number of times '//' appears on the command line.
@@ -401,13 +415,6 @@ case $opt_command in
 			print_log error "The // must be the only argument if it is given."
 			exit 134
 		fi
-
-#		BTRFS_LIST=$(btrfs sub list ${opt_mountpoint} | sort -k9 | grep -v ${opt_delim} | awk '{print $9}')  \
-		BTRFS_LIST=$(btrfs sub list ${opt_mountpoint} | grep -v "/" | awk '{print $9}' | sort)  \
-			|| { print_log error "unable to get list of volumes"; exit 102; }
-
-		BTRFS_LIST=$(printf "%s\n" "$BTRFS_LIST")
-		test -n "$opt_vroot" && BTRFS_LIST=$(printf ".\n%s\n" "$BTRFS_LIST") 
 
 		# Verify that each argument exists
 		for ii in "$@"
@@ -480,7 +487,7 @@ case $opt_command in
 		[ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
 		if [ $opt_dev != $1 ]; then
 		    [ ! -b $1 ] && { echo "non existend source device"; exit 5; }
-		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 )
+		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
 		fi
 		mkdir /tmp/btrfs-source
 		if [ $opt_dev != $1 ]; then
@@ -489,7 +496,8 @@ case $opt_command in
 		    mount -o bind ${tmp_dir} /tmp/btrfs-source
 		fi
 		findmnt $2 >/dev/null && { umount $2 || { echo "can not umount destination partition"; exit 5; }; }
-		mkfs.btrfs -L xbian-copy -f $2 && mkdir /tmp/btrfs-dest && mount -t btrfs -o subvol=/,compress=lzo,thread_pool=1 $2 /tmp/btrfs-dest
+		[ -n "opt_nocreate" ] || mkfs.btrfs -L xbian-copy -f $2 && mkdir /tmp/btrfs-dest
+		mount -t btrfs -o subvol=/,thread_pool=5 $2 /tmp/btrfs-dest
 		for v in $BTRFS_LIST; do
 		    btrfs sub create /tmp/btrfs-dest/$v
 		    btrfs sub snap -r /tmp/btrfs-source/$v/@ /tmp/btrfs-source/$v/@_ro
