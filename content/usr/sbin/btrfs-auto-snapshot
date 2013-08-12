@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # btrfs-auto-snapshot for Linux.
 # Automatically create, rotate, and destroy periodic BTRFS snapshots.
@@ -486,7 +486,7 @@ case $opt_command in
 	(xbiancopy)
 		[ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
 		if [ $opt_dev != $1 ]; then
-		    [ ! -b $1 ] && { echo "non existend source device"; exit 5; }
+		    [ ! -b $1 ] && echo "non existend source device" && exit 5
 		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
 		fi
 		mkdir /tmp/btrfs-source
@@ -497,7 +497,7 @@ case $opt_command in
 		fi
 		findmnt $2 >/dev/null && { umount $2 || { echo "can not umount destination partition"; exit 5; }; }
 		[ -n "opt_nocreate" ] || mkfs.btrfs -L xbian-copy -f $2 && mkdir /tmp/btrfs-dest
-		mount -t btrfs -o subvol=/,thread_pool=5 $2 /tmp/btrfs-dest
+		mount -t btrfs -o subvol=/,compress=lzo,thread_pool=2 $2 /tmp/btrfs-dest
 		for v in $BTRFS_LIST; do
 		    btrfs sub create /tmp/btrfs-dest/$v
 		    btrfs sub snap -r /tmp/btrfs-source/$v/@ /tmp/btrfs-source/$v/@_ro

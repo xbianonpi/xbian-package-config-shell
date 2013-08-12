@@ -38,8 +38,10 @@ function setHostnameFn() {
 	hostname $1
 	eval "sed -i 's/$2/$1/g' /etc/hosts";
 	if [ $(hostname) == $1 ]; then
+	        xbian-update-initramfs &
 		return 1;
 	else
 		return 0;
 	fi
+
 }

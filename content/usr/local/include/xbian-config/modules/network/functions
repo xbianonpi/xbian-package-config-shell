@@ -497,7 +497,8 @@ function restartWLANAdapterFn() {
 #  @: Process id of the ifup process
 #  0: Process ifup not running
 function restartLANAdapterFn() {
-	ifdown eth0 > /dev/null; ifup eth0 >/dev/null
+        [ -n "$1" ] && ifc=$1 || ifc=eth0
+	ifdown --force $ifc >&/dev/null; ifup --force $ifc >&/dev/null
 	return $PROCESSID;
 }
 

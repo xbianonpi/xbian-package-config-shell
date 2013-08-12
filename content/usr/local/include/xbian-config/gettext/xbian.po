@@ -1010,3 +1010,22 @@ msgstr "Automatic update"
 
 msgid "xbian-config.preferences.label.confirm_modification"
 msgstr "Confirm Modification"
+
+#
+#	xbiancopy
+#
+
+msgid "xbian-config.xbiancopy.label.source"
+msgstr "Source drive/partition: "
+
+msgid "xbian-config.xbiancopy.label.dest"
+msgstr "Destination: "
+
+msgid "xbian-config.xbiancopy.name"
+msgstr "Xbian copier"
+
+msgid "xbian-config.xbiancopy.description"
+msgstr "XBIAN system copy tool (to usb ...)"
+
+msgid "xbian-config.xbiancopy.dialog.wrongblkdev"
+msgstr "Wrong destination block device"

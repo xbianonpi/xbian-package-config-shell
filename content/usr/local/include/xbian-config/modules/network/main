@@ -80,6 +80,7 @@ function showIPModeConfigGUIFn() {
 			STATUS=$?;
 			#showInterfaceDhcpSuccessDlg
 			MODE="dhcp"
+
 		else
 			# Static IP Selected
 			showInterfaceStaticGUIFn "$IFACE" "$IFACE_DATA"
@@ -94,6 +95,8 @@ function showIPModeConfigGUIFn() {
 				showWlanScanGUIFn "$IFACE" "$IFACE_DATA"
 			else
 				# Configuration done
+                                showRestartAdapterDlg "$IFACE"
+                                restartLANAdapterFn "$IFACE"
 				showGUIFn
 			fi
 		fi
@@ -135,7 +138,7 @@ function showInterfaceStaticGUIFn() {
 					showWlanScanGUIFn "$1" "$2"
 				else
 					showRestartAdapterDlg $1
-					restartLANAdapterFn;
+					restartLANAdapterFn $1
 					showGUIFn;
 				fi
 			else

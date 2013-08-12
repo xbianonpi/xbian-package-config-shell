@@ -18,7 +18,7 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 DEFAULTWIDTH=55;
-DEFAULTHEIGHT=7;
+DEFAULTHEIGHT=9;
 DEFAULTCOLSEP="!"
 DEFAULTDELIMITER="%"
 

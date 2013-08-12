@@ -27,3 +27,4 @@ nscd:
 rpcbind:
 mysql:mysqld
 console-setup:
+openbsd-inetd:inetd
