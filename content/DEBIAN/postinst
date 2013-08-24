@@ -2,7 +2,7 @@
 
 if [ $1 == "configure" ]; then
 
-	echo $(date) > /home/xbian/xbian-config-update.log
+	date > /home/xbian/xbian-config-update.log
 
 	[ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
 	msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.po 
@@ -18,9 +18,8 @@ if [ $1 == "configure" ]; then
 	                echo 1 > /home/xbian/.xbian-config-start
 	        fi
 
-	        grep -v "sudo xbian-config" /home/xbian/.bashrc  > /home/xbian/.bashrc.new
-	        echo "if [ \"\$(cat /home/xbian/.xbian-config-start)\" -eq '1' ]; then sudo xbian-config; fi" >> /home/xbian/.bashrc.new
-	        mv /home/xbian/.bashrc.new /home/xbian/.bashrc
+	        sed -i '/sudo xbian-config/d' /home/xbian/.bashrc
+	        echo "if [ \"\$(cat /home/xbian/.xbian-config-start)\" -eq '1' ]; then sudo xbian-config; fi" >> /home/xbian/.bashrc
 
 	        if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
 	                echo "Success: changing .bashrc" >> /home/xbian/xbian-config-update.log;
