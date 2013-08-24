@@ -496,10 +496,12 @@ case $opt_command in
 		    mount -o bind ${tmp_dir} /tmp/btrfs-source
 		fi
 		findmnt $2 >/dev/null && { umount $2 || { echo "can not umount destination partition"; exit 5; }; }
-		[ -n "opt_nocreate" ] || mkfs.btrfs -L xbian-copy -f $2 && mkdir /tmp/btrfs-dest
-		mount -t btrfs -o subvol=/,compress=lzo,thread_pool=2 $2 /tmp/btrfs-dest
+		[ -n "$opt_nocreate" ] || mkfs.btrfs -L xbian-copy -f $2
+		mkdir -p /tmp/btrfs-dest
+		mount -t btrfs -o subvol=/ $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
 		for v in $BTRFS_LIST; do
 		    btrfs sub create /tmp/btrfs-dest/$v
+		    btrfs sub delete /tmp/btrfs-source/$v/@_ro > /dev/null 2>&1
 		    btrfs sub snap -r /tmp/btrfs-source/$v/@ /tmp/btrfs-source/$v/@_ro
 		    btrfs send -v /tmp/btrfs-source/$v/@_ro | btrfs receive -v /tmp/btrfs-dest/$v
 		    btrfs sub snap /tmp/btrfs-dest/$v/@_ro /tmp/btrfs-dest/$v/@

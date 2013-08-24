@@ -97,6 +97,7 @@ function showIPModeConfigGUIFn() {
 				# Configuration done
                                 showRestartAdapterDlg "$IFACE"
                                 restartLANAdapterFn "$IFACE"
+				setAuto "$IFACE"
 				showGUIFn
 			fi
 		fi
@@ -139,6 +140,7 @@ function showInterfaceStaticGUIFn() {
 				else
 					showRestartAdapterDlg $1
 					restartLANAdapterFn $1
+					setAuto $1
 					showGUIFn;
 				fi
 			else
@@ -281,6 +283,7 @@ function showWlanRestartGUIFn() {
 	showRestartAdapterDlg $1
 	restartWLANAdapterFn "$1"
 	LASTSTATUS=-1;
+	setAuto $1
 	while [ $(kill -0 $PROCESSID 2>/dev/null >/dev/null; echo $?) -eq 0 ]; do
 		getWLANConnectStatusFn;
 
@@ -394,6 +397,7 @@ function showCMDFn() {
 				if [ $? -eq 1 ]; then
 					setInterfaceDhcpFn "$2"
 					echo "1"
+					setAuto "$2"
 					return 1;
 				else
 					# Invalid interface
@@ -417,6 +421,7 @@ function showCMDFn() {
 					# $6 = Nameserver1
 					# $7 = Nameserver2
 
+					setAuto "$2"
 					# Handle optional name servers
 					NAMESERVER1=""
 					NAMESERVER2=""
@@ -474,6 +479,7 @@ function showCMDFn() {
 					# $4 = ESSID
 					# $5 = WLANKEY (semi-optional, only needed with WPA or WEP)
 
+					setAuto $2
 					WLANKEY=""
 					if [ $# -gt 4 ]; then
 						WLANKEY="$5"
@@ -526,7 +532,8 @@ function showCMDFn() {
 					isValidInterfaceFn "$2"
 					if [ $? -eq 1 ]; then
 						restartWLANAdapterFn $2
-						if [ $PROCESSID -gt 0 ]; then
+						if [ "$PROCESSID" -gt 0 ]; then
+							setAuto $2
 							echo 1
 						else
 							echo -11

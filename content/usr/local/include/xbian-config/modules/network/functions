@@ -18,6 +18,26 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
+setAuto() {
+    ni=$1
+    case $1 in 
+        wlan?)
+            echo "auto lo" > /etc/network/interfaces.new
+            grep -vi ^auto /etc/network/interfaces >> /etc/network/interfaces.new
+            mv /etc/network/interfaces.new /etc/network/interfaces
+            ;;
+        eth?)
+            echo "auto $1 lo" > /etc/network/interfaces.new
+            grep -vi ^auto /etc/network/interfaces >> /etc/network/interfaces.new
+            mv /etc/network/interfaces.new /etc/network/interfaces
+            ;;
+        lo)
+            ;;
+    esac
+
+    return 0
+}
+
 # Set wlan credentials
 # Arguments
 #  $1 Interface name
@@ -122,6 +142,7 @@ setInterfaceDhcpFn() {
 			return 1;
 		else
 			# Interface not present, add it to the end
+			case $1 in wlan?) echo "allow-hotplug $1" >> /etc/network/interfaces; ;; esac
 			sudo echo -e "iface $1 inet dhcp\n" >> /etc/network/interfaces
 
 			return 1;
@@ -215,6 +236,7 @@ setInterfaceStaticFn() {
 
 		else
 			# Interface not present, add it to the end
+			case $1 in wlan?) echo "allow-hotplug $1" >> /etc/network/interfaces; ;; esac
 			sudo echo -e "iface $1 inet static" >> /etc/network/interfaces
 			echo -e "$BUFFERIFACES\n" >> /etc/network/interfaces
 
@@ -298,6 +320,7 @@ function readNetworkConfigurationFn() {
 
 		# Extract DHCP or Static
 		MODE=$(echo -e "$TFILEIFACES" | sed -ne "s/\(iface $1 \)\([a-z]\{1,\}\)[\ ]\([a-z]\{1,\}\)/\3/p");
+		[ -z "$MODE" ] && MODE=manual
 		CIP=$(ifconfig -a $1 | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet addr:\([0-9.]\+\).*/\1/gp');
 		CSM=$(ifconfig -a $1 | grep Mask | awk '{print $4}' | cut -f2 -d:);
 		CGW=$(netstat -rn | grep -m1 0.0.0.0 | awk '{print $2}');
@@ -314,6 +337,8 @@ function readNetworkConfigurationFn() {
 		elif [ ! -z "$MODEWEP" ]; then
 			PROTECTION="WEP"
 		fi
+
+		[ -z "$PROTECTION" ] && PROTECTION=open
 
 		# Extract wlan credentials
 		SSID=""
@@ -446,7 +471,9 @@ function scanWLANNetworksFn() {
 			WLAN[2]=$(echo $LINE | cut -f2 -d":");
 		fi
 		if [[ $LINE =~ "Signal level" ]]; then
-			WLAN[3]=$(echo $LINE | awk -F"Signal level=" '{print $2}' | cut -d'/' -f1);
+#			WLAN[3]=$(echo $LINE | awk -F"Quality=" '{print $2}' | cut -d'/' -f1);
+			WLAN[3]=$(echo $LINE | awk -F"Quality=" '{print $2}' | cut -d' ' -f1);
+			WLAN[3]=$((100*${WLAN[3]}))
                 fi
 	done;
 	X=$(($X+1));
@@ -480,14 +507,11 @@ function scanWLANNetworksFn() {
 #  @: Process id of the ifup process
 #  0: Process ifup not running
 function restartWLANAdapterFn() {
-	if [ $(kill -0 $(pgrep ifup) 2>/dev/null >/dev/null; echo $?) -eq 1 ]; then
-		ifdown $1 2>/dev/null 1>/dev/null 3>/dev/null;
-		(nohup ifup $1 2>/tmp/wlanstatus 1>/dev/null >/dev/null 3>/dev/null &) 
-		PROCESSID=$(pgrep ifup);
-	else
-		PROCESSID="0";
-	fi
-	return $PROCESSID;
+	pkill wpa_supplicant > /dev/null 2>&1;pkill wpa_cli > /dev/null 2>&1
+	ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null
+	nohup ifup $1 2>/tmp/wlanstatus 1>/dev/null  &
+	PROCESSID=$!
+	return $PROCESSID
 }
 
 # Restart a lan adapter
@@ -498,8 +522,9 @@ function restartWLANAdapterFn() {
 #  0: Process ifup not running
 function restartLANAdapterFn() {
         [ -n "$1" ] && ifc=$1 || ifc=eth0
-	ifdown --force $ifc >&/dev/null; ifup --force $ifc >&/dev/null
-	return $PROCESSID;
+	ifdown $ifc >&/dev/null
+	ifdown --force $ifc >&/dev/null 
+	ifup $ifc >&/dev/null
 }
 
 # Gets the status of the wlan restart
