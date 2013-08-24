@@ -18,7 +18,9 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 function checkNeedToResizeFn() {
+        echo &>/dev/null;
 }
 
 function resizeSDFn() {
+        echo &>/dev/null;
 }
