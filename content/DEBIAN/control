@@ -1,6 +1,6 @@
 Origin: XBian
 Package: xbian-package-config-shell
-Version: 2.1.4-7
+Version: 2.1.4-8
 Section: utils
 Essential: No
 Priority: optional
@@ -8,6 +8,7 @@ Architecture: armhf
 Pre-Depends: anacron
 Replaces: xbian-package-config
 Depends: wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian)
+Breaks: xbian-package-config-xbmc (<<1.1-2.2)
 Conflicts: xbian-package-config
 Maintainer: Koenkk <development@xbian.org>
 Description: Configuration utility for XBian.

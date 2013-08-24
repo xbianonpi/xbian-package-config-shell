@@ -485,7 +485,7 @@ function showCMDFn() {
 						WLANKEY="$5"
 					fi
 
-					RETURN=$(setInterfaceWlanCredentials "$2" "$3" "$4" "$WLANKEY"; echo $?)
+					RETURN=$(setInterfaceWlanCredentials "$2" "$3" "$(echo $4 | base64 -d)" "$(echo $WLANKEY | base64 -d)"; echo $?)
 					case $RETURN in
 						2)
 							echo -10;

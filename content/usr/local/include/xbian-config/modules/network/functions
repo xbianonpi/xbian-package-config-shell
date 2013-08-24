@@ -380,8 +380,13 @@ function readNetworkConfigurationFn() {
 		echo "nameserver2 $NS2"
 		if [ ! -z "$PROTECTION" ]; then
 			echo "protection $PROTECTION"
-			echo "ssid $SSID"
-			echo "key $WLANKEY"
+			if [ "$GUIMODE" -eq 1 ]; then
+				echo "ssid $SSID"
+				echo "key $WLANKEY"
+			else
+				echo "ssid $(echo $SSID | base64)"
+				echo "key $(echo $WLANKEY | base64)"
+			fi
 		fi
 		return 1;
 	else
