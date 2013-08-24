@@ -48,7 +48,7 @@ function showXBMCWebserverDlg() {
 	wrapTxtFn "$(_ xbmc.webserver.enable_disable)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
-	showConfirmDlg "$ALIGNEDTXT" $HEIGHT 55 "$_ENABLE" "$_DISABLE"
+	showConfirmDlg "$ALIGNEDTXT" $HEIGHT 55 "$(_ dialog.enable)" "$(_ dialog.disable)"
 	return $?;
 }
 
@@ -80,7 +80,7 @@ function showXBMCWebserverFailedDisableDlg() {
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;	
 }
 
-function showXBMCGUIResSuccessDDlg() {
+function showXBMCGUIResSuccessDlg() {
 	wrapTxtFn "$(_ xbmc.guires.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
