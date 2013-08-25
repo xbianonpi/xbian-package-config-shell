@@ -229,7 +229,7 @@ msgid "xbian-config.license.updated"
 msgstr "%s successfully updated"
 
 msgid "xbian-config.license.invalid"
-msgstr "A %s must be 9 or 10 characters long and looks like 0x00000000"
+msgstr "A %s must be 9 or 10 characters long and looks like 0x00000000. You can specify maximum 8 licenses, separated by comma."
 
 #
 # xbian-config module licensempg2

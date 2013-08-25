@@ -25,6 +25,7 @@ function getCurrentLicenseVC1Fn() {
 	LICENSE=$(cat /boot/config.txt | grep 'decode_WVC1' | cut -f 2 -d=); 
 }
 
+
 # Insert the current license
 #  $1 [String] License
 # Returns
@@ -32,17 +33,18 @@ function getCurrentLicenseVC1Fn() {
 #  - 1: Success
 #  - 0: Failed
 function insertLicenseVC1Fn() {
-	NEWLICENSE=$1;
-	if [ "${NEWLICENSE:0:2}" == "0x" ] && [[ "${NEWLICENSE:2:8}" =~ ^[0-9a-f]{1,8}$ ]] && [ ${#NEWLICENSE} -le 10 ] && [ ${#NEWLICENSE} -ge 9 ]; then
-		echo "decode_WVC1=$1" >> /boot/config.txt 
-		if [ $(cat /boot/config.txt | grep -c $1) -eq 1 ]; then
-			return 1;
+        IFS=$','
+        set -- $1
+        [ $# -gt 8 ] && return 2
+        for NEWLICENSE in $@; do
+		if [ "${NEWLICENSE:0:2}" == "0x" ] && [[ "${NEWLICENSE:2:8}" =~ ^[0-9a-f]{1,8}$ ]] && [ ${#NEWLICENSE} -le 10 ] && [ ${#NEWLICENSE} -ge 9 ]; then
+			:
 		else
-			return 0;
+			return 2
 		fi
-	else
-		return 2;
-	fi
+	done
+        echo "decode_WVC1=$@" | tr " " "," >> /boot/config.txt
+        return 1;
 }
 
 
@@ -54,17 +56,9 @@ function insertLicenseVC1Fn() {
 #  - 1: Success
 #  - 0: Failed
 function updateLicenseVC1Fn() {
-	NEWLICENSE=$1;
-	if [ "${NEWLICENSE:0:2}" == "0x" ] && [[ "${NEWLICENSE:2:8}" =~ ^[0-9a-f]{1,8}$ ]] && [ ${#NEWLICENSE} -le 10 ] && [ ${#NEWLICENSE} -ge 9 ]; then
-		sed -i "s/decode_WVC1=$2/decode_WVC1=$1/g" /boot/config.txt;
-		if [ $(cat /boot/config.txt | grep -c $1) -eq 1 ]; then
-			return 1;
-		else
-			return 0;
-		fi
-	else
-		return 2;
-	fi
+        grep -v ^"decode_WVC1=" /boot/config.txt > /boot/config.new
+        mv /boot/config.new /boot/config.txt
+        insertLicenseVC1Fn $1
 }
 
 # Delete the current license

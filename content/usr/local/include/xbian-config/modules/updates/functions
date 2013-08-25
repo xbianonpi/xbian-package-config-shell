@@ -45,7 +45,7 @@ function updatePackagesFn() {
 	LIST="";
 	ARRAY=($2);
 	for INDEX in ${ARRAY[@]}; do
-		INDEX=${INDEX//\"/ };
+		INDEX=${INDEX/\\/}
 		NAME=$(echo ${PACKAGES[$((INDEX-1))]} | cut -f1 -d";");
 		VERSION=$(echo ${PACKAGES[$((INDEX-1))]} | cut -f3 -d";");
 		LIST+=" "$NAME"="$VERSION
