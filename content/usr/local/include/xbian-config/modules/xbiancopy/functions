@@ -16,25 +16,6 @@
 #
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
-#
 
-# update/insert Raspberry PI config variable
-#  $1 [String] Key
-#  $2 [Mixed] Value
-updateConfigVarFn() {
-	sed -i "/$1=/d" /boot/config.txt
-	echo "$1=$2" >> /boot/config.txt
-	sed -i '/^$/d' /boot/config.txt
-}
+# Get list of installed services
 
-# select Raspberry PI config variable
-#  $1 [String] Key
-selectConfigVarFn() {
-	RETURN="$(grep -w $1 /boot/config.txt)"
-}
-
-# remove Raspberry PI config variable
-#  $1 [String] Key
-deleteConfigVarFn() {
-	sed -i "/$1=/d" /boot/config.txt
-}

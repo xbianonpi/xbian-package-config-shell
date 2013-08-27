@@ -270,6 +270,24 @@ Codename: wheezy
 Replacing: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
 
 Package: xbian-package-firmware
+Version: 1.4-4
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 7243
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/main/x/xbian-package-firmware/xbian-package-firmware_1.4-4_armhf.deb
+Size: 2193998
+MD5sum: 28b2055bbeb98186ea137f7c124b493d
+SHA1: d1c71bddbaeff47ea9836ae47c6364c1084e19bf
+SHA256: cd29c8c44cb65e3ce62591dccc8dc5e5ec7be8fd64036c046f908c7e8910a23f
+Section: firmware
+Priority: optional
+Description: Firmware for XBian.(Aug 21 2013 12:52:10, bf5ae9ff9c214727f6c9f1d381be35632678b98b)
+
+Package: xbian-package-firmware
 Version: 1.3
 Architecture: armhf
 Essential: Yes

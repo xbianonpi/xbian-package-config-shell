@@ -38,6 +38,7 @@ opt_createdirs=''
 opt_mountpoint=${tmp_dir}
 #opt_snapdir='.btrfs/snapshot/'
 opt_snapdir=''
+opt_img=''
 
 # what is name for snapshot which is normaly mounted as running filesystem (if SUBVOL/@running, then use "@running")
 opt_runningcopyin='@'
@@ -62,7 +63,7 @@ print_usage ()
                              listvol, rollback
                              createvol
 
-                             xbiancopy
+                             xbiancopy [--no-create] [[--img]] source dest
                             
                        If not given, snapshot is assumed.
     --dev              Device which is part of the btrfs filesystem (by default
@@ -84,6 +85,7 @@ print_usage ()
     -m, --mountpoint   Dir used to mount rootvolid. By default ${tmp_dir}
     -t,--dirs          Create snapshot directories if needed.
     --no-create        Doesn't auto create fs on 'xbiancopy'.
+    --img              Create img file instead if physical partition.
 
       name           Filesystem and volume names, or '//' for all subvolumes.
 " 
@@ -263,7 +265,7 @@ else
 fi
 
 GETOPT=$(getopt \
-        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create \
+        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img \
         --options=p:dvl:i:m:nhtsk:e: \
         -- "$@" ) \
         || exit 128
@@ -273,6 +275,10 @@ eval set -- ${GETOPT}
 while [ "$#" -gt '0' ]
 do
         case "$1" in
+                (--img)
+                        opt_img=1
+                        shift 1
+                        ;;
                 (--no-create)
                         opt_nocreate='1'
                         shift 1
@@ -373,7 +379,11 @@ while true; do
                         rmdir ${tmp_dir}
                         exit 100
                 fi
-                trap "btrfs  fi sync ${opt_mountpoint} > /dev/null; umount ${opt_mountpoint};rmdir '${tmp_dir}'" INT TERM EXIT
+                trap "btrfs  fi sync ${opt_mountpoint} > /dev/null; umount ${opt_mountpoint};rmdir '${tmp_dir}'; \
+                    mountpoint -q /tmp/btrfs-dest && umount -l /tmp/btrfs-dest; \
+                    mountpoint -q /tmp/btrfs-source && umount -l /tmp/btrfs-source; \
+                    losetup -d $loopd > /dev/null 2>&1; " INT TERM EXIT
+
                 break
         elif [ $opt_command = listvol ]; then
                 break
@@ -485,30 +495,57 @@ case $opt_command in
                 ;;
 	(xbiancopy)
 		[ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
+		mkdir -p /tmp/btrfs-dest
+		if [ -n "$opt_img" ]; then
+		    size=$(df -B1G | grep -w $(findmnt --source $1 -f -o TARGET -n) -m1 | awk '{print $2}')
+		    truncate -s "$(($size-1))G" $2
+		    modprobe -q loop
+		    loopd=$(losetup -f)
+		    losetup $loopd $2
+		    parted -s $loopd mklabel msdos
+		    echo "2048,69632,b,*," | sfdisk -u S -N1 -q $loopd > /dev/null 2>&1
+		    echo "71680,+,83,," | sfdisk -u S -N2 -q $loopd > /dev/null 2>&1
+		    losetup -d $loopd; losetup --offset $((2048*512)) $loopd $2
+		    dd if=/dev/mmcblk0p1 of=$loopd; mount -t vfat $loopd /tmp/btrfs-dest || exit 5
+		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootfsopts=*}
+		    cat /boot/cmdline.txt | eval $(echo "sed 's%$z%root=LABEL=xbian-copy%'") > /tmp/btrfs-dest/cmdline.txt
+		    umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest
+		    losetup -d $loopd
+		    losetup --offset $((71680*512)) $loopd $2
+		    set -- $1 $loopd
+		fi
 		if [ $opt_dev != $1 ]; then
 		    [ ! -b $1 ] && echo "non existend source device" && exit 5
 		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
 		fi
-		mkdir /tmp/btrfs-source
-		if [ $opt_dev != $1 ]; then
-		    mount -t btrfs -o subvol=/ $1 /tmp/btrfs-source
-		else
-		    mount -o bind ${tmp_dir} /tmp/btrfs-source
-		fi
+		mkdir -p /tmp/btrfs-source
+		mount -t btrfs -o subvol=/ $1 /tmp/btrfs-source
 		findmnt $2 >/dev/null && { umount $2 || { echo "can not umount destination partition"; exit 5; }; }
 		[ -n "$opt_nocreate" ] || mkfs.btrfs -L xbian-copy -f $2
 		mkdir -p /tmp/btrfs-dest
-		mount -t btrfs -o subvol=/ $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
+		mount -t btrfs -o subvol=/,compress=lzo,noatime $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
+
+		subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootfsopts=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
+		snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootfsopts=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
+		BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
+		[ "$snapextra" = "@" ] || snapextra="@$snapextra @"
 		for v in $BTRFS_LIST; do
-		    btrfs sub create /tmp/btrfs-dest/$v
-		    btrfs sub delete /tmp/btrfs-source/$v/@_ro > /dev/null 2>&1
-		    btrfs sub snap -r /tmp/btrfs-source/$v/@ /tmp/btrfs-source/$v/@_ro
-		    btrfs send -v /tmp/btrfs-source/$v/@_ro | btrfs receive -v /tmp/btrfs-dest/$v
-		    btrfs sub snap /tmp/btrfs-dest/$v/@_ro /tmp/btrfs-dest/$v/@
-		    btrfs sub delete /tmp/btrfs-dest/$v/@_ro
-		    btrfs sub delete /tmp/btrfs-source/$v/@_ro
+		    [ -n "$v" ] || continue
+		    btrfs sub create "/tmp/btrfs-dest/$v"
+		    export v="$v"
+		    for s in $snapextra; do
+		        [ -n "$s" ] || continue
+		        btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
+		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue 
+		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro"
+		        btrfs send -v "/tmp/btrfs-source/$v/$s.ro" | btrfs receive -v "/tmp/btrfs-dest/$v"
+		        btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
+		        btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
+		        btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro"
+		    done
 		done
-		btrfs fi sync /tmp/btrfs-dest; umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest
+
+		btrfs fi sync /tmp/btrfs-dest; umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest > /dev/null 2>&1
 		umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
 		echo ""
 		echo "for users on xbian version below beta2 (beta1.1, beta1). beta2 handles this automaticaly."
@@ -520,6 +557,9 @@ case $opt_command in
 		echo "4) umount /mnt"
 		echo ""
 		echo "for all users - change /boot/cmdline.txt if you want to boot from the copy just created. change root=LABEL=xbian-root-btrfs to root=LABEL=xbian-copy"
+		echo ""
+		echo "if you created img file, cmdline.txt was updated automatically. "
+		[ -n "$opt_img" ] && losetup -d $loopd
 		;;
         (*)
                 print_log error "Wrong command."

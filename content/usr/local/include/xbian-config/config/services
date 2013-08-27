@@ -17,7 +17,6 @@ cron:
 avahi-daemon:
 nfs-kernel-server:nfsd
 smartmontools:smartd
-wd_keepalive:
 smartd:
 atd:
 samba:nmbd,smbd

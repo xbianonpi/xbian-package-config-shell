@@ -42,6 +42,7 @@ in_list()
 
 function getServiceAutoStartStatusFn() {
 	[ -z "$1" ] && return 1
+        [ $1 = samba ] && { grep RUN_MODE /etc/default/samba | grep -q inetd && return 0; }
         { grep -qx manual /etc/init/$1.override 2>/dev/null|| grep -qx manual /etc/init/$1.conf 2>/dev/null; } && return 1
         [ ! -e /etc/rc2.d/S??$1 -a ! -e /etc/rcS.d/S??$1 ] && [ ! -e /etc/init/$1.conf ] && return 1
 	return 0
@@ -54,6 +55,9 @@ refreshProcessesFn()
 }
 function getServiceRunningStatusFn() {
         [ -z "$1" ] && return 2
+        [ $1 = samba ] && { if grep RUN_MODE /etc/default/samba | grep -q inetd; then \
+            getServiceRunningStatusFn "openbsd-inetd" && return 0 || return 1; 
+        fi; }
         p=${SERVICES[$1]}
 
 	[ -z "$PROCESSES" ] && refreshProcessesFn
