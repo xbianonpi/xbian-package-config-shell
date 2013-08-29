@@ -27,3 +27,7 @@ rpcbind:
 mysql:mysqld
 console-setup:
 openbsd-inetd:inetd
+statd:rpc.statd
+idmapd:rpc.idmapd
+gssd:rpc.gssd
+rsh:rlogin

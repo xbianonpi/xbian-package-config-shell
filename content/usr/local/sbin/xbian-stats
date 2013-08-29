@@ -1,0 +1,458 @@
+#!/bin/bash
+
+#
+# Simple script to monitor Raspberry Pi CPU load, temperature, memory and network stats
+#
+# Copyright (c) 2012 Neil MacLeod <bcmstat@nmacleod.com>
+#
+modprobe bcm2835-thermal
+
+#Run this monitor process at the lowest possible priority
+#Hack a renice alternative for those systems without renice...
+if [ -z "$(which renice)" ]; then
+  if [ $(nice) -eq 0 ]; then
+    nice -n +20 $0 $*
+    exit $?
+  fi
+else
+  renice -n +20 -p $$ 1>/dev/null 2>/dev/null
+fi
+
+AWK_FORMAT_LINE_MAIN='
+function comma(num)
+{
+  if (num < 0)
+    return "-" comma(-num)
+
+  do
+  {
+    p=match(num, /([0-9])([0-9][0-9][0-9])($|[,.])/)
+    if ( p != 0 ) num = substr(num, 1, p) "," substr(num, p+1)
+  }
+  while ( p > 3 )
+
+  return num
+}
+function colour(num, format, green, yellow, red, withcomma)
+{
+  cnum = (withcomma == "Y" ? comma("" num) : num)
+
+  if (COLOUR == "N")
+    return sprintf(format, cnum)
+
+  if (red > green)
+  {
+    if (num >= red)
+      return "\033[0;31m" sprintf(format, cnum) "\033[0m"
+    if (num >= yellow)
+      return "\033[0;33m" sprintf(format, cnum) "\033[0m"
+    if (num >= green)
+      return "\033[0;32m" sprintf(format, cnum) "\033[0m"
+  }
+  else
+  {
+    if (num <= red)
+      return "\033[0;31m" sprintf(format, cnum) "\033[0m"
+    if (num <= yellow)
+      return "\033[0;33m" sprintf(format, cnum) "\033[0m"
+    if (num <= green)
+      return "\033[0;32m" sprintf(format, cnum) "\033[0m"
+  }
+
+  return sprintf(format, cnum)
+}
+{
+  gsub("frequency\\([0-9]*\\)=","")
+  gsub("volt=","")
+
+  dTIME=($2-$1)/1000000000
+  dTIME=(dTIME <= 0 ? 1 : dTIME)
+  iIRQ=int($9/dTIME)
+  iRX=int($10/dTIME)
+  iTX=int($11/dTIME)
+
+  LINE=sprintf("%s  %s  %s  %s  %s (%s)  %s  %s  %s",
+               $3,
+               colour($4/1000000, "%4dMhz",   250,   800,   900, "N"),
+               colour($5/1000000, "%4dMhz",     0,   200,   400, "N"),
+               colour($6/1000000, "%4dMhz",     0,   200,   300, "N"),
+               colour($7/1000,    "%5.2fC",  50.0,  70.0,  80.0, "N"),
+               colour($8/1000,    "%5.2fC",  50.0,  70.0,  80.0, "N"),
+               colour(iIRQ,       "%6s",      500,  2500,  5000, "Y"),
+               colour(iRX,        "%10s",   0.5e6, 2.5e6, 5.0e6, "Y"),
+               colour(iTX,        "%10s",   0.5e6, 2.5e6, 5.0e6, "Y"))
+
+  if ( NF > 13 )
+  {
+    JIFFY=dTIME
+    CPUuser = $12/JIFFY
+    CPUnice = $13/JIFFY
+    CPUsystem=$14/JIFFY
+    CPUidle = $15/JIFFY
+    CPUiowait=$16/JIFFY
+    CPUirq =  $17/JIFFY
+    CPUsirq = $18/JIFFY
+
+    #CPUTop=CPUuser + CPUnice + CPUsystem + CPUiowait + CPUirq + CPUsirq
+    CPUTotal=100 - CPUidle
+
+    LINE=LINE sprintf("  %s  %s  %s  %s  %s  %s  %s  %s  %7s kB/%s",
+                      colour(CPUuser,   "%6.2f",  30, 50, 70, "N"),
+                      colour(CPUnice,   "%6.2f",  10, 20, 30, "N"),
+                      colour(CPUsystem, "%6.2f",  30, 50, 70, "N"),
+                      colour(CPUidle,   "%6.2f",  70, 50, 30, "N"),
+                      colour(CPUiowait, "%6.2f",   2,  5, 10, "N"),
+                      colour(CPUirq,    "%6.2f",   2,  5, 10, "N"),
+                      colour(CPUsirq,   "%6.2f", 7.5, 15, 20, "N"),
+                      colour(CPUTotal,  "%6.2f",  30, 50, 70, "N"),
+                      comma($19),
+                      colour($20/10,    "%4.1f%%", 0, 60, 85, "N"))
+  }
+
+  printf "\n%s", LINE
+}
+'
+
+AWK_FORMAT_LINE_MAIN_RAW='
+{
+  gsub("frequency\\([0-9]*\\)=","")
+  gsub("volt=","")
+  gsub("V","")
+
+  sDATE = substr($3,1,10) " " substr($3,12)
+  dTIME=($2-$1)/1000000000
+  dTIME=(dTIME <= 0 ? 1 : dTIME)
+  sIRQ="" int($9/dTIME)
+  sRX="" int($10/dTIME)
+  sTX="" int($11/dTIME)
+
+  LINE=sprintf("%s,%d,%d,%d,%.2f,%.2f,%s,%s,%s",
+    sDATE, $4/1000000, $5/1000000, $6/1000000, $7/1000, $8/1000,
+    sIRQ, sRX, sTX)
+
+  if ( NF > 11 )
+  {
+    JIFFY=dTIME
+    CPUuser = $12/JIFFY
+    CPUnice = $13/JIFFY
+    CPUsystem=$14/JIFFY
+    CPUidle = $15/JIFFY
+    CPUiowait=$16/JIFFY
+    CPUirq =  $17/JIFFY
+    CPUsirq = $18/JIFFY
+
+    CPUTotal=100 - CPUidle
+
+    LINE=LINE sprintf(",%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%s,%.1f",
+      CPUuser, CPUnice, CPUsystem, CPUidle, CPUiowait, CPUirq, CPUsirq, CPUTotal, $19, $20/10)
+  }
+
+  printf "%s\n", LINE
+}
+'
+
+AWK_FORMAT_LINE_MEM='
+function comma(num)
+{
+  if (num < 0)
+    return "-" comma(-num)
+
+  do
+  {
+    p=match(num, /([0-9])([0-9][0-9][0-9])($|[,.])/)
+    if ( p != 0 ) num = substr(num, 1, p) "," substr(num, p+1)
+  }
+  while ( p > 3 )
+
+  return num
+}
+{
+  if ( $3 == "M" )
+    printf "MEMSTATS %s %s: %7s  %4.1f%% -> %4.1f%%\n", $1, $2, comma($4), $7/10, $8/10
+  else
+    printf "MEMSTATS %s %s: %7s  %4.1f%% -> %4.1f%% (%4.1f%%)\n", $1, $2, comma($4), $7/10, $5/10, $8/10
+}
+'
+
+usage() {
+  echo "
+Usage:  $(basename $0) [-c|-m] [-d n] [-g gov] [-H n] [-i iface] [-l] [-r] [-q] [-x] [-h|--help]
+
+   -c    Colourise output
+   -m    Monochrome output (no colourise)
+   -d    Specify interval (in seconds) between each iteration - default 2
+   -g    Change to a different governor/keep it fixed (ondemand, conservative, powersave etc.)
+   -H    Header every n iterations (0 = no header)
+   -i    Monitor network interface other than the default eth0, eg. br1
+   -l    Log all memory usage upticks to ~/memusage.log
+   -L    Log only memory usage highwater to ~/memusage.log
+   -r    Raw figures (suitable for graphing, comma delimited) written to stdout.
+         Columns same as normal display: arm, core, h264, core temp, core temp max etc.
+   -q    Suppress summary inforation
+   -x    Monitor additional CPU stats
+   -h    Show this message
+"
+}
+
+#Loop every DELAY seconds
+DELAY=2
+
+#Default interface
+IF=eth0
+
+#Show header every HDREVERY iterations
+HDREVERY=30
+
+#By default don't show cpu stats
+EXTENDED=N
+
+#Optionally change to a new Governor
+GOVERNOR=
+
+#Log memory
+LOGMEM=N
+LOGMEMFILE=~/memusage.log
+
+#Summary info
+SUMMARY=Y
+
+#Raw output
+RAW=N
+
+#Colourise/Monochrome
+COLOUR=N
+
+while getopts ":d:g:H:i:lLrqxhcm" opt; do
+  case $opt in
+    c)  COLOUR=Y;;
+    m)  COLOUR=N;;
+    d)  DELAY=$OPTARG;;
+    g)  GOVERNOR=$OPTARG;;
+    H)  HDREVERY=$OPTARG;;
+    i)  IF=$OPTARG;;
+    l)  LOGMEM=Y;;
+    L)  LOGMEM=M;;
+    r)  RAW=Y;;
+    q)  SUMMARY=N;;
+    x)  EXTENDED=Y;;
+
+    h)  usage; exit 0;;
+    :)  echo "Missing mandatory parameter for option -$OPTARG"; usage; exit 1;;
+    \?) echo "Unknown parameter: $OPTARG"; usage; exit 1;;
+  esac
+done
+
+if [ -z "$(echo $DELAY | egrep "^[\.0-9]*$")" ]; then
+  echo "A delay value of \"$DELAY\" is not valid!"
+  usage
+  exit 1
+fi
+
+if [ -z "$(echo $HDREVERY | egrep "^[0-9]*$")" ]; then
+  echo "A header value of \"$HDREVERY\" is not valid!"
+  usage
+  exit 1
+fi
+
+#Not all systems support nanosecond time, so use a suitable timer
+[ "$(date +%N)" == "%N" ] && TIMER="date +%s000000000" || TIMER="date +%s%N"
+
+
+#Locate gawk - if not available, use awk and hope it's a recent version.
+AWK=$(which gawk)
+[ -z "$AWK" -o ! -x "$AWK" ] && AWK=$(which awk)
+
+#Locate vcgencmd
+VCGENCMD=$(which vcgencmd)
+[ -z "$VCGENCMD" -o ! -x $VCGENCMD ] && VCGENCMD=/opt/vc/bin/vcgencmd
+[ -z "$VCGENCMD" -o ! -x $VCGENCMD ] && VCGENCMD=/usr/bin/vcgencmd
+
+if [ ! -x $VCGENCMD ]; then
+  echo "vcgencmd not available - aborting"
+  exit 1
+fi
+
+$VCGENCMD version >/dev/null
+if [ $? -ne 0 ]; then
+  echo "Current user [$(whoami)] does not have sufficient privilege to execute $VCGENCMD - aborting"
+  exit 2
+fi
+
+
+#Set the cpufreq governor, if specified
+[ ! -z "$GOVERNOR" ] && echo $GOVERNOR > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+
+if [ $SUMMARY == Y -a $RAW == N ]; then
+  BOOT_DIR=$(mount|grep mmcblk0p1|awk '{ print $3 }')
+  CONFIG_TXT=${BOOT_DIR}/config.txt
+
+  MEM_MAX=$(cat /proc/cpuinfo |grep Revision| sed "s/: 1/: /"| awk -F": " '{ REV=int(sprintf("%d", "0x" $2)); print (REV>10)?512:256 }')
+  MEM_GPU_XXX=$(grep "^[   ]*gpu_mem_${MEM_MAX}[ =]" $CONFIG_TXT|awk -F"=" '{print $2}')
+  MEM_GPU_GLB=$(grep "^[   ]*gpu_mem[ =]" $CONFIG_TXT|awk -F"=" '{print $2}')
+  [ -z "$MEM_GPU_GLB" ] && MEM_GPU_GLB=64
+  MEM_GPU=${MEM_GPU_XXX:-$MEM_GPU_GLB}
+  MEM_ARM=$(($MEM_MAX-$MEM_GPU))
+
+  BOOTED=$(grep btime /proc/stat | awk '{print $2}')
+  BOOTED=$(date --date="@${BOOTED}")
+
+  GOV=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)
+  ARM_MIN=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq)
+  ARM_MAX=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq)
+  ARM_VOLT=$($VCGENCMD get_config over_voltage | awk -F= '{print $2}')
+  CORE_MAX=$($VCGENCMD get_config core_freq | awk -F= '{print $2}')
+
+  SDRAM_MAX=$($VCGENCMD get_config sdram_freq | awk -F= '{print $2}')
+  SDRAM_VOLT=$($VCGENCMD get_config over_voltage_sdram | awk -F= '{print $2}')
+  vCore=$($VCGENCMD measure_volts core)
+  vRAM=$($VCGENCMD measure_volts sdram_c)
+
+  TEMP_LIMIT="$($VCGENCMD get_config temp_limit | awk -F= '{print $2}')"
+  VER="$($VCGENCMD version | grep -v Copyright | tr -s "\n" "@" | sed "s/ @/, /" | tr -d "@")"
+
+  OTHER_VARS="TEMP_LIMIT=${TEMP_LIMIT}C"
+  [ "$($VCGENCMD get_config force_turbo | awk -F= '{print $2}')" == "1" ] && OTHER_VARS="${OTHER_VARS}, FORCE_TURBO"
+  [ "$($VCGENCMD get_config current_limit_override | awk -F= '{print $2}')" == "0x5a000020" ] && OTHER_VARS="${OTHER_VARS}, CURRENT_LIMIT_OVERRIDE"
+
+  for codec in H264 WVC1 MPG2 VP8 VORBIS MJPG DTS DDP; do
+    [ ! -z "$($VCGENCMD codec_enabled ${codec} | grep "enabled")" ] && CODECS="${CODECS}${codec} "
+  done
+  [ -z "$CODECS" ] && CODECS="none"
+
+  echo "Governor: $GOV"
+  echo "  Memory: ${MEM_MAX}MB (${MEM_ARM}MB ARM, ${MEM_GPU}MB GPU)"
+  echo "$ARM_MIN 250 $SDRAM_MAX" | $AWK '{ printf "Min Freq: %4dMhz | %4dMhz | %4dMhz\n", $1/1000, $2, $3 }'
+  echo "$ARM_MAX $CORE_MAX $SDRAM_MAX" | $AWK '{ printf "Max Freq: %4dMhz | %4dMhz | %4dMhz\n", $1/1000, $2, $3 }'
+  echo "$ARM_VOLT $vCore $SDRAM_VOLT $vRAM" | $AWK '{ printf "Voltages:      %s    | %s\n",
+                                                          ($1<0?"":($1==0?" ":"+")) sprintf("%d", $1) ", " substr($2,6,5),
+                                                          ($3<0?"":($3==0?" ":"+")) sprintf("%d", $3) ", " substr($4,6,5) }'
+  echo "   Other: ${OTHER_VARS}"
+  echo " Version: $VER"
+  echo "vcg path: $VCGENCMD"
+  echo "  Codecs: $CODECS"
+  echo -n "  Booted: ${BOOTED}"
+fi
+
+if [ $RAW == Y -a $HDREVERY -gt 0 ]; then
+  HDR="Timestamp,fARM,fCore,fH264,tCore,tCoreMax,IRQ/s,RX B/s,TX B/s"
+  [ "$EXTENDED" == "Y" ] && HDR="${HDR},%user,%nice,%system,%idle,%iowait,%irq,%s/irq,%total,MemoryFreeKB,%MemoryUsed"
+  echo "$HDR"
+fi
+
+tMAX=0
+
+MEMAVAIL="$(free | egrep "^Mem:" | awk '{ print $2 }')"
+
+PIRQ=$(grep dwc /proc/interrupts | awk '{ print $2 }')
+PNET=$(grep "${IF}:" /proc/net/dev | awk '{ print $2 " " $10 }')
+PCPULOAD="$(cat /proc/stat | head -1)"
+PTIME=$($TIMER)
+PMEM=0
+MEMMAX=0
+MEMLAST=0
+count=$HDREVERY
+
+[ $LOGMEM == Y ] && echo "** LOGGING ALL MEMORY USAGE UPTICKS **" > $LOGMEMFILE
+[ $LOGMEM == W ] && echo "** LOGGING ONLY HIGH MEMORY WATERMARKS **" > $LOGMEMFILE
+
+while [ true ]; do
+#If specific governor requested, keep it set
+  if [ ! -z "$GOVERNOR" ]; then
+    GOV=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)
+    if [ $GOV != $GOVERNOR ]; then
+#     echo "Governor has been modified. Is $GOV, needs to be $GOVERNOR - correcting."
+      echo $GOVERNOR > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    fi
+  fi
+
+#Show header every now and again...
+  if [ $HDREVERY -gt 0 -a $count -ge $HDREVERY -a $RAW == N ]; then
+    HDR1="Time          ARM     Core     h264  Core Temp (Max)   IRQ/s      RX B/s      TX B/s"
+    HDR2="========  =======  =======  =======  ===============  ======  ==========  =========="
+    [ "$EXTENDED" == "Y" ] && HDR1="${HDR1}   %user   %nice %system   %idle %iowait    %irq  %s/irq  %total  Memory Free/Used"
+    [ "$EXTENDED" == "Y" ] && HDR2="${HDR2}  ======  ======  ======  ======  ======  ======  ======  ======  ================"
+    printf "\n\n%s\n%s" "$HDR1" "$HDR2"
+    count=0
+  fi
+
+#Clock frequency - clock can be one of arm, core, h264, isp, v3d, uart, pwm, emmc, pixel, vec, hdmi, dpi
+  fARM=$($VCGENCMD measure_clock arm)
+  fCore=$($VCGENCMD measure_clock core)
+  fH264=$($VCGENCMD measure_clock h264)
+
+#Grab temp - ignore temps of 85C as this seems to be an occasional aberration in the reading
+  tCore=$(cat /sys/class/thermal/thermal_zone0/temp)
+  [ $tCore -lt 0 ] && tCore=0
+  [ $tCore -gt $tMAX -a $tCore -lt 85000 ] && tMAX=$tCore
+
+#Calculate IRQ delta
+  CIRQ=$(grep dwc /proc/interrupts | awk '{ print $2 }')
+  DIRQ=$((${CIRQ}-${PIRQ}))
+  PIRQ=$CIRQ
+
+#Get RX/TX and calculate interval delta
+  CNET=$(grep "${IF}:" /proc/net/dev | awk '{ print $2 " " $10 }')
+  RXTX=$(printf "$PNET\n$CNET" | \
+    $AWK  'FNR == 1 { iPRX = $1; iPTX = $2 }
+           FNR == 2 { iCRX = ($1 < iPRX ? ($1 + 4294967295) : $1)
+                      iCTX = ($2 < iPTX ? ($2 + 4294967295) : $2)
+                      printf "%d %d\n", (iCRX - iPRX), (iCTX - iPTX) }')
+  PNET=$CNET
+
+#CPU Load
+  if [ "$EXTENDED" == "Y" ]; then
+    CCPULOAD="$(cat /proc/stat | head -1)"
+    CPULOAD=$(printf "$PCPULOAD\n$CCPULOAD" | \
+      $AWK  'FNR == 1 { split($0, OLD, " ") }
+             FNR == 2 { split($0, NEW, " ")
+            for (i = 2; i <= 8; i++)
+            {
+            printf "%d ", (NEW[i] - OLD[i])
+            }
+          }')
+
+    PCPULOAD=$CCPULOAD
+  fi
+
+#Memory free/used, with optional logging
+  if [ $EXTENDED == Y -o $LOGMEM != N ]; then
+    MEMFREE="$(free | egrep "^\-/\+ buffers" | awk '{ print $4 }')"
+    MEMUSED="$(echo "$MEMAVAIL $MEMFREE" | awk '{ printf "%.0f\n", (1-($2/$1))*1000 }')"
+    MEMDIFF=$(($MEMUSED - $PMEM))
+
+#Log if memory usage has increased
+
+    if [ $LOGMEM != N -a $MEMDIFF -gt 0 ]; then
+#Log if logging everything and current memory used is not the same as the last value logged,
+#or if logging high water only
+      if [ [ $LOGMEM == Y -a $MEMUSED -ne $MEMLAST ] -o \
+           [ $LOGMEM == M -a $MEMUSED -gt $MEMMAX  ] ]; then
+        [ $MEMUSED -gt $MEMMAX ] && MEMMAX=$MEMUSED
+        echo "$(date '+%d/%m/%Y %H:%M:%S') $LOGMEM $MEMFREE $MEMUSED $MEMLAST $PMEM $MEMMAX" | \
+          $AWK "$AWK_FORMAT_LINE_MEM" >> $LOGMEMFILE
+        MEMLAST=$MEMUSED
+      fi
+    fi
+
+    PMEM="$MEMUSED"
+
+    [ $EXTENDED == N ] && MEMFREE="" && MEMUSED=""
+  fi
+
+#Delta time, hopefully to nanosecond accuracy
+  CTIME=$($TIMER)
+
+  if [ $RAW == N ]; then
+    echo "$PTIME $CTIME $(date +%H:%M:%S) $fARM $fCore $fH264 $tCore $tMAX $DIRQ $RXTX $CPULOAD $MEMFREE $MEMUSED" | \
+      $AWK  -vCOLOUR=$COLOUR "$AWK_FORMAT_LINE_MAIN"
+  else
+    echo "$PTIME $CTIME $(date "+%Y/%m/%d:%H:%M:%S") $fARM $fCore $fH264 $tCore $tMAX $DIRQ $RXTX $CPULOAD $MEMFREE $MEMUSED" | \
+      $AWK  "$AWK_FORMAT_LINE_MAIN_RAW"
+  fi
+
+  PTIME=$CTIME
+
+  count=$(($count+1))
+
+  sleep $DELAY
+done

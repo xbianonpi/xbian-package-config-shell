@@ -24,7 +24,7 @@
 
 tmp_dir='/tmp/btrfs-snap'
 opt_syslog=''
-opt_dev=$(mount | grep " / " | awk '{print $1}')
+opt_dev='/dev/root'
 opt_dry_run=''
 opt_quiet=''
 opt_verbose=''
@@ -39,6 +39,8 @@ opt_mountpoint=${tmp_dir}
 #opt_snapdir='.btrfs/snapshot/'
 opt_snapdir=''
 opt_img=''
+#opt_remotecmd='rsh -l root media.private '
+opt_remotecmd=''
 
 # what is name for snapshot which is normaly mounted as running filesystem (if SUBVOL/@running, then use "@running")
 opt_runningcopyin='@'
@@ -382,7 +384,8 @@ while true; do
                 trap "btrfs  fi sync ${opt_mountpoint} > /dev/null; umount ${opt_mountpoint};rmdir '${tmp_dir}'; \
                     mountpoint -q /tmp/btrfs-dest && umount -l /tmp/btrfs-dest; \
                     mountpoint -q /tmp/btrfs-source && umount -l /tmp/btrfs-source; \
-                    losetup -d $loopd > /dev/null 2>&1; " INT TERM EXIT
+                    [ -e "/run/kpartxmap.xbiancopy" ] && while ! kpartx -d $(cat /run/kpartxmap.xbiancopy >&/dev/null); do sleep 1; done  > /dev/null 2>&1; " \
+                        INT TERM EXIT
 
                 break
         elif [ $opt_command = listvol ]; then
@@ -498,32 +501,29 @@ case $opt_command in
 		mkdir -p /tmp/btrfs-dest
 		if [ -n "$opt_img" ]; then
 		    size=$(df -B1G | grep -w $(findmnt --source $1 -f -o TARGET -n) -m1 | awk '{print $2}')
-		    truncate -s "$(($size-1))G" $2
+		    touch $2; chattr +C $2; truncate -s "$(($size-1))G" $2
 		    modprobe -q loop
-		    loopd=$(losetup -f)
-		    losetup $loopd $2
 		    parted -s $loopd mklabel msdos
-		    echo "2048,69632,b,*," | sfdisk -u S -N1 -q $loopd > /dev/null 2>&1
-		    echo "71680,+,83,," | sfdisk -u S -N2 -q $loopd > /dev/null 2>&1
-		    losetup -d $loopd; losetup --offset $((2048*512)) $loopd $2
-		    dd if=/dev/mmcblk0p1 of=$loopd; mount -t vfat $loopd /tmp/btrfs-dest || exit 5
+		    echo "2048,69632,b,*," | sfdisk -u S -N1 -H 4 -S 16 -q $2 > /dev/null 2>&1
+		    echo "71680,+,83,," | sfdisk -u S -N2 -H 4 -S 16 -q $2 > /dev/null 2>&1
+		    loopd=$(kpartx -s -l $2 -av | tail -1 | awk '{print $3}'); loopd=${loopd%%p?}; echo $2 > /run/kpartxmap.xbiancopy
+		    dd if=/dev/mmcblk0p1 of=/dev/mapper/${loopd}p1; mount -t vfat /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
 		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootfsopts=*}
 		    cat /boot/cmdline.txt | eval $(echo "sed 's%$z%root=LABEL=xbian-copy%'") > /tmp/btrfs-dest/cmdline.txt
 		    umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest
-		    losetup -d $loopd
-		    losetup --offset $((71680*512)) $loopd $2
-		    set -- $1 $loopd
+		    set -- $1 /dev/mapper/${loopd}p2
 		fi
+
 		if [ $opt_dev != $1 ]; then
 		    [ ! -b $1 ] && echo "non existend source device" && exit 5
 		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
 		fi
 		mkdir -p /tmp/btrfs-source
 		mount -t btrfs -o subvol=/ $1 /tmp/btrfs-source
-		findmnt $2 >/dev/null && { umount $2 || { echo "can not umount destination partition"; exit 5; }; }
-		[ -n "$opt_nocreate" ] || mkfs.btrfs -L xbian-copy -f $2
-		mkdir -p /tmp/btrfs-dest
-		mount -t btrfs -o subvol=/,compress=lzo,noatime $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
+		eval $opt_remotecmd findmnt -n $2 | grep -qw $2 && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
+		[ -n "$opt_nocreate" ] || eval $opt_remotecmd mkfs.btrfs -L xbian-copy -f $2
+		eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
+		eval $opt_remotecmd mount -t btrfs -o subvol=/,compress=lzo,noatime $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
 
 		subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootfsopts=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
 		snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootfsopts=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
@@ -531,21 +531,21 @@ case $opt_command in
 		[ "$snapextra" = "@" ] || snapextra="@$snapextra @"
 		for v in $BTRFS_LIST; do
 		    [ -n "$v" ] || continue
-		    btrfs sub create "/tmp/btrfs-dest/$v"
+		    eval $opt_remotecmd btrfs sub create "/tmp/btrfs-dest/$v"
 		    export v="$v"
 		    for s in $snapextra; do
 		        [ -n "$s" ] || continue
 		        btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
 		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue 
 		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro"
-		        btrfs send -v "/tmp/btrfs-source/$v/$s.ro" | btrfs receive -v "/tmp/btrfs-dest/$v"
+		        btrfs send -v "/tmp/btrfs-source/$v/$s.ro" | eval $opt_remotecmd btrfs receive -v "/tmp/btrfs-dest/$v"
 		        btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
-		        btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
-		        btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro"
+		        eval $opt_remotecmd btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
+		        eval $opt_remotecmd btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro"
 		    done
 		done
 
-		btrfs fi sync /tmp/btrfs-dest; umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest > /dev/null 2>&1
+		eval $opt_remotecmd btrfs fi sync /tmp/btrfs-dest; eval $opt_remotecmd umount /tmp/btrfs-dest; eval $opt_remotecmd rmdir /tmp/btrfs-dest > /dev/null 2>&1
 		umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
 		echo ""
 		echo "for users on xbian version below beta2 (beta1.1, beta1). beta2 handles this automaticaly."
@@ -559,7 +559,7 @@ case $opt_command in
 		echo "for all users - change /boot/cmdline.txt if you want to boot from the copy just created. change root=LABEL=xbian-root-btrfs to root=LABEL=xbian-copy"
 		echo ""
 		echo "if you created img file, cmdline.txt was updated automatically. "
-		[ -n "$opt_img" ] && losetup -d $loopd
+		[ -n "$opt_img" ] && kpartx -d $2
 		;;
         (*)
                 print_log error "Wrong command."

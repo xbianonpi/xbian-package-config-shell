@@ -42,7 +42,7 @@ in_list()
 
 function getServiceAutoStartStatusFn() {
 	[ -z "$1" ] && return 1
-        [ $1 = samba ] && { grep RUN_MODE /etc/default/samba | grep -q inetd && return 0; }
+        [ $1 = samba -a -e /etc/default/samba ] && { grep RUN_MODE /etc/default/samba | grep -q inetd && ! grep -q ^"smbd" /etc/hosts.deny && return 0; }
         { grep -qx manual /etc/init/$1.override 2>/dev/null|| grep -qx manual /etc/init/$1.conf 2>/dev/null; } && return 1
         [ ! -e /etc/rc2.d/S??$1 -a ! -e /etc/rcS.d/S??$1 ] && [ ! -e /etc/init/$1.conf ] && return 1
 	return 0
@@ -55,8 +55,8 @@ refreshProcessesFn()
 }
 function getServiceRunningStatusFn() {
         [ -z "$1" ] && return 2
-        [ $1 = samba ] && { if grep RUN_MODE /etc/default/samba | grep -q inetd; then \
-            getServiceRunningStatusFn "openbsd-inetd" && return 0 || return 1; 
+        [ $1 = samba -a -e /etc/default/samba ] && { if grep RUN_MODE /etc/default/samba | grep -q inetd; then \
+            getServiceAutoStartStatusFn "samba" && return 0 || return 1; 
         fi; }
         p=${SERVICES[$1]}
 
@@ -88,7 +88,7 @@ function checkServiceExistsFn() {
 
 function restartServiceFn() {
 
-        echo "$NAME" $2 >> /run/xbian-config
+        [ $2 = samba ] && return 0
         test -z "$2" && c="restart" || c="$2"
 
 	if [ -f "/etc/init/$1.conf" ]; then
@@ -111,6 +111,8 @@ function stopServiceFn() {
 }
 
 function disableAutoStartFn() {
+        [ $1 = samba ] && grep RUN_MODE /etc/default/samba | grep -q inetd && echo -e "smbd: ALL\n" >> /etc/hosts.deny
+
 	if [ -f "/etc/init/$1.conf" ]; then
 		echo "manual" >> "/etc/init/$1.override"
 		grep -xq manual "/etc/init/$1.override"; return $?
@@ -120,6 +122,8 @@ function disableAutoStartFn() {
 }
 
 function enableAutoStartFn() {
+        [ $1 = samba ] && grep RUN_MODE /etc/default/samba | grep -q inetd && sed -i '/smbd: ALL/d' /etc/hosts.deny
+
 	if [ -f "/etc/init/$1.conf" ]; then
 		grep -xv manual "/etc/init/$1.override" > "/etc/init/$1.override.new"
 		mv "/etc/init/$1.override.new" "/etc/init/$1.override"
