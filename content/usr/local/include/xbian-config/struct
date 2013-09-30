@@ -25,4 +25,6 @@
 5.1:updatemirrors
 5.2:aptupdate
 5.3:updates
+5.4:enableauto
 6:xbiancopy
+7:backuphome
