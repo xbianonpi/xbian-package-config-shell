@@ -1,0 +1,19 @@
+# enable periodic running (daily / weekly)
+ENABLEDSCHEDULE=yes
+KEEPDAYS=3
+KEEPWEEKS=2
+
+# enable creating of snapshot before APT operations. if wrong packages installed or something stopped working, 
+# restoration will take few seconds to state before APT run
+ENABLEDAPT=yes
+KEEPAPT=10
+
+# backup to img file (in case of total SD card corruption, your system can be restored by reflashing this image)
+ENABLEDIMG=yes
+
+# backup to img should be run: daily/weekly/monthly
+IMGPLAN=
+
+# path to img including file name (/media/my_disk/xbian_backup.img)
+IMGFILE=
+
