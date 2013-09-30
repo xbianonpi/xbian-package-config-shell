@@ -40,5 +40,5 @@ function clrFSCacheFn() {
 
 function askForRebootFn() {
 	ASKFORREBOOT=1;
-	echo 1 > /tmp/xbian-config-reboot
+	echo 1 > /var/run/reboot-required
 }

@@ -30,7 +30,7 @@ updateConfigVarFn() {
 # select Raspberry PI config variable
 #  $1 [String] Key
 selectConfigVarFn() {
-	RETURN="$(grep -w $1 /boot/config.txt)"
+	RETURN="$(grep $1 /boot/config.txt)"
 }
 
 # remove Raspberry PI config variable

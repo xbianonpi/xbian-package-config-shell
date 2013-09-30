@@ -17,7 +17,8 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
-DEFAULTWIDTH=55;
+#[ -z "$DEFAULTWIDTH" ] && DEFAULTWIDTH=55
+[ -z "$DEFAULTWIDTH" ] && DEFAULTWIDTH=55
 DEFAULTHEIGHT=9;
 DEFAULTCOLSEP="!"
 DEFAULTDELIMITER="%"
@@ -363,8 +364,8 @@ function showPassDlg() {
 			--insecure \
 			--passwordform "$1" \
 			$HEIGHT $WIDTH 0 \
-			"$_PASSWORD" 1 3 "" 1 15 15 0 \
-			"$_CONFIRM"  2 3 "" 2 15 15 0 \
+			"$(_ dialog.password)" 1 3 "" 1 15 15 0 \
+			"$(_ dialog.confirm)"  2 3 "" 2 15 15 0 \
 		3>&1 1>&2 2>&3);
 }
 

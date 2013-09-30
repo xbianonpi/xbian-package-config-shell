@@ -73,11 +73,15 @@ function getPackageVersionFn() {
 }
 
 function updateAptFn() {
+        apt-get clean
         if [ "$1" = speak ]; then
                 apt-get update 2>&1 | tee /tmp/aptstatus 
         else
         	apt-get update 2>&1 >/tmp/aptstatus
         fi
+        rm -f /tmp/aptupdates
+        touch /var/lib/apt/periodic/update-stamp
+        touch /var/lib/apt/periodic/update-success-stamp
 }
 
 function getAllPackagesForInstallFn() {
