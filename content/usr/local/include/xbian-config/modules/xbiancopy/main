@@ -46,9 +46,7 @@ function showGUIFn() {
             DEST=${DATA[1]}; echo "$DEST" | grep -q ^'file:' && opt_img='--img'
             DEST=${DEST##'file:'}
             [ -n "$opt_img" -o -b ${DATA[1]} ] || { showWrongBlockDev; sleep 5; showGUIFn; }
-            touch /run/xbiancopy.out
-            btrfs-auto-snapshot xbiancopy $opt_img  ${DATA[0]} "$DEST" > /run/xbiancopy.out & 
-            dialog --tailbox /run/xbiancopy.out  20 80
+            { btrfs-auto-snapshot xbiancopy $opt_img  ${DATA[0]} "$DEST"; } >&1 2>&1 | dialog --programbox "Please wait until OK button appears"  $(tput lines) $(tput cols)
 	fi
 }
 

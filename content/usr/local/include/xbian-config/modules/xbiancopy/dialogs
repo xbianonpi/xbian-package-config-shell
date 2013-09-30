@@ -41,5 +41,6 @@ If you want to create .img file with /boot partition and your system, specify \"
 Otherwise specify block device 
 (e.g. /dev/sda2)
     
-" 15 60
+!!! PARTITION WILL BE REFORMATTED !!!
+" 17 60
 } 
