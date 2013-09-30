@@ -174,5 +174,6 @@ function showAvailableUpdatesDlg() {
         "${MENU[@]}";
 	TBLCOLUMNCENTER=1;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+16));
-	showChecklistDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9)) 
+	DEFAULTWIDTH=66 showChecklistDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9)) 
 }
+

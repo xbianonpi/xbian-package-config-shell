@@ -17,13 +17,46 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
+function setEnableAuto() {
+	if [ -z "$1" ]; then
+	    [ -e /etc/apt/apt.conf.d/10xbian-periodic ] && return $(grep "APT::Periodic::Unattended-Upgrade" /etc/apt/apt.conf.d/10xbian-periodic | grep -o "[0-9]*") || return 0
+	else
+            grep -v "APT::Periodic::Unattended-Upgrade" /etc/apt/apt.conf.d/10xbian-periodic > /etc/apt/apt.conf.d/10xbian-periodic.new
+            mv /etc/apt/apt.conf.d/10xbian-periodic.new /etc/apt/apt.conf.d/10xbian-periodic
+	    echo "APT::Periodic::Unattended-Upgrade \"$1\";" >> /etc/apt/apt.conf.d/10xbian-periodic
+	    [ "$(xbian-config updates enableauto)" = "$1" ] && return 1 || return 0
+	fi
+}
+
+function setEnableInventoryAuto() {
+	if [ -z "$1" ]; then
+	    [ -e /etc/apt/apt.conf.d/10xbian-periodic ] && return $(grep "APT::Periodic::Update-Package-Lists" /etc/apt/apt.conf.d/10xbian-periodic | grep -o "[0-9]*") || return 0
+	else
+	    [ $1 -ne 0 ] && int=$2 || int=0
+            grep -v "APT::Periodic::Update-Package-Lists" /etc/apt/apt.conf.d/10xbian-periodic > /etc/apt/apt.conf.d/10xbian-periodic.new
+            mv /etc/apt/apt.conf.d/10xbian-periodic.new /etc/apt/apt.conf.d/10xbian-periodic
+	    echo "APT::Periodic::Update-Package-Lists \"$int\";" >> /etc/apt/apt.conf.d/10xbian-periodic
+	    [ $(grep "APT::Periodic::Update-Package-Lists" /etc/apt/apt.conf.d/10xbian-periodic | grep -o "[0-9]*") = "$int" ] && return 1 || return 0
+	fi
+}
+
+function setSnapApt(){
+    if [ -z "$1" ]; then 
+	grep -q ENABLEDAPT=yes /etc/default/xbian-snap && return 1 || return 0
+    else
+	cs=$(grep ENABLEDAPT= /etc/default/xbian-snap)
+	[ $1 -eq 1 ] && sed -i 's/ENABLEDAPT=.*/ENABLEDAPT=yes/' /etc/default/xbian-snap && return $(xbian-config updates snapapt)
+	[ $1 -eq 0 ] && sed -i 's/ENABLEDAPT=.*/ENABLEDAPT=no/' /etc/default/xbian-snap && return $((1 - $(xbian-config updates snapapt) ))
+    fi
+}
+
 function retrieveUpdateListFn() {
-	apt-get upgrade -s >/tmp/aptupdates 2>/dev/null
+	xbian-apt-show-versions -u >/tmp/aptupdates 2>/dev/null
 }
 
 function getAllPackagesLisFn() {
 	if [ -f "/tmp/aptupdates" ]; then
-		PACKAGES=($(cat /tmp/aptupdates | sed -ne 's/\(Inst.*\)\([\ ]\{1\}\)\([A-Za-z0-9\.\-]\{1,\}\)\([\ ]\)\(\[\)\(.*\)\(\]\)\(.*[(]\)\([0-9A-Za-z\~\.\:\+\-]\{1,\}\)\([\ ].*\)/\3;\6;\9/p' | grep -v xbian-update | sort | uniq));
+		PACKAGES=($(grep -vw xbian-update /tmp/aptupdates | sed 's/\/[a-z]*//g' | awk '{print $1";"$2";"$5}' | sort | uniq));
                 [ -z "${PACKAGES[0]}" ] && unset PACKAGES
 		return 1;
 	else
@@ -33,8 +66,8 @@ function getAllPackagesLisFn() {
 
 function getAllUpdatesLisFn() {
 	if [ -f "/tmp/aptupdates" ]; then
-		UPDATES=("$(cat /tmp/aptupdates | sed -ne 's/\(Inst.*\)\([\ ]\{1\}\)\(xbian-update\)\([\ ]\)\(\[\)\(.*\)\(\]\)\(.*[(]\)\([0-9A-Za-z\~\.\:\+\-]\{1,\}\)\([\ ].*\)/\3;\6;\9/p' | sort | uniq)");
-                [ -z "${UPDATES[0]}" ] && unset UPDATES
+		UPDATES=($(grep -w xbian-update /tmp/aptupdates | sed 's/\/[a-z]*//g' | awk '{print $1";"$2";"$5}' | sort | uniq));
+		[ -z "${UPDATES[0]}" ] && unset UPDATES
 		return 1;
 	else
 		return 0;
@@ -55,7 +88,7 @@ function updatePackagesFn() {
 	if [ $1 -eq 1 ]; then
 		eval apt-get install -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		{ rm -f /tmp/aptupdates; eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; } | tee /tmp/aptstatus | dialog --progressbox 20 80
+		{ rm -f /tmp/aptupdates; eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
 	elif [ $1 -eq 2 ]; then
 		{ eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
 	fi
@@ -137,23 +170,28 @@ function updateSystemFn() {
 	ARRAY=($2);
 	NEXTVERSION="";
 	if [ ${#ARRAY[@]} -gt 0 ]; then
-		INDEX=${ARRAY[0]};
-		INDEX=${INDEX//\"/ };
+#		INDEX=${ARRAY[0]};
+#		INDEX=${INDEX/\\/}
+#		INDEX=$(echo $INDEX | tr -d "\"")
+		INDEX=1
 		NVERSION=$(echo ${UPDATES[$((INDEX-1))]} | cut -f3 -d";");
 		CVERSION=$(echo ${UPDATES[$((INDEX-1))]} | cut -f2 -d";");
 		CMAJVERSION=$(echo $CVERSION | cut -f1 -d"-");
 		CMINVERSION=$(echo $CVERSION | cut -f2 -d"-");
 
-		findNextUpdateVersionFn "$CMAJVERSION" "$CMINVERSION";
+#		findNextUpdateVersionFn "$CMAJVERSION" "$CMINVERSION";
+		VERSIONS=($(echo ${UPDATES[$((INDEX-1))]} | cut -f1 -d";"))
+		NEXTVERSION=$NVERSION
 	fi
 
 	if [ -z "$NEXTVERSION" ]; then
 		return 2;
 	else 
+		touch /run/noreboot
 		if [ $1 -eq 1 ]; then
 			eval apt-get install -s ${VERSIONS[0]}"="$NEXTVERSION >/tmp/aptstatus
 		elif [ $1 -eq 0 ]; then
-			{ rm -f /tmp/aptupdates; eval apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION; } | tee /tmp/aptstatus | dialog --progressbox 20 80 
+			{ rm -f /tmp/aptupdates; eval apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
 		elif [ $1 -eq 2 ]; then
 			{ eval nohup apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
 		fi

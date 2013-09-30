@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(list progress updatedb install installtest);
+ARGUMENTS=(list progress updatedb install installtest enableauto snapapt autoinventory);
 
 #|------------------------------------|
 #|          Include files             |
@@ -65,7 +65,7 @@ function showGUIFn() {
 	fi
 	if [ "$APTUPDATELISTUPDATED" -eq 0 ] || [ ! -f "/tmp/aptupdates" ]; then
 		showRetrievingUpdateListDlg;
-		retrieveUpdateListFn;
+		FORCE=yes retrieveUpdateListFn;
 		APTUPDATELISTUPDATED=1;
 	fi
 	getAllUpdatesLisFn
@@ -105,8 +105,10 @@ function showGUIFn() {
 					fi
 					[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
 					LOG=1;
-					showSystemUpdateRebootDlg;
-					sleep 10; sudo reboot;
+					if [ ! -e /run/noreboot ]; then 
+					    showSystemUpdateRebootDlg;
+					    sleep 10; sudo reboot;
+					fi
 				else
 					showUpdateAdvErrorDlg;
 				fi
@@ -187,13 +189,38 @@ function showGUIFn() {
 #  -  1: Apt is still running
 #  -  0: Apt is not running
 #  *updatedb - Updates local and remote apt library (when needed)
+#  *enableauto - enable automatic updates
+#  -     no parameter - get actual settings 
+#  -  1: is enabled or set requested action was success
+#  -  0: is disabled or set requested action was failure
+
 function showCMDFn() {
+	echo $@ > /tmp/a
 	case $1 in
+		autoinventory)
+			setEnableInventoryAuto $2 $3; rc=$?
+			if [ $rc -gt 0 ]; then
+			    [ -z "$2" ] && echo "1 $rc" || echo "$rc"
+			else 
+			    echo "$rc 1"
+			fi
+			;;
+		enableauto)
+			setEnableAuto $2
+			echo $?
+			;;
+		snapapt)
+			setSnapApt $2
+			echo $?
+			;;
 		list)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
-                                        limit=15; i=1
-					[ -z "$(find /tmp/aptupdates -cmin -60 2>/dev/null)" ] && retrieveUpdateListFn;
+					int=$(grep "APT::Periodic::Update-Package-Lists" /etc/apt/apt.conf.d/10xbian-periodic 2>/dev/null| grep -o "[0-9]*")
+					[ -z "$int" -o "$int" -eq 0 ] && int=1440 || int=$((int*24*60))
+					[ -z "$(eval find /var/lib/apt/periodic/update-success-stamp -cmin -$int 2>/dev/null)" ] && { echo -3; exit 0; }
+					limit=15; i=1
+					[ -z "$(eval find /tmp/aptupdates -cmin -$int 2>/dev/null)" ] && retrieveUpdateListFn;
 					if [ "$2" == "packages" ]; then
 						getAllPackagesLisFn;
 						if [ ${#PACKAGES[@]} -ge 1 ]; then
@@ -311,7 +338,7 @@ function showCMDFn() {
 			fi
 		;;		
 		progress)
-			if pgrep apt-get >/dev/null; then
+			if [ $(ps ax | grep -v grep | grep -c "xbian-config updates") -gt 3 ] || pgrep apt-get &>/dev/null; then
 				echo 1;
 			else
 				echo 0;
@@ -321,10 +348,17 @@ function showCMDFn() {
 			STATUS=0;
 			updateAptMirrorsFn;
 			if [ $? -eq 0 ]; then
-						updateAptFn
+						if [ $(GUIMODE=0 xbian-config updates progress) = '1' ]; then
+                                                    while [ $(GUIMODE=0 xbian-config updates progress) = '1' ]; do
+                                                        sleep 2
+                                                    done
+                                                else
+                                                    updateAptFn
+                                                fi
                                                 retrieveUpdateListFn
-                                                grep -q ^Inst /tmp/aptupdates 
-						if [ $? -eq 0 ]; then
+						getAllPackagesLisFn
+						getAllUpdatesLisFn
+						if [ ${#PACKAGES[@]} -ge 1 -o ${#UPDATES[@]} -ge 1 ]; then
 							STATUS=1;
 						else
 							STATUS=0;
