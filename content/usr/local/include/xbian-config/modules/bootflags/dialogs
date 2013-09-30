@@ -36,7 +36,7 @@ function showBootFlagsDlg() {
 	"#;\Zb$LABEL" \
 	"${MENU[@]}"
 	
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+10));
 	showChecklistDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9))
 }
 

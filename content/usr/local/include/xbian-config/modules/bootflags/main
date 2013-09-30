@@ -23,7 +23,7 @@
 
 # The arguments this module accepts
 ARGUMENTS=(list select update);
-BOOTFLAGS=(splash logo quiet console loglevel);
+BOOTFLAGS=(splash logo quiet loglevel);
 CMDLINE=$(cat /boot/cmdline.txt);
 declare -A BOOTSETTINGS;
 
