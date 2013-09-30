@@ -34,6 +34,7 @@ opt_prefix='btrfs-auto-snap'
 opt_recursive=''
 opt_sep='_'
 opt_rootvolid='5'
+opt_size=0
 opt_createdirs=''
 opt_mountpoint=${tmp_dir}
 #opt_snapdir='.btrfs/snapshot/'
@@ -66,6 +67,7 @@ print_usage ()
                              createvol
 
                              xbiancopy [--no-create] [[--img]] source dest
+                             backuphome
                             
                        If not given, snapshot is assumed.
     --dev              Device which is part of the btrfs filesystem (by default
@@ -88,6 +90,7 @@ print_usage ()
     -t,--dirs          Create snapshot directories if needed.
     --no-create        Doesn't auto create fs on 'xbiancopy'.
     --img              Create img file instead if physical partition.
+    --size             Target size of destination img file in MBytes.
 
       name           Filesystem and volume names, or '//' for all subvolumes.
 " 
@@ -188,7 +191,7 @@ do_snapshot ()
                 fi
                 if [ ! -d "$opt_mountpoint/$ii/$opt_snapdir$SNAPNAME" ]; then
                         tmp_runningcopyin=$opt_runningcopyin
-                        z=$(findmnt | grep /$ii/ | awk '{print $2}'); z=${z##*\/}; z=${z%%]}
+                        z=$(findmnt -n | grep /$ii/ -m1 | awk '{print $2}'); z=${z##*\/}; z=${z%%]}
                         [ -n "$z" ] && tmp_runningcopyin=$z 
                         if do_run "btrfs sub snapshot $opt_mountpoint/$ii/$tmp_runningcopyin $opt_mountpoint/$ii/$opt_snapdir$SNAPNAME"; then
                                 SNAPSHOT_COUNT=$(( $SNAPSHOT_COUNT + 1 ))
@@ -266,8 +269,10 @@ else
     opt_command='snapshot'
 fi
 
+[ -e "$opt_dev" ] || opt_dev="$(findmnt -n -o SOURCE -v /)"
+
 GETOPT=$(getopt \
-        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img \
+        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,size: \
         --options=p:dvl:i:m:nhtsk:e: \
         -- "$@" ) \
         || exit 128
@@ -287,6 +292,10 @@ do
                         ;;
                 (--dev)
                         opt_dev="$2"
+                        shift 2
+                        ;;
+                (--size)
+                        opt_size="$2"
                         shift 2
                         ;;
                 (-e|--name)
@@ -350,7 +359,7 @@ done
 print_log debug "Using command $opt_command."
 
 if [ "$#" -eq '0' ]; then
-        if [ "$opt_command" != 'list' -a "$opt_command" != 'listvol' -a "$opt_command" != 'xbiancopy' ]; then
+        if [ "$opt_command" != 'list' -a "$opt_command" != 'listvol' -a "$opt_command" != 'xbiancopy' -a "$opt_command" != 'backuphome' -a "$opt_command" != 'restorehome' ]; then
                 print_log error "The filesystem argument list is empty."
                 exit 133
         else
@@ -376,7 +385,7 @@ DATE=$(date +%F-%H%M)
 COUNTER='0'
 while true; do
         if $(mkdir "${tmp_dir}" > /dev/null 2>&1); then 
-                if ! $(mount -t btrfs -o subvolid=$opt_rootvolid $opt_dev $opt_mountpoint); then
+                if ! $(mount -t btrfs -o subvol=/ $opt_dev $opt_mountpoint); then
                         print_log error "unable to mount the filesystem"
                         rmdir ${tmp_dir}
                         exit 100
@@ -384,7 +393,7 @@ while true; do
                 trap "btrfs  fi sync ${opt_mountpoint} > /dev/null; umount ${opt_mountpoint};rmdir '${tmp_dir}'; \
                     mountpoint -q /tmp/btrfs-dest && umount -l /tmp/btrfs-dest; \
                     mountpoint -q /tmp/btrfs-source && umount -l /tmp/btrfs-source; \
-                    [ -e "/run/kpartxmap.xbiancopy" ] && while ! kpartx -d $(cat /run/kpartxmap.xbiancopy >&/dev/null); do sleep 1; done  > /dev/null 2>&1; " \
+                    [ -e "/run/kpartxmap.xbiancopy.$$" ] && while ! kpartx -d $(cat /run/kpartxmap.xbiancopy.$$ 2>/dev/null); do sleep 5; done  > /dev/null 2>&1; " \
                         INT TERM EXIT
 
                 break
@@ -501,13 +510,13 @@ case $opt_command in
 		mkdir -p /tmp/btrfs-dest
 		if [ -n "$opt_img" ]; then
 		    size=$(df -B1G | grep -w $(findmnt --source $1 -f -o TARGET -n) -m1 | awk '{print $2}')
-		    touch $2; chattr +C $2; truncate -s "$(($size-1))G" $2
+		    touch $2; chattr +C $2;  truncate -s "$(($size-1))G" $2; [ "$opt_size" != 0 ] && truncate -s $opt_size $2
 		    modprobe -q loop
-		    parted -s $loopd mklabel msdos
+		    parted -s $2 mklabel msdos
 		    echo "2048,69632,b,*," | sfdisk -u S -N1 -H 4 -S 16 -q $2 > /dev/null 2>&1
 		    echo "71680,+,83,," | sfdisk -u S -N2 -H 4 -S 16 -q $2 > /dev/null 2>&1
-		    loopd=$(kpartx -s -l $2 -av | tail -1 | awk '{print $3}'); loopd=${loopd%%p?}; echo $2 > /run/kpartxmap.xbiancopy
-		    dd if=/dev/mmcblk0p1 of=/dev/mapper/${loopd}p1; mount -t vfat /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
+		    loopd=$(kpartx -s -l $2 -av | tail -1 | awk '{print $3}'); loopd=${loopd%%p?}; echo $2 > /run/kpartxmap.xbiancopy.$$
+		    dd if=/dev/mmcblk0p1 of=/dev/mapper/${loopd}p1; mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
 		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootfsopts=*}
 		    cat /boot/cmdline.txt | eval $(echo "sed 's%$z%root=LABEL=xbian-copy%'") > /tmp/btrfs-dest/cmdline.txt
 		    umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest
@@ -518,23 +527,28 @@ case $opt_command in
 		    [ ! -b $1 ] && echo "non existend source device" && exit 5
 		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
 		fi
+
 		mkdir -p /tmp/btrfs-source
 		mount -t btrfs -o subvol=/ $1 /tmp/btrfs-source
 		eval $opt_remotecmd findmnt -n $2 | grep -qw $2 && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
-		[ -n "$opt_nocreate" ] || eval $opt_remotecmd mkfs.btrfs -L xbian-copy -f $2
+		[ -n "$opt_nocreate" ] || eval $opt_remotecmd mkfs.btrfs -f -l 8192 -m single -L xbian-copy -f $2
 		eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
-		eval $opt_remotecmd mount -t btrfs -o subvol=/,compress=lzo,noatime $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
+		eval $opt_remotecmd mount -o compress=zlib,noatime,ssd,autodefrag $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
 
-		subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootfsopts=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
-		snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootfsopts=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
+		if grep -q "rootflags=subvol=" /proc/cmdline; then
+		    subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
+		    snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootflags=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
+		fi
+
 		BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
-		[ "$snapextra" = "@" ] || snapextra="@$snapextra @"
+		snapextra=$(printf "%s\n%s\n" "@$snapextra" "@"| sort | uniq)
 		for v in $BTRFS_LIST; do
 		    [ -n "$v" ] || continue
 		    eval $opt_remotecmd btrfs sub create "/tmp/btrfs-dest/$v"
 		    export v="$v"
 		    for s in $snapextra; do
 		        [ -n "$s" ] || continue
+		        echo "DEBUG: v = $v, s = $s"
 		        btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
 		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue 
 		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro"
@@ -545,6 +559,10 @@ case $opt_command in
 		    done
 		done
 
+                if [ -n "$opt_img" ]; then
+                    echo "Compacting file"
+                    
+                fi
 		eval $opt_remotecmd btrfs fi sync /tmp/btrfs-dest; eval $opt_remotecmd umount /tmp/btrfs-dest; eval $opt_remotecmd rmdir /tmp/btrfs-dest > /dev/null 2>&1
 		umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
 		echo ""
@@ -561,6 +579,53 @@ case $opt_command in
 		echo "if you created img file, cmdline.txt was updated automatically. "
 		[ -n "$opt_img" ] && kpartx -d $2
 		;;
+        (backuphome)
+                dr=$(mktemp -u)
+                mkdir -p $dr
+                mount -o subvol=home /dev/root $dr
+                btrfs sub snap -r "$dr/@" "$dr/ro@"
+                find /xbmc-backup -type f -print0 | xargs -0 rm -f  || :
+                mkdir /xbmc-backup/temp
+                btrfs send -v "$dr/ro@" | gzip -1 > /xbmc-backup/temp/backup_home_$DATE.img.gz; ret=$?
+                btrfs sub delete "$dr/ro@" && btrfs fi sync $dr
+                umount $dr && rmdir $dr
+                [ $ret -ne 0 ] && { rm -f /xbmc-backup/temp/backup_home_$DATE.img.gz; exit 1; }
+                mv /xbmc-backup/temp/backup_home_$DATE.img.gz /xbmc-backup/backup_home_$DATE.img.gz; rmdir /xbmc-backup/temp
+                mkdir -p /xbmc-backup/put_here_to_restore
+                [ -e "/tmp/backuphome.running" ] && touch /xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)
+                ;;
+        (restorehome)
+                set -x
+                [ -e $1 ] || exit 500
+                mv $1 $1.working
+                gunzip --suffix .working -t $1.working || exit 500
+                gunzip -cd < $1.working | btrfs receive -v /tmp/btrfs-snap/home
+                [ $? -ne 0 ] && exit 1
+                rm -fr $1.working
+                pgrep xbmc.bin > /dev/null && { touch /run/start.xbmc; stop -q xbmc; }
+                stop -q zram-swap
+
+                locks=$(lsof | grep "/home" | awk '{print $2}' | sort | uniq)
+                i=0; sig='-SIGTERM' 
+                while test "$locks" != ''; do
+                    [ $i -gt 3 ] && sig='-SIGKILL'
+                    for p in $locks; do
+                        kill $sig $p
+                    done
+                    sleep 2
+                    locks=$(lsof | grep "/home" | awk '{print $2}' | sort | uniq)
+                    i=$((i+1))
+                done
+
+                for m in $(mount | awk '{print $3}' | grep "/home" | sort -r); do while mountpoint -q "$m"; do umount "$m" || sleep 1; done; done
+
+                btrfs sub delete /tmp/btrfs-snap/home/@
+                btrfs sub snap /tmp/btrfs-snap/home/ro@ /tmp/btrfs-snap/home/@
+                btrfs sub delete /tmp/btrfs-snap/home/ro@
+                start zram-swap
+                mount /home
+                [ -e /run/start.xbmc ] && { rm /run/start.xbmc; start -qn xbmc; }
+                ;;
         (*)
                 print_log error "Wrong command."
                 exit 200
