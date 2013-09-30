@@ -243,9 +243,9 @@ function showWlanProtectionGUIFn() {
 				
 				showInterfaceCredentialsSuccessDlg
 				showWlanRestartGUIFn $1 $SSID
-				if [ $STATUS -eq 3 ]; then
+				if [ $STATUS -eq 2 ]; then
 					showGUIFn;
-				elif [ $STATUS -eq 2 ]; then
+				elif [ $STATUS -eq 3 ]; then
 					showWlanProtectionGUIFn "$1" "$2" "$PROTECTION" "$CUSTOM"
 				fi
 			else
@@ -284,38 +284,21 @@ function showWlanRestartGUIFn() {
 	restartWLANAdapterFn "$1"
 	LASTSTATUS=-1;
 	setAuto $1
-	while [ $(kill -0 $PROCESSID 2>/dev/null >/dev/null; echo $?) -eq 0 ]; do
-		getWLANConnectStatusFn;
+	while kill -0 $(cat /tmp/wlanstatus.pid) 2>/dev/null; do
+		showWLANConnectingDlg $2
+		sleep 1
+	done
+	getWLANConnectStatusFn
 
-		if [ $LASTSTATUS -ne $STATUS ]; then
-			LASTSTATUS=$STATUS;
-			if [ $STATUS -eq 1 ]; then
-				showWLANConnectingDlg $2
-			elif [ $STATUS -eq 2 ]; then
-				showWLANConnectionFailedDlg $2
-			elif [ $STATUS -eq 3 ]; then
-				showWLANConnectionSuccessDlg $2
-			fi
-		fi
-		sleep 1;
-	done;
-	
-	getWLANConnectStatusFn;
-	
-	if [ $LASTSTATUS -ne $STATUS ]; then
-		LASTSTATUS=$STATUS;
-		if [ $STATUS -eq 1 ]; then
-			showWLANConnectingDlg $2
-		elif [ $STATUS -eq 2 ]; then
-			showWLANConnectionFailedDlg $2
-		elif [ $STATUS -eq 3 ]; then
-			showWLANConnectionSuccessDlg $2
-		fi
+	if [ $STATUS -eq 2 ]; then
+		showWLANConnectionSuccessDlg $2
+	elif [ $STATUS -eq 3 ]; then
+		showWLANConnectionFailedDlg $2
 	fi
-	
 	clearWLANStatusFn;
-	
 	return $STATUS;
+
+
 }
 
 # Executes the command line version of this module
@@ -549,22 +532,22 @@ function showCMDFn() {
 			fi
 		;;
 		progress)
-			if [ $(kill -0 $(pgrep ifup) 2>/dev/null >/dev/null; echo $?) -eq 0 ]; then
+			if kill -0 $(cat /tmp/wlanstatus.pid) 2>/dev/null; then
+				echo 2
+			else
 				getWLANConnectStatusFn;
 				if [ $STATUS -eq 0 ]; then
 					echo -12;
 				elif [ $STATUS -eq 1 ]; then
-					echo 2;
-				elif [ $STATUS -eq 2 ]; then
 					echo 0;
-					clearWLANStatusFn;
-				elif [ $STATUS -eq 3 ]; then
+				elif [ $STATUS -eq 2 ]; then
 					echo 1;
 					clearWLANStatusFn;
+				elif [ $STATUS -eq 3 ]; then
+					echo 0;
+					clearWLANStatusFn;
 				fi
-			else
-				echo 0;
-				clearWLANStatusFn
+
 			fi
 		;;
 		type)

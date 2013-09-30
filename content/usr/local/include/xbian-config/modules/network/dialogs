@@ -255,13 +255,13 @@ function showScanForWLANDlg() {
 	
 	TBLCOLUMNCENTER=0;
 	createTableFn "menu" \
-	"#,\Zb$(_ network.label.wlan)" \
+	"#;\Zb$(_ network.label.wlan)" \
 	"1,\Zn$(_ network.label.scan)" \
 	"2,\Zn$(_ network.label.custom)"
 	TBLCOLUMNCENTER=1;
 	
 	# Show interface selector dialog
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+8));
 	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+8))
 }
 

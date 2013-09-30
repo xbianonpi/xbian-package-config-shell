@@ -338,7 +338,7 @@ function readNetworkConfigurationFn() {
 			PROTECTION="WEP"
 		fi
 
-		[ -z "$PROTECTION" ] && PROTECTION=open
+		[ -z "$PROTECTION" ] && [[ $1 =~ wlan ]] && PROTECTION=open
 
 		# Extract wlan credentials
 		SSID=""
@@ -478,6 +478,7 @@ function scanWLANNetworksFn() {
 		if [[ $LINE =~ "Signal level" ]]; then
 #			WLAN[3]=$(echo $LINE | awk -F"Quality=" '{print $2}' | cut -d'/' -f1);
 			WLAN[3]=$(echo $LINE | awk -F"Quality=" '{print $2}' | cut -d' ' -f1);
+			[ "${WLAN[3]}" = '' ] && WLAN[3]=$(echo $LINE | awk -F"Signal level=" '{print $2}');
 			WLAN[3]=$((100*${WLAN[3]}))
                 fi
 	done;
@@ -512,10 +513,10 @@ function scanWLANNetworksFn() {
 #  @: Process id of the ifup process
 #  0: Process ifup not running
 function restartWLANAdapterFn() {
-	pkill wpa_supplicant > /dev/null 2>&1;pkill wpa_cli > /dev/null 2>&1
 	ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null
+	pkill wpa_supplicant > /dev/null 2>&1;pkill wpa_cli > /dev/null 2>&1
 	nohup ifup $1 2>/tmp/wlanstatus 1>/dev/null  &
-	PROCESSID=$!
+	PROCESSID=$!; echo $PROCESSID > /tmp/wlanstatus.pid
 	return $PROCESSID
 }
 
@@ -541,15 +542,12 @@ function restartLANAdapterFn() {
 function getWLANConnectStatusFn() {
 	STATUS=0;
 	if [ -f /tmp/wlanstatus ]; then
-		if [ $(grep -c "bound" /tmp/wlanstatus) -gt 0 ]; then
-			STATUS=3;
-		elif [ $(grep -c 'RTNETLINK' /tmp/wlanstatus) -gt 0 ]; then
-			STATUS=3;
-		elif [ $(grep -c 'DHCPOFFERS\|Terminated' /tmp/wlanstatus) -gt 0 ]; then
+		STATUS=1
+		if grep -qw "bound" /tmp/wlanstatus; then
 			STATUS=2;
-		elif [ $(grep -c "DHCPDISCOVER" /tmp/wlanstatus) -gt 0 ]; then
-			STATUS=1;
-		fi;
+		elif grep -qw 'DHCPOFFERS\|Terminated\|RTNETLINK' /tmp/wlanstatus; then
+			STATUS=3;
+		fi
 	fi
 	
 	return $STATUS;
@@ -557,7 +555,7 @@ function getWLANConnectStatusFn() {
 
 function clearWLANStatusFn() {
 	if [ -f /tmp/wlanstatus ]; then
-		rm /tmp/wlanstatus
+		rm /tmp/wlanstatus*
 	fi
 }
 
