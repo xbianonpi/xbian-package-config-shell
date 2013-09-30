@@ -1,3 +1,8 @@
 #!/bin/sh
 
-btrfs-auto-snapshot -l weekly -k 2 -v //
+. /etc/default/xbian-snap
+
+[ "$ENABLEDSCHEDULE" = yes ] || exit 0
+[ "$KEEPWEEKS" -ne 0 ] || exit 0
+
+btrfs-auto-snapshot -l weekly -k $KEEPWEEKS -v //

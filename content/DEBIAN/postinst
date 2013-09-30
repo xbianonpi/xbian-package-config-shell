@@ -9,33 +9,54 @@ if [ $1 == "configure" ]; then
 
 	. /etc/bash_completion.d/xbian-config.sh >/dev/null
 
+        /usr/sbin/btrfs-auto-snapshot listvol | grep -qx data || { /usr/sbin/btrfs-auto-snapshot createvol data; /usr/sbin/btrfs-auto-snapshot createvol data/@; }
+
         [ -e /home/xbian/.bashrc ] || touch /home/xbian/.bashrc
-        if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 0 ]; then
 
-	        if [ $(grep -c ^"#sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
-	                echo 0 > /home/xbian/.xbian-config-start
-	        else
-	                echo 1 > /home/xbian/.xbian-config-start
-	        fi
+        if [ ! -e /home/xbian/.xbian-config-start ]; then
+            if grep -q "#sudo xbian-config" /home/xbian/.bashrc; then
+                echo '0' > /home/xbian/.xbian-config-start
+            else
+                echo '1' > /home/xbian/.xbian-config-start
+            fi
 
-	        grep -v "sudo xbian-config" /home/xbian/.bashrc  > /home/xbian/.bashrc.new
-	        echo "if [ \"\$(cat /home/xbian/.xbian-config-start)\" -eq '1' ]; then sudo xbian-config; fi" >> /home/xbian/.bashrc.new
-	        mv /home/xbian/.bashrc.new /home/xbian/.bashrc
+            chown xbian:xbian /home/xbian/.xbian-config-start > /dev/null
+        fi
 
-	        if [ $(grep -c "then sudo xbian-config" /home/xbian/.bashrc) -eq 1 ]; then
-	                echo "Success: changing .bashrc" >> /home/xbian/xbian-config-update.log;
-	        else
-	                echo "Error: changing .bashrc" >> /home/xbian/xbian-config-update.log;
-		fi
+        grep -v "sudo xbian-config" /home/xbian/.bashrc > /home/xbian/.bashrc.new
+        grep -q "/home/xbian/.xbian-config-start.sh" /home/xbian/.bashrc.new || echo ". /home/xbian/.xbian-config-start.sh" >> /home/xbian/.bashrc.new
+        mv /home/xbian/.bashrc.new /home/xbian/.bashrc
+        chown xbian:xbian /home/xbian/.bashrc
 
-	else
+    mv /var/tmp/20apt-show-versions /etc/apt/apt.conf.d/20apt-show-versions
 
-		echo "Notice: patch already applied" >> /home/xbian/xbian-config-update.log
+    # update config
+    if [ ! -e /etc/default/xbian-snap ]; then
+        mv /var/tmp/xbian-snap /etc/default/xbian-snap
+    else
+        if grep -q "ENABLEDSCHEDULE=" /etc/default/xbian-snap; then
+            us="$(grep ENABLEDSCHEDULE= /etc/default/xbian-snap)"
+            eval $(echo "sed -i 's%ENABLEDSCHEDULE=yes%$us%' /var/tmp/xbian-snap")
+        fi
+        if grep -q "KEEPDAYS=" /etc/default/xbian-snap; then
+            us=$(grep KEEPDAYS= /etc/default/xbian-snap)
+            eval $(echo "sed -i 's%KEEPDAYS=3%$us%' /var/tmp/xbian-snap")
+        fi
+        if grep -q "KEEPWEEKS=" /etc/default/xbian-snap; then
+            us=$(grep KEEPWEEKS= /etc/default/xbian-snap )
+            eval $(echo "sed -i 's%KEEPWEEKS=2%$us%' /var/tmp/xbian-snap")
+        fi
+        if grep -q "ENABLEDAPT=" /etc/default/xbian-snap; then
+            us=$(grep ENABLEDAPT= /etc/default/xbian-snap)
+            eval $(echo "sed -i 's%ENABLEDAPT=yes%$us%' /var/tmp/xbian-snap")
+        fi
+        if grep -q "KEEPAPT=" /etc/default/xbian-snap; then
+            us=$(grep KEEPAPT= /etc/default/xbian-snap)
+            eval $(echo "sed -i 's%KEEPAPT=10%$us%' /var/tmp/xbian-snap")
+        fi
 
-	fi
-	
-	# echo "---UPDATE LOG---"
-        # cat "/home/xbian/xbian-config-update.log"
+        mv /var/tmp/xbian-snap /etc/default/xbian-snap
+    fi
+    :
 
-	# non xbian-update relevant
 fi
