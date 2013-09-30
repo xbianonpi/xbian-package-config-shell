@@ -1,0 +1,4 @@
+netbios-ssn stream tcp nowait root /usr/sbin/smbd smbd
+netbios-ns dgram udp wait root /usr/sbin/nmbd nmbd
+microsoft-ds stream tcp nowait root /usr/sbin/smbd smbd
+
