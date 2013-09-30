@@ -218,7 +218,7 @@ function showPackageCategoryListDlg() {
 	"${MENU[@]}";
 	
 	TBLCOLUMNCENTER=1;
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
 	HEIGHT=$((${#MENU[@]}+8));
 	if [ ${#MENU[@]} -gt 15 ]; then
 		HEIGHT=15;
@@ -250,7 +250,7 @@ function showPackagesListDlg() {
 	"${MENU[@]}";
 	
 	TBLCOLUMNCENTER=1;
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
 	HEIGHT=$((${#MENU[@]}+8));
 	if [ ${#MENU[@]} -gt 15 ]; then
 		HEIGHT=15;
@@ -267,14 +267,13 @@ function showPackageOptionsDlg() {
 	MENU+=(1",\Zn"$(_ packages.label.information));
 	MENU+=(2",\Zn"$(_ packages.label.install_update));
 	MENU+=(3",\Zn"$(_ packages.label.remove));
-	echo ${MENU[@]};
 	
 	createTableFn "menu"\
 	"#;\Zb"$(_ packages.label.actions)\
 	"${MENU[@]}";
 
 	TBLCOLUMNCENTER=1;
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
 	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 11
 }
 

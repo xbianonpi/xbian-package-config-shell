@@ -39,7 +39,7 @@ if [ $GUIMODE -eq 1 ]; then
 fi
 source $BASEPATH/functions/packages
 
-updateAllPackagesListFn
+[ -z "$ALLPKGLST" ] && updateAllPackagesListFn
 PKGNOTFOUND=0;
 #|------------------------------------|
 #|           Main program             |
@@ -141,7 +141,7 @@ function showGUIFn() {
 			showFailedToRetrieveAptMirrosDlg;
 		else
 			downloadPackageListFn;
-			REMOTEPKGDBUPDATED=$?
+			REMOTEPKGDBUPDATED=$((1-$?))
 		fi;
 	CONTENT=$(cat $BASEPATH/config/pkglist);
 	fi
@@ -217,15 +217,15 @@ function showCMDFn() {
 		list)
 			if [ $# -eq 1 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
-					getPackageCategoryListFn;
-					updateAllPackagesListFn;
+					getPackageCategoryListFn
+					updateAllPackagesListFn
 					for CATEGORY in ${CATEGORIES[@]}; do
 						getPackagesFromCategoryFn $CATEGORY;
 						X=0;
 						for PACKAGE in ${PACKAGES[@]}; do
-							getPackageStatusFn $PACKAGE;
+							getPackageStatusFn $PACKAGE
 							if [ $? -eq 1 ]; then
-								X=$(($X+1));
+								X=$((X+1));
 							fi
 						done
 						echo $CATEGORY,${#PACKAGES[@]},$X;
