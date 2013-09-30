@@ -49,7 +49,7 @@ function showGUIFn() {
 			setHostnameFn $RETURN $CURRENTHOSTNAME
 			if [ $? -eq 1 ]; then
 				showHostnameSuccessDlg;
-				askForRebootFn;
+				hostname -F /etc/hostname 
 			else
 				showErrorDlg;
 			fi
