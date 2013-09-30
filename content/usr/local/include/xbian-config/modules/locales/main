@@ -47,7 +47,6 @@ function showGUIFn() {
 			getLanguageByIdFn $LETTER $RETURN;
 			setLocaleFn ${LOCALE[0]};
 			showSettingLocaleSuccessFn;
-			askForRebootFn;
 		fi
 		showGUIFn;
 	fi
@@ -99,7 +98,6 @@ function showCMDFn() {
 			if [ $# == 2 ]; then
 				if [ $(ISOLocaleExistsFn $2; echo $?) -eq 1 ]; then
 					setLocaleFn $2;
-					askForRebootFn;
 					echo 1;
 				else
 					echo -3;

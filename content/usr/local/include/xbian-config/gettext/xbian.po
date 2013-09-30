@@ -164,6 +164,15 @@ msgstr "Boot flags successfully updated"
 msgid "xbian-config.bootflags.splash"
 msgstr "Show XBian splash on boot"
 
+msgid "xbian-config.bootflags.logo"
+msgstr "Disable kernel bootup logo"
+
+msgid "xbian-config.bootflags.quiet"
+msgstr "Suppress kernel output"
+
+msgid "xbian-config.bootflags.loglevel"
+msgstr "Kernel loglevel"
+
 #
 # xbian-config module information
 #
@@ -1025,7 +1034,45 @@ msgid "xbian-config.xbiancopy.name"
 msgstr "Xbian copier"
 
 msgid "xbian-config.xbiancopy.description"
-msgstr "XBIAN system copy tool (to usb ...)"
+msgstr "XBIAN system copy tool (to usb, img file ...)"
 
 msgid "xbian-config.xbiancopy.dialog.wrongblkdev"
 msgstr "Wrong destination block device"
+
+#
+#       backuphome
+#
+
+msgid "xbian-config.backuphome.name"
+msgstr "Backup /home to file"
+
+msgid "xbian-config.backuphome.description"
+msgstr "Backups XBMC settings, Libraries and related files"
+
+msgid "xbian-config.backuphome.running"
+msgstr "Please wait while creating backup file"
+
+msgid "xbian-config.backuphome.done"
+msgstr "Backup file is prepared at /xbmc-backup. Please grab the file over network or save locally."
+
+msgid "xbian-config.backuphome.failed"
+msgstr "Backup /home process failed!"
+
+#
+#	enable auto updates
+#
+
+msgid "xbian-config.enableauto.name"
+msgstr "Auto updates"
+
+msgid "xbian-config.enableauto.description"
+msgstr "Set auto update mechanism"
+
+msgid "xbian-config.updates.enableauto.enable_disable"
+msgstr "Do you want to activate automatic updates?"
+
+msgid "xbian-config.updates.enableauto.disabled"
+msgstr "Automatic updates are disabled"
+
+msgid "xbian-config.updates.enableauto.enabled"
+msgstr "Automatic updates are enabled"
