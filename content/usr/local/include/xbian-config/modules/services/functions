@@ -19,8 +19,8 @@
 
 # Get list of installed services
 function getInstalledServicesFn() {
-	for s in $(printf "%s\n" ${!SERVICES[@]} | sort ); do
-		[ -z "$(find /etc/init.d -iname $s)" ] && [ ! -e /etc/init/$s.conf ] && unset SERVICES[$s]
+	for s in $(printf "%s\n" ${!SERVICES[@]}); do
+		[ ! -e /etc/init.d/$s ] && [ ! -e /etc/init/$s.conf ] && [ ! -e $BASEPATH/config/$s.inetd ] && unset SERVICES[$s]
 	done
         X=$((${#SERVICES[@]}-1))
         IDX=($(printf "%s\n" ${!SERVICES[@]} | sort))
@@ -42,29 +42,31 @@ in_list()
 
 function getServiceAutoStartStatusFn() {
 	[ -z "$1" ] && return 1
-        [ $1 = samba -a -e /etc/default/samba ] && { grep RUN_MODE /etc/default/samba | grep -q inetd && ! grep -q ^"smbd" /etc/hosts.deny && return 0; }
-        { grep -qx manual /etc/init/$1.override 2>/dev/null|| grep -qx manual /etc/init/$1.conf 2>/dev/null; } && return 1
-        [ ! -e /etc/rc2.d/S??$1 -a ! -e /etc/rcS.d/S??$1 ] && [ ! -e /etc/init/$1.conf ] && return 1
+        [ -e $BASEPATH/config/$1.inetd ] && return $(grep -qxf $BASEPATH/config/$1.inetd /etc/inetd.conf; echo $?)
+
+        grep -qx manual /etc/init/$1.override /etc/init/$1.conf 2>/dev/null && return 1
+        [ ! -e /etc/init/$1.conf ] && [ ! -e /etc/rc2.d/S??$1 -a ! -e /etc/rcS.d/S??$1 ] && return 1
 	return 0
 }
 
 refreshProcessesFn()
 {
-        echo "Reloading process list" >> /run/xbian-splash
-        PROCESSES=$(ps -e | awk 'ORS="\n"{print $4}')
+#        echo "Reloading process list" >> /run/xbian-splash
+        PROCESSES=$(ps eax | awk '{print $5" "$6}')
 }
 function getServiceRunningStatusFn() {
         [ -z "$1" ] && return 2
-        [ $1 = samba -a -e /etc/default/samba ] && { if grep RUN_MODE /etc/default/samba | grep -q inetd; then \
-            getServiceAutoStartStatusFn "samba" && return 0 || return 1; 
-        fi; }
-        p=${SERVICES[$1]}
+	[ -e $BASEPATH/config/$1.inetd ] && { getServiceAutoStartStatusFn $1 && { getServiceRunningStatusFn "openbsd-inetd" && return 0; } || return 1; }
+
+        p=${SERVICES[$1]//,/ }
 
 	[ -z "$PROCESSES" ] && refreshProcessesFn
-	[ -z "$p" ] && { $(echo "$PROCESSES" | grep -q "$1") && return 0 || return 1; }
-	for pn in $(echo $p| tr ',' '\n'); do 
-                $(echo "$PROCESSES" | grep -q "$pn") || return 1
+	[ -z "$p" ] && { [[ $PROCESSES =~ "$1" ]] && return 0 || { status "$1" 2>/dev/null| grep -q "start/running"; return $?; }; }
+	oIFS=$IFS; IFS=$' ' 
+        for pn in $p; do 
+                [[ $PROCESSES =~ "$pn" ]] || return 1
         done
+        IFS=$oIFS;
         return 0
 }
 
@@ -73,22 +75,22 @@ function getServiceNameFn() {
 }
 
 function getServiceIDFn() {
-	I=0;
-	for s in $(printf "%s\n" ${SERVIES[@]} | sort); do
+	I=0
+	for s in $(printf "%s\n" ${IDX[@]} | sort); do
                 [ "$1" = $s ] && return $I
 		I=$(($I+1));
 	done
-        return 999
+        echo 999
 }
 
 function checkServiceExistsFn() {
-	[ -e "/etc/init.d/$1" -o -e "/etc/init/$1.conf" ] && return 0
+	[ -e "/etc/init.d/$1" -o -e "/etc/init/$1.conf" -o -e $BASEPATH/config/$s.inetd ] && return 0
 	return 1
 }
 
 function restartServiceFn() {
 
-        [ $2 = samba ] && return 0
+        [ -e $BASEPATH/config/$1.inetd ] && { restartServiceFn $1 "openbsd-inetd" && return 0 || return 1; }
         test -z "$2" && c="restart" || c="$2"
 
 	if [ -f "/etc/init/$1.conf" ]; then
@@ -111,7 +113,11 @@ function stopServiceFn() {
 }
 
 function disableAutoStartFn() {
-        [ $1 = samba ] && grep RUN_MODE /etc/default/samba | grep -q inetd && echo -e "smbd: ALL\n" >> /etc/hosts.deny
+        [ -e $BASEPATH/config/$1.inetd ] && { 	while read service details; do
+						    [ -z "$service" ] && continue
+						    service=$(echo $service | awk '{print $1}')
+						    update-inetd --disable $service || return 1
+						done < $BASEPATH/config/$1.inetd; return 0; }
 
 	if [ -f "/etc/init/$1.conf" ]; then
 		echo "manual" >> "/etc/init/$1.override"
@@ -122,7 +128,12 @@ function disableAutoStartFn() {
 }
 
 function enableAutoStartFn() {
-        [ $1 = samba ] && grep RUN_MODE /etc/default/samba | grep -q inetd && sed -i '/smbd: ALL/d' /etc/hosts.deny
+        [ -e $BASEPATH/config/$1.inetd ] && { 	while read service details; do
+						    [ -z "$service" ] && continue
+						    service=$(echo $service | awk '{print $1}')
+						    update-inetd --enable $service || return 1
+						done < $BASEPATH/config/$1.inetd; return 0; }
+
 
 	if [ -f "/etc/init/$1.conf" ]; then
 		grep -xv manual "/etc/init/$1.override" > "/etc/init/$1.override.new"

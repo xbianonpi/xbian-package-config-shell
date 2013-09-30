@@ -33,8 +33,9 @@ fi
 readServicesFn()
 {
         SERVICES=(); IDX=()
-        for s in $(cat $BASEPATH/config/services | sort); do 
-                SERVICES[${s%:*}]="$(echo ${s#*:})" 
+        for s in $(cat $BASEPATH/config/services); do 
+#                SERVICES[${s%:*}]="$(echo ${s#*:})" 
+                SERVICES[${s%:*}]=${s#*:}
         done
 
         getInstalledServicesFn
@@ -206,11 +207,7 @@ function showCMDFn() {
 		list)
 			if [ $# -eq 1 ]; then
 				if [ -f "$BASEPATH/config/services" ]; then
-					for NAME in ${!SERVICES[@]}; do
-						if [ -f "/etc/init.d/$NAME" -o -f "/etc/init/$NAME.conf" ]; then
-							echo $NAME;
-						fi
-					done;
+					printf "%s\n" ${!SERVICES[@]} | sort 
 				else
 					echo -7;
 				fi
@@ -241,18 +238,19 @@ function showCMDFn() {
                                 [ -n "$2" ] && filter="$2"
 				if [ -n "$filter" ] && [[ ${!SERVICES[@]} =~ "$2" ]] || [ -z "$filter" ]; then
                                     if [ -f "$BASEPATH/config/services" ]; then
-					for NAME in ${!SERVICES[@]}; do
+					for NAME in $(printf "%s\n" ${!SERVICES[@]} | sort); do
+#					for NAME in ${!SERVICES[@]}; do
                                                 [ -n "$filter" -a "$NAME" != "$filter" ] && continue
 						RUNNING=$(getServiceRunningStatusFn $NAME; echo $?);
 						AUTOSTART=$(getServiceAutoStartStatusFn $NAME; echo $?);
                                                 if [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 0 ]; then
 							echo $NAME 5;
-						elif [ $RUNNING -eq 1 ] && [ $AUTOSTART -eq 0 ]; then
-							echo $NAME 3;
-						elif [ $RUNNING -eq 0 ] && [ $AUTOSTART -eq 1 ]; then
-							echo $NAME 4;
 						elif [ $RUNNING -eq 1 ] && [ $AUTOSTART -eq 1 ]; then
 							echo $NAME 2;
+						elif [ $RUNNING -eq 1 ] && [ $AUTOSTART -eq 0 ]; then
+							echo $NAME 3;
+						else
+							echo $NAME 4;
                                                 fi
 					done;
 				    else
