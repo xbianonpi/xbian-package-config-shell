@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+#Copyright 2013 mk01B <development@xbian.org>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+
+function showBackupHomeInfoDlg() {
+	dialog --cr-wrap --tab-correct --msgbox "		While you are reading this instructions, image backup of /home is already being prepared. It can take several minutes depending on size of your /home/xbian directory. 
+
+    Once finished, file will be created under /xbian-backup, which is also accessible through smb from Windows / Linux / MacOSX by navigating to XBIAN machine on network and opening share \"xbian-backup\". 
+
+    Until image is being prepared, there will be just temp folder. Once ready, .img file will appear and temp folder will be deleted. You can copy the file directly to you computer (the file will not be preserved during reboots!). 
+
+    Anytime you wish to restore your XBMC (settings / addons / addon settings / skins / libraries), just copy .img file to xbian-backup/put_to_restore folder. You can again do it from your desktop PC. Once restored, XBMC will be restarted and your saved XBMC environment should be back." 25 66
+}
+
+function showBackupHomeRunningDlg() {
+    wrapTxtFn "$(_ backuphome.running) $x" $(($DEFAULTWIDTH-4));
+    centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+    valignTxtFn "$CENTEREDTXT"
+    showInfoDlg "$ALIGNEDTXT" $HEIGHT;
+}
+
+function showBackupHomeDoneDlg() {
+    wrapTxtFn "$(_ backuphome.done)" $(($DEFAULTWIDTH-4));
+    centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+    valignTxtFn "$CENTEREDTXT"
+    showMsgDlg "$ALIGNEDTXT" $HEIGHT;
+}
+
+function showBackupHomeFailedDlg() {
+    wrapTxtFn "$(_ backuphome.failed)" $(($DEFAULTWIDTH-4));
+    centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+    valignTxtFn "$CENTEREDTXT"
+    showMsgDlg "$ALIGNEDTXT" $HEIGHT;
+}

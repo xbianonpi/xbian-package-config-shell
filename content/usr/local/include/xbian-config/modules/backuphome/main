@@ -1,0 +1,114 @@
+#!/bin/bash
+
+#
+#Copyright 2012 CurlyMo <development@xbian.org>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+#|------------------------------------|
+#|          Include files             |
+#|------------------------------------|
+
+source $BASEPATH/modules/backuphome/functions
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/backuphome/dialogs;
+fi
+
+#|------------------------------------|
+#|          Global variables          |
+#|------------------------------------|
+
+# The arguments this module accepts
+ARGUMENTS=(start status);
+
+#|------------------------------------|
+#|           Main program             |
+#|------------------------------------|
+
+# Executes the GUI version of this module
+function showGUIFn() {
+    [ $(GUIMODE=0 xbian-config backuphome status) -eq 0 ] && return 0
+    xbian-config backuphome start
+
+    showBackupHomeInfoDlg
+
+    x=' '; r='0'
+    while [ $r -eq 0 ]; do
+        showBackupHomeRunningDlg
+        case $x in
+            ' ')
+                x='Z'
+                ;;
+            'Z')
+                x='Zz'
+                ;;
+            'Zz')
+                x='Zzz'
+                ;;
+            'Zzz')
+                x='Zzzz'
+                ;;
+            'Zzzz')
+                x=' '
+                ;;
+        esac
+        sleep 2
+        r=$(GUIMODE=0 xbian-config backuphome status)
+    done
+
+    case $r in
+        '1')
+            showBackupHomeDoneDlg
+            ;;
+        '-1')
+            showBackupHomeFailedDlg
+            ;;
+    esac
+}
+
+# Executes the command line version of this module
+#  $1 Argument [String]
+# status | start
+#
+# status return code
+# 1 ready
+# 0 running
+# -1 failed
+# -2 not started
+#
+# start return code
+# number - pid of started backup process
+# -1 failed
+function showCMDFn() {
+    case $1 in
+        start)
+            nice -n +1 /usr/sbin/btrfs-auto-snapshot backuphome > /dev/null 2>&1 & pid=$!
+            echo $pid > /tmp/backuphome.running
+            ;;
+        status)
+            [ -e /tmp/backuphome.running ] || { echo "-2"; exit 0; }
+            if test -e "/xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)"; then
+                rm -f "/xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)"
+                rm -f /tmp/backuphome.running
+                echo "1"
+            else
+                kill -0 $(cat /tmp/backuphome.running) > /dev/null 2>&1 || { echo "-1"; rm -f /tmp/backuphome.running; exit 0; }
+                echo "0"
+            fi
+            ;;
+    esac
+
+    exit 0
+}
