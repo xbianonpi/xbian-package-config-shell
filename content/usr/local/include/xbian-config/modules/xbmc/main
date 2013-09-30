@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(guires webserver);
+ARGUMENTS=(guires webserver tvoff usbauto usbshare priority uuidname hddspin sharerw);
 GUIRES=(480 540 720 1080);
 
 #|------------------------------------|
@@ -48,7 +48,7 @@ function showGUIFn() {
 				setXBMCGUIResFn ${GUIRES[$(($RETURN-1))]};
 				if [ $? -eq 1 ]; then
 					showXBMCGUIResSuccessDlg;
-					askForRebootFn;
+#					askForRebootFn;
 				else
 					showXBMCGUIResFailedDlg;
 				fi
@@ -66,7 +66,7 @@ function showGUIFn() {
 				else
 					showXBMCWebserverSuccessDisabledDlg;
 				fi
-				askForRebootFn;
+#				askForRebootFn;
 			else
 				if [ $STATE -eq 0 ]; then
 					showXBMCWebserverFailedEnableDlg;
@@ -123,7 +123,7 @@ function showCMDFn() {
 						if [ $MATCH -eq 1 ]; then
 							setXBMCGUIResFn $3
 							echo $?;							
-							askForRebootFn;
+#							askForRebootFn;
 						else
 							echo -3;
 						fi
@@ -145,11 +145,11 @@ function showCMDFn() {
 				elif [ "$2" == "enable" ]; then
 					setXBMCWebserverFn 1
 					echo $?
-					askForRebootFn;
+#					askForRebootFn;
 				elif [ "$2" == "disable" ]; then
 					setXBMCWebserverFn 0
 					echo $?
-					askForRebootFn;
+#					askForRebootFn;
 				else
 					echo -1
 				fi
@@ -157,5 +157,70 @@ function showCMDFn() {
 				echo -1;
 			fi
 		;;
+                tvoff)
+                    if [ $# -gt 1 ]; then
+                        setXBMCtvoffFn $2 $3
+                    else
+                        getXBMCtvoffFn
+                    fi
+                ;;
+                usbauto)
+                    if [ $# -eq 2 ]; then
+                        setXBMCusbautoFn $2
+                        echo $((1-$?))
+                    else
+                        getXBMCusbautoFn
+                        echo $((1-$?))
+                    fi
+                ;;
+                usbshare)
+                    if [ $# -eq 2 ]; then
+                        setXBMCusbshareFn $2
+                        echo $((1-$?))
+                    else
+                        getXBMCusbshareFn
+                        echo $((1-$?))
+                    fi
+                ;;
+                sharerw)
+                    if [ $# -eq 2 ]; then
+                        setXBMCsharerwFn $2
+                        echo $((1-$?))
+                    else
+                        getXBMCsharerwFn
+                        echo $((1-$?))
+                    fi
+                ;;
+                uuidname)
+                    if [ $# -eq 2 ]; then
+                        setXBMCuuidnameFn $2
+                        echo $((1-$?))
+                    else
+                        getXBMCuuidnameFn
+                        echo $((1-$?))
+                    fi
+                ;;
+                priority)
+                    if [ $# -gt 1 ]; then
+                        setXBMCpriorityFn $2 $3 $4
+                        echo $((1-$?))
+                    else
+                        getXBMCpriorityFn
+                        echo $(echo $(echo $((1-$?)); grep PSAVER /etc/default/xbmc | awk -F'=' '{print $2}';  grep PPLAYER /etc/default/xbmc | awk -F'=' '{print $2}')| tr "\"" " ")
+                    fi
+                ;;
+                hddspin)
+                    if [ $# -gt 1 ]; then
+                        setXBMChddspinFn $2 $3
+                        echo $((1-$?))
+                    else
+                        min=$(getXBMChddspinFn)
+                        if [ $min -gt 0 ]; then
+                            echo "1 $min"
+                        else
+                            echo "0 0"
+                        fi
+                    fi
+                ;;
 	esac;
 }

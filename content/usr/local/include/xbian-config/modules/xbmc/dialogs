@@ -25,7 +25,7 @@ function showXBMCSettingsDlg() {
 	"#;\Zb"$(_ xbmc.label.actions)\
 	"${MENU[@]}";
 
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11))
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7))
 	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 10
 }
 

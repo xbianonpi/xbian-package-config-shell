@@ -94,3 +94,188 @@ function getXBMCWebserverFn() {
 		return 1;
 	fi	
 }
+
+function getXBMCtvoffFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+    [ "$(grep SCREENOFF=yes /etc/default/xbmc | awk -F'=' '{print $2}')" = yes ] \
+        && { echo "1 $(grep AFTER= /etc/default/xbmc | awk -F'=' '{print $2}')"; return 0; }
+    echo "0 0"
+    return 1
+}
+
+function setXBMCtvoffFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+
+    if [ -n "$2" ]; then
+        eval "sed -i 's/AFTER=[0-9]*/AFTER=$2/' /etc/default/xbmc"
+    fi
+
+    if [ $1 -eq 0 ]; then
+        sed -i 's/SCREENOFF=.*/SCREENOFF=no/' /etc/default/xbmc
+        grep -q SCREENOFF=no /etc/default/xbmc
+    elif [ $1 -gt 0 ]; then
+        sed -i 's/SCREENOFF=.*/SCREENOFF=yes/' /etc/default/xbmc
+        grep -q SCREENOFF=yes /etc/default/xbmc
+    else
+        echo 0; return 1;
+    fi
+
+    echo $((1-$?))
+}
+
+function getXBMCusbautoFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    [ "$(grep ^ENABLED= /etc/usbmount/usbmount.conf | awk -F'=' '{print $2}')" -eq 1 ] && return 0
+    return 1
+}
+
+
+function getXBMCusbshareFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    [ "$(grep ^SHARESMB= /etc/usbmount/usbmount.conf | awk -F'=' '{print $2}')" = yes ] && return 0
+    return 1
+}
+
+function getXBMCsharerwFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    [ "$(grep ^SHARERW= /etc/usbmount/usbmount.conf | awk -F'=' '{print $2}')" = yes ] && return 0
+    return 1
+}
+
+function getXBMCpriorityFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+    [ "$(grep ^DPRIORITY= /etc/default/xbmc | awk -F'=' '{print $2}')" = yes ] && return 0
+    return 1
+}
+function getXBMCuuidnameFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    [ "$(grep ^UUIDNAME= /etc/usbmount/usbmount.conf | awk -F'=' '{print $2}')" = yes ] && return 0
+    return 1
+}
+function getXBMChddspinFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && echo  0
+    echo "$(grep ^SPINDOWN= /etc/usbmount/usbmount.conf | awk -F'=' '{print $2}')"
+}
+
+function setXBMCusbautoFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    if grep -q ENABLED=1 /etc/usbmount/usbmount.conf; then
+        if [ $1 -eq 0 ]; then
+            sed -i 's/ENABLED=1/ENABLED=0/' /etc/usbmount/usbmount.conf
+            grep -q ENABLED=0 /etc/usbmount/usbmount.conf
+            return $?
+        else
+            return 0
+        fi
+    elif grep -q ENABLED=0 /etc/usbmount/usbmount.conf; then
+        if [ $1 -eq 1 ]; then
+            sed -i 's/ENABLED=0/ENABLED=1/' /etc/usbmount/usbmount.conf
+            grep -q ENABLED=1 /etc/usbmount/usbmount.conf
+            return $?
+        else
+            return 0
+        fi
+    fi
+    return 1
+}
+
+function setXBMCusbshareFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    if grep -q SHARESMB=yes /etc/usbmount/usbmount.conf; then
+        if [ $1 -eq 0 ]; then
+            sed -i 's/SHARESMB=yes/SHARESMB=no/' /etc/usbmount/usbmount.conf
+            grep -q SHARESMB=no /etc/usbmount/usbmount.conf
+            return $?
+        else
+            return 0
+        fi
+    elif grep -q SHARESMB=no /etc/usbmount/usbmount.conf; then
+        if [ $1 -eq 1 ]; then
+            sed -i 's/SHARESMB=no/SHARESMB=yes/' /etc/usbmount/usbmount.conf
+            grep -q SHARESMB=yes /etc/usbmount/usbmount.conf
+            return $?
+        else
+            return 0
+        fi
+    fi
+    return 1
+}
+
+function setXBMCsharerwFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    if [ $1 -eq 0 ]; then
+        sed -i 's/SHARERW=.*/SHARERW=no/' /etc/usbmount/usbmount.conf
+        grep -q SHARERW=no /etc/usbmount/usbmount.conf
+        return $?
+    elif [ $1 -eq 1 ]; then
+        sed -i 's/SHARERW=.*/SHARERW=yes/' /etc/usbmount/usbmount.conf
+        grep -q SHARERW=yes /etc/usbmount/usbmount.conf
+        return $?
+    else
+        return 0
+    fi
+    return 1
+}
+
+function setXBMCpriorityFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+
+    P=$(grep PSAVER /etc/default/xbmc)
+    [ -n "$2" ] && eval $(echo "sed -i 's/$P/PSAVER=\"$2\"/' /etc/default/xbmc")
+    P=$(grep PPLAYER /etc/default/xbmc)
+    [ -n "$3" ] && eval $(echo "sed -i 's/$P/PPLAYER=\"$3\"/' /etc/default/xbmc")
+
+    if grep -q DPRIORITY=yes /etc/default/xbmc; then
+        if [ $1 -eq 0 ]; then
+            sed -i 's/DPRIORITY=yes/DPRIORITY=no/' /etc/default/xbmc
+            grep -q DPRIORITY=no /etc/default/xbmc
+            return $?
+        else
+            return 0
+        fi
+    elif grep -q DPRIORITY=no /etc/default/xbmc; then
+        if [ $1 -eq 1 ]; then
+            sed -i 's/DPRIORITY=no/DPRIORITY=yes/' /etc/default/xbmc
+            grep -q DPRIORITY=yes /etc/default/xbmc
+            return $?
+        else
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+function setXBMCuuidnameFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+
+    if grep -q UUIDNAME=yes /etc/usbmount/usbmount.conf; then
+        if [ $1 -eq 0 ]; then
+            sed -i 's/UUIDNAME=yes/UUIDNAME=no/' /etc/usbmount/usbmount.conf
+            grep -q UUIDNAME=no /etc/usbmount/usbmount.conf
+            return $?
+        else
+            return 0
+        fi
+    elif grep -q UUIDNAME=no /etc/usbmount/usbmount.conf; then
+        if [ $1 -eq 1 ]; then
+            sed -i 's/UUIDNAME=no/UUIDNAME=yes/' /etc/usbmount/usbmount.conf
+            grep -q UUIDNAME=yes /etc/usbmount/usbmount.conf
+            return $?
+        else
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+function setXBMChddspinFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    [ $2 -gt 20 ] && return 1
+
+    cv=$(getXBMChddspinFn)
+    eval $(echo "sed -i 's/SPINDOWN=$cv/SPINDOWN=$2/' /etc/usbmount/usbmount.conf")
+    r=$(eval $(echo "grep -w SPINDOWN=$2 /etc/usbmount/usbmount.conf"))
+    [ "$r" = "SPINDOWN=$2" ] && { for b in /dev/sda /dev/sdb /dev/sdc /dev/sdd; do [ -b $b ] && DEVNAME=$b usbmount spindown; done; return 0; } || return 1
+}
