@@ -104,6 +104,12 @@ function changeCurrentTZFn() {
 		if [ -f $TZLOCATIONPATH ] || [ -L $TZLOCATIONPATH ]; then
 			ln -s $TZLOCATIONPATH /etc/localtime 2>/dev/null;
 			if [ $? -eq 0 ]; then
+				export city=$2
+				cou=$(cat $BASEPATH/config/countries | awk -v c=$city -F'\t' '$6 ~ c {print $5}')
+				if [ -n "$cou" ]; then
+				    eval $(echo "sed -i 's/<timezone>.*<\/timezone>/<timezone>$1\/$2<\/timezone>/' /home/xbian/.xbmc/userdata/guisettings.xml")
+				    eval $(echo "sed -i 's/<timezonecountry>.*<\/timezonecountry>/<timezonecountry>$cou<\/timezonecountry>/' /home/xbian/.xbmc/userdata/guisettings.xml")
+				fi
 				return 1;
 			else
 				return 0;

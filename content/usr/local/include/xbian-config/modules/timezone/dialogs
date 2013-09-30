@@ -63,7 +63,7 @@ function showTZCategoryDlg() {
 	"#;\Zb"$(_ timezone.label.timezone) \
 	"${MENU[@]}"
 	TBLCOLUMNCENTER=1;
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+5)); 
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6)); 
 	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 15;
 }
 
@@ -93,10 +93,10 @@ function showTZLocationDlg() {
 	fi
 	TBLCOLUMNCENTER=0;
 	createTableFn "radio" \
-	"$NRSIGN,\Zb"$(_ timezone.label.location) \
+	"$NRSIGN;\Zb"$(_ timezone.label.location) \
 	"${MENU[@]}"
 	TBLCOLUMNCENTER=1;
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+5));  
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));  
 	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 15;
 }
 
