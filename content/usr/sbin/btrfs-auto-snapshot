@@ -507,10 +507,21 @@ case $opt_command in
                 ;;
 	(xbiancopy)
 		[ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
+		[ "$(readlink -e $1)" = "$(readlink -e $2)" ] && { echo "source and destination can not be the same block device"; exit 5; }
+
+		if [ $opt_dev != $1 ]; then
+		    [ ! -b $1 ] && echo "non existend source device" && exit 5
+		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
+		fi
+
 		mkdir -p /tmp/btrfs-dest
 		if [ -n "$opt_img" ]; then
+		    touch $2 || { echo "can not create img file"; exit 5; }
+		    [ "$(df -P $2 | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; exit 5; }
 		    size=$(df -B1G | grep -w $(findmnt --source $1 -f -o TARGET -n) -m1 | awk '{print $2}')
-		    touch $2; chattr +C $2;  truncate -s "$(($size-1))G" $2; [ "$opt_size" != 0 ] && truncate -s $opt_size $2
+		    { [ "$opt_size" != 0 ] && size=$opt_size; } || size="$(($size-1))G"
+		    [ "$(printf "%s\n%s\n" $(df -h $2 | tail -1 | awk '{print $4}') "$size" | sort -rh | grep -m1 .)" = "$size" ] && { echo "not enough free space on destination filesystem"; exit 5; }
+		    chattr +C $2 &>/dev/null;  truncate -s $size $2
 		    modprobe -q loop
 		    parted -s $2 mklabel msdos
 		    echo "2048,69632,b,*," | sfdisk -u S -N1 -H 4 -S 16 -q $2 > /dev/null 2>&1
@@ -523,10 +534,6 @@ case $opt_command in
 		    set -- $1 /dev/mapper/${loopd}p2
 		fi
 
-		if [ $opt_dev != $1 ]; then
-		    [ ! -b $1 ] && echo "non existend source device" && exit 5
-		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
-		fi
 
 		mkdir -p /tmp/btrfs-source
 		mount -t btrfs -o subvol=/ $1 /tmp/btrfs-source
