@@ -270,6 +270,7 @@ else
 	MODULE=$1;
 	[ $MODULE = "--help" -o $MODULE = "-h" ] && MODULE=help
 	if [ $MODULE == "reboot" ]; then
+		[ -n "$2" ] && [ "$2" -eq 1 ] && { touch /var/run/reboot-required; exit 0; }
 		if [ -f /var/run/reboot-required ]; then
 			{ pgrep dpkg > /dev/null|| pgrep apt-get >/dev/null; } && return 0
 			echo 1;
