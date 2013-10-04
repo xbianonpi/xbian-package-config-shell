@@ -96,6 +96,7 @@ function showCMDFn() {
         start)
             nice -n +1 /usr/sbin/btrfs-auto-snapshot backuphome > /dev/null 2>&1 & pid=$!
             echo $pid > /tmp/backuphome.running
+            echo $pid
             ;;
         status)
             [ -e /tmp/backuphome.running ] || { echo "-2"; exit 0; }
