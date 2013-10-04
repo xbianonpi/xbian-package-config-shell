@@ -163,10 +163,7 @@ function showAvailableUpdatesDlg() {
 		IFS=";";
 		VALUE=($VALUE);
 		I=$(($I+1));
-#                NAME=$(echo ${VALUE[0]} | rev | cut -f1 -d"-" | rev);
-		if ! [[ "${VALUE[0]}" =~ "xbian-update" ]]; then
-				MENU+=($I,"\Zb${VALUE[0]},\Zb${VALUE[1]} (${VALUE[2]}),Off");
-		fi
+		MENU+=($I,"\Zb${VALUE[0]},\Zb${VALUE[1]} (${VALUE[2]}),Off");
 	done;
 	IFS=$ORIGINALIFS;
 	TBLCOLUMNCENTER=0;
