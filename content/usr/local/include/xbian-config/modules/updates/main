@@ -195,7 +195,6 @@ function showGUIFn() {
 #  -  0: is disabled or set requested action was failure
 
 function showCMDFn() {
-	echo $@ > /tmp/a
 	case $1 in
 		autoinventory)
 			setEnableInventoryAuto $2 $3; rc=$?
@@ -221,7 +220,7 @@ function showCMDFn() {
 					[ -z "$(eval find /var/lib/apt/periodic/update-success-stamp -cmin -$int 2>/dev/null)" ] && { echo -3; exit 0; }
 					limit=15; i=1
 					[ -z "$(eval find /tmp/aptupdates -cmin -$int 2>/dev/null)" ] && retrieveUpdateListFn;
-					if [ "$2" == "packages" ]; then
+					if [ "$2" == "packages" -o "$2" == "upgrades" ]; then
 						getAllPackagesLisFn;
 						if [ ${#PACKAGES[@]} -ge 1 ]; then
 							for KEY in ${!PACKAGES[@]}; do
@@ -229,17 +228,6 @@ function showCMDFn() {
                                                                 echo $(($KEY+1))";"${PACKAGES[$KEY]};
                                                                 i=$(($i+1))
 							done
-						else
-							echo -2;
-						fi
-					elif [ "$2" == "upgrades" ]; then
-						getAllUpdatesLisFn;
-						if [ ${#UPDATES[@]} -ge 1 ]; then
-							for KEY in ${!UPDATES[@]}; do
-								test $i -gt $limit && break
-                                                                echo $(($KEY+1))";"${UPDATES[$KEY]};
-							        i=$(($i+1))
-                                                        done
 						else
 							echo -2;
 						fi
@@ -257,25 +245,11 @@ function showCMDFn() {
 			if [ $# -ge 3 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					shift;
-					if [ "$1" == "packages" ]; then
+					if [ "$1" == "packages" -o "$1" == "upgrades" ]; then
 						shift;
 						getAllPackagesLisFn;
 						SELECTION=($@);
 						updatePackagesFn 1 "${SELECTION[*]}";
-						RETURN=$?;
-						case $RETURN in
-							0)
-								echo 1;
-							;;
-							*)
-								echo $(($RETURN+1));
-							;;
-						esac
-					elif [ "$1" == "upgrades" ]; then
-						shift;
-						getAllUpdatesLisFn;
-						SELECTION=($@);
-						updateSystemFn 1 "${SELECTION[*]}";
 						RETURN=$?;
 						case $RETURN in
 							0)
@@ -299,7 +273,7 @@ function showCMDFn() {
 			if [ $# -ge 3 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					shift;
-					if [ "$1" == "packages" ]; then
+					if [ "$1" == "packages" -o "$1" == "upgrades" ]; then
 						shift;
 						getAllPackagesLisFn;
 						SELECTION=($@);
@@ -308,20 +282,6 @@ function showCMDFn() {
 						case $RETURN in
 							0)
                                                                 echo 1;
-							;;
-							*)
-								echo $(($RETURN+1));
-							;;
-						esac
-					elif [ "$1" == "upgrades" ]; then
-						shift;
-						getAllUpdatesLisFn;
-						SELECTION=($@);
-						updateSystemFn 2 "${SELECTION[*]}";
-						RETURN=$?;
-						case $RETURN in
-							0)
-								echo 1;
 							;;
 							*)
 								echo $(($RETURN+1));

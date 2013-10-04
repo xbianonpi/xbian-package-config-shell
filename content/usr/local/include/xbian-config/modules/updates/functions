@@ -52,11 +52,12 @@ function setSnapApt(){
 
 function retrieveUpdateListFn() {
 	xbian-apt-show-versions -u >/tmp/aptupdates 2>/dev/null
+        apt-mark showhold > /tmp/apthold
 }
 
 function getAllPackagesLisFn() {
 	if [ -f "/tmp/aptupdates" ]; then
-		PACKAGES=($(grep -vw xbian-update /tmp/aptupdates | sed 's/\/[a-z]*//g' | awk '{print $1";"$2";"$5}' | sort | uniq));
+		PACKAGES=($(grep -vw -f /tmp/apthold /tmp/aptupdates | sed 's/\/[a-z]*//g' | awk '{print $1";"$2";"$5}' | sort | uniq));
                 [ -z "${PACKAGES[0]}" ] && unset PACKAGES
 		return 1;
 	else
@@ -65,23 +66,25 @@ function getAllPackagesLisFn() {
 }
 
 function getAllUpdatesLisFn() {
-	if [ -f "/tmp/aptupdates" ]; then
-		UPDATES=($(grep -w xbian-update /tmp/aptupdates | sed 's/\/[a-z]*//g' | awk '{print $1";"$2";"$5}' | sort | uniq));
-		[ -z "${UPDATES[0]}" ] && unset UPDATES
-		return 1;
-	else
-		return 0;
-	fi
+        getAllPackagesLisFn
 }
 
 function updatePackagesFn() {
 	LIST="";
-	ARRAY=($2);
-	for INDEX in ${ARRAY[@]}; do
+        if [ "$2" = '-' ]; then
+            lt=${!PACKAGES[@]}
+            d=0
+        else
+            lt=$2
+            d=1
+        fi
+
+        ARRAY=($lt);
+        for INDEX in ${ARRAY[@]}; do
 		INDEX=${INDEX/\\/}
 		INDEX=$(echo $INDEX | tr -d "\"")
-		NAME=$(echo ${PACKAGES[$((INDEX-1))]} | cut -f1 -d";");
-		VERSION=$(echo ${PACKAGES[$((INDEX-1))]} | cut -f3 -d";");
+		NAME=$(echo ${PACKAGES[$((INDEX-$d))]} | cut -f1 -d";");
+		VERSION=$(echo ${PACKAGES[$((INDEX-$d))]} | cut -f3 -d";");
 		LIST+=" "$NAME"="$VERSION
 	done;
 
