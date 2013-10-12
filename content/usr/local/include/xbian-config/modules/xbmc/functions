@@ -142,6 +142,12 @@ function getXBMCsharerwFn() {
     return 1
 }
 
+function getXBMCusbsyncFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    grep ^MOUNTOPTIONS= /etc/usbmount/usbmount.conf | grep -qw sync && return 0
+    return 1
+}
+
 function getXBMCpriorityFn() {
     [ ! -e /etc/default/xbmc ] && return 1
     [ "$(grep ^DPRIORITY= /etc/default/xbmc | awk -F'=' '{print $2}')" = yes ] && return 0
@@ -197,6 +203,25 @@ function setXBMCusbshareFn() {
         else
             return 0
         fi
+    fi
+    return 1
+}
+
+function setXBMCusbsyncFn() {
+    [ ! -e /etc/usbmount/usbmount.conf ] && return 1
+    if [ $1 -eq 0 ]; then
+        getXBMCusbsyncFn || return 0
+        o=$(grep ^MOUNTOPTIONS=\" /etc/usbmount/usbmount.conf)
+        n=$(echo $o | sed 's/sync/async/')
+        eval sed -i 's/$o/$n/' /etc/usbmount/usbmount.conf
+        return $((1-getXBMCusbsyncFn))
+    elif [ $1 -eq 1 ]; then
+        o=$(grep ^MOUNTOPTIONS=\" /etc/usbmount/usbmount.conf)
+        n=$(echo $o | sed 's/async/sync/')
+        eval sed -i 's/$o/$n/' /etc/usbmount/usbmount.conf
+        return $(getXBMCusbsyncFn)
+    else
+        return 0
     fi
     return 1
 }
