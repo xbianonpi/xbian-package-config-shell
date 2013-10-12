@@ -221,6 +221,12 @@ do_snapshot ()
 
 }
 
+do_remove_kpartx () 
+{
+    [ -e /run/kpartxmap.xbiancopy.$$ ] && read img < /run/kpartxmap.xbiancopy.$$
+    [ -n "$img" ] && [ -f "$img" ] && while ! kpartx -d $img 2>/dev/null; do sleep 5; done
+}
+
 do_rename () 
 {
         dSNAP="$opt_mountpoint/$2"
@@ -393,7 +399,7 @@ while true; do
                 trap "btrfs  fi sync ${opt_mountpoint} > /dev/null; umount ${opt_mountpoint};rmdir '${tmp_dir}'; \
                     mountpoint -q /tmp/btrfs-dest && umount -l /tmp/btrfs-dest; \
                     mountpoint -q /tmp/btrfs-source && umount -l /tmp/btrfs-source; \
-                    [ -e "/run/kpartxmap.xbiancopy.$$" ] && while ! kpartx -d $(cat /run/kpartxmap.xbiancopy.$$ 2>/dev/null); do sleep 5; done  > /dev/null 2>&1; " \
+                    do_remove_kpartx; rm -f kpartxmap.xbiancopy.$$; " \
                         INT TERM EXIT
 
                 break
@@ -538,7 +544,9 @@ case $opt_command in
 		mkdir -p /tmp/btrfs-source
 		mount -t btrfs -o subvol=/ $1 /tmp/btrfs-source
 		eval $opt_remotecmd findmnt -n $2 | grep -qw $2 && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
-		[ -n "$opt_nocreate" ] || eval $opt_remotecmd mkfs.btrfs -f -l 8192 -m single -L xbian-copy -f $2
+		if [ -z "$opt_nocreate" ]; then
+		    eval $opt_remotecmd mkfs.btrfs -l 8192 -m single -L xbian-copy -f $2 | grep -q "SMALL VOLUME" && eval $opt_remotecmd mkfs.btrfs -L xbian-copy -f $2
+		fi
 		eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
 		eval $opt_remotecmd mount -o compress=lzo,noatime,autodefrag $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
 
@@ -584,7 +592,8 @@ case $opt_command in
 		echo "for all users - change /boot/cmdline.txt if you want to boot from the copy just created. change root=LABEL=xbian-root-btrfs to root=LABEL=xbian-copy"
 		echo ""
 		echo "if you created img file, cmdline.txt was updated automatically. "
-		[ -n "$opt_img" ] && kpartx -d $2
+#		[ -n "$opt_img" ] && kpartx -d $2
+		touch /tmp/xbiancopy.running.$$
 		;;
         (backuphome)
                 dr=$(mktemp -u)
