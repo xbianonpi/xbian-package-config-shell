@@ -272,7 +272,7 @@ else
 	if [ $MODULE == "reboot" ]; then
 		[ -n "$2" ] && [ "$2" -eq 1 ] && { touch /var/run/reboot-required; exit 0; }
 		if [ -f /var/run/reboot-required ]; then
-			{ pgrep dpkg > /dev/null|| pgrep apt-get >/dev/null; } && return 0
+			{ pgrep dpkg > /dev/null|| pgrep apt-get >/dev/null || ps x | grep -v "grep"| grep -q "/usr/bin/unattended-upgrade" ; } && return 0
 			echo 1;
 		else
 			echo 0;
