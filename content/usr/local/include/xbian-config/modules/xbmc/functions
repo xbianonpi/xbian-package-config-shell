@@ -272,10 +272,10 @@ function setXBMCuuidnameFn() {
 
 function setXBMChddspinFn() {
     [ ! -e /etc/usbmount/usbmount.conf ] && return 1
-    [ $2 -gt 20 ] && return 1
+    [ -z "$2" -o "$1" -eq 0 ] && tm=$1 || tm=$2
+    [ $tm -gt 20 ] && return 1
 
-    cv=$(getXBMChddspinFn)
-    eval $(echo "sed -i 's/SPINDOWN=$cv/SPINDOWN=$2/' /etc/usbmount/usbmount.conf")
-    r=$(eval $(echo "grep -w SPINDOWN=$2 /etc/usbmount/usbmount.conf"))
-    [ "$r" = "SPINDOWN=$2" ] && { for b in /dev/sda /dev/sdb /dev/sdc /dev/sdd; do [ -b $b ] && DEVNAME=$b usbmount spindown; done; return 0; } || return 1
+    eval "sed -i 's/SPINDOWN=.*/SPINDOWN=$tm/' /etc/usbmount/usbmount.conf"
+    r=$(eval $(echo "grep -w SPINDOWN=$tm /etc/usbmount/usbmount.conf"))
+    [ "$r" = "SPINDOWN=$tm" ] && { for b in /dev/sda /dev/sdb /dev/sdc /dev/sdd; do [ -b $b ] && DEVNAME=$b usbmount spindown; done; return 0; } || return 1
 }
