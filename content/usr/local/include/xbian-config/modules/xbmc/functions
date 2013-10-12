@@ -214,12 +214,12 @@ function setXBMCusbsyncFn() {
         o=$(grep ^MOUNTOPTIONS=\" /etc/usbmount/usbmount.conf)
         n=$(echo $o | sed 's/sync/async/')
         eval sed -i 's/$o/$n/' /etc/usbmount/usbmount.conf
-        return $((1-getXBMCusbsyncFn))
+        getXBMCusbsyncFn || return 0
     elif [ $1 -eq 1 ]; then
         o=$(grep ^MOUNTOPTIONS=\" /etc/usbmount/usbmount.conf)
         n=$(echo $o | sed 's/async/sync/')
         eval sed -i 's/$o/$n/' /etc/usbmount/usbmount.conf
-        return $(getXBMCusbsyncFn)
+        getXBMCusbsyncFn && return 0
     else
         return 0
     fi
