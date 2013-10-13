@@ -534,7 +534,7 @@ case $opt_command in
 		    echo "71680,+,83,," | sfdisk -u S -N2 -H 4 -S 16 -q $2 > /dev/null 2>&1
 		    loopd=$(kpartx -s -l $2 -av | tail -1 | awk '{print $3}'); loopd=${loopd%%p?}; echo $2 > /run/kpartxmap.xbiancopy.$$
 		    dd if=/dev/mmcblk0p1 of=/dev/mapper/${loopd}p1; mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
-		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootfsopts=*}
+		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootflags=*}
 		    cat /boot/cmdline.txt | eval $(echo "sed 's%$z%root=LABEL=xbian-copy%'") > /tmp/btrfs-dest/cmdline.txt
 		    umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest
 		    set -- $1 /dev/mapper/${loopd}p2
