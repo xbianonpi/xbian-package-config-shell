@@ -522,8 +522,8 @@ case $opt_command in
 
 		mkdir -p /tmp/btrfs-dest
 		if [ -n "$opt_img" ]; then
-		    touch $2 || { echo "can not create img file"; exit 5; }
-		    [ "$(df -P $2 | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; exit 5; }
+		    [ -e "$2" ] && rm -f "$2"; touch "$2" || { echo "can not create img file"; exit 5; }
+		    [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; exit 5; }
 		    size=$(df -B1G | grep -w $(findmnt --source $1 -f -o TARGET -n) -m1 | awk '{print $2}')
 		    { [ "$opt_size" != 0 ] && size=$opt_size; } || size="$(($size-1))G"
 		    [ "$(printf "%s\n%s\n" $(df -h $2 | tail -1 | awk '{print $4}') "$size" | sort -rh | grep -m1 .)" = "$size" ] && { echo "not enough free space on destination filesystem"; exit 5; }

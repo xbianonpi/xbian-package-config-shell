@@ -21,7 +21,7 @@
 backupImgPlanFn() {
     [ -z "$1" ] && { grep IMGPLAN= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
     case $1 in
-        daily|weekly|monthly)
+        none|daily|weekly|monthly)
             eval sed -i 's/IMGPLAN=.*/IMGPLAN=$1/' /etc/default/xbian-snap
             echo 1
             ;;
