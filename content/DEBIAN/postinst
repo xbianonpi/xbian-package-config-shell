@@ -54,6 +54,18 @@ if [ $1 == "configure" ]; then
             us=$(grep KEEPAPT= /etc/default/xbian-snap)
             eval $(echo "sed -i 's%KEEPAPT=10%$us%' /var/tmp/xbian-snap")
         fi
+        if grep -q "IMGPLAN=" /etc/default/xbian-snap; then
+            us=$(grep IMGPLAN= /etc/default/xbian-snap)
+            eval $(echo "sed -i 's%IMGPLAN=none%$us%' /var/tmp/xbian-snap")
+        fi
+        if grep -q "IMGTYPE=" /etc/default/xbian-snap; then
+            us=$(grep IMGTYPE= /etc/default/xbian-snap)
+            eval $(echo "sed -i 's%IMGTYPE=notset%$us%' /var/tmp/xbian-snap")
+        fi
+        if grep -q "IMGDEST=" /etc/default/xbian-snap; then
+            us=$(grep IMGDEST= /etc/default/xbian-snap)
+            eval $(echo "sed -i 's%IMGDEST=notset%$us%' /var/tmp/xbian-snap")
+        fi
 
         mv /var/tmp/xbian-snap /etc/default/xbian-snap
     fi

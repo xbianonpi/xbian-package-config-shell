@@ -8,12 +8,13 @@ KEEPWEEKS=2
 ENABLEDAPT=yes
 KEEPAPT=10
 
-# backup to img file (in case of total SD card corruption, your system can be restored by reflashing this image)
-ENABLEDIMG=yes
+# auto clone / image creation should be run: none/daily/weekly/monthly
+IMGPLAN=none
 
-# backup to img should be run: daily/weekly/monthly
-IMGPLAN=
+# backup to img file (file) (in case of total SD card corruption, your system can be restored by reflashing this image)
+# or directly to block device (block)
+IMGTYPE=notset
 
-# path to img including file name (/media/my_disk/xbian_backup.img)
-IMGFILE=
+# path to img including file name (/media/my_disk/xbian_backup.img) or block device (/dev/sda1)
+IMGDEST=notset
 
