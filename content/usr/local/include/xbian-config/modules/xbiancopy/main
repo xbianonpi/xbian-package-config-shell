@@ -19,7 +19,7 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 # The arguments this module accepts
-ARGUMENTS=(start status);
+ARGUMENTS=(start status  imgplan imgdest imgtype);
 
 #|------------------------------------|
 #|          Include files             |
@@ -87,9 +87,18 @@ function showCMDFn() {
                 rm -f /tmp/xbiancopy.running
                 echo "1"
             else
-                kill -0 $(cat /tmp/xbiancopy.running) > /dev/null 2>&1 || { echo "-1"; rm -f /tmp/xbiancopy.running; }
+                kill -0 $(cat /tmp/xbiancopy.running) > /dev/null 2>&1 || { echo "-1"; rm -f /tmp/xbiancopy.running; exit 0; }
                 echo "0"
             fi
+            ;;
+        imgplan)
+            echo $(backupImgPlanFn $2)
+            ;;
+        imgtype)
+            echo $(backupImgTypeFn $2)
+            ;;
+        imgdest)
+            echo $(backupImgDestFn $2)
             ;;
     esac
 

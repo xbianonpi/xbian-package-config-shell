@@ -17,5 +17,44 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
-# Get list of installed services
 
+backupImgPlanFn() {
+    [ -z "$1" ] && { grep IMGPLAN= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
+    case $1 in
+        daily|weekly|monthly)
+            eval sed -i 's/IMGPLAN=.*/IMGPLAN=$1/' /etc/default/xbian-snap
+            echo 1
+            ;;
+        *)
+            echo -1
+            ;;
+    esac
+}
+backupImgTypeFn() {
+    [ -z "$1" ] && { grep IMGTYPE= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
+    case $1 in
+        "block"|"file")
+            eval sed -i 's/IMGTYPE=.*/IMGTYPE=$1/' /etc/default/xbian-snap
+            echo 1
+            ;;
+        *)
+            echo -1
+            ;;
+    esac
+}
+backupImgDestFn() {
+    [ -z "$1" ] && { grep IMGDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
+    tt=$(backupImgTypeFn)
+    case $tt in
+        block)
+            [ ! -b "$1" ] && { echo -1; exit 0; }
+            ;;
+        file)
+            ! touch "$1" 2>/dev/null && { echo -1; exit 0; }
+            ;;
+        *)
+            { echo -1; exit 0; }
+    esac
+    eval sed -i 's%IMGDEST=.*%IMGDEST=$1%' /etc/default/xbian-snap
+    echo 1
+}
