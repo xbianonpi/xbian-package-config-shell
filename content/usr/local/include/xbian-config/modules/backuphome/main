@@ -31,7 +31,7 @@ fi
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(start status);
+ARGUMENTS=(start status imgplan imgdest imgtype);
 
 #|------------------------------------|
 #|           Main program             |
@@ -108,6 +108,15 @@ function showCMDFn() {
                 kill -0 $(cat /tmp/backuphome.running) > /dev/null 2>&1 || { echo "-1"; rm -f /tmp/backuphome.running; exit 0; }
                 echo "0"
             fi
+            ;;
+        imgplan)
+            echo $(backupImgPlanFn $2)
+            ;;
+        imgtype)
+            echo $(backupImgTypeFn $2)
+            ;;
+        imgdest)
+            echo $(backupImgDestFn $2)
             ;;
     esac
 
