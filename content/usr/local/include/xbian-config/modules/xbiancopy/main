@@ -19,7 +19,7 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 # The arguments this module accepts
-ARGUMENTS=(start status  imgplan imgdest imgtype);
+ARGUMENTS=(start status  imgplan imgdest imgtype getpart);
 
 #|------------------------------------|
 #|          Include files             |
@@ -68,9 +68,12 @@ function showGUIFn() {
 # start return code
 # number - pid of started backup process
 # -1 failed
+# -3 already running 
+
 function showCMDFn() {
     case $1 in
         start)
+            [ "$(xbian-config xbiancopy status)" -eq 0 ] && { echo "-3"; exit 0; }
             [ $# -lt 3 ] && { echo "-1"; exit 5; }
             # [ -n "$4" ] && lab="--label  
             [ -n "$5" ] && size="--size"
@@ -99,6 +102,9 @@ function showCMDFn() {
             ;;
         imgdest)
             echo $(backupImgDestFn $2)
+            ;;
+        getpart)
+            echo $(getImgPartitionsFn)
             ;;
     esac
 

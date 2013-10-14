@@ -51,10 +51,15 @@ backupImgDestFn() {
             ;;
         file)
             ! touch "$1" 2>/dev/null && { echo -1; exit 0; }
+            [ "$(df -P "$1" | tail -1 | awk '{print $1}')" = "$(readlink -e /dev/root)" ] && { echo -2; exit 0; }
             ;;
         *)
             { echo -1; exit 0; }
     esac
     eval sed -i 's%IMGDEST=.*%IMGDEST=$1%' /etc/default/xbian-snap
     echo 1
+}
+
+getImgPartitionsFn(){
+    printf "%s;" $(blkid | grep -v "$(readlink -e /dev/root)\|mmcblk0p1\|zram\|loop\|$(blkid -t TYPE=swap -o device)"| awk -F':' '{print $1}')
 }
