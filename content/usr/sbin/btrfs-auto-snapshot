@@ -384,6 +384,8 @@ if [ -n "$opt_name" ]; then
         opt_keep=''
 fi
 
+[ $(( $(df  / | tail -1 | awk '{print $4}') * 100 /  $(df  / | tail -1 | awk '{print $2}') )) -lt 30 ] && opt_keep=1 && echo "WARNING: Less than 30% of free space. Keeping only one single snapshot..." > /dev/stderr
+
 # ISO style date; fifteen characters: YYYY-MM-DD-HHMM
 # On Solaris %H%M expands to 12h34.
 DATE=$(date +%F-%H%M)
