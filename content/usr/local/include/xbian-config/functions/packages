@@ -19,8 +19,9 @@
 #
 
 function updateAptMirrorsFn() {
-	wget --spider http://apt.xbian.org/mirror.txt >/dev/null 2>&1 || return 1
-	URL=$APTBASE"mirror.txt"
+	src="$(grep ^deb.*xbian.* /etc/apt/sources.list | awk '{print $2}')"
+	[ -z "$src" ] && URL=$APTBASE"/mirror.txt" || URL=$src"/mirror.txt"
+	wget --spider $URL >/dev/null 2>&1 || return 1
 	wget -O - "$URL" > $BASEPATH/config/aptmirror 2>/dev/null
 
 	return 0
