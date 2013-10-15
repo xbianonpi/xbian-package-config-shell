@@ -63,3 +63,33 @@ backupImgDestFn() {
 getImgPartitionsFn(){
     printf "%s;" $(blkid | grep -v "$(readlink -e /dev/root)\|mmcblk0p1\|zram\|loop\|$(blkid -t TYPE=swap -o device)"| awk -F':' '{print $1}')
 }
+
+dailySnapFn() {
+    sch=0
+    case $1 in
+        '')
+            grep -q ENABLEDSCHEDULE=yes /etc/default/xbian-snap && sch=1
+            nr=$(grep KEEPDAYS= /etc/default/xbian-snap| awk -F'=' '{print $2}')
+            [ $sch -eq 1 -a $nr -gt 0 ] && echo "1 $nr" || echo "0"
+            ;;
+        *)
+            eval sed -i 's/KEEPDAYS=.*/KEEPDAYS=$1/' /etc/default/xbian-snap
+            grep -q KEEPDAYS=$1 /etc/default/xbian-snap && echo 1 || echo 0
+            ;;
+    esac
+}
+
+weeklySnapFn() {
+    sch=0
+    case $1 in
+        '')
+            grep -q ENABLEDSCHEDULE=yes /etc/default/xbian-snap && sch=1
+            nr=$(grep KEEPWEEKS= /etc/default/xbian-snap| awk -F'=' '{print $2}')
+            [ $sch -eq 1 -a $nr -gt 0 ] && echo "1 $nr" || echo "0"
+            ;;
+        *)
+            eval sed -i 's/KEEPWEEKS=.*/KEEPWEEKS=$1/' /etc/default/xbian-snap
+            grep -q KEEPWEEKS=$1 /etc/default/xbian-snap && echo 1 || echo 0
+            ;;
+    esac
+}

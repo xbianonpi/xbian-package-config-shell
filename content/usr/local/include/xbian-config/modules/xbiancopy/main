@@ -19,7 +19,7 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 # The arguments this module accepts
-ARGUMENTS=(start status  imgplan imgdest imgtype getpart);
+ARGUMENTS=(start status  imgplan imgdest imgtype getpart dodaily doweekly);
 
 #|------------------------------------|
 #|          Include files             |
@@ -105,6 +105,12 @@ function showCMDFn() {
             ;;
         getpart)
             echo $(getImgPartitionsFn)
+            ;;
+        dodaily)
+            echo $(dailySnapFn $2)
+            ;;
+        doweekly)
+            echo $(weeklySnapFn $2)
             ;;
     esac
 
