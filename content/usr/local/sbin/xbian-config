@@ -79,7 +79,7 @@ function showMainCloseDlg() {
 				DOREBOOT=1;
 			;;
 			1)
-				rm /run/reboot-required
+				:
 			;;
 		esac
 	fi
