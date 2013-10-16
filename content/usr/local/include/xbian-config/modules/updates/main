@@ -218,7 +218,7 @@ function showCMDFn() {
 					int=$(grep "APT::Periodic::Update-Package-Lists" /etc/apt/apt.conf.d/10xbian-periodic 2>/dev/null| grep -o "[0-9]*")
 					[ -z "$int" -o "$int" -eq 0 ] && int=1440 || int=$((int*24*60))
 					[ -z "$(eval find /var/lib/apt/periodic/update-success-stamp -cmin -$int 2>/dev/null)" ] && { echo -3; exit 0; }
-					limit=15; i=1
+					limit=999; i=1
 					[ -z "$(eval find /tmp/aptupdates -cmin -$int 2>/dev/null)" ] && retrieveUpdateListFn;
 					if [ "$2" == "packages" -o "$2" == "upgrades" ]; then
 						getAllPackagesLisFn;
@@ -298,7 +298,7 @@ function showCMDFn() {
 			fi
 		;;		
 		progress)
-			if [ $(ps ax | grep -v grep | grep -c "xbian-config updates") -gt 3 ] || pgrep apt-get &>/dev/null; then
+			if [ $(ps ax | grep -v 'grep\|sudo' | grep -c "xbian-config updates") -gt 3 ] || pgrep apt-get &>/dev/null; then
 				echo 1;
 			else
 				echo 0;
