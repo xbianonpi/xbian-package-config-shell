@@ -38,6 +38,7 @@ function setHostnameFn() {
 	eval "sed -i 's/$2 /$1 /g' /etc/hosts";
 	eval "sed -i 's/$2\t/$1\t/g' /etc/hosts";
 	eval "sed -i 's/$2\./$1\./g' /etc/hosts";
+	eval "sed -i 's/$2\$/$1/g' /etc/hosts";
 	eval "sed -i 's/<devicename>.*<\/devicename>/<devicename>$1<\/devicename>/' /home/xbian/.xbmc/userdata/guisettings.xml"
 	if [ $(hostname) == $1 ]; then
 		return 1;
