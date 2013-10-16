@@ -45,11 +45,11 @@ function updateAllPackagesListFn() {
 # $1: Package name
 function getPackageInformationFn() {
 	NAME=$1;
-	INFO=$(echo -e "$CONTENT" | awk -vRS='' "/Package:[A-Za-z -]+$NAME/"'{print $0"\n"}' | grep -v "xbian-update");
+	INFO=$(echo -e "$CONTENT" | awk -vRS='' "/Package:[A-Za-z -]+$NAME\n/"'{print $0"\n"}' | grep -v "xbian-update");
 	IFS=$'\n' VERSIONS=($(echo -e "$INFO" | sed -ne 's/\(Version: \)\([0-9\.]\{1,\}\)/\2/p'));
 	X=0; I=0
 	for KEY in ${!VERSIONS[@]}; do
-		if [ "${VERSIONS[$KEY]}" > "$X" ]; then
+		if [[ "${VERSIONS[$KEY]}" > "$X" ]]; then
 			X=${VERSIONS[$KEY]};
 			I=$KEY;
 		fi
@@ -58,7 +58,7 @@ function getPackageInformationFn() {
 	INFO=$(echo -e "$INFO" | awk -vRS='' "/Version: $X/"'{print $0"\n"}');
 	PKGINFO[0]=$(echo -e "$INFO" | sed -ne 's/\(Package: \)\([A-Za-z0-9. -]\{1,\}\)/\2/p' | sort -r);
 	PKGINFO[1]=$X;
-	PKGINFO[2]=$(($(echo -e "$INFO" | sed -ne 's/\(Installed-Size: \)\([0-9]\{1,\}\)/\2/p')*1024))
+	PKGINFO[2]=$(($(echo -e "$INFO " | sed -ne 's/\(Installed-Size: \)\([0-9]\{1,\}\)/\2/p')*1024))
 	PKGINFO[3]=$(echo -e "$INFO" | sed -ne 's/\(^Size: \)\([0-9]\{1,\}\)/\2/p');
 	PKGINFO[4]=$(echo -e "$INFO" | sed -ne 's/\(Description: \)\([A-Za-z0-9\ ]\{1,\}\)/\2/p');
 	PKGINFO[5]=$(echo -e "$INFO" | sed -ne 's/\(Depends: \)\([A-Za-z0-9\ ]\{1,\}\)/\2/p')
