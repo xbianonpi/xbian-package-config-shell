@@ -40,7 +40,7 @@ function showXBMCGUIResDlg() {
 	"#;\Zb"$(_ xbmc.label.guires)\
 	"${MENU[@]}";
 
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11))
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+8))
 	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 12
 }
 
