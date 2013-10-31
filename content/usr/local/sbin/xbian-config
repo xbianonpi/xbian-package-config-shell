@@ -197,7 +197,8 @@ if [ $# -eq 0 -o "$1" = goto ]; then
 	#|------------------------------------|
 	#|              GUI Mode              |
 	#|------------------------------------|
-	
+	echo $$ >> /run/lock/xbian-config.gui
+
 	LOADER=0;
 	while ! pgrep dialog > /dev/null; do 
 		for a in \\ \| \/ -; do
@@ -249,7 +250,7 @@ if [ $# -eq 0 -o "$1" = goto ]; then
 	#else
 		showMainMenuDlg 0 "";
 	#fi
-	
+	eval $(echo "sed -i '/$$/d' /run/lock/xbian-config.gui")
 else
 	#|------------------------------------|
 	#|              CLI Mode              |

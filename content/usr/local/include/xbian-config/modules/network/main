@@ -230,11 +230,11 @@ function showWlanProtectionGUIFn() {
 		showInterfaceCredentialsDlg "$SSID" "$WLANKEY"
 		if [ $? -eq 0 ]; then
 			IFS=$'\n';
-			CREDENTIALS=($(echo -e "$RETURN"))
+			CREDENTIALS=($(echo "$RETURN"))
 			IFS=$ORIGINALIFS;
 			if [ ${#CREDENTIALS[@]} -eq 2 ];then
-				SSID=${CREDENTIALS[0]}
-				WLANKEY=${CREDENTIALS[1]}
+				SSID="${CREDENTIALS[0]}"
+				WLANKEY="${CREDENTIALS[1]}"
 				if [ $NEWPROTECTION -eq 1 ]; then
 					setInterfaceWlanCredentials "$1" "WPA" "$SSID" "$WLANKEY"
 				else
