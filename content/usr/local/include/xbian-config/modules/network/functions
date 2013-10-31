@@ -61,13 +61,13 @@ setInterfaceWlanCredentials() {
 		k=$(echo "$4" | sed 's%\\%\\\\%g' )
 		case $2 in
 			"WEP")
-				WLANBUFFER+="\nwireless-essid '$n'\nnwireless-key '$k'"
+				WLANBUFFER+="\nwireless-essid $n\nnwireless-key $k"
 			;;
 			"WPA")
-				WLANBUFFER+="\nwpa-ssid '$n'\nwpa-psk '$k'"
+				WLANBUFFER+="\nwpa-ssid $n\nwpa-psk $k"
 			;;
 			"Open")
-				WLANBUFFER+="\nwireless-mode managed\nwireless-essid '$n'"
+				WLANBUFFER+="\nwireless-mode managed\nwireless-essid $n"
 			;;
 			*)
 				return 2
@@ -350,8 +350,8 @@ function readNetworkConfigurationFn() {
 				SSID=$(echo -e "$CONTENT" | sed -ne 's/wireless-essid[\ ]\(.*\)/\1/p')
 				WLANKEY=$(echo -e "$CONTENT" | sed -ne 's/wireless-key[\ ]\(.*\)/\1/p')
 			elif [ "$PROTECTION" == "WPA" ]; then
-				SSID=$(echo -e "$CONTENT" | sed -ne 's/wpa-ssid[\ ]\"\(.*\)\"/\1/p')
-				WLANKEY=$(echo -e "$CONTENT" | sed -ne 's/wpa-psk[\ ]\"\(.*\)\"/\1/p')				
+				SSID=$(echo -e "$CONTENT" | sed -ne 's/wpa-ssid[\ ]\(.*\)/\1/p')
+				WLANKEY=$(echo -e "$CONTENT" | sed -ne 's/wpa-psk[\ ]\(.*\)/\1/p')				
 			elif [ "$PROTECTION" == "open" ]; then
 				SSID=$(echo -e "$CONTENT" | sed -ne 's/wireless-essid[\ ]\(.*\)/\1/p')
 			fi
