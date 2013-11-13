@@ -107,9 +107,16 @@ function changeCurrentTZFn() {
 				export city=$2
 				cou=$(cat $BASEPATH/config/countries | awk -v c=$city -F'\t' '$6 ~ c {print $5}')
 				if [ -n "$cou" ]; then
-				    eval $(echo "sed -i 's/<timezone>.*<\/timezone>/<timezone>$1\/$2<\/timezone>/' /home/xbian/.xbmc/userdata/guisettings.xml")
-				    eval $(echo "sed -i 's/<timezonecountry>.*<\/timezonecountry>/<timezonecountry>$cou<\/timezonecountry>/' /home/xbian/.xbmc/userdata/guisettings.xml")
+				    mkdir -p /run/xbian-config
+				    echo "eval \$(echo \"sed -i 's/<timezone>.*<\/timezone>/<timezone>$1\/$2<\/timezone>/' /home/xbian/.xbmc/userdata/guisettings.xml\")" >> /run/xbian-config/xbmc-tz
+				    echo "eval \$(echo \"sed -i 's/<timezonecountry>.*<\/timezonecountry>/<timezonecountry>$cou<\/timezonecountry>/' /home/xbian/.xbmc/userdata/guisettings.xml\")" >> /run/xbian-config/xbmc-tz
 				fi
+				if pgrep xbmc.bin > /dev/null; then
+				    cat /run/xbian-config/xbmc-tz >> /run/xbian-config/xbmc-changesettings.sh
+				else
+				    sh /run/xbian-config/xbmc-tz
+				fi
+				rm /run/xbian-config/xbmc-tz
 				return 1;
 			else
 				return 0;
