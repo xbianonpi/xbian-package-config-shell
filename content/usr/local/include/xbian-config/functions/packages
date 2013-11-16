@@ -19,11 +19,16 @@
 #
 
 function updateAptMirrorsFn() {
-	src="$(grep ^deb.*xbian.* /etc/apt/sources.list | awk '{print $2}')"
-	[ -z "$src" ] && URL=$APTBASE"/mirror.txt" || URL=$src"/mirror.txt"
-	wget --spider $URL >/dev/null 2>&1 || return 1
-	wget -O - "$URL" > $BASEPATH/config/aptmirror 2>/dev/null
+	src="$(grep '^deb.*xbian.*\|^mirror.*xbian.*' /etc/apt/sources.list | awk '{print $2}' | sort | uniq)"
+	[ -z "$src" ] && URL=$APTBASE || URL=$src
 
+	[ -e $BASEPATH/config/aptmirror.new ] && rm $BASEPATH/config/aptmirror.new
+	for a in $URL; do    
+	    wget --spider $URL/mirror.txt >/dev/null 2>&1 || return 1
+	    wget -O - "$URL"/mirror.txt >> $BASEPATH/config/aptmirror.new 2>/dev/null
+	done
+
+	mv $BASEPATH/config/aptmirror.new $BASEPATH/config/aptmirror
 	return 0
 }
 
@@ -47,19 +52,22 @@ function downloadPackageListFn() {
 		IFS=$'\n';
 		MIRRORS=($(cat $BASEPATH/config/aptmirror));
 		for MIRROR in ${MIRRORS[@]}; do
-			URL=$MIRROR"/dists/wheezy/main/binary-armhf/Packages"
-			if [ $(wget --spider $URL >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
-				wget -O - $URL > $BASEPATH/config/pkglist 2>/dev/null
-				touch /var/lib/apt/periodic/package-success-stamp
-				RETURN=0;
-				break;
-			else
-				RETURN=1
-			fi
+			RETURN=0; rm /tmp/sources 2>/dev/null
+			subscript=$(grep '^deb.*xbian.*\|^mirror.*xbian.*' /etc/apt/sources.list | awk '{print $3}')
+			for s in $subscript; do echo $MIRROR/dists/$s/main/binary-armhf/Packages >> /tmp/sources; done
+			[ -e $BASEPATH/config/pkglist.new ] && rm $BASEPATH/config/pkglist.new
+			while read m; do
+				if [ $(wget --spider $m >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
+				    wget -O - $m >> $BASEPATH/config/pkglist.new 2>/dev/null
+				    touch /var/lib/apt/periodic/package-success-stamp
+				    RETURN=$(( $RETURN + 1 ))
+				fi
+				[ $RETURN -eq $(grep -c . /tmp/sources) ] && { mv $BASEPATH/config/pkglist.new $BASEPATH/config/pkglist; break; }
+			done < /tmp/sources
 		done
 		IFS=$ORIGINALIFS;
 	fi
-	return $RETURN;
+	[ $RETURN -ne 0 ] && return $RETURN || return 0
 }
 
 #Retrieves the package version

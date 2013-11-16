@@ -33,12 +33,12 @@ function getPackagesFromCategoryFn() {
 
 
 function getPackageStatusFn() {
-	echo -e "$ALLPKGLST" | grep -v "xbian-update" | grep -q "xbian-package-$1[[:space:]]*install\|xbian-package-$1[[:space:]]*hold\|$1[[:space:]]*install\|$1[[:space:]]*hold"
+	echo -e "$ALLPKGLST" | grep -v "xbian-update" | grep -wq "xbian-package-$1\|$1"
 	return $((1-$?))
 }
 
 function updateAllPackagesListFn() {
-	ALLPKGLST=$(dpkg --get-selections "*");
+        ALLPKGLST=$(dpkg-query -W --showformat='${Package} %%${Origin}%% %%${Status}%%\n'  | grep -i '%%XBian%%' | grep -w installed%%);
 }
 
 #Gets the package information

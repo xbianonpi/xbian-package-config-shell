@@ -428,7 +428,7 @@ function showCMDFn() {
 				downloadPackageListFn;
 				if [ $? -eq 0 ]; then
 					localPackageDBOutdatedFn;
-					if [ $? -eq 0 ]; then
+					if [ $? -eq 1 ]; then
 						updateAptFn;
 						if [ $? -eq 0 ]; then
 							STATUS=1;
