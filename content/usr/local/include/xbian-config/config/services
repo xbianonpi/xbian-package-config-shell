@@ -34,3 +34,5 @@ xbian-xbmc-bridge:/usr/local/sbin/upstart-xbmc-bridge.py
 restore-home:
 vnc-server:
 zram-swap:
+tvheadend:
+
