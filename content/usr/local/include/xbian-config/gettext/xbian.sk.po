@@ -7,9 +7,9 @@ msgstr ""
 "Project-Id-Version: XBian 1.0 Beta 1\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 09-03-2013 12:00+0100\n"
-"Last-Translator: CurlyMo <development@xbian.org>\n"
-"Language-Team: CurlyMo <development@xbian.org>\n"
+"PO-Revision-Date: 06-01-2013 12:00+0100\n"
+"Last-Translator: mk01 <development@xbian.org>\n"
+"Language-Team: mk01 <development@xbian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,163 +25,163 @@ msgid "xbian-config.main.title"
 msgstr "Config"
 
 msgid "xbian-config.main.reboot_question"
-msgstr "A reboot is required. Do you want to reboot now?"
+msgstr "Je potrebný reštart. Môžem teraz?"
 
 msgid "xbian-config.settings.name"
-msgstr "Settings"
+msgstr "Nastavenia"
 
 msgid "xbian-config.settings.description"
-msgstr "Change various system settings"
+msgstr "Systémové nastavenia"
 
 msgid "xbian-config.system.name"
-msgstr "System"
+msgstr "Systém"
 
 msgid "xbian-config.system.description"
-msgstr "e.g. Resize SD, Overclocking, Hostname"
+msgstr "Nastavenia systému"
 
 msgid "xbian-config.accounts.name"
-msgstr "Accounts"
+msgstr "Užv. účty"
 
 msgid "xbian-config.accounts.description"
-msgstr "e.g. Change passwords, SSH root login"
+msgstr "Heslá, root prístup, iné"
 
 msgid "xbian-config.licenses.name"
-msgstr "Licenses"
+msgstr "Licencie"
 
 msgid "xbian-config.licenses.description"
-msgstr "Add/Remove hardware licenses"
+msgstr "Uprav hw licencie"
 
 msgid "xbian-config.connectivity.name"
-msgstr "Connectivity"
+msgstr "Pripojenie"
 
 msgid "xbian-config.connectivity.description"
-msgstr "e.g. Video output"
+msgstr "napr. video výstup"
 
 #
 # xbian-config dialog
 #
 
 msgid "xbian-config.dialog.error"
-msgstr "Error"
+msgstr "Chyba"
 
 msgid "xbian-config.dialog.apply"
-msgstr "Apply"
+msgstr "Vykonaj"
 
 msgid "xbian-config.dialog.ok"
 msgstr "OK"
 
 msgid "xbian-config.dialog.yes"
-msgstr "Yes"
+msgstr "Áno"
 
 msgid "xbian-config.dialog.no"
-msgstr "No"
+msgstr "Nie"
 
 msgid "xbian-config.dialog.on"
-msgstr "On"
+msgstr "Zap"
 
 msgid "xbian-config.dialog.off"
-msgstr "Off"
+msgstr "Vyp"
 
 msgid "xbian-config.dialog.insert"
-msgstr "Insert"
+msgstr "Vlož"
 
 msgid "xbian-config.dialog.remove"
-msgstr "Remove"
+msgstr "Odstráň"
 
 msgid "xbian-config.dialog.update"
-msgstr "Update"
+msgstr "Aktualizuj"
 
 msgid "xbian-config.dialog.cancel"
-msgstr "Cancel"
+msgstr "Zruš"
 
 msgid "xbian-config.dialog.select"
-msgstr "Select"
+msgstr "Potvrď"
 
 msgid "xbian-config.dialog.return"
-msgstr "Return"
+msgstr "Naspäť"
 
 msgid "xbian-config.dialog.unexpected_error"
-msgstr "An unexpected error occurred"
+msgstr "Neznáma chyba"
 
 msgid "xbian-config.dialog.close"
-msgstr "Close"
+msgstr "Zatvor"
 
 msgid "xbian-config.dialog.change"
-msgstr "Change"
+msgstr "Uprav"
 
 msgid "xbian-config.dialog.exit"
-msgstr "Exit"
+msgstr "Ukonči"
 
 msgid "xbian-config.dialog.enable"
-msgstr "Enable"
+msgstr "Povol"
 
 msgid "xbian-config.dialog.disable"
-msgstr "Disable"
+msgstr "Zakáž"
 
 msgid "xbian-config.dialog.password"
-msgstr "Password:"
+msgstr "Heslo:"
 
 msgid "xbian-config.dialog.confirm"
-msgstr "Confirm:"
+msgstr "Potvrď:"
 
 msgid "xbian-config.dialog.retry"
-msgstr "Retry"
+msgstr "Opakuj"
 
 msgid "xbian-config.dialog.space_option_select"
-msgstr "Press [space] to select a different option"
+msgstr "Stlač medzeru pre opätovný výber"
 
 msgid "xbian-config.dialog.space_check_select"
-msgstr "Press [space] to enable or disable an option"
+msgstr "tlač medzeru pre zapnúť/vypnúť"
 
 msgid "xbian-config.dialog.loading_module"
-msgstr "Loading module. Please wait..."
+msgstr "Načítavam komponent. Čakaj..."
 
 msgid "xbian-config.dialog.required_packages"
-msgstr "This program requires the following packages:"
+msgstr "Tento program potrebuje nasledovné komponenty:"
 
 msgid "xbian-config.dialog.insufficient_arguments"
-msgstr "Insufficient number of arguments"
+msgstr "Málo parametrov"
 
 msgid "xbian-config.dialog.incorrect_arguments"
-msgstr "Incorrect argument type"
+msgstr "Nesprávny typ parametru"
 
 #
 # xbian-config module bootflags
 #
 
 msgid "xbian-config.bootflags.name"
-msgstr "Boot settings"
+msgstr "Nastavenia pri štarte"
 
 msgid "xbian-config.bootflags.description"
-msgstr "Change various boot settings"
+msgstr "Zmeň parametre štartu"
 
 msgid "xbian-config.bootflags.label.bootflags"
-msgstr "Boot flags"
+msgstr "Parametre štartu"
 
 msgid "xbian-config.bootflags.update_success"
-msgstr "Boot flags successfully updated"
+msgstr "Parametre zmenené"
 
 msgid "xbian-config.bootflags.splash"
-msgstr "Show XBian splash on boot"
+msgstr "Zobraz XBian štartovací splash"
 
 msgid "xbian-config.bootflags.logo"
-msgstr "Disable kernel bootup logo"
+msgstr "Nezobrazuj logo z kernelu"
 
 msgid "xbian-config.bootflags.quiet"
-msgstr "Suppress kernel output"
+msgstr "Obmedz kernelové hlášky"
 
 msgid "xbian-config.bootflags.loglevel"
-msgstr "Kernel loglevel"
+msgstr "Loglevel pre kernelové hlášky"
 
 #
 # xbian-config module information
 #
 
 msgid "xbian-config.information.name"
-msgstr "Information"
+msgstr "Informácie"
 
 msgid "xbian-config.information.description"
-msgstr "Information about this distribution"
+msgstr "Informácie o distribúcii XBian"
 
 msgid "xbian-config.information.text"
 msgstr "XBian is a free, Open Source media center distribution for the Raspberry Pi, which can be downloaded at http://www.xbian.org. Our slogan is \"XBMC on Raspberry Pi, bleeding edge\" as our main focus is delivering the fastest mediacenter solution for the Raspberry Pi. We believe that everyone can help make XBian better. Please visit our website for support and if you have suggestions, wishes or contributions, please share them with us!"

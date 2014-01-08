@@ -24,10 +24,14 @@ if [ ! $(id -u) -eq 0 ]; then
 	exit 0;
 fi
 
+rmtmp() {
+    rm -f /run/xbian-config.$$
+}
+
 # Disable [ctrl]-c and [ctrl]-z actions
 trap '' 2 20
 #trap "{ test -e /run/xbian-config.umount && mountpoint -q /boot && umount /boot; rm -fr /run/xbian-config.$$ /run/xbian-config.umount; [ $GUIMODE -eq 1 ] && showMainCloseDlg; }" EXIT INT ERR
-trap "{ env | grep -qw GUIMODE=1 && showMainCloseDlg; }" EXIT INT ERR
+trap "{ rmtmp; env | grep -qw GUIMODE=1 && showMainCloseDlg; }" EXIT INT ERR
 
 #|------------------------------------|
 #|          Global variables          |
@@ -127,7 +131,7 @@ function showMainMenuDlg() {
 	#clrMemCacheFn;
 	
 	# Create main menu
-	
+
 	# If a certain menu items has no subitems, than we've reach of final function we want to execute
 	if [ -z "$ITEMS" ]; then
 		
@@ -153,7 +157,7 @@ function showMainMenuDlg() {
 		MENU="";
 		I=1;
 		for ITEM in ${ITEMS[@]}; do
-			MENU+="$I%$(_ ${ITEM}.name)!-!\"$(_ $ITEM.description)\"%";
+			MENU+=$I%$(_ ${ITEM}.name)!\-!$(_ $ITEM.description)%;
 			I=$(($I+1));
 		done;
 		
@@ -161,7 +165,6 @@ function showMainMenuDlg() {
 		# Set the title to the appropriate menu level we're in
 		TITLE="["$CPATH"]"
 
-		
 		# Show the main menu
 		if [ $1 -eq 0 ]; then
 			showMenuDlg "" "$MENU" 10 14 $(($DEFAULTWIDTH+35)) $(_ dialog.select) $(_ dialog.exit);

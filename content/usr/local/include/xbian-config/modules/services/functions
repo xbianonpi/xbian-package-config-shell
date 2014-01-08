@@ -42,7 +42,7 @@ in_list()
 
 function getServiceAutoStartStatusFn() {
 	[ -z "$1" ] && return 1
-        [ -e $BASEPATH/config/$1.inetd ] && return $(grep -qxf $BASEPATH/config/$1.inetd /etc/inetd.conf; echo $?)
+        [ -e $BASEPATH/config/$1.inetd ] && { while read a; do ! grep -qx ^"$a" /etc/inetd.conf && return 1; done < $BASEPATH/config/$1.inetd ; return 0; }
 
         grep -qx manual /etc/init/$1.override /etc/init/$1.conf 2>/dev/null && return 1
         [ ! -e /etc/init/$1.conf ] && [ ! -e /etc/rc2.d/S??$1 -a ! -e /etc/rcS.d/S??$1 ] && return 1
@@ -123,7 +123,7 @@ function disableAutoStartFn() {
 		echo "manual" >> "/etc/init/$1.override"
 		grep -xq manual "/etc/init/$1.override"; return $?
         else
-		insserv -rf "/etc/init.d/$1"  > /dev/null 2>&1; return $?
+		update-rc.d -f "$1" remove > /dev/null 2>&1;insserv -rf "/etc/init.d/$1"  > /dev/null 2>&1; return $?
         fi
 }
 
@@ -141,7 +141,7 @@ function enableAutoStartFn() {
 		test $(grep -cvx manual "/etc/init/$1.override") -eq 0 && rm -f /etc/init/$1.override && return 0
 		return $(grep -cx manual "/etc/init/$1.override")
         else
-		insserv -f "/etc/init.d/$1" > /dev/null 2>&1; return $?
+		update-rc.d -f "$1" remove > /dev/null 2>&1 ;insserv -f "/etc/init.d/$1" > /dev/null 2>&1; return $?
         fi
 }
 

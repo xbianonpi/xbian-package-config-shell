@@ -444,7 +444,7 @@ function checkValidIpNetmaskFn() {
 function scanWLANNetworksFn() {
 	IFS=$'\n'
 	OUTPUT=($(iwlist $1 scan));
-	
+
 	WNETWORKS=();
 	WLAN=();
 	NUMBERS=();
@@ -482,6 +482,7 @@ function scanWLANNetworksFn() {
 			WLAN[3]=$(echo $LINE | awk -F"Quality=" '{print $2}' | cut -d' ' -f1);
 			[ "${WLAN[3]}" = '' ] && WLAN[3]=$(echo $LINE | awk -F"Signal level=" '{print $2}');
 			[ "${WLAN[3]}" = '' ] && WLAN[3]=$(echo $LINE | awk -F"Signal level:" '{print $2}' | cut -d' ' -f1));
+			[ "${WLAN[3]}" = '' ] && WLAN[3]=0
 			WLAN[3]=$((100*${WLAN[3]}))
                 fi
 	done;

@@ -6,6 +6,6 @@ mountpoint -q /boot || mount /boot
 mkdir -p /tmp/boot
 cp -ar /boot/* /tmp/boot
 umount /boot || exit 1
-mkfs.msdos -F 16 /dev/mmcblk0p1 -n boot
+mkfs.msdos /dev/mmcblk0p1 -n xbianboot
 mount /boot
 cp -ar /tmp/boot/* /boot

@@ -27,8 +27,8 @@ check_locale()
         lsetting=$LC_ALL
     elif [ -n "$LC_MESSAGES" ]; then
         lsetting=$LC_MESSAGES
-    elif [ -n "$LANGUAGES" ]; then
-        lsetting=$LANGUAGES
+    elif [ -n "$LANGUAGE" ]; then
+        lsetting="$LANGUAGE"
     elif [ -n "$LANG" ]; then
         lsetting=$LANG
     fi
@@ -38,14 +38,16 @@ check_locale()
     ldir="${ldir}_."
     ldir="${ldir%%_*.*}"
     [ ! -e "/usr/share/locale/$ldir/LC_MESSAGES/xbian.mo" ] && return 1
-    
+
+    echo -e $(env -i LANG=$lsetting locale) > /run/xbian-config.$$
     return 0
 
 }
 
 function _() {
-	[ ! -e /run/xbian-config.$$ ] && { check_locale || echo  "LANG=en_US.UTF-8" > /run/xbian-config.$$; }
-	[ -e /run/xbian-config.$$ ] && { . /run/xbian-config.$$; export LANG; }
+    if [ ! -e /run/xbian-config.$$ ]; then
+        check_locale || echo -e $(env -i LANG=en_US.UTF-8 locale) > /run/xbian-config.$$
+    fi
 
-	env -i LANG=$LANG gettext xbian xbian-config.$1
+    eval $(cat /run/xbian-config.$$) gettext xbian "xbian-config.$1"
 }

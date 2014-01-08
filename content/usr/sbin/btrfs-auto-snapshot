@@ -179,6 +179,7 @@ do_destroy ()
                 WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
         fi
 
+        do_run "btrfs fi sync $opt_mountpoint/" >/dev/null
 }
 
 do_snapshot ()
@@ -228,6 +229,8 @@ do_remove_kpartx ()
 {
     [ -e /run/kpartxmap.xbiancopy.$$ ] && read img < /run/kpartxmap.xbiancopy.$$
     [ -n "$img" ] && [ -f "$img" ] && while ! kpartx -d $img 2>/dev/null; do sleep 5; done
+
+    sysctl -p /etc/sysctl.d/xbian.conf > /dev/null 2>/dev/null
 }
 
 do_rename () 
@@ -278,7 +281,6 @@ else
     opt_command='snapshot'
 fi
 
-[ -e "$opt_dev" ] || opt_dev="$(findmnt -n -o SOURCE -v /)"
 
 GETOPT=$(getopt \
         --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,size:,fs-name: \
@@ -369,6 +371,13 @@ do
         esac
 done
 
+[ ! -e "$opt_dev" -o -z "$opt_dev" ] && opt_dev="$(findmnt -n -o SOURCE -v /)"
+if [ "$(blkid -o value -s TYPE  $opt_dev)" != btrfs ]; then
+    print_log notice "Filesystem is not of type btrfs. Not taking any actions."
+    exit 0
+fi
+
+
 print_log debug "Using command $opt_command."
 
 if [ "$#" -eq '0' ]; then
@@ -391,7 +400,6 @@ if [ -n "$opt_name" ]; then
         opt_keep=''
 fi
 
-[ $(( $(df  / | tail -1 | awk '{print $4}') * 100 /  $(df  / | tail -1 | awk '{print $2}') )) -lt 30 ] && opt_keep=1 && echo "WARNING: Less than 30% of free space. Keeping only one single snapshot..." > /dev/stderr
 
 # ISO style date; fifteen characters: YYYY-MM-DD-HHMM
 # On Solaris %H%M expands to 12h34.
@@ -419,6 +427,11 @@ while true; do
         sleep 5
         COUNTER=$(( $COUNTER + 1 ))
 done
+
+[ $(( $(df  "${tmp_dir}" | tail -1 | awk '{print $4}') * 100 /  $(df  "${tmp_dir}" | tail -1 | awk '{print $2}') )) -lt 30 ] && opt_keep=1 && echo "WARNING: Less than 30% of free space. Keeping only one single snapshot..." > /dev/stderr
+mdt=$(btrfs fi df "${tmp_dir}" | grep -m1 "Metadata, " | awk -F'=' '{print "("$2}' | grep -o [\(0-9BKMGi\.]* | sed 's/GiB/ * 1024 MiB/;s/MiB/ * 1024 KiB/;s/KiB/ * 1024/; s/$/ +\\/; $a0 )/1' | bc)
+mdu=$(btrfs fi df "${tmp_dir}" | grep -m1 "Metadata, " | awk -F'=' '{print "("$3}' | grep -o [\(0-9BKMGi\.]* | sed 's/GiB/ * 1024 MiB/;s/MiB/ * 1024 KiB/;s/KiB/ * 1024/; s/$/ +\\/; $a0 )/1' | bc)
+[ $(( 100 - (mdu*100 / mdt) )) -lt 30 ] && opt_keep=1 && echo "WARNING: Less than 30% of free metadata space. Keeping only one single snapshot..." > /dev/stderr
 
 test -d $opt_mountpoint/$opt_snapdir && test -n "$opt_snapdir" && opt_vroot='1'
 
@@ -519,6 +532,7 @@ case $opt_command in
 		do_rename $(dirname $1)/@$tmpd $1_rollback
                 ;;
 	(xbiancopy)
+		sysctl -w fs.file-max=80000 > /dev/null 2>/dev/null
 		[ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
 		[ "$(readlink -e $1)" = "$(readlink -e $2)" ] && { echo "source and destination can not be the same block device"; exit 5; }
 
@@ -531,31 +545,35 @@ case $opt_command in
 		if [ -n "$opt_img" ]; then
 		    [ -e "$2" ] && rm -f "$2"; touch "$2" || { echo "can not create img file"; exit 5; }
 		    [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; exit 5; }
-		    size=$(df -B1G | grep -w $(findmnt --source $1 -f -o TARGET -n) -m1 | awk '{print $2}')
-		    { [ "$opt_size" != 0 ] && size=$opt_size; } || size="$(($size-1))G"
+		    size=$(df -B1M | grep -w $(findmnt --source $1 -f -o TARGET -n) -m1 | awk '{print $3}')
+		    { [ "$opt_size" != 0 ] && size=$opt_size; } || size="$(($size+500))M"
 		    [ "$(printf "%s\n%s\n" $(df -h $2 | tail -1 | awk '{print $4}') "$size" | sort -rh | grep -m1 .)" = "$size" ] && { echo "not enough free space on destination filesystem"; exit 5; }
-		    chattr +C $2 &>/dev/null;  truncate -s $size $2
+		    chattr +CA $2 &>/dev/null;  truncate -s $size $2 || { echo "can't resize img file to needed size"; exit 5; }
 		    modprobe -q loop
 		    parted -s $2 mklabel msdos
 		    echo "2048,69632,b,*," | sfdisk -u S -N1 -H 4 -S 16 -q $2 > /dev/null 2>&1
 		    echo "71680,+,83,," | sfdisk -u S -N2 -H 4 -S 16 -q $2 > /dev/null 2>&1
 		    loopd=$(kpartx -s -l $2 -av | tail -1 | awk '{print $3}'); loopd=${loopd%%p?}; echo $2 > /run/kpartxmap.xbiancopy.$$
-		    umount /boot; dd if=/dev/mmcblk0p1 of=/dev/mapper/${loopd}p1; mount /boot; mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
+		    mkfs.msdos -F 16 -n xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2; mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
+		    cp -ar /boot/* /tmp/btrfs-dest
 		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootflags=*}
 		    cat /boot/cmdline.txt | eval $(echo "sed 's%$z%root=LABEL=$opt_clonename%'") > /tmp/btrfs-dest/cmdline.txt
-		    umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest
+		    sed -i 's/^#initramfs /initramfs /' /tmp/btrfs-dest/config.txt
+		    umount /tmp/btrfs-dest; rmdir /tmp/btrfs-dest; sync
 		    set -- $1 /dev/mapper/${loopd}p2
 		fi
 
-
 		mkdir -p /tmp/btrfs-source
-		mount -t btrfs -o subvol=/ $1 /tmp/btrfs-source
-		eval $opt_remotecmd findmnt -n $2 | grep -qw $2 && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
+		mount -t btrfs -o noatime,subvol=/ $1 /tmp/btrfs-source
+		{ eval $opt_remotecmd findmnt -n $2 | grep -qw $2; } && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
 		if [ -z "$opt_nocreate" ]; then
-		    eval $opt_remotecmd mkfs.btrfs -l 16384 -m single -L $opt_clonename -f $2 | grep -q "SMALL VOLUME" && eval $opt_remotecmd mkfs.btrfs -m single -L $opt_clonename -f $2
+		    mfs=$(eval $opt_remotecmd mkfs.btrfs -l 16384 -m single -L $opt_clonename -f $2 2>&1)
+		    if [ $? -gt 0 ]; then
+			echo $mfs | grep -q "SMALL VOLUME" && eval $opt_remotecmd mkfs.btrfs -m single -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; exit 5; }
+		    fi
 		fi
 		eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
-		eval $opt_remotecmd mount -o compress=lzo,noatime,autodefrag $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
+		eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1,nossd $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
 
 		if grep -q "rootflags=subvol=" /proc/cmdline; then
 		    subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
@@ -571,20 +589,18 @@ case $opt_command in
 		    for s in $snapextra; do
 		        [ -n "$s" ] || continue
 		        echo "DEBUG: v = $v, s = $s"
-		        btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
+		        [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
 		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue 
-		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro"
-		        btrfs send -v "/tmp/btrfs-source/$v/$s.ro" | eval $opt_remotecmd btrfs receive -v "/tmp/btrfs-dest/$v"
-		        btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
-		        eval $opt_remotecmd btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
-		        eval $opt_remotecmd btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro"
+		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro"
+		        nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v"
+		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
+		        eval $opt_remotecmd mv "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
+		        printf "\n%s\n" "---> DONE COPYING SUB-VOLUME $v SNAPSHOT $s" 
 		    done
+		    printf "\n%s\n\n" "DONE COPYING SUB-VOLUME $v" 
 		done
 
-                if [ -n "$opt_img" ]; then
-                    echo "Compacting file"
-                fi
-		eval $opt_remotecmd btrfs fi sync /tmp/btrfs-dest; eval $opt_remotecmd umount /tmp/btrfs-dest; eval $opt_remotecmd rmdir /tmp/btrfs-dest > /dev/null 2>&1
+		eval $opt_remotecmd umount /tmp/btrfs-dest; eval $opt_remotecmd rmdir /tmp/btrfs-dest > /dev/null 2>&1
 		umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
 		echo ""
 		echo "for users on xbian version below beta2 (beta1.1, beta1). beta2 handles this automaticaly."

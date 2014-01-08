@@ -27,7 +27,7 @@ TBLCOLUMNCENTER=1
 #  $HEIGHT [Integer]		Needed height for the dialog
 #  $WRAPPEDTEXT [String]	String wrapped in newlines to fit width
 function wrapTxtFn() {
-	TEXT=$1;
+	TEXT="$1";
 	
 	if [ $# -gt 1 ]; then
 		WIDTH=$2;
@@ -65,7 +65,7 @@ function wrapTxtFn() {
 # Returns
 #  $CENTEREDTXT [String]
 function centerTxtFn() {
-	TEXT=$1;
+	TEXT="$1";
 	IFS=$'\n';
 	if [ $# -gt 1 ]; then
 		WIDTH=$2;
@@ -120,7 +120,7 @@ function valignTxtFn() {
 # Returns
 #  $TRIMMEDLN [String]
 function trimLnFn() {
-	TRIMMEDLN=$(echo -e "$1" | sed 's/^\ //;s/\ $//');
+	TRIMMEDLN=$(echo -e "$1" | sed 's/^[\ ]*//;s/[\ ]*$//');
 }
 
 # Create table header used inside table
@@ -131,7 +131,7 @@ function trimLnFn() {
 #  $HEADER [String] String containing the outlined header
 #  $ROWS   [String] String with all outlined rows
 function createTableFn() {
-	TYPE=$1;
+	TYPE="$1";
 	shift;
 	IFS=";";
 	OLDHEADER=($1)

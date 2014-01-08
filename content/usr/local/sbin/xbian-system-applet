@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if [ "$1" = stop ]; then
+    [ -e /run/lock/xbian-system-applet ] && kill $(cat /run/lock/xbian-system-applet) 2>/dev/null
+    rm -f /run/lock/xbian-system-applet
+    exit 0
+fi
+
+busybox nmeter -d 2000 "%c jmp %x frk%p free %[mf] sw%s io%b irq %i" > /tmp/v.log & echo $! >> /run/lock/xbian-system-applet
+
+exec 1>$(tty)
+
+while sleep 2; do
+
+	C=$(tput cols)
+	m=$(tail -1 /tmp/v.log)
+	s=${#m}
+	P=$(($C-$s))
+	tput sc
+	tput cup 0 $P
+	echo "$m"
+	tput rc
+done &
+
+echo $! >> /run/lock/xbian-system-applet
+
+

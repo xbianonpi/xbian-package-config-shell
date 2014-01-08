@@ -1,466 +1,39 @@
-Package: xbian-package-cec
-Version: 1.1-0.4
-Architecture: armhf
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 1705
-Depends: udev (>=175-7.1), liblockdev1 (>=1.0.3-1.5)
-Conflicts: libcec1
-Breaks: xbian-package-xbmc (<< 2.3)
-Replaces: xbian-update (<< 1.0-1)
-Provides: libcec1
-Filename: pool/devel/main/x/xbian-package-cec/xbian-package-cec_1.1-0.4_armhf.deb
-Size: 520544
-MD5sum: 285d0d16020a6265cec6c2a312da3c01
-SHA1: f16d691baeae75fe05ce2c659a74dd0c95435188
-SHA256: 3febb4b9f3e9a06c3c899df5f027e1a099011153285d510aafd8e8ac4779a6e9
-Section: utils
-Priority: optional
-Description: cec for XBian.
-
-Package: xbian-package-config-shell
-Version: 2.1.6-50a
-Architecture: armhf
-Essential: No
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 557
-Pre-Depends: anacron
-Depends: wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx, apt-show-versions, xbian-update
-Conflicts: xbian-package-config
-Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
-Replaces: xbian-package-config
-Filename: pool/devel/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-50a_armhf.deb
-Size: 128964
-MD5sum: 3a13abcee1aa25512e06bb45b67157e1
-SHA1: 980cad89e37df0959677f73f4245150988992ec3
-SHA256: efcbb59eeb4492fa606baaeb27d20b2fdeba5d805f2b23cf56e91a6906d2a781
-Section: utils
-Priority: optional
-Description: Configuration utility for XBian.
-
-Package: xbian-package-config-xbmc
-Version: 1.1.4-2a
-Architecture: armhf
-Essential: No
-Origin: XBian-devel
-Maintainer: Belese <development@xbian.org>
-Installed-Size: 637
-Depends: xbian-package-config-shell (>=2.1.6-48), xbian-update (>=1.0.2-7c)
-Breaks: xbian-package-xbmc-scripts (<<1.0.0-1), xbian-package-xbmc-scripts (<<1.0.0-6)
-Filename: pool/devel/main/x/xbian-package-config-xbmc/xbian-package-config-xbmc_1.1.4-2a_armhf.deb
-Size: 112150
-MD5sum: ea3be3ca72e7cff546321e9b49810c3e
-SHA1: 6805299586b66a7eda10795c4029d01380a6885c
-SHA256: c7f975ff827fe83e67ce14f87e19242cebcc5ae91d47b05904e3aab840731be7
-Section: utils
-Priority: optional
-Description: Configuration utility for XBian.
-
-Package: xbian-package-firmware
-Version: 1.4-7
-Architecture: armhf
-Essential: Yes
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 7275
-Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
-Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
-Filename: pool/devel/main/x/xbian-package-firmware/xbian-package-firmware_1.4-7_armhf.deb
-Size: 3144220
-MD5sum: e9f3c7693ee8fd06178b4a8adc13c00f
-SHA1: 86d8bddce6956d461f4d4be0515cfc7c82365435
-SHA256: 55618f9eb57d97867dc46a91fbefb853cffebecd808da2f769ccb1eb43e87072
-Section: firmware
-Priority: optional
-Description: Firmware for XBian. (Oct  1 2013 00:37:09 Copyright (c) 2012 Broadcom version a421d4b2cee544ec22bd4eee75080248f18fc20b (tainted) (release))
-
-Package: xbian-package-firmware
-Version: 1.4-3
-Architecture: armhf
-Essential: Yes
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 4940
-Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
-Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
-Filename: pool/devel/main/x/xbian-package-firmware/xbian-package-firmware_1.4-3_armhf.deb
-Size: 3027284
-MD5sum: e37f3cc25447c48a960540d178995bb2
-SHA1: 089fa7dbd0cbaf81cd5a19e61937cce41d8c9ad0
-SHA256: 45c6c7767fbf0bec4476ea294674a790a288be376bda7d6320a63e9a3a1a2d5f
-Section: firmware
-Priority: optional
-Description: Firmware for XBian.(Aug  7 2013 16:19:51, version 7c7b17433e2a63025f6f42adcb2b8766eff55e12)
-
-Package: xbian-package-firmware
-Version: 1.4-6
-Architecture: armhf
-Essential: Yes
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 7273
-Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
-Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
-Filename: pool/devel/main/x/xbian-package-firmware/xbian-package-firmware_1.4-6_armhf.deb
-Size: 3143124
-MD5sum: 54f6daa02bbc97a7f3f2c37aaf3bd8e6
-SHA1: 2ae56102c03e9f263eb7ad6e9cd82330befdf359
-SHA256: aaf0b2b20772e9a6e6f5aff5d466469f9c1a3f61ba23ba0ad835923b52739f3c
-Section: firmware
-Priority: optional
-Description: Firmware for XBian. (Sep 10 2013 12:42:29, 26ff70fafc90598f8cf7666117c00acb25b03110)
-
-Package: xbian-package-initramfs-tools
-Version: 1.3.1-5b
-Architecture: armhf
-Essential: Yes
-Origin: XBian-devel
-Maintainer: mk01 <development@xbian.org>
-Installed-Size: 59
-Pre-Depends: initramfs-tools, triggerhappy
-Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils
-Breaks: xbian-package-splash (<<1.0-1), xbian-package-kernel (<<1.3-5.5)
-Filename: pool/devel/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.1-5b_armhf.deb
-Size: 14838
-MD5sum: 96744ac63121afb11d0ab64b55ae040e
-SHA1: 567f502341bb6962622e8ad5417765fbd6daac8f
-SHA256: 0ee582b4a4742139b02a91e47ebff184b362768b37d6f9a4d3019f81494dcf53
-Section: kernel
-Priority: standard
-Description: Initramfs handling tools.
-
-Package: xbian-package-kernel
-Version: 1.3-5.5
-Architecture: armhf
-Essential: No
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 34421
-Depends: xbian-package-firmware (>=1.4-3), rng-tools, xbian-package-initramfs-tools (>= 1.0-2.3)
-Suggests: xbian-package-kernel-headers
-Conflicts: linux-firmware-image, linux-image, linux-modules-3.10.12+
-Replaces: xbian-package-kernel3.6.11
-Provides: linux-image, linux-firmware-image, linux-modules-3.10.12+
-Filename: pool/devel/main/x/xbian-package-kernel/xbian-package-kernel_1.3-5.5_armhf.deb
-Size: 15217314
-MD5sum: 7fe104eaf4def5b11fa95c0e7c7a7a6e
-SHA1: bf7a942aa2f1aa89396dbf18f1c1b25b659a0aa2
-SHA256: 568c868f94ac819efeab2a788c403324a1af74737e441160f5588de9b3d38ea2
-Section: kernel
-Priority: optional
-Description: Latest XBian kernel for the Raspberry Pi (3.10.12+)
-
-Package: xbian-package-kernel
-Version: 1.3-5.4
-Architecture: armhf
-Essential: No
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 34421
-Depends: xbian-package-firmware (>=1.4-3), rng-tools, xbian-package-initramfs-tools (>= 1.0-2.3)
-Suggests: xbian-package-kernel-headers
-Conflicts: linux-firmware-image, linux-image, linux-modules-3.10.12+
-Replaces: xbian-package-kernel3.6.11
-Provides: linux-image, linux-firmware-image, linux-modules-3.10.12+
-Filename: pool/devel/main/x/xbian-package-kernel/xbian-package-kernel_1.3-5.4_armhf.deb
-Size: 15216500
-MD5sum: 05b32877fef880f2500d41a442dc2a47
-SHA1: c936598f37009effa1c4e232452898d558d72861
-SHA256: 26e681094ee2c06d43bf1f8131a2bdc1ee3068e03229cd0cdc76d187f8b88811
-Section: kernel
-Priority: optional
-Description: Latest XBian kernel for the Raspberry Pi (3.10.12+)
-
-Package: xbian-package-kernel-headers
-Version: 1.3-5.5
-Architecture: armhf
-Essential: No
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 37895
-Depends: xbian-package-kernel (>=1.3-5.5), make, gcc
-Suggests: dkms
-Conflicts: linux-headers-3.10.12+
-Provides: linux-headers-3.10.12+
-Filename: pool/devel/main/x/xbian-package-kernel-headers/xbian-package-kernel-headers_1.3-5.5_armhf.deb
-Size: 8377794
-MD5sum: 86d4cd86d9420d8a63c73aa53be1f0b1
-SHA1: 527531fac405ded44c1de3aef202e8ff5d754b95
-SHA256: 649ab586046ac84c42d2d4a6bbb7e072692ef4492f3f1ec562da1fb8f101571a
-Section: kernel
-Priority: optional
-Description: Latest XBian kernel headers for the Raspberry Pi (3.10.12+)
-
-Package: xbian-package-libshairport
-Version: 1.0-1
-Architecture: armhf
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 139
-Conflicts: libshairport1, libshairport-dev
-Breaks: xbian-package-xbmc (<<2.3)
-Provides: libshairport1, libshairport-dev
-Filename: pool/devel/main/x/xbian-package-libshairport/xbian-package-libshairport_1.0-1_armhf.deb
-Size: 28698
-MD5sum: cd62fa5fe895b8409566003542425ad4
-SHA1: 41804cb4b9a79daf21f2c75264aee78f92a7e08e
-SHA256: 6494d57370af784e257ba3c10c992b6a020cce623901efe7bb44a357b5401ca9
-Section: utils
-Priority: optional
-Description: libshairport for XBian
-
-Package: xbian-package-libtag
-Version: 1.0-2
-Architecture: armhf
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 1262
-Conflicts: libtag-extras0, libtag1-rusxmms, libtag1-vanilla
-Breaks: xbian-package-xbmc (<< 2.3)
-Provides: libtag1-dev, libtag1-vanilla
-Filename: pool/devel/main/x/xbian-package-libtag/xbian-package-libtag_1.0-2_armhf.deb
-Size: 514582
-MD5sum: 9b65a7caef4e2b644b9b0e617ceddff6
-SHA1: 0770896682ebaca1cbdfb329e8689cc390c86bc0
-SHA256: e9d8a9f9668340299813c2bb5c4270675221e199ba6cd30e05b34c740850e042
-Section: utils
-Priority: optional
-Description: libtag for XBian
-
-Package: xbian-package-lirc
-Version: 1.4-8.8
-Architecture: armhf
-Essential: No
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 375
-Depends: upstart
-Conflicts: lirc, iguanair
-Replaces: lirc, iguanair
-Filename: pool/devel/main/x/xbian-package-lirc/xbian-package-lirc_1.4-8.8_armhf.deb
-Size: 369250
-MD5sum: 83d24d2737d9777625f3284678f644e3
-SHA1: af31a8617204d21465cc3dc5960d08a139fe91f3
-SHA256: c8f35e488435fdc09b7d2ba912f79acec015c40a3a3833a0c31183ae493c9b76
-Section: utils
-Priority: optional
-Description: Remote controller deamon.
-
-Package: xbian-package-samba
-Version: 2.0.0-3
-Architecture: armhf
-Origin: XBian-devel
-Maintainer: <development@xbian.org>
-Installed-Size: 8
-Pre-Depends: openbsd-inetd
-Depends: samba, samba-common-bin
-Conflicts: xbian-package-networkfs
-Replaces: xbian-package-networkfs
-Filename: pool/devel/main/x/xbian-package-samba/xbian-package-samba_2.0.0-3_armhf.deb
-Size: 2534
-MD5sum: f8ad5d0aececa08a7e7492a83f4f0a2e
-SHA1: 301111ce8370ebe18a1854358f78d49fb0a5131a
-SHA256: 0c466dc251af2e3597a021326c7fdff60e3a3c9943fc36980ecf45b327ec3662
-Section: net
-Priority: optional
-Description: Windows <--> linux filesharing.
-
-Package: xbian-package-splash
-Version: 1.0-1.1
-Architecture: armhf
-Essential: Yes
-Origin: XBian-devel
-Maintainer: mk01 <development@xbian.org>
-Installed-Size: 799
-Depends: xbian-package-initramfs-tools (>=1.0-1)
-Replaces: xbian-update (<=1.0-0.5)
-Filename: pool/devel/main/x/xbian-package-splash/xbian-package-splash_1.0-1.1_armhf.deb
-Size: 459460
-MD5sum: fcf4396a51f132a8ddf604383e97512a
-SHA1: 876f7d5dc3d2e522b0d14e7ee7b1e374dc739fbe
-SHA256: 3adb2e3ed458551bd657eabc8a367f4dda115c86eb492bbb55313ec0e28b3f22
-Section: video
-Priority: standard
-Description: Splash screen.
-
-Package: xbian-package-upstart-xbmc-bridge
-Version: 1.1.0-4
-Architecture: armhf
-Origin: XBian-devel
-Maintainer: belese <besme2@gmail.com>
-Installed-Size: 110
-Depends: xbian-package-xbmc, upstart, python
-Filename: pool/devel/main/x/xbian-package-upstart-xbmc-bridge/xbian-package-upstart-xbmc-bridge_1.1.0-4_armhf.deb
-Size: 5342
-MD5sum: b78025b45f8718092ccc10b38b3b384e
-SHA1: 74b0a2f75c4edbd249c5e74a9330b82d0e3d3176
-SHA256: d4b382aa665e05b6ec7d533930859fcb451806e946b4396f84b8c18f577df878
-Section: utils
-Priority: optional
-Description: Bridge between xbmc event and upstart
-
-Package: xbian-package-usbmount
-Version: 1.0.5
-Architecture: all
-Essential: No
-Origin: XBian-devel
-Maintainer: mk01 <development@xbian.org>
-Installed-Size: 261
-Depends: lockfile-progs, udev, util-linux (>> 2.16), policykit-1, ufsutils
-Conflicts: usbmount
-Replaces: usbmount
-Provides: usbmount
-Filename: pool/devel/main/x/xbian-package-usbmount/xbian-package-usbmount_1.0.5_all.deb
-Size: 20748
-MD5sum: ab248c35abe5aaf9bceb487d683667d0
-SHA1: 3c3eb03b40562ba0c37fe685aea9ca410cd6a122
-SHA256: 5af38beea2d450367f53f1eadb8c40053ebfdf77c4c3d57ec9ee17a76473a6ee
-Section: utils
-Priority: extra
-Description: automatically mount and unmount USB mass storage devices
-
-Package: xbian-package-vnc-server
-Version: 1.0.0-3b
-Architecture: armhf
-Essential: No
-Origin: XBian-devel
-Maintainer: mk01 <development@xbian.org>
-Installed-Size: 139
-Depends: xbian-package-firmware, libc6, libvncserver0, zlib1g, libjpeg8, libgcrypt11, libgnutls26, libgcc1, libgpg-error0, libtasn1-3, libp11-kit-dev
-Filename: pool/devel/main/x/xbian-package-vnc-server/xbian-package-vnc-server_1.0.0-3b_armhf.deb
-Size: 9390
-MD5sum: 99230a6fb96290f8b253031fbf287fcc
-SHA1: 751cdfb052fed34993b43299d96891f7e06dd2fc
-SHA256: dce263c332c9ffc3d404ff512eddc78a6d104287638d421f43470cf5a8acc837
-Section: net
-Priority: optional
-Description: VNC Server for Raspberry PI using dispmanx https://github.com/hanzelpeter/dispmanx_vnc.git
-
-Package: xbian-package-xbmc
-Version: 2.9-10.13
-Architecture: armhf
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 65966
-Depends: xbian-package-xbmc-scripts, libhal-storage1, libhal1, xbian-package-libtag (>=1.0-2), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libnfs1, psmisc
-Conflicts: xbian-package-xbmc-gotham-nightly
-Breaks: xbian-update (<<1.0-1.2)
-Replaces: xbian-package-xbmc-gotham-nightly
-Filename: pool/devel/main/x/xbian-package-xbmc/xbian-package-xbmc_2.9-10.13_armhf.deb
-Size: 34897668
-MD5sum: a8e45d8360e137d71ee002b7faaaa882
-SHA1: e40ab669014ed52ccfe0f68209f3c049b5c12a56
-SHA256: d815d28170b5b45d020acc354722e0f192ce303492d2fc1e24a0e0a7b2f2cbc4
-Section: video
-Priority: optional
-Description: Frodo nightly.
-
-Package: xbian-package-xbmc
-Version: 2.9-10.10
-Architecture: armhf
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 65949
-Depends: xbian-package-xbmc-scripts, libhal-storage1, libhal1, xbian-package-libtag (>=1.0-2), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libnfs1, psmisc, xbian-package-config-xbmc (>=1.1-2.7)
-Breaks: xbian-update (<<1.0-1.2)
-Filename: pool/devel/main/x/xbian-package-xbmc/xbian-package-xbmc_2.9-10.10_armhf.deb
-Size: 34890252
-MD5sum: f56ad0db1af396cbfbbcd0bdd711ae80
-SHA1: 0814d7fbad057be596bd4aa3259ec2db3f15dd1e
-SHA256: a9e91d8f184ca97afcf7aaba5354e691176d4deb11fa5a1053dc91dfc5ba9541
-Section: video
-Priority: optional
-Description: Frodo nightly.
-
-Package: xbian-package-xbmc-gotham-nightly
-Version: 2.9-10.14a
-Architecture: armhf
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 79606
-Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage
-Conflicts: xbian-package-xbmc
-Breaks: xbian-update (<<1.0-1.1), xbian-package-xbmc-scripts (<<1.0.1-7), xbian-package-cec (<<1.1-0.4)
-Replaces: xbian-package-xbmc
-Provides: xbian-package-xbmc
-Filename: pool/devel/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.14a_armhf.deb
-Size: 41328168
-MD5sum: 3b247770c196727c30b97211fd857993
-SHA1: 2e489b3ed6969083c08203f49c4608e4dd118227
-SHA256: dcaf07663c1426171aaec597c01c28e546de4f519d2faff304304f3eef90ce96
-Section: video
-Priority: optional
-Description: Gotham nightly
-
-Package: xbian-package-xbmc-scripts
-Version: 1.0.1-13c
-Architecture: armhf
-Origin: XBian-devel
-Maintainer: Koenkk <development@xbian.org>
-Installed-Size: 22
-Suggests: xbian-package-xbmc
-Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
-Replaces: xbian-package-xbmc
-Filename: pool/devel/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-13c_armhf.deb
-Size: 5684
-MD5sum: b268fb1b3c9a8e08e57a46a4ba181c2d
-SHA1: 790394538635a6bb6ea51fd99d5eae430bc4ae97
-SHA256: 0d307b1a6c0c8488d34fafa97ddf4e932740de786bb90c2c087c4f65fdc3d28a
-Section: video
-Priority: optional
-Description: XBian XBMC upstart scripts.
-
-Package: xbian-package-zram-swap
-Version: 1.0-4.6
-Architecture: armhf
-Essential: No
-Origin: XBian-devel
-Maintainer: mk01 <development@xbian.org>
-Installed-Size: 84
-Depends: xbian-update, xbian-package-kernel
-Breaks: xbian-package-usbmount (<<1.0-0.7)
-Filename: pool/devel/main/x/xbian-package-zram-swap/xbian-package-zram-swap_1.0-4.6_armhf.deb
-Size: 4172
-MD5sum: 0a8ddcc59dd6c15b304c7e3c7fdceaf5
-SHA1: 426cdceec30ec0aacc8eb66e883e8d5f5e98802f
-SHA256: cf3dce628fc3fd071f6573afab32e7adcf02f164d42433de23d5112fe2bde086
-Section: base
-Priority: optional
-Description: zram-swap custom xbian package
-
-Package: xbian-update
-Version: 1.0.2-8d
-Architecture: armhf
-Essential: Yes
-Origin: XBian-devel
-Maintainer: mk01 <development@xbian.org>
-Installed-Size: 893
-Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian), libcurl3, libva1, xbian-package-config-shell, policykit-1, patch, openbsd-inetd
-Depends: ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware, xbian-package-splash, xbian-package-kernel, xbian-package-xbmc, unattended-upgrades
-Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
-Breaks: xbian-packate-vnc-server (<<1.0.0-2), xbian-package-xbmc-scripts (<<1.0.1-3), xbian-package-samba (<<2.0.0-3), xbian-package-config-shell (<<2.1.6-48b), xbian-package-cec (<<1.1-0.3), xbian-package-config-xbmc (<<1.1.4-1), xbian-package-firmware (<<1.4-5.1), xbian-package-initramfs-tools (<<1.3.1-2), xbian-package-kernel (<<1.3-5.5), xbian-package-libshairport (<<1.0-1), xbian-package-libtag (<<1.0-2), xbian-package-lirc (<<1.4-8.8), xbian-package-splash (<<1.0-1.1), xbian-package-upstart-xbmc-bridge (<<1.1.0-3), xbian-package-usbmount (<<1.0.4-7), xbian-package-xbmc (<<2.9-10.9), xbian-package-zram-swap (<<1.0-4.3)
-Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
-Filename: pool/devel/main/x/xbian-update/xbian-update_1.0.2-8d_armhf.deb
-Size: 60210
-MD5sum: 7dbeac786cd403b90af53146b291cfba
-SHA1: ffb25f8b6aff37d2c8f3fdc63a4c4ab29324a2fe
-SHA256: 1b1f1b12b8e2b66fa5d9d108ca98cd96603bd139d98aa70a51c7cccdb9bdc697
-Section: update
-Priority: optional
-Description: Updater package to XBian 1.0 Beta2
-
 Package: btrfs-tools
 Version: 1.0-xbian
 Architecture: armhf
 Maintainer: Luk Claes <luk@debian.org>
-Installed-Size: 2208
+Installed-Size: 2572
 Depends: e2fslibs (>= 1.42), libc6 (>= 2.13-28), libcomerr2 (>= 1.01), libgcc1 (>= 1:4.4.0), libuuid1 (>= 2.16), zlib1g (>= 1:1.2.0), liblzo2-2
 Filename: pool/stable/main/b/btrfs-tools/btrfs-tools_1.0-xbian_armhf.deb
-Size: 1318106
-MD5sum: d408a9d4f3292128193056a4b203fbda
-SHA1: 56cb601ba0a347327b546e9a3f8bd6c91aa6f09e
-SHA256: 0d7bc4348474f1ca5906e3bc82835af048fb3277b7f78449683f8741849ab283
+Size: 1291074
+MD5sum: 7c1198fa38f76fe54f36f22c5537e4b6
+SHA1: ae94818e47d79c42c76886d5e5c7a07dde592750
+SHA256: 0f8c67d3202f0b3a8984a5ec7387e12ce0b55a4d7510feb997efd38b7c035e63
+Section: admin
+Priority: optional
+Homepage: http://btrfs.wiki.kernel.org/
+Description: Checksumming Copy on Write Filesystem utilities
+Btrfs is a new copy on write filesystem for Linux aimed at implementing
+advanced features while focusing on fault tolerance, repair and easy
+administration.
+.
+This package contains utilities (mkfs, fsck, btrfsctl) used to work with btrfs
+and an utility (btrfs-convert) to make a btrfs filesystem from an ext3.
+.
+git commit 194aa4a1bd6447bb545286d0bcb0b0be8204d79f from Fri Jul 5 13:44:07 2013 -0400
+
+Package: btrfs-tools
+Version: 1.0-xbian1
+Architecture: armhf
+Origin: XBian
+Maintainer: Luk Claes <luk@debian.org>
+Installed-Size: 2572
+Depends: e2fslibs (>= 1.42), libc6 (>= 2.13-28), libcomerr2 (>= 1.01), libgcc1 (>= 1:4.4.0), libuuid1 (>= 2.16), zlib1g (>= 1:1.2.0), liblzo2-2
+Filename: pool/stable/main/b/btrfs-tools/btrfs-tools_1.0-xbian1_armhf.deb
+Size: 1291080
+MD5sum: 12169fdcac44bb2129cfb425e4b0bf65
+SHA1: 29412b372e48cd3b61d9c03e9f079e44148c9c4f
+SHA256: ae79d221ac089c15dce74b8d702f69a00d8f49b3fbd8fd97c7e19f9ab5204ee8
 Section: admin
 Priority: optional
 Homepage: http://btrfs.wiki.kernel.org/
@@ -508,6 +81,305 @@ Homepage: http://www.rarlabs.com/
 Description: Unarchiver for .rar files (non-free version)
 Unrar can extract files from .rar archives. If you want to create .rar
 archives, install package rar.
+
+Package: xbian-package-cec
+Version: 1.1-0.4
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 1705
+Depends: udev (>=175-7.1), liblockdev1 (>=1.0.3-1.5)
+Conflicts: libcec1
+Breaks: xbian-package-xbmc (<< 2.3)
+Replaces: xbian-update (<< 1.0-1)
+Provides: libcec1
+Filename: pool/stable/main/x/xbian-package-cec/xbian-package-cec_1.1-0.4_armhf.deb
+Size: 520544
+MD5sum: 285d0d16020a6265cec6c2a312da3c01
+SHA1: f16d691baeae75fe05ce2c659a74dd0c95435188
+SHA256: 3febb4b9f3e9a06c3c899df5f027e1a099011153285d510aafd8e8ac4779a6e9
+Section: utils
+Priority: optional
+Description: cec for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-53
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 675
+Pre-Depends: anacron
+Depends: parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/stable/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-53_armhf.deb
+Size: 141786
+MD5sum: 2a1e1d5a67a09fdee3d0ab8b3cbc82c5
+SHA1: d35c652c545b27cd04b8840a0260a9c1e7612e5f
+SHA256: 10017143ff3131021a87045cb68c799b6912ef4e30cc717f3cf84316fab605ed
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-52b
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 577
+Pre-Depends: anacron
+Depends: wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/stable/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-52b_armhf.deb
+Size: 131478
+MD5sum: b45d23302a35cef8785bc8e20662fed6
+SHA1: 6a991045101dd2c671f04506dfb289c2f0490866
+SHA256: 88d8d25b86a03d2a12d79d0c9ec2c933f96e5256e11d3187bbaeb3ac3d532a39
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-52h
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 605
+Pre-Depends: anacron
+Depends: parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/stable/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-52h_armhf.deb
+Size: 132630
+MD5sum: 9b257cb3081a142ccc72ebb7259649cf
+SHA1: 024bbd04b14afd30d681b01e8d43b4c646454ead
+SHA256: ec10b0be639d8df7b948dbefd42dec9e2317aa0b5dc5bec181e5658a79be34cf
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-52g
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 576
+Pre-Depends: anacron
+Depends: parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/stable/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-52g_armhf.deb
+Size: 131520
+MD5sum: 81f258ae9121c6a3e2593c3da8ace287
+SHA1: d118dd7918386f953e185cabe530fdb0b627e700
+SHA256: fdf6b6c06eb005bb9a50f5cd6211f0dc229cd02c6d52c15611379b517bfbf36f
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-52d
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 576
+Pre-Depends: anacron
+Depends: parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/stable/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-52d_armhf.deb
+Size: 131420
+MD5sum: 054378dcdf73b5631fe2944e35538bfc
+SHA1: e580196502df2e7e5df529f2de1215452113d86b
+SHA256: b7aa601259d31ea0b60ec6422956e25619b55c82331017a58d0678cd921459a4
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-51a
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 569
+Pre-Depends: anacron
+Depends: wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx, apt-show-versions, xbian-update
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/stable/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-51a_armhf.deb
+Size: 130468
+MD5sum: 15c7026cd6aa6b1356873343828167fd
+SHA1: c0b2a0dc7a920070a693cdd09808d1dcf546316b
+SHA256: 8e5719a4b099752515011be7c43d52040f04ae19913c473580a70b3699ee8a6d
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-52a
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 577
+Pre-Depends: anacron
+Depends: wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx, apt-show-versions, xbian-update
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/stable/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-52a_armhf.deb
+Size: 131498
+MD5sum: 68f76a406ba54ec821ec6ccdd1035c2e
+SHA1: 381081f2d802f13490816ae65f49d269e8b970eb
+SHA256: 56b10fd440f398b4be61220dc640d75e26327f77299cb4c0223de69c290413a2
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-52f
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 576
+Pre-Depends: anacron
+Depends: parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/stable/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-52f_armhf.deb
+Size: 131438
+MD5sum: b82960fb6a6582e27536ba6d29f5ee55
+SHA1: 53ef1ff2d5a7c6be6547d2dd49a831ddefcc4da4
+SHA256: da9b7668d66db4dae04d01fe90cff97b3b3fb170445562db4a98b27df51bbce6
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-52c
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 577
+Pre-Depends: anacron
+Depends: wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/stable/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-52c_armhf.deb
+Size: 131482
+MD5sum: b4e82e93e333127503e31553e0293de5
+SHA1: cd4417b642b314b4f56be04e37b0514fff409b84
+SHA256: 512697429c23fb9bf9fe28fdfe74409611588abf22d7133eeea3f69ac284074e
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-xbmc
+Version: 1.1.4-3a
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Belese <development@xbian.org>
+Installed-Size: 637
+Depends: xbian-package-config-shell (>=2.1.6-48), xbian-update (>=1.0.2-7c)
+Breaks: xbian-package-xbmc-scripts (<<1.0.0-1), xbian-package-xbmc-scripts (<<1.0.0-6)
+Filename: pool/stable/main/x/xbian-package-config-xbmc/xbian-package-config-xbmc_1.1.4-3a_armhf.deb
+Size: 112276
+MD5sum: bd3ea36b5a273000500368baf3d705e2
+SHA1: 096c4acc5183defb39c4fcf256864fc39cc2b1d9
+SHA256: 855e1f2a9f8ebe9e83d91b12f07abf9b116deb337d1625283ac552fd1c234534
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-xbmc
+Version: 1.1.4-4b
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Belese <development@xbian.org>
+Installed-Size: 638
+Depends: xbian-package-config-shell (>=2.1.6-48), xbian-update (>=1.0.2-7c)
+Breaks: xbian-package-xbmc-scripts (<<1.0.0-1), xbian-package-xbmc-scripts (<<1.0.0-6)
+Filename: pool/stable/main/x/xbian-package-config-xbmc/xbian-package-config-xbmc_1.1.4-4b_armhf.deb
+Size: 111060
+MD5sum: 4f016ec4459ffc2cb9e04dbd9b499dc5
+SHA1: 1df4489202949c3ef2e450aa5ab745f092ec0e10
+SHA256: bd647912ab320a244e036d82c73070e8d4243c20162c6b96debd5d2aaa932e51
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-xbmc
+Version: 1.1.4-5
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Belese <development@xbian.org>
+Installed-Size: 639
+Depends: xbian-package-config-shell (>=2.1.6-53), xbian-update (>=1.0.2-7c)
+Breaks: xbian-package-xbmc-scripts (<<1.0.1-16)
+Filename: pool/stable/main/x/xbian-package-config-xbmc/xbian-package-config-xbmc_1.1.4-5_armhf.deb
+Size: 111112
+MD5sum: 1c999343404f74d41673a99dd7b23124
+SHA1: ffa63ed8319e48c9c925110880b0716e4ee053b3
+SHA256: f1987044d50290c7d6b3b0f74dfac80f7e7a1e83713bcbafcc89379eae936714
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-xbmc
+Version: 1.1.4-3
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Belese <development@xbian.org>
+Installed-Size: 637
+Depends: xbian-package-config-shell (>=2.1.6-48), xbian-update (>=1.0.2-7c)
+Breaks: xbian-package-xbmc-scripts (<<1.0.0-1), xbian-package-xbmc-scripts (<<1.0.0-6)
+Filename: pool/stable/main/x/xbian-package-config-xbmc/xbian-package-config-xbmc_1.1.4-3_armhf.deb
+Size: 112274
+MD5sum: 315439be7f5671b5eb8d0ead5e418628
+SHA1: 6ac04247e1bdfc203e392ab085628b549e0c7b52
+SHA256: 04b60fcf66ae93481f8685c1319456838c91ffa6c11184225032c6ddfb9ecf94
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-xbmc
+Version: 1.1.4-2a
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Belese <development@xbian.org>
+Installed-Size: 637
+Depends: xbian-package-config-shell (>=2.1.6-48), xbian-update (>=1.0.2-7c)
+Breaks: xbian-package-xbmc-scripts (<<1.0.0-1), xbian-package-xbmc-scripts (<<1.0.0-6)
+Filename: pool/stable/main/x/xbian-package-config-xbmc/xbian-package-config-xbmc_1.1.4-2a_armhf.deb
+Size: 112150
+MD5sum: ea3be3ca72e7cff546321e9b49810c3e
+SHA1: 6805299586b66a7eda10795c4029d01380a6885c
+SHA256: c7f975ff827fe83e67ce14f87e19242cebcc5ae91d47b05904e3aab840731be7
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
 
 Package: xbian-package-couchpotato
 Version: 2.0.7
@@ -591,6 +463,60 @@ Section: web
 Priority: optional
 Description: Torrent + Newserver download managers.
 
+Package: xbian-package-firmware
+Version: 1.4-7
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 7275
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/stable/main/x/xbian-package-firmware/xbian-package-firmware_1.4-7_armhf.deb
+Size: 3144220
+MD5sum: e9f3c7693ee8fd06178b4a8adc13c00f
+SHA1: 86d8bddce6956d461f4d4be0515cfc7c82365435
+SHA256: 55618f9eb57d97867dc46a91fbefb853cffebecd808da2f769ccb1eb43e87072
+Section: firmware
+Priority: optional
+Description: Firmware for XBian. (Oct  1 2013 00:37:09 Copyright (c) 2012 Broadcom version a421d4b2cee544ec22bd4eee75080248f18fc20b (tainted) (release))
+
+Package: xbian-package-firmware
+Version: 1.4-3
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 4940
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/stable/main/x/xbian-package-firmware/xbian-package-firmware_1.4-3_armhf.deb
+Size: 3027284
+MD5sum: e37f3cc25447c48a960540d178995bb2
+SHA1: 089fa7dbd0cbaf81cd5a19e61937cce41d8c9ad0
+SHA256: 45c6c7767fbf0bec4476ea294674a790a288be376bda7d6320a63e9a3a1a2d5f
+Section: firmware
+Priority: optional
+Description: Firmware for XBian.(Aug  7 2013 16:19:51, version 7c7b17433e2a63025f6f42adcb2b8766eff55e12)
+
+Package: xbian-package-firmware
+Version: 1.4-6
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 7273
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/stable/main/x/xbian-package-firmware/xbian-package-firmware_1.4-6_armhf.deb
+Size: 3143124
+MD5sum: 54f6daa02bbc97a7f3f2c37aaf3bd8e6
+SHA1: 2ae56102c03e9f263eb7ad6e9cd82330befdf359
+SHA256: aaf0b2b20772e9a6e6f5aff5d466469f9c1a3f61ba23ba0ad835923b52739f3c
+Section: firmware
+Priority: optional
+Description: Firmware for XBian. (Sep 10 2013 12:42:29, 26ff70fafc90598f8cf7666117c00acb25b03110)
+
 Package: xbian-package-headphones
 Version: 1.1
 Architecture: armhf
@@ -622,6 +548,429 @@ Section: net
 Priority: optional
 Description: Headphones compiled, patched and configured for XBian
 Codename: wheezy
+
+Package: xbian-package-headphones
+Version: 1.1.0-1
+Architecture: armhf
+Origin: XBian
+Maintainer: sjengfred <sjengfred@home.nl>
+Installed-Size: 15878
+Depends: xbian-update, git-core
+Filename: pool/stable/main/x/xbian-package-headphones/xbian-package-headphones_1.1.0-1_armhf.deb
+Size: 9111150
+MD5sum: 7a91acff0f3bddbcacf7328157a36368
+SHA1: b771e8fed56cf7d54091cc1afb94c8977d360fa1
+SHA256: 288c92d12dd4b1d032f6333638e8c408b399b85bf0d9d5bff2247ebc2f82fdb0
+Section: net
+Priority: optional
+Description: Headphones compiled, patched and configured for XBian
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.2
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 66
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-6.2), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.2_armhf.deb
+Size: 15024
+MD5sum: d4ba855840e9c0e3d5f923885154da7d
+SHA1: 09d21dac40bd7a8e7ca3f9f62683c982ad23abc1
+SHA256: 4727f7d87bd2ed83554bb7524d36508836d72d8f7cc7851f345baba8f74c91f3
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.2-1d
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 67
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-6.2), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.2-1d_armhf.deb
+Size: 15432
+MD5sum: cb9686edd5e73cafb32f858ffb9ed2e8
+SHA1: d1ce8fdd40f52c612f8050cad46265dcc1208f09
+SHA256: dbf7d829ca3e1769fb9974e0afc23fa3f59ee405b6d14e04f687e9da23e4b90f
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.1-5b
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 59
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils
+Breaks: xbian-package-splash (<<1.0-1), xbian-package-kernel (<<1.3-5.5)
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.1-5b_armhf.deb
+Size: 14838
+MD5sum: 96744ac63121afb11d0ab64b55ae040e
+SHA1: 567f502341bb6962622e8ad5417765fbd6daac8f
+SHA256: 0ee582b4a4742139b02a91e47ebff184b362768b37d6f9a4d3019f81494dcf53
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.1-5d
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 62
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-5.5), xbian-package-splash (>=1.0-1)
+Breaks: xbian-update (<<1.0.2-0)
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.1-5d_armhf.deb
+Size: 14670
+MD5sum: 9359fb559016970956fcaf1f19471b6e
+SHA1: 26aa02de60c010c2dd7f5918541765e3b5ff177a
+SHA256: 7a3321be1b195cf2296bbc3a97af3a281d492121c8e5553f83f3fa0b1b067af2
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.1-5g
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 62
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-5.5), xbian-package-splash (>=1.0-1)
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.1-5g_armhf.deb
+Size: 14670
+MD5sum: f08a84902ae31ad9dee97e6109d4eadc
+SHA1: db9b0d6252221e3179df4117598ad88b9d9739d0
+SHA256: 372d360e471ba40b84687e42a96ebe45104f6eebc059185edcb7188a3a7c9021
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.1-5c
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 59
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-5.5)
+Breaks: xbian-package-splash (<<1.0-1)
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.1-5c_armhf.deb
+Size: 13920
+MD5sum: 8c317542e02683905ad219aea597b11f
+SHA1: 3e6b469644972a430c392fad77ef0c36ac905995
+SHA256: e5a81038a65ef9b9f551a4041d2f17ac1f652a52219d19271e3b5fa1a5c047a9
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.2-1a
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 67
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-6.2), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.2-1a_armhf.deb
+Size: 15148
+MD5sum: 6f70114946e74c14da986611cc254dbe
+SHA1: ea33becc56867cf787e0d12e5aec801e795802a5
+SHA256: 2d89457070e4278a4ec8df61dd4cdc20a3aa20c8efb3beb90e5828332ba045c1
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.2-1b
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 67
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-6.2), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.2-1b_armhf.deb
+Size: 15304
+MD5sum: e12626e76a933b4e5e8d55ca01189ed2
+SHA1: 61c4f6900e9ae7e91f15b04e8a54a36895428a40
+SHA256: c3820729b147c8966984c2606893f5534dc45eece31fa7912dca9449467b64eb
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.2-1c
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 67
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-6.2), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.2-1c_armhf.deb
+Size: 15414
+MD5sum: 7d7bf9ba8906ec04afcc2d3fb81fd520
+SHA1: e8b390785e6eb17604318db775d8241ce7a47fb2
+SHA256: 7c2f8e934fb9914a76227b55aa4bc261157819b1b2233aa586738e8e9a1ac189
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.1-5h
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 64
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-5.5), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.1-5h_armhf.deb
+Size: 14898
+MD5sum: c518ab95866c6f5c7888e0628e09589b
+SHA1: 38780ca340b7d78b220c39b97ac5064aa0129428
+SHA256: 4b83e37cf9de222e093a0ba737dd0ae77664b2766525b8dbf66dde547102a2e1
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.1-5f
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 62
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-5.5), xbian-package-splash (>=1.0-1), xbian-update (>=1.0.2)
+Filename: pool/stable/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.1-5f_armhf.deb
+Size: 14682
+MD5sum: f916668d3fdeb381048dd62499112fc7
+SHA1: f4ee73688d3eb8d7d1a763a6235d8b7217c65c01
+SHA256: c8949504f8cbc120c9d59140d3eb80cb7b770555411df392e3a5e57edbe6f826
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-kernel
+Version: 1.3-6.3
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 34337
+Depends: xbian-package-firmware (>=1.4-3), rng-tools, xbian-package-initramfs-tools (>= 1.3.1)
+Suggests: xbian-package-kernel-headers
+Conflicts: linux-firmware-image, linux-image, linux-modules-3.10.18+
+Replaces: xbian-package-kernel3.6.11
+Provides: linux-image, linux-firmware-image, linux-modules-3.10.18+
+Filename: pool/stable/main/x/xbian-package-kernel/xbian-package-kernel_1.3-6.3_armhf.deb
+Size: 15180782
+MD5sum: 0e9e0bb45c134c20799411256983ec74
+SHA1: 8436392a10eaa71c822605a5c44c323120eab4cb
+SHA256: 1416507a6cc7c2a31ffaa2fb10b04caf26fd97f537eaeb7ab0a3abf85ce3941a
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel for the Raspberry Pi (3.10.18+)
+
+Package: xbian-package-kernel
+Version: 1.3-5.5
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 34421
+Depends: xbian-package-firmware (>=1.4-3), rng-tools, xbian-package-initramfs-tools (>= 1.0-2.3)
+Suggests: xbian-package-kernel-headers
+Conflicts: linux-firmware-image, linux-image, linux-modules-3.10.12+
+Replaces: xbian-package-kernel3.6.11
+Provides: linux-image, linux-firmware-image, linux-modules-3.10.12+
+Filename: pool/stable/main/x/xbian-package-kernel/xbian-package-kernel_1.3-5.5_armhf.deb
+Size: 15217314
+MD5sum: 7fe104eaf4def5b11fa95c0e7c7a7a6e
+SHA1: bf7a942aa2f1aa89396dbf18f1c1b25b659a0aa2
+SHA256: 568c868f94ac819efeab2a788c403324a1af74737e441160f5588de9b3d38ea2
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel for the Raspberry Pi (3.10.12+)
+
+Package: xbian-package-kernel
+Version: 1.3-6.2
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 34441
+Depends: xbian-package-firmware (>=1.4-3), rng-tools, xbian-package-initramfs-tools (>= 1.3.1)
+Suggests: xbian-package-kernel-headers
+Conflicts: linux-firmware-image, linux-image, linux-modules-3.10.21+
+Replaces: xbian-package-kernel3.6.11
+Provides: linux-image, linux-firmware-image, linux-modules-3.10.21+
+Filename: pool/stable/main/x/xbian-package-kernel/xbian-package-kernel_1.3-6.2_armhf.deb
+Size: 15223290
+MD5sum: a2b1f9d0ff295a854b8118c5c660f2b8
+SHA1: a4b307963b1057b426021d0ee21f1309027fe150
+SHA256: 2193208a9597f54940b1c0c0e13f78ef124bec263260ee3003f9f5e66b0eb0c6
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel for the Raspberry Pi (3.10.21+)
+
+Package: xbian-package-kernel
+Version: 1.3-6.1
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 34337
+Depends: xbian-package-firmware (>=1.4-3), rng-tools, xbian-package-initramfs-tools (>= 1.3.1)
+Suggests: xbian-package-kernel-headers
+Conflicts: linux-firmware-image, linux-image, linux-modules-3.10.18+
+Replaces: xbian-package-kernel3.6.11
+Provides: linux-image, linux-firmware-image, linux-modules-3.10.18+
+Filename: pool/stable/main/x/xbian-package-kernel/xbian-package-kernel_1.3-6.1_armhf.deb
+Size: 15189778
+MD5sum: 8b955fffea746fb50f7590f350f1b08c
+SHA1: 42773a173c7160ad75ca0975ecb8632460dca884
+SHA256: b2e4c4acb3bcd8c3bcc23a5f24bd1b569774f90dc4c65aa63d387cdfb7b93785
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel for the Raspberry Pi (3.10.18+)
+
+Package: xbian-package-kernel
+Version: 1.3-5.4
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 34421
+Depends: xbian-package-firmware (>=1.4-3), rng-tools, xbian-package-initramfs-tools (>= 1.0-2.3)
+Suggests: xbian-package-kernel-headers
+Conflicts: linux-firmware-image, linux-image, linux-modules-3.10.12+
+Replaces: xbian-package-kernel3.6.11
+Provides: linux-image, linux-firmware-image, linux-modules-3.10.12+
+Filename: pool/stable/main/x/xbian-package-kernel/xbian-package-kernel_1.3-5.4_armhf.deb
+Size: 15216500
+MD5sum: 05b32877fef880f2500d41a442dc2a47
+SHA1: c936598f37009effa1c4e232452898d558d72861
+SHA256: 26e681094ee2c06d43bf1f8131a2bdc1ee3068e03229cd0cdc76d187f8b88811
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel for the Raspberry Pi (3.10.12+)
+
+Package: xbian-package-kernel-headers
+Version: 1.3-5.5
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 37895
+Depends: xbian-package-kernel (>=1.3-5.5), make, gcc
+Suggests: dkms
+Conflicts: linux-headers-3.10.12+
+Provides: linux-headers-3.10.12+
+Filename: pool/stable/main/x/xbian-package-kernel-headers/xbian-package-kernel-headers_1.3-5.5_armhf.deb
+Size: 8377794
+MD5sum: 86d4cd86d9420d8a63c73aa53be1f0b1
+SHA1: 527531fac405ded44c1de3aef202e8ff5d754b95
+SHA256: 649ab586046ac84c42d2d4a6bbb7e072692ef4492f3f1ec562da1fb8f101571a
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel headers for the Raspberry Pi (3.10.12+)
+
+Package: xbian-package-kernel-headers
+Version: 1.3-6.3
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 37930
+Depends: xbian-package-kernel (>=1.3-6.3), make, gcc
+Suggests: dkms
+Conflicts: linux-headers-3.10.18+
+Provides: linux-headers-3.10.18+
+Filename: pool/stable/main/x/xbian-package-kernel-headers/xbian-package-kernel-headers_1.3-6.3_armhf.deb
+Size: 8391656
+MD5sum: 5a9a9e7a2ed8a974ae4390c26eb5d4c8
+SHA1: a967615b34686ce94f3e882e2c9d192e3cd40092
+SHA256: f8c1acd4a3c89f4b8defafbe38f0b6ab4ff6f4e6cc3457f31cd0498e2979d994
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel headers for the Raspberry Pi (3.10.18+)
+
+Package: xbian-package-libshairport
+Version: 1.0-1
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 139
+Conflicts: libshairport1, libshairport-dev
+Breaks: xbian-package-xbmc (<<2.3)
+Provides: libshairport1, libshairport-dev
+Filename: pool/stable/main/x/xbian-package-libshairport/xbian-package-libshairport_1.0-1_armhf.deb
+Size: 28698
+MD5sum: cd62fa5fe895b8409566003542425ad4
+SHA1: 41804cb4b9a79daf21f2c75264aee78f92a7e08e
+SHA256: 6494d57370af784e257ba3c10c992b6a020cce623901efe7bb44a357b5401ca9
+Section: utils
+Priority: optional
+Description: libshairport for XBian
+
+Package: xbian-package-libtag
+Version: 1.0-2
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 1262
+Conflicts: libtag-extras0, libtag1-rusxmms, libtag1-vanilla
+Breaks: xbian-package-xbmc (<< 2.3)
+Provides: libtag1-dev, libtag1-vanilla
+Filename: pool/stable/main/x/xbian-package-libtag/xbian-package-libtag_1.0-2_armhf.deb
+Size: 514582
+MD5sum: 9b65a7caef4e2b644b9b0e617ceddff6
+SHA1: 0770896682ebaca1cbdfb329e8689cc390c86bc0
+SHA256: e9d8a9f9668340299813c2bb5c4270675221e199ba6cd30e05b34c740850e042
+Section: utils
+Priority: optional
+Description: libtag for XBian
+
+Package: xbian-package-lirc
+Version: 1.4-8.8
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 375
+Depends: upstart
+Conflicts: lirc, iguanair
+Replaces: lirc, iguanair
+Filename: pool/stable/main/x/xbian-package-lirc/xbian-package-lirc_1.4-8.8_armhf.deb
+Size: 369250
+MD5sum: 83d24d2737d9777625f3284678f644e3
+SHA1: af31a8617204d21465cc3dc5960d08a139fe91f3
+SHA256: c8f35e488435fdc09b7d2ba912f79acec015c40a3a3833a0c31183ae493c9b76
+Section: utils
+Priority: optional
+Description: Remote controller deamon.
 
 Package: xbian-package-maraschino
 Version: 1.0
@@ -686,6 +1035,91 @@ SHA256: 2af69a5f38aa2c373e1b367f0fcedcf45618cf3879268733a512118f54503f69
 Section: net
 Priority: optional
 Description: NZBGet 11.0 compiled, patched and configured for XBian
+
+Package: xbian-package-rasp-switching
+Version: 1.0.1
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 8
+Breaks: xbian-package-xbmc-scripts (<<1.0.1-14)
+Filename: pool/stable/main/x/xbian-package-rasp-switching/xbian-package-rasp-switching_1.0.1_armhf.deb
+Size: 1528
+MD5sum: 521958a718fa47d95a242f3a1750bff0
+SHA1: e677f8f162789afda1bc1d57a9f85edff73564f8
+SHA256: 2d0b802220e8c3b6e668a91536fa5ea32096921f43c8df63e2e29eed60cd34d8
+Section: system
+Priority: optional
+Description: Enables XWindows for pi user, XBMC for xbian.
+
+Package: xbian-package-repo
+Version: 1.0.0
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 10
+Filename: pool/stable/main/x/xbian-package-repo/xbian-package-repo_1.0.0_armhf.deb
+Size: 3186
+MD5sum: 29e2ab40f5b55a6002cec5fc9668d18b
+SHA1: 50e72da4429f977c00d9e11e629783b2e76b6cf0
+SHA256: 32fb3279b78eeaf16c2c046024a29e8540d95fffdc2e3b92edbceec59cd2fdbe
+Section: system
+Priority: optional
+Description: XBian repository package. It installs XBian public apt keys and sources files.
+
+Package: xbian-package-samba
+Version: 2.0.0-3
+Architecture: armhf
+Origin: XBian
+Maintainer: <development@xbian.org>
+Installed-Size: 8
+Pre-Depends: openbsd-inetd
+Depends: samba, samba-common-bin
+Conflicts: xbian-package-networkfs
+Replaces: xbian-package-networkfs
+Filename: pool/stable/main/x/xbian-package-samba/xbian-package-samba_2.0.0-3_armhf.deb
+Size: 2534
+MD5sum: f8ad5d0aececa08a7e7492a83f4f0a2e
+SHA1: 301111ce8370ebe18a1854358f78d49fb0a5131a
+SHA256: 0c466dc251af2e3597a021326c7fdff60e3a3c9943fc36980ecf45b327ec3662
+Section: net
+Priority: optional
+Description: Windows <--> linux filesharing.
+
+Package: xbian-package-samba
+Version: 2.0.0-4
+Architecture: armhf
+Origin: XBian
+Maintainer: <development@xbian.org>
+Installed-Size: 9
+Pre-Depends: openbsd-inetd
+Depends: samba, samba-common-bin
+Conflicts: xbian-package-networkfs
+Replaces: xbian-package-networkfs
+Filename: pool/stable/main/x/xbian-package-samba/xbian-package-samba_2.0.0-4_armhf.deb
+Size: 1654
+MD5sum: 2509c3e266d6bfd706bbc04d79719346
+SHA1: 604f111cb8bccd89d4437e0c508fccaffc9867a1
+SHA256: 642d6be34de8dde09e4e28bcb15cc01a881bae9e36f7a315e4c7ec763e851c70
+Section: net
+Priority: optional
+Description: Windows <--> linux filesharing.
+
+Package: xbian-package-shairplay
+Version: 1.0
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 210
+Breaks: xbian-package-xbmc (<<2.3)
+Filename: pool/stable/main/x/xbian-package-shairplay/xbian-package-shairplay_1.0_armhf.deb
+Size: 88570
+MD5sum: bec3c35d616c4c73913d2b1298fabae6
+SHA1: 2a95d0d43d1cb5396cb8f7abb48dcb88281ca694
+SHA256: 0f14e89906e86834a4c4d1ca2e5b08d1c9ce2e5985d6a9f3f9001c4d74a00986
+Section: utils
+Priority: optional
+Description: libshairplay for XBian
 
 Package: xbian-package-sickbeard
 Version: 1.0
@@ -787,6 +1221,41 @@ Section: net
 Priority: optional
 Description: SickBeard TPB compiled, patched and configured for XBian
 
+Package: xbian-package-splash
+Version: 1.0-1.1
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 799
+Replaces: xbian-update (<=1.0-0.5), xbian-package-initramfs-tools (<<1.0-1)
+Filename: pool/stable/main/x/xbian-package-splash/xbian-package-splash_1.0-1.1_armhf.deb
+Size: 455704
+MD5sum: 3735266543e6a97fa9069183470ed900
+SHA1: 2071e6ce108f2183ceeecee4400076d01abe8be8
+SHA256: 2776c6eb465077cf4e2f33fa14012f0421d1ef4b16ea301fb5c5806d49e5ef47
+Section: video
+Priority: standard
+Description: Splash screen.
+
+Package: xbian-package-splash
+Version: 1.0-1.1a
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 799
+Depends: libfreetype6, zlib1g, libjpeg8
+Replaces: xbian-update (<=1.0-0.5), xbian-package-initramfs-tools (<<1.0-1)
+Filename: pool/stable/main/x/xbian-package-splash/xbian-package-splash_1.0-1.1a_armhf.deb
+Size: 455734
+MD5sum: 849125130a143ad7280b47cb42d66879
+SHA1: 26eb5d3a8c3277d03196da5a8c09bc7cc43d43ab
+SHA256: 03f23447702d1e7179c6e35fb263a205e79168f08fbe35cb2e2794b6ca6db30b
+Section: video
+Priority: standard
+Description: Splash screen.
+
 Package: xbian-package-transmission
 Version: 2.76
 Architecture: armhf
@@ -840,24 +1309,150 @@ Priority: optional
 Description: Transmission 2.80 compiled, patched and configured for XBian
 
 Package: xbian-package-tvheadend
-Version: 1.0.1
+Version: 1.0.1d
 Architecture: armhf
 Origin: XBian
 Maintainer: mk01 <development@xbian.org>
-Installed-Size: 7631
+Installed-Size: 7632
 Depends: libavahi-client3 (>= 0.6.16), libavahi-common3 (>= 0.6.16), libavcodec53 (>= 6:0.8.3-1~) | libavcodec-extra-53 (>= 6:0.8.6), libavformat53 (>= 6:0.8.3-1~), libavutil51 (>= 6:0.8.3-1~), libc6 (>= 2.13-28), libcurl3-gnutls (>= 7.16.2), libgcc1 (>= 1:4.4.0), libssl1.0.0 (>= 1.0.0), libswscale2 (>= 6:0.8.3-1~), zlib1g (>= 1:1.1.4)
 Suggests: xbian-package-xbmc
 Breaks: xbian-update (<<1.0-1.2)
 Replaces: hts-tvheadend
-Filename: pool/stable/main/x/xbian-package-tvheadend/xbian-package-tvheadend_1.0.1_armhf.deb
-Size: 2317428
-MD5sum: 147eed0e9950714d1540f42b39cdb716
-SHA1: 4d136055810630e2b9b7c1ce4c4a59127d8c29ff
-SHA256: 4dc6c3006570362929d9849bdcb6072f4ec9fb538fd82968fadfc0f38c899c7f
+Filename: pool/stable/main/x/xbian-package-tvheadend/xbian-package-tvheadend_1.0.1d_armhf.deb
+Size: 2317010
+MD5sum: 405ef04ffb8aaa3b388ec3ffbad8755c
+SHA1: b4983910e298a8ddead2b828c01d4e640e38929e
+SHA256: b054b7e0ae90e097437a3bb543c4be9f47f32c102f8fd01ae0dffaa8cf953f76
 Section: video
 Priority: optional
 Homepage: https://tvheadend.org
 Description: TVHeadEnd 3.5.245~g6c9bff1
+
+Package: xbian-package-upstart-xbmc-bridge
+Version: 1.1.0-5
+Architecture: armhf
+Origin: XBian
+Maintainer: belese <besme2@gmail.com>
+Installed-Size: 23
+Depends: xbian-package-xbmc, upstart, python
+Filename: pool/stable/main/x/xbian-package-upstart-xbmc-bridge/xbian-package-upstart-xbmc-bridge_1.1.0-5_armhf.deb
+Size: 4506
+MD5sum: e39e521dc6e020b2af41931bb9f4af93
+SHA1: 35d01102c68aae15f0442bda99d18a4753e3d072
+SHA256: 40a3e972e4ad9e926d324380e6a4907ed323843c6b08198f2f8a28396090bdf9
+Section: utils
+Priority: optional
+Description: Bridge between xbmc event and upstart
+
+Package: xbian-package-upstart-xbmc-bridge
+Version: 1.1.0-4
+Architecture: armhf
+Origin: XBian
+Maintainer: belese <besme2@gmail.com>
+Installed-Size: 21
+Depends: xbian-package-xbmc, upstart, python
+Filename: pool/stable/main/x/xbian-package-upstart-xbmc-bridge/xbian-package-upstart-xbmc-bridge_1.1.0-4_armhf.deb
+Size: 4404
+MD5sum: 07c308f054f1a218ace7d8e9fccaf146
+SHA1: 92d0965c3971897e5bec65eaf775234d1840a4e5
+SHA256: b9988793c23291a680bf9cc8405d615a2612c2ea84418016d45807413492241d
+Section: utils
+Priority: optional
+Description: Bridge between xbmc event and upstart
+
+Package: xbian-package-usbmount
+Version: 1.0.5-1b
+Architecture: all
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 261
+Depends: lockfile-progs, udev, util-linux (>> 2.16), policykit-1, ufsutils
+Conflicts: usbmount
+Replaces: usbmount
+Provides: usbmount
+Filename: pool/stable/main/x/xbian-package-usbmount/xbian-package-usbmount_1.0.5-1b_armhf.deb
+Size: 19838
+MD5sum: 1a54a516d043b7e143c2d88181ca8688
+SHA1: 7fec2c5c89124fbb8c84609276595981616f09f3
+SHA256: f9d812d7c0f8bf783c59103f0a26ebf4b2d9358e65c26dc020e541620c7189b8
+Section: utils
+Priority: extra
+Description: automatically mount and unmount USB mass storage devices
+
+Package: xbian-package-usbmount
+Version: 1.0.5
+Architecture: all
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 261
+Depends: lockfile-progs, udev, util-linux (>> 2.16), policykit-1, ufsutils
+Conflicts: usbmount
+Replaces: usbmount
+Provides: usbmount
+Filename: pool/stable/main/x/xbian-package-usbmount/xbian-package-usbmount_1.0.5_all.deb
+Size: 20748
+MD5sum: ab248c35abe5aaf9bceb487d683667d0
+SHA1: 3c3eb03b40562ba0c37fe685aea9ca410cd6a122
+SHA256: 5af38beea2d450367f53f1eadb8c40053ebfdf77c4c3d57ec9ee17a76473a6ee
+Section: utils
+Priority: extra
+Description: automatically mount and unmount USB mass storage devices
+
+Package: xbian-package-usbmount
+Version: 1.0.5-1a
+Architecture: all
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 261
+Depends: lockfile-progs, udev, util-linux (>> 2.16), policykit-1, ufsutils
+Conflicts: usbmount
+Replaces: usbmount
+Provides: usbmount
+Filename: pool/stable/main/x/xbian-package-usbmount/xbian-package-usbmount_1.0.5-1a_armhf.deb
+Size: 19824
+MD5sum: d68eb952be11241657686c33d670ad69
+SHA1: 89cbfe1e99f53ffda5aadbc1f82c9c88c8b47234
+SHA256: af0678a26ebe79ad5c0cd281c9ccb76b0b8ed4c7570f92bea31ea9925cdbe73b
+Section: utils
+Priority: extra
+Description: automatically mount and unmount USB mass storage devices
+
+Package: xbian-package-vnc-server
+Version: 1.0.0-3b
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 139
+Depends: xbian-package-firmware, libc6, libvncserver0, zlib1g, libjpeg8, libgcrypt11, libgnutls26, libgcc1, libgpg-error0, libtasn1-3, libp11-kit-dev
+Filename: pool/stable/main/x/xbian-package-vnc-server/xbian-package-vnc-server_1.0.0-3b_armhf.deb
+Size: 9390
+MD5sum: 99230a6fb96290f8b253031fbf287fcc
+SHA1: 751cdfb052fed34993b43299d96891f7e06dd2fc
+SHA256: dce263c332c9ffc3d404ff512eddc78a6d104287638d421f43470cf5a8acc837
+Section: net
+Priority: optional
+Description: VNC Server for Raspberry PI using dispmanx https://github.com/hanzelpeter/dispmanx_vnc.git
+
+Package: xbian-package-vnc-server
+Version: 1.0.1
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 23
+Depends: xbian-package-firmware, libc6, libvncserver0, zlib1g, libjpeg8, libgcrypt11, libgnutls26, libgcc1, libgpg-error0, libtasn1-3, libp11-kit-dev
+Filename: pool/stable/main/x/xbian-package-vnc-server/xbian-package-vnc-server_1.0.1_armhf.deb
+Size: 8460
+MD5sum: 09f9f01fec7de39cdeee4d4581bfd0cf
+SHA1: b6127e281b4103e6d13a3abdff9c5ecc44603450
+SHA256: 8559ce5f0282372174c29ba11946d457fa4e3331a6d31297b51ec27c42afed93
+Section: net
+Priority: optional
+Description: VNC Server for Raspberry PI using dispmanx https://github.com/hanzelpeter/dispmanx_vnc.git
 
 Package: xbian-package-webserver
 Version: 1.0
@@ -878,6 +1473,460 @@ Priority: optional
 Description: PHP + Apache webserver.
 Codename: wheezy
 
+Package: xbian-package-xbmc
+Version: 2.9-10.10
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 65949
+Depends: xbian-package-xbmc-scripts, libhal-storage1, libhal1, xbian-package-libtag (>=1.0-2), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libnfs1, psmisc, xbian-package-config-xbmc (>=1.1-2.7)
+Breaks: xbian-update (<<1.0-1.2)
+Filename: pool/stable/main/x/xbian-package-xbmc/xbian-package-xbmc_2.9-10.10_armhf.deb
+Size: 34890252
+MD5sum: f56ad0db1af396cbfbbcd0bdd711ae80
+SHA1: 0814d7fbad057be596bd4aa3259ec2db3f15dd1e
+SHA256: a9e91d8f184ca97afcf7aaba5354e691176d4deb11fa5a1053dc91dfc5ba9541
+Section: video
+Priority: optional
+Description: Frodo nightly.
+
+Package: xbian-package-xbmc
+Version: 2.9-10.13
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 65966
+Depends: xbian-package-xbmc-scripts, libhal-storage1, libhal1, xbian-package-libtag (>=1.0-2), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libnfs1, psmisc
+Conflicts: xbian-package-xbmc-gotham-nightly
+Replaces: xbian-package-xbmc-gotham-nightly
+Filename: pool/stable/main/x/xbian-package-xbmc/xbian-package-xbmc_2.9-10.13_armhf.deb
+Size: 34918266
+MD5sum: 2bfb1615cdd065b279cb38b07eb3b69c
+SHA1: f9a042abb72937cf96c184ca4a0fc035092db683
+SHA256: d74d2ef75a3908ff2a723f1bdb50664d2243f0d32036aec07de20c6ec4d3e6eb
+Section: video
+Priority: optional
+Description: Frodo nightly.
+
+Package: xbian-package-xbmc-gotham-nightly
+Version: 2.9-10.20
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 82364
+Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage1, xbian-package-shairplay
+Conflicts: xbian-package-xbmc
+Replaces: xbian-package-xbmc
+Provides: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.20_armhf.deb
+Size: 42856028
+MD5sum: e5dbcc68ac291ef2321b8a4726d2dfab
+SHA1: 2bd1ebc4af83443e92cd7e87ed9a9e17911eaaab
+SHA256: a147f05536aca6bf25a0fcd8f046212e1b981c349f75b74b3609ebe332eaa0bd
+Section: video
+Priority: optional
+Description: Gotham nightly
+
+Package: xbian-package-xbmc-gotham-nightly
+Version: 2.9-10.21
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 82846
+Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage1, xbian-package-shairplay
+Conflicts: xbian-package-xbmc
+Replaces: xbian-package-xbmc
+Provides: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.21_armhf.deb
+Size: 43110184
+MD5sum: ce612e28a713b935db087b1c773ecc37
+SHA1: b3c30cf705d9fea07b7e72a6e287b10357b83e28
+SHA256: d2c4e8310967c68d01c320c9ec05ac25f7c4dacc7196afe815c732d313e5a7a4
+Section: video
+Priority: optional
+Description: Gotham nightly
+
+Package: xbian-package-xbmc-gotham-nightly
+Version: 2.9-10.17
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 80564
+Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage1
+Conflicts: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.1), xbian-package-xbmc-scripts (<<1.0.1-7), xbian-package-cec (<<1.1-0.4)
+Replaces: xbian-package-xbmc
+Provides: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.17_armhf.deb
+Size: 41537240
+MD5sum: 8da91220e5f8bb4cac3ad38e9c459dac
+SHA1: 33d9cb47dc246520bdb04b18074c80e544c772d1
+SHA256: bab71eb74d7b1278effd081ba6f708c2aa0d524aee68a7d31c4e7b4d77e8ba92
+Section: video
+Priority: optional
+Description: Gotham nightly
+
+Package: xbian-package-xbmc-gotham-nightly
+Version: 2.9-10.19
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 82319
+Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage1
+Conflicts: xbian-package-xbmc
+Replaces: xbian-package-xbmc
+Provides: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.19_armhf.deb
+Size: 42855994
+MD5sum: 5f21b7a962e5ee446c2cdb16227c345d
+SHA1: 6f90bc9c8242d225879dd38cd629f1533cb1eaeb
+SHA256: 9f0359a263cb12f07fe8e394a09c09216a4cc22e8965ddd1a799f4803679ee1e
+Section: video
+Priority: optional
+Description: Gotham nightly
+
+Package: xbian-package-xbmc-gotham-nightly
+Version: 2.9-10.16
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 80533
+Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage1
+Conflicts: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.1), xbian-package-xbmc-scripts (<<1.0.1-7), xbian-package-cec (<<1.1-0.4)
+Replaces: xbian-package-xbmc
+Provides: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.16_armhf.deb
+Size: 41537734
+MD5sum: 9b45daedbb922ffac6f29b505b167d8a
+SHA1: c4c7559e0c0cfe6c008355ac2f07632cdd7764fc
+SHA256: 5e001aa8bc57151c7a04499f7e614e5f5873513c4f3d3de0e66b897fc764e649
+Section: video
+Priority: optional
+Description: Gotham nightly
+
+Package: xbian-package-xbmc-gotham-nightly
+Version: 2.9-10.18
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 80804
+Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage1
+Conflicts: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.1), xbian-package-xbmc-scripts (<<1.0.1-7), xbian-package-cec (<<1.1-0.4)
+Replaces: xbian-package-xbmc
+Provides: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.18_armhf.deb
+Size: 41663312
+MD5sum: 1fdb3ddcbd3c0599df581457a2ad38c3
+SHA1: a606c39b1eddf44c069ebebd867bdd290370fe4f
+SHA256: ce4978f3720f2cdc1365e2d80ee2317ebab6fad0f56693b0850541bd1eb7afcd
+Section: video
+Priority: optional
+Description: Gotham nightly
+
+Package: xbian-package-xbmc-gotham-nightly
+Version: 2.9-10.15
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 79606
+Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage1
+Conflicts: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.1), xbian-package-xbmc-scripts (<<1.0.1-7), xbian-package-cec (<<1.1-0.4)
+Replaces: xbian-package-xbmc
+Provides: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.15_armhf.deb
+Size: 41327248
+MD5sum: 7b7d616118166227c33023e8d987a39e
+SHA1: 047fd23f7b42a531c7bc13c57cd63577da8a57d1
+SHA256: a9c6476e4d642fd50d1ac3b3adbfaab451d53a0839205be48fe93da3bbd5fdcf
+Section: video
+Priority: optional
+Description: Gotham nightly
+
+Package: xbian-package-xbmc-gotham-nightly
+Version: 2.9-10.22
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 82895
+Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage1, xbian-package-shairplay
+Conflicts: xbian-package-xbmc
+Replaces: xbian-package-xbmc
+Provides: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.22_armhf.deb
+Size: 43110370
+MD5sum: b031609105529e48f7b8a28295d4f8ef
+SHA1: 6a63e31c83baccc04f49874ac9344884a191542d
+SHA256: f09ab06ac3a72a7cdfc0af8801fe55334dab09ddc56e966650577d2d7d58ccae
+Section: video
+Priority: optional
+Description: Gotham nightly
+
+Package: xbian-package-xbmc-gotham-nightly
+Version: 2.9-10.14b
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 79606
+Depends: xbian-package-xbmc-scripts, xbian-package-libtag (>=1.0-1), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libhal1, libhal-storage1
+Conflicts: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.1), xbian-package-xbmc-scripts (<<1.0.1-7), xbian-package-cec (<<1.1-0.4)
+Replaces: xbian-package-xbmc
+Provides: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-gotham-nightly/xbian-package-xbmc-gotham-nightly_2.9-10.14b_armhf.deb
+Size: 41327322
+MD5sum: e869ff18da4e6eca466e083759f5696f
+SHA1: f183a87de5a055ce86ae97ab3d31d228de60f7c5
+SHA256: 37e9e65bfa02a0c010a6b89676f1832058902799cae5f70122d4f33806e5c485
+Section: video
+Priority: optional
+Description: Gotham nightly
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-15b
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 23
+Depends: xbian-package-upstart-xbmc-bridge (>=1.1.0-5)
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-15b_armhf.deb
+Size: 4966
+MD5sum: 69db20b8922df8c7837c1f9d474d18fd
+SHA1: eb7631a47af69a51d1cc2aded12f30259b062b77
+SHA256: 83e95a7d293ee87027ac9ac8a59bd8d49979dc75a1c79ed8481212c4ca5963d2
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-16
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 24
+Depends: xbian-package-upstart-xbmc-bridge (>=1.1.0-5)
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-16_armhf.deb
+Size: 5118
+MD5sum: 8f86cd2ad52078ffd94aa6ee18f8fef7
+SHA1: 6db524ce81e408d83225c9d9f01b2f4d8cf2f4e3
+SHA256: f6816a6d51f238ada077cf9fcbd1ea02112fe3c10db41dd7cab78b31715fdcff
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-17a
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 25
+Depends: xbian-package-upstart-xbmc-bridge (>=1.1.0-5)
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-17a_armhf.deb
+Size: 5170
+MD5sum: 7a8540435318eeb79dc0502380a152df
+SHA1: 231f604972ca1a2992a41c39e4225ba368a20482
+SHA256: adec9afdfdba613a3d906dbcca2412dee6dace69585380aff8553b2551653faa
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-14e
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 23
+Depends: xbian-package-upstart-xbmc-bridge (>=1.1.0-5)
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-14e_armhf.deb
+Size: 4912
+MD5sum: 43eb3472cb18d153e51f94819f5355c9
+SHA1: 65e4c1c88b4db616a48828ab280d5091b792f855
+SHA256: a97d70c6a8c27437957ee6fed6c1417fa8a68424c5d66e532ad2ee37f7ca2000
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-17
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 24
+Depends: xbian-package-upstart-xbmc-bridge (>=1.1.0-5)
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-17_armhf.deb
+Size: 5152
+MD5sum: d79d830521a7633c67f5b24f7a0e6835
+SHA1: 93ec9202de5d9b4dbfe014bbce83f07d19a57230
+SHA256: d1e4c5068685ef1df69d9ef3c5fc19af9c5af7e788a7e32e6d35b4660ab411bd
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-15c
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 23
+Depends: xbian-package-upstart-xbmc-bridge (>=1.1.0-5)
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-15c_armhf.deb
+Size: 4968
+MD5sum: b269fa3589f3c443f0f6be42d940af52
+SHA1: d06c40d3925adf7d8d770aef8e2b9401f3453af5
+SHA256: 9063776100b9d21a9ddc0b8ebef2502f3e883262bd80bb98f07fd472e0423502
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-14d
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 23
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-14d_armhf.deb
+Size: 4846
+MD5sum: 8abde960c29f3beb60e261fed6212a83
+SHA1: 7733cb0fd70aac8e4a1c1f2e268ff31e180939db
+SHA256: e14db374698a12176f473bac393c255cd1c62b97773fae7c8a5427ee4e464e35
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-15a
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 23
+Depends: xbian-package-upstart-xbmc-bridge (>=1.1.0-5)
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-15a_armhf.deb
+Size: 4926
+MD5sum: b863b428ec467e0d963b67ebf0d91b44
+SHA1: 0dbf3c63b6c541a2badf8ae59865c1a11b694534
+SHA256: edb8db6bbc26b25e4bd3118405a0f89e46212cbac60e2217de0081622b16e2f3
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-13c
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 22
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-13c_armhf.deb
+Size: 5684
+MD5sum: b268fb1b3c9a8e08e57a46a4ba181c2d
+SHA1: 790394538635a6bb6ea51fd99d5eae430bc4ae97
+SHA256: 0d307b1a6c0c8488d34fafa97ddf4e932740de786bb90c2c087c4f65fdc3d28a
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-xbmc-scripts
+Version: 1.0.1-15
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 23
+Depends: xbian-package-upstart-xbmc-bridge (>=1.1.0-5)
+Suggests: xbian-package-xbmc
+Breaks: xbian-update (<<1.0-1.2), xbian-package-xbmc (<<2.9-10.9)
+Replaces: xbian-package-xbmc
+Filename: pool/stable/main/x/xbian-package-xbmc-scripts/xbian-package-xbmc-scripts_1.0.1-15_armhf.deb
+Size: 4910
+MD5sum: aa999a7ca4eed56ed87813ac62888bf4
+SHA1: 21a298ffc9a290166fa6919d272706bc11743946
+SHA256: 5dd337faf51bade2b5d24bf392ff8dcbf55d27c8587ba10bd7166d3eebe693d6
+Section: video
+Priority: optional
+Description: XBian XBMC upstart scripts.
+
+Package: xbian-package-zram-swap
+Version: 1.0-4.7
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 16
+Breaks: xbian-package-usbmount (<<1.0-0.7)
+Filename: pool/stable/main/x/xbian-package-zram-swap/xbian-package-zram-swap_1.0-4.7_armhf.deb
+Size: 3420
+MD5sum: e591deb648e9412fda0e5109dddc3eff
+SHA1: be36c3b1a6656cf168035e3badf75a0ce629182a
+SHA256: 9872be2d1539bb6c112230b2e5a3eb24d8f8be7b9fc606f8ae2883be8082b0e8
+Section: base
+Priority: optional
+Description: zram-swap custom xbian package
+
+Package: xbian-package-zram-swap
+Version: 1.0-4.6
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 15
+Breaks: xbian-package-usbmount (<<1.0-0.7)
+Filename: pool/stable/main/x/xbian-package-zram-swap/xbian-package-zram-swap_1.0-4.6_armhf.deb
+Size: 3220
+MD5sum: c5f14638d5ec72890b9a3825886c12c0
+SHA1: 20f051dbd7cd758abed75906d18decf8c515dfcb
+SHA256: 3f9a5b21b4aad4f98660537b6f03bb0bcf4d78adf8aa8fdb9f5b1e6fbd843bea
+Section: base
+Priority: optional
+Description: zram-swap custom xbian package
+
+Package: xbian-update
+Version: 1.0.2-9a
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 246
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian), libcurl3, libva1, xbian-package-config-shell, policykit-1, patch, openbsd-inetd
+Depends: ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc, unattended-upgrades, xbian-update (>=1.0-0.5)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Breaks: xbian-packate-vnc-server (<<1.0.0-2), xbian-package-xbmc-scripts (<<1.0.1-3), xbian-package-samba (<<2.0.0-3), xbian-package-config-shell (<<2.1.6-48b), xbian-package-cec (<<1.1-0.3), xbian-package-config-xbmc (<<1.1.4-1), xbian-package-initramfs-tools (<<1.3.1-2), xbian-package-kernel (<<1.3-5.5), xbian-package-libshairport (<<1.0-1), xbian-package-lirc (<<1.4-8.8), xbian-package-usbmount (<<1.0.4-7), xbian-package-zram-swap (<<1.0-4.3), xbian-package-xbmc (<<2.9-10.13)
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/stable/main/x/xbian-update/xbian-update_1.0.2-9a_armhf.deb
+Size: 59790
+MD5sum: eee38a4493772238f1b38713b5940157
+SHA1: 3d55bb9fc7e55596234c73084732003c1244e6f4
+SHA256: 97087d6a2e6e15e95d46bdfc0271a3aafa7a7b0454a547e2d55e811d412c6704
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
 Package: xbian-update
 Version: 1.0.2-8e
 Architecture: armhf
@@ -890,11 +1939,630 @@ Depends: ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package
 Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
 Breaks: xbian-packate-vnc-server (<<1.0.0-2), xbian-package-xbmc-scripts (<<1.0.1-3), xbian-package-samba (<<2.0.0-3), xbian-package-config-shell (<<2.1.6-48b), xbian-package-cec (<<1.1-0.3), xbian-package-config-xbmc (<<1.1.4-1), xbian-package-firmware (<<1.4-5.1), xbian-package-initramfs-tools (<<1.3.1-2), xbian-package-kernel (<<1.3-5.5), xbian-package-libshairport (<<1.0-1), xbian-package-libtag (<<1.0-2), xbian-package-lirc (<<1.4-8.8), xbian-package-splash (<<1.0-1.1), xbian-package-upstart-xbmc-bridge (<<1.1.0-3), xbian-package-usbmount (<<1.0.4-7), xbian-package-xbmc (<<2.9-10.9), xbian-package-zram-swap (<<1.0-4.3)
 Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
-Filename: pool/staging/main/x/xbian-update/xbian-update_1.0.2-8e_armhf.deb
+Filename: pool/stable/main/x/xbian-update/xbian-update_1.0.2-8e_armhf.deb
 Size: 59194
 MD5sum: c56235d53301ec56d129b975186618b8
 SHA1: 7164ab295b61f12df5f8d9c663547f8fa6be81ef
 SHA256: cad65c824287d89aa6a907b1088d16897d7accb719750e26846deaaf8f9a767b
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-8d
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 893
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian), libcurl3, libva1, xbian-package-config-shell, policykit-1, patch, openbsd-inetd
+Depends: ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware, xbian-package-splash, xbian-package-kernel, xbian-package-xbmc, unattended-upgrades
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Breaks: xbian-packate-vnc-server (<<1.0.0-2), xbian-package-xbmc-scripts (<<1.0.1-3), xbian-package-samba (<<2.0.0-3), xbian-package-config-shell (<<2.1.6-48b), xbian-package-cec (<<1.1-0.3), xbian-package-config-xbmc (<<1.1.4-1), xbian-package-firmware (<<1.4-5.1), xbian-package-initramfs-tools (<<1.3.1-2), xbian-package-kernel (<<1.3-5.5), xbian-package-libshairport (<<1.0-1), xbian-package-libtag (<<1.0-2), xbian-package-lirc (<<1.4-8.8), xbian-package-splash (<<1.0-1.1), xbian-package-upstart-xbmc-bridge (<<1.1.0-3), xbian-package-usbmount (<<1.0.4-7), xbian-package-xbmc (<<2.9-10.9), xbian-package-zram-swap (<<1.0-4.3)
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/stable/main/x/xbian-update/xbian-update_1.0.2-8d_armhf.deb
+Size: 60210
+MD5sum: 7dbeac786cd403b90af53146b291cfba
+SHA1: ffb25f8b6aff37d2c8f3fdc63a4c4ab29324a2fe
+SHA256: 1b1f1b12b8e2b66fa5d9d108ca98cd96603bd139d98aa70a51c7cccdb9bdc697
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-package-cec
+Version: 1.1-1
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 1719
+Depends: udev (>=175-7.1), liblockdev1 (>=1.0.3-1.5), makedev, inetutils-ping
+Conflicts: libcec1
+Breaks: xbian-package-xbmc (<< 2.3)
+Replaces: xbian-update (<< 1.0-1)
+Provides: libcec1
+Filename: pool/staging/main/x/xbian-package-cec/xbian-package-cec_1.1-1_armhf.deb
+Size: 525736
+MD5sum: 95c3aa72407c16ff6c1cb3ec79deb1d7
+SHA1: 98e55d19e576bf7eff8e6fb1b82550f0f5c06a7e
+SHA256: 18fc0316d301cc6b4528a156077626d6b557943117300af21479224ef60febec
+Section: utils
+Priority: optional
+Description: cec for XBian.
+
+Package: xbian-package-cec
+Version: 1.1-0.4
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 1705
+Depends: udev (>=175-7.1), liblockdev1 (>=1.0.3-1.5), makedev, inetutils-ping
+Conflicts: libcec1
+Breaks: xbian-package-xbmc (<< 2.3)
+Replaces: xbian-update (<< 1.0-1)
+Provides: libcec1
+Filename: pool/staging/main/x/xbian-package-cec/xbian-package-cec_1.1-0.4_armhf.deb
+Size: 519700
+MD5sum: ec9beb30563cc4536d14a5d98d1ca98d
+SHA1: 6b01d90e55d4360fe89196fcab632386aa3bced5
+SHA256: b1571d656a86ade2f835f09a76edcbfede6eacd590181789be5ecc0c4c939a21
+Section: utils
+Priority: optional
+Description: cec for XBian.
+
+Package: xbian-package-config-xbmc
+Version: 1.1.4-4a
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: Belese <development@xbian.org>
+Installed-Size: 638
+Depends: xbian-package-config-shell (>=2.1.6-48), xbian-update (>=1.0.2-7c)
+Breaks: xbian-package-xbmc-scripts (<<1.0.0-1), xbian-package-xbmc-scripts (<<1.0.0-6)
+Filename: pool/staging/main/x/xbian-package-config-xbmc/xbian-package-config-xbmc_1.1.4-4a_armhf.deb
+Size: 110988
+MD5sum: 9636e45fe580da687d32f925f63fef56
+SHA1: 9a789b5d5025a77552dd743e56adff2d29a2cabe
+SHA256: ea06af4c1820631af1f869f8b2bfc4fbfe217adcf084bc66a1bc473d55000f7a
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-firmware
+Version: 1.4.11
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 7356
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/staging/main/x/xbian-package-firmware/xbian-package-firmware_1.4.11_armhf.deb
+Size: 3182262
+MD5sum: a5d58c18d974680ab5465609a10e741e
+SHA1: c5f873aef82f7ffff03bb8d1737ba38a39f752ee
+SHA256: 6acc1edaaaf9ed1b61aa6ccea969dc7ba158ab976762413452e4f46166beec4d
+Section: firmware
+Priority: optional
+Description: Firmware for XBian. Dec  9 2013 21:24:40 Copyright (c) 2012 Broadcom version c7215df85576f3e72f9c390db9bc2da642453b10 (clean) (release)
+
+Package: xbian-package-firmware
+Version: 1.4-9
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 7355
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/staging/main/x/xbian-package-firmware/xbian-package-firmware_1.4-9_armhf.deb
+Size: 3181980
+MD5sum: 76d5998faca2a2e166b97663b150f46e
+SHA1: b0c1ce0aec83612f05061be3c9d746c04c141492
+SHA256: acfddbbce9fc84b2f723caab8a217e2c3aca0eee19c1389d611512d183b694d1
+Section: firmware
+Priority: optional
+Description: Firmware for XBian. (upstream Dec-1-2013)
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.2-1e
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 69
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: busybox, udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-6.2), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/staging/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.2-1e_armhf.deb
+Size: 15532
+MD5sum: b2adae98cf6653dd2f301fb325db74c8
+SHA1: 9cfee15afc59c1c5c8f6592491ce325133ceb714
+SHA256: c2177567ef6236f99b154eab0c9900890bbab35b64708a70fd7afb420e5d0788
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-kernel
+Version: 1.3-6.3a
+Architecture: armhf
+Essential: No
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 34575
+Depends: xbian-package-firmware (>=1.4-3), rng-tools, xbian-package-initramfs-tools (>= 1.3.2-1e)
+Suggests: xbian-package-kernel-headers
+Conflicts: linux-firmware-image, linux-image, linux-modules-3.10.23+
+Replaces: xbian-package-kernel3.6.11
+Provides: linux-image, linux-firmware-image, linux-modules-3.10.23+
+Filename: pool/staging/main/x/xbian-package-kernel/xbian-package-kernel_1.3-6.3a_armhf.deb
+Size: 15250372
+MD5sum: c080a37849cc2e17ca2189b8985a6930
+SHA1: 30d4733bebd090b720328c8c4cea67aa297b4af0
+SHA256: 7b46ed138def4624a05c5a8884a41279592e260db5b0aa166f163766b43497ba
+Section: kernel
+Priority: optional
+Description: Latest XBian kernel for the Raspberry Pi (3.10.23+)
+
+Package: xbian-package-xbianhome
+Version: 1.0.0-2a
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 4793
+Filename: pool/staging/main/x/xbian-package-xbianhome/xbian-package-xbianhome_1.0.0-2a_armhf.deb
+Size: 2490078
+MD5sum: f4cd5dd7ff17a9b7c185b10754f8f4f3
+SHA1: 1f73d0c7cadadb0a9ca00ac7f22b9fbddafe23e2
+SHA256: eae4b1f64b5f66908aaccd85bbb92dd398f4d666611dd4b55a347772f49d6047
+Section: system
+Description: default user xbian home dir
+
+Package: xbian-package-xbianhome
+Version: 1.0.0-2b
+Architecture: armhf
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 4792
+Filename: pool/staging/main/x/xbian-package-xbianhome/xbian-package-xbianhome_1.0.0-2b_armhf.deb
+Size: 2489890
+MD5sum: 997557c8fb2a2d98b8ca1da5dafd41d4
+SHA1: 786931136476c2d88559e9911d511e51dcd2912b
+SHA256: ca5ca1484920cd2084d6b781086e78b38205033bd6aa9d6dabee9a73cf26ec96
+Section: system
+Description: default user xbian home dir
+
+Package: xbian-package-xbmc
+Version: 2.9-10.16
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 66485
+Depends: xbian-package-xbmc-scripts, libhal-storage1, libhal1, xbian-package-libtag (>=1.0-2), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libnfs1, psmisc
+Conflicts: xbian-package-xbmc-gotham-nightly
+Replaces: xbian-package-xbmc-gotham-nightly
+Filename: pool/staging/main/x/xbian-package-xbmc/xbian-package-xbmc_2.9-10.16_armhf.deb
+Size: 35170474
+MD5sum: a48be187a6d72828c8bf49af09c0b1b6
+SHA1: f8a6b663ad77dc46af2a1e8175876e7df080a2d7
+SHA256: 7defd8327bb97b02caec72d557da7ba28697d0564ae11fff46bad67e98964fab
+Section: video
+Priority: optional
+Description: Frodo nightly.
+
+Package: xbian-package-xbmc
+Version: 2.9-10.18
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 66485
+Depends: xbian-package-shairplay, xbian-package-xbmc-scripts, libhal-storage1, libhal1, xbian-package-libtag (>=1.0-2), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libnfs1, psmisc
+Conflicts: xbian-package-xbmc-gotham-nightly
+Replaces: xbian-package-xbmc-gotham-nightly
+Filename: pool/staging/main/x/xbian-package-xbmc/xbian-package-xbmc_2.9-10.18_armhf.deb
+Size: 35171492
+MD5sum: a4d8356de79b55cce607f9af6c44560e
+SHA1: f3b538d8a3eeeae41362e5b24f669bac4ad733f9
+SHA256: f2117eeb241fa9a8b075fa45da0757a793cd2b29d7ac4c349ba8212cebfe9679
+Section: video
+Priority: optional
+Description: Frodo nightly.
+
+Package: xbian-package-xbmc
+Version: 2.9-10.17
+Architecture: armhf
+Origin: XBian
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 66530
+Depends: xbian-package-shairplay, xbian-package-xbmc-scripts, libhal-storage1, libhal1, xbian-package-libtag (>=1.0-2), xbian-package-libshairport (>=1.0-1), libbluetooth3, xbian-package-cec (>= 1.0), libmad0, libtiff4, libcurl3-gnutls, libafpclient0, python, python-sqlite, libmysqlclient18, libtinyxml2.6.2, libyajl2, liblzo2-2, libpython2.7, libpcrecpp0, libcdio13, libsamplerate0, libsmbclient, libssh-4, libavahi-client3, libmicrohttpd10, libpng12-0, fontconfig-config, libaacs0, libass4, libbluray1, libenca0, libfontconfig1, libjasper1, ttf-dejavu-core, libnfs1, psmisc
+Conflicts: xbian-package-xbmc-gotham-nightly
+Replaces: xbian-package-xbmc-gotham-nightly
+Filename: pool/staging/main/x/xbian-package-xbmc/xbian-package-xbmc_2.9-10.17_armhf.deb
+Size: 35171460
+MD5sum: 689d3244635bef30e61217dd9c0ef453
+SHA1: 7b39234f987e820a2911e5f3d11f0f5594ba2dab
+SHA256: eece0130ce3a4ac7f6c4c2a6d03df09d0ef4de8acbbd7777eefa657ad6963156
+Section: video
+Priority: optional
+Description: Frodo nightly.
+
+Package: xbian-update
+Version: 1.0.2-12b
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 254
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc | xbian-package-xbmc-gotham-nightly, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.2-1c), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/staging/main/x/xbian-update/xbian-update_1.0.2-12b_armhf.deb
+Size: 61130
+MD5sum: b942681a7c53a0945a475e077da87e23
+SHA1: c98e9cd5622d997776a6879ef1071f6177a54e1b
+SHA256: 48451fd64c24d1c1bc2dfb7db7d13eb70524feb712d26ef6fddd9294f237f6a3
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-12a
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 254
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc | xbian-package-xbmc-gotham-nightly, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.2-1c), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/staging/main/x/xbian-update/xbian-update_1.0.2-12a_armhf.deb
+Size: 61126
+MD5sum: 30e34bba19accac840a4da7d625b83a5
+SHA1: 4c8c7a01f04c53ea1dbcbee36a14501210da90d3
+SHA256: f7da988aad0c1db7ac17600492a82bc8aedf96a8bfc5079cefbe70b568282234
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-11e
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 252
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.1-2), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3), xbian-package-xbmc (>=2.9-10.13)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/staging/main/x/xbian-update/xbian-update_1.0.2-11e_armhf.deb
+Size: 60528
+MD5sum: 92a89c4d6d60ec0da7cee3f89ecf8225
+SHA1: 9ddf86ed6e7fdf4a2ba5178fd9e9f5f42634ed31
+SHA256: bd3d03ddc560ae837a7ec1333b750297991711940a78ca9b7cd08cceef3f736a
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-11j
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 254
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.2-1c), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3), xbian-package-xbmc (>=2.9-10.13)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/staging/main/x/xbian-update/xbian-update_1.0.2-11j_armhf.deb
+Size: 60944
+MD5sum: 89ee3bcc4b55d74fee1cd9467a304ed1
+SHA1: d7077cd3099ef652278e05ade93c5daf15640964
+SHA256: 5809798e6629ae27eb3b7abda4dbfde9ebdd09b3ef7841bd48bd8c140b5c3ffd
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-11g
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 251
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.1-5h), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3), xbian-package-xbmc (>=2.9-10.13)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/staging/main/x/xbian-update/xbian-update_1.0.2-11g_armhf.deb
+Size: 60466
+MD5sum: 84a5708a33aa0b894924d5c8c4944306
+SHA1: 7ca7ff02db3b5822c92fb54fb7bdda146377d43f
+SHA256: 1abec77e1e75f81989408a9917aa3a45d07851d11c2d538b7166272fb13ca807
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-11d
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 252
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.1-2), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3), xbian-package-xbmc (>=2.9-10.13)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/staging/main/x/xbian-update/xbian-update_1.0.2-11d_armhf.deb
+Size: 60524
+MD5sum: f1d51c6babfc3e04070fa7c9c351a1b8
+SHA1: e3684a67546afd5da7e1a53209ce915b4fed9abf
+SHA256: d0ab79c01c4f9a934684493f19322ad6e6de3d7e60019b0d1bd55d11e0bc00b4
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-12
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 254
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc | xbian-package-xbmc-gotham-nightly, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.2-1c), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/staging/main/x/xbian-update/xbian-update_1.0.2-12_armhf.deb
+Size: 61080
+MD5sum: a1d1ecce805332eec4c0abb3d1cc1533
+SHA1: 808eb004a348669e967c80544a04a6140ebeeb42
+SHA256: c3b7039f4e57f6cc55745c647e7901f382220fcb346b1cccc89ae19feb6163d4
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-12d
+Architecture: armhf
+Essential: Yes
+Origin: XBian
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 254
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc | xbian-package-xbmc-gotham-nightly, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.2-1c), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/staging/main/x/xbian-update/xbian-update_1.0.2-12d_armhf.deb
+Size: 61128
+MD5sum: 291894280eced7a2246931294266ecff
+SHA1: 9b72b05311221f4f5e611279fd6956570b8ce212
+SHA256: 43ae79f4fd9b39ef8f0ae7e87dd3af9fcdac1a19f6bf038eca1f8cd7e1f35254
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: btrfs-tools
+Version: 1.0-xbian2
+Architecture: armhf
+Maintainer: Dmitrijs Ledkovs <xnox@debian.org>
+Installed-Size: 3153
+Depends: e2fslibs (>= 1.42), libblkid1 (>= 2.17.2), libc6 (>= 2.13-28), libcomerr2 (>= 1.01), libgcc1 (>= 1:4.4.0), liblzo2-2, libuuid1 (>= 2.16), zlib1g (>= 1:1.2.0)
+Breaks: xbian-package-config-shell (<< 2.1.6-53a)
+Filename: pool/devel/main/b/btrfs-tools/btrfs-tools_1.0-xbian2_armhf.deb
+Size: 1429136
+MD5sum: d0b6c1bee69e0414223e14cf6639de85
+SHA1: 929f410973db814752e2cc1207e93cb21fad69cb
+SHA256: 00e710909f3f7df14d26ed575dcff52703355e559fc7160cacec9dd38064ce59
+Section: admin
+Priority: optional
+Homepage: http://btrfs.wiki.kernel.org/
+Description: Checksumming Copy on Write Filesystem utilities
+Btrfs is a new copy on write filesystem for Linux aimed at implementing
+advanced features while focusing on fault tolerance, repair and easy
+administration.
+.
+This package contains utilities (mkfs, fsck) used to work with btrfs
+and an utility (btrfs-convert) to make a btrfs filesystem from an ext3.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-56
+Architecture: armhf
+Essential: No
+Origin: XBian-devel
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 1488
+Pre-Depends: anacron
+Depends: parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian2), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/devel/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-56_armhf.deb
+Size: 628388
+MD5sum: e617170d15f7674d9f65a9d032f714b5
+SHA1: 7795b3f2566960cc3a2491a4dd0398484c28fd8c
+SHA256: 31fee3aebb5684ead795aae0522b0bb3124a2d69d20573dfbb3ff99250359f51
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-54
+Architecture: armhf
+Essential: No
+Origin: XBian-devel
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 675
+Pre-Depends: anacron
+Depends: parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian2), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/devel/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-54_armhf.deb
+Size: 141828
+MD5sum: dfd6d207774b9d4f148c38c41da39888
+SHA1: 7b24787e7f2dd7dfe021e48b988d6f1b09389619
+SHA256: 56e7eea129c2762f05104f2bbd63a5121db4707ab3b74f3ebdb60dabad3936a2
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-config-shell
+Version: 2.1.6-55
+Architecture: armhf
+Essential: No
+Origin: XBian-devel
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 675
+Pre-Depends: anacron
+Depends: parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian2), kpartx
+Conflicts: xbian-package-config
+Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
+Replaces: xbian-package-config
+Filename: pool/devel/main/x/xbian-package-config-shell/xbian-package-config-shell_2.1.6-55_armhf.deb
+Size: 142470
+MD5sum: f132f9cce4d3bfe707151b29a683c8b7
+SHA1: 9c5f9ce86c0f2b2cbe6ca8882298b48ebb91665b
+SHA256: 520b853e87e9027c6261777f4008ef48e96497a71980c928d85cdb0a884d74db
+Section: utils
+Priority: optional
+Description: Configuration utility for XBian.
+
+Package: xbian-package-firmware
+Version: 1.4-8a
+Architecture: armhf
+Essential: Yes
+Origin: XBian-devel
+Maintainer: Koenkk <development@xbian.org>
+Installed-Size: 7337
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, xbian-update (<=1.0-0.4)
+Filename: pool/devel/main/x/xbian-package-firmware/xbian-package-firmware_1.4-8a_armhf.deb
+Size: 3170848
+MD5sum: fb75e2b2a1eaa8cbca17169bcb237e29
+SHA1: 2f04b3d6163f05b538d3457328e10d692db0e51e
+SHA256: 202d6fba749d6583f92d644a6ee6150d73c838f8d448db877843b45e6dfa772a
+Section: firmware
+Priority: optional
+Description: Firmware for XBian. (Oct  1 2013 00:37:09 Copyright (c) 2012 Broadcom version a421d4b2cee544ec22bd4eee75080248f18fc20b (tainted) (release))
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.3-1a
+Architecture: armhf
+Essential: Yes
+Origin: XBian-devel
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 1782
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-6.2), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/devel/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.3-1a_armhf.deb
+Size: 1005524
+MD5sum: 60d63355d777c6df68162e40cfde6b97
+SHA1: 4b1adf36e11816469a42196dc02a16ef4dcb7c0b
+SHA256: b12beec84f78513fb3fb7a376a54f42b843c3f80c89695eca8efd0c2aead0cb6
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.3-1b
+Architecture: armhf
+Essential: Yes
+Origin: XBian-devel
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 1782
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-6.2), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/devel/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.3-1b_armhf.deb
+Size: 1005450
+MD5sum: 4a4c7de2704c22fd4f9346d2d32ec4a5
+SHA1: 1b6de7007b93337314557f72126f2fadb46c381f
+SHA256: 438f760df56c2efac6e539ff7423588572a5bf9e47f24d753608efdbcf9dffda
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-package-initramfs-tools
+Version: 1.3.3-1c
+Architecture: armhf
+Essential: Yes
+Origin: XBian-devel
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 1782
+Pre-Depends: initramfs-tools, triggerhappy
+Depends: udev, btrfs-tools (>=1.0-xbian), klibc-utils, xbian-package-kernel (>=1.3-6.2), xbian-package-splash (>=1.0-1)
+Replaces: xbian-update
+Filename: pool/devel/main/x/xbian-package-initramfs-tools/xbian-package-initramfs-tools_1.3.3-1c_armhf.deb
+Size: 1005426
+MD5sum: d0cea8b6095f9df921cdd42f7a415f02
+SHA1: 74966ffa3c1adb0a8abc3c1a9f4fbcef8fecf180
+SHA256: c1c92ff7df10637e96e29a1396a412eaa2fa3951f774a4a2ee3bc2141b53c24c
+Section: kernel
+Priority: standard
+Description: Initramfs handling tools.
+
+Package: xbian-update
+Version: 1.0.2-12f
+Architecture: armhf
+Essential: Yes
+Origin: XBian-devel
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 254
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc | xbian-package-xbmc-gotham-nightly, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.2-1c), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/devel/main/x/xbian-update/xbian-update_1.0.2-12f_armhf.deb
+Size: 61252
+MD5sum: 90caa828fb0442e35cb056d20d54f852
+SHA1: 77164922a29a72e99513cf8d6f64219f48fd83d0
+SHA256: 25227b940c8c14aa49b82e22468cdc52c43c5e4ab0db583001a33b47d4930b52
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-12g
+Architecture: armhf
+Essential: Yes
+Origin: XBian-devel
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 253
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian1), libcurl3, libva1, policykit-1, patch, openbsd-inetd
+Depends: dosfstools, sudo, ifplugd, ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc | xbian-package-xbmc-gotham-nightly, unattended-upgrades, xbian-update (>=1.0-0.5), xbian-package-vnc-server (>=1.0.0-2), xbian-package-xbmc-scripts (>=1.0.1-3), xbian-package-samba (>=2.0.0-3), xbian-package-config-shell (>=2.1.6-48b), xbian-package-cec (>=1.1-0.3), xbian-package-config-xbmc (>=1.1.4-1), xbian-package-initramfs-tools (>=1.3.2-1c), xbian-package-kernel (>=1.3-5.5), xbian-package-libshairport (>=1.0-1), xbian-package-lirc (>=1.4-8.8), xbian-package-usbmount (>=1.0.4-7), xbian-package-zram-swap (>=1.0-4.3)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/devel/main/x/xbian-update/xbian-update_1.0.2-12g_armhf.deb
+Size: 61324
+MD5sum: 08b72c7489fcdb1fafd844e5d4209d77
+SHA1: 6933a9022dcb8fff92b99c1f0752ddef3fc9063f
+SHA256: 5b248029f4afd09a728284ffca93e3c7db740defbe4726c0753d951d83333f4e
+Section: update
+Priority: optional
+Description: Updater package to XBian 1.0 Beta2
+
+Package: xbian-update
+Version: 1.0.2-11
+Architecture: armhf
+Essential: Yes
+Origin: XBian-devel
+Maintainer: mk01 <development@xbian.org>
+Installed-Size: 246
+Pre-Depends: udisks, kbd, nfs-common, btrfs-tools (>=1.0-xbian), libcurl3, libva1, xbian-package-config-shell, policykit-1, patch, openbsd-inetd
+Depends: ir-keytable, xbian-package-samba, xbian-package-usbmount, xbian-package-lirc, upstart, avahi-daemon, ntfs-3g, libplist1, pv, usbutils, libafpclient0, python-sqlite, lsof, ntp, cron, console-setup, isc-dhcp-client, update-notifier-common, xbian-package-zram-swap (>=1.0-3.6), libc-bin, libc6, xbian-package-upstart-xbmc-bridge, nfs-common, cifs-utils, exfat-fuse, exfat-utils, fuse, hdparm, hfsplus, hfsprogs, hfsutils, wireless-tools, bc, ntfs-3g, wpasupplicant, xbian-package-firmware (>=1.4-5.1), xbian-package-kernel, xbian-package-xbmc, unattended-upgrades, xbian-update (>=1.0-0.5)
+Conflicts: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, udhcpc, dhcpcd
+Breaks: xbian-packate-vnc-server (<<1.0.0-2), xbian-package-xbmc-scripts (<<1.0.1-3), xbian-package-samba (<<2.0.0-3), xbian-package-config-shell (<<2.1.6-48b), xbian-package-cec (<<1.1-0.3), xbian-package-config-xbmc (<<1.1.4-1), xbian-package-initramfs-tools (<<1.3.1-2), xbian-package-kernel (<<1.3-5.5), xbian-package-libshairport (<<1.0-1), xbian-package-lirc (<<1.4-8.8), xbian-package-usbmount (<<1.0.4-7), xbian-package-zram-swap (<<1.0-4.3), xbian-package-xbmc (<<2.9-10.13)
+Replaces: raspberrypi-artwork, raspberrypi-bootloader, libraspberrypi0, libraspberrypi-bin, libraspberrypi-dev, console-tools, rpi-update, base-files, upstart
+Filename: pool/devel/main/x/xbian-update/xbian-update_1.0.2-11_armhf.deb
+Size: 59624
+MD5sum: 92634cf095b822bd81c45a2992b5f03c
+SHA1: 2fe4cd821337d1328ca86afb52f0cbd1e5b42b71
+SHA256: 9df20e42204b0f76d455245086e67178ea874bc496eccd28a91d0ac8e708d4bb
 Section: update
 Priority: optional
 Description: Updater package to XBian 1.0 Beta2

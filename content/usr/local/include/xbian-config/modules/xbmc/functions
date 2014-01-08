@@ -103,6 +103,11 @@ function getXBMCtvoffFn() {
     return 1
 }
 
+function getXBMChaltoffFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+    return $(grep -q SCROFFHALT=yes /etc/default/xbmc; echo $?)
+}
+
 function getXBMCtvonFn() {
     [ ! -e /etc/default/xbmc ] && return 1
     return $(grep -q XBMCEXITON=yes /etc/default/xbmc; echo $?)
@@ -247,6 +252,22 @@ function setXBMCsharerwFn() {
     return 1
 }
 
+function setXBMChaltoffFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+    if [ $1 -eq 0 ]; then
+        sed -i 's/SCROFFHALT=.*/SCROFFHALT=no/' /etc/default/xbmc
+        grep -q SCROFFHALT=no /etc/default/xbmc
+        return $?
+    elif [ $1 -eq 1 ]; then
+        sed -i 's/SCROFFHALT=.*/SCROFFHALT=yes/' /etc/default/xbmc
+        grep -q SCROFFHALT=yes /etc/default/xbmc
+        return $?
+    else
+        return 0
+    fi
+    return 1
+}
+
 function setXBMCtvonFn() {
     [ ! -e /etc/default/xbmc ] && return 1
     if [ $1 -eq 0 ]; then
@@ -262,6 +283,7 @@ function setXBMCtvonFn() {
     fi
     return 1
 }
+
 
 function setXBMCpriorityFn() {
     [ ! -e /etc/default/xbmc ] && return 1

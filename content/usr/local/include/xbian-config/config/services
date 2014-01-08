@@ -35,4 +35,4 @@ restore-home:
 vnc-server:
 zram-swap:
 tvheadend:
-
+lightdm:

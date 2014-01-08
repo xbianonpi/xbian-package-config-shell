@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(guires webserver tvoff tvexiton usbsync usbauto usbshare priority uuidname hddspin sharerw);
+ARGUMENTS=(guires webserver tvoff tvexiton haltoff usbsync usbauto usbshare priority uuidname hddspin sharerw);
 GUIRES=(480 540 720 1080);
 
 #|------------------------------------|
@@ -169,6 +169,14 @@ function showCMDFn() {
                         setXBMCtvonFn $2
                     else
                         getXBMCtvonFn
+                    fi
+                    echo $((1-$?))
+                ;;
+                haltoff)
+                    if [ $# -gt 1 ]; then
+                        setXBMChaltoffFn $2
+                    else
+                        getXBMChaltoffFn
                     fi
                     echo $((1-$?))
                 ;;
