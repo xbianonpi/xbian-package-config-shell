@@ -429,8 +429,8 @@ while true; do
 done
 
 [ $(( $(df  "${tmp_dir}" | tail -1 | awk '{print $4}') * 100 /  $(df  "${tmp_dir}" | tail -1 | awk '{print $2}') )) -lt 30 ] && opt_keep=1 && echo "WARNING: Less than 30% of free space. Keeping only one single snapshot..." > /dev/stderr
-mdt=$(btrfs fi df "${tmp_dir}" | grep -m1 "Metadata, " | awk -F'=' '{print "("$2}' | grep -o [\(0-9BKMGi\.]* | sed 's/GiB/ * 1024 MiB/;s/MiB/ * 1024 KiB/;s/KiB/ * 1024/; s/$/ +\\/; $a0 )/1' | bc)
-mdu=$(btrfs fi df "${tmp_dir}" | grep -m1 "Metadata, " | awk -F'=' '{print "("$3}' | grep -o [\(0-9BKMGi\.]* | sed 's/GiB/ * 1024 MiB/;s/MiB/ * 1024 KiB/;s/KiB/ * 1024/; s/$/ +\\/; $a0 )/1' | bc)
+mdt=$(btrfs fi df "${tmp_dir}" | grep -m1 "Metadata, " | awk -F'=' '{print "("$2}' | grep -o "[\(0-9BKMGi\.]*" | sed 's/GiB/ * 1024 MiB/;s/MiB/ * 1024 KiB/;s/KiB/ * 1024/; s/$/ +\\/; $a0 )/1' | bc)
+mdu=$(btrfs fi df "${tmp_dir}" | grep -m1 "Metadata, " | awk -F'=' '{print "("$3}' | grep -o "[\(0-9BKMGi\.]*" | sed 's/GiB/ * 1024 MiB/;s/MiB/ * 1024 KiB/;s/KiB/ * 1024/; s/$/ +\\/; $a0 )/1' | bc)
 [ $(( 100 - (mdu*100 / mdt) )) -lt 30 ] && opt_keep=1 && echo "WARNING: Less than 30% of free metadata space. Keeping only one single snapshot..." > /dev/stderr
 
 test -d $opt_mountpoint/$opt_snapdir && test -n "$opt_snapdir" && opt_vroot='1'
