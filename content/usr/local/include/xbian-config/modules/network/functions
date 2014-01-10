@@ -154,6 +154,44 @@ setInterfaceDhcpFn() {
 	fi
 }
 
+# Validate a given ip address
+# Arguments
+#  $1 IP
+#  $2 Netmask
+# Return
+#  1: Valid
+#  0: Invalid
+function checkValidIpNumberFn() {
+	[ "$(ipcalc $1/$2|grep Address: | awk '{print $2}')" = "$1" ] || return 0
+	return 1;
+}
+
+function checkIp() {
+    ipcalc $1 | grep -q "INVALID ADDRESS" || return 1
+    return 0
+}
+
+function checkValidGwFn() {
+    checkIp "$3" && return 0
+    lo=$(echo $(ipcalc -b $1/$2|grep 'Network\|Broadcast' |awk '{print $2}' | awk -F'/' '{print $1}') | awk '{print $1}')
+    hi=$(echo $(ipcalc -b $1/$2|grep 'Network\|Broadcast' |awk '{print $2}' | awk -F'/' '{print $1}') | awk '{print $2}')
+    [[ "$lo" < "$3" ]] && [[ "$3" < "$hi" ]] || return 0
+    return 1 
+}
+
+
+# Validate a given netmask
+# Arguments
+#  $1 IP
+#  $2 Netmask
+# Return
+#  1: Valid
+#  0: Invalid
+function checkValidIpNetmaskFn() {
+	[ "$(ipcalc $1/$2|grep Netmask: | awk '{print $2}')" = "$2" ] || return 0
+	return 1
+}
+
 # Sets an interface to use static ip
 # Arguments
 #  $1 Interface name
@@ -178,28 +216,27 @@ setInterfaceStaticFn() {
 		# Configuration buffer
 		BUFFERIFACES=""
 		BUFFERRESOLV=""
-
 		# Validate input & preparation of configuration buffers
-		checkValidIpNumberFn "$2"
+		checkValidIpNumberFn "$2" "$3"
 		if [ ! $? -eq 1 ]; then
 			return 6;
 		else
 			BUFFERIFACES+="address $2"
 		fi
-		checkValidIpNetmaskFn "$3"
+		checkValidIpNetmaskFn "$2" "$3"
 		if [ ! $? -eq 1 ]; then
 			return 7;
 		else
 			BUFFERIFACES+="\nnetmask $3"
 		fi
-		checkValidIpNumberFn "$4"
+		checkValidGwFn "$2" "$3" "$4"
 		if [ ! $? -eq 1 ]; then
 			return 8;
 		else
 			BUFFERIFACES+="\ngateway $4"
 		fi
 		if [ $# -gt 4 ] && [ ! -z "$5" ]; then
-			checkValidIpNumberFn "$5"
+			checkIp "$5"
 			if [ ! $? -eq 1 ]; then
 				return 9;
 			else
@@ -207,14 +244,13 @@ setInterfaceStaticFn() {
 			fi
 		fi
 		if [ $# -gt 5 ] && [ ! -z "$6" ]; then
-			checkValidIpNumberFn "$6"
+			checkIp "$6"
 			if [ ! $? -eq 1 ]; then
 				return 9;
 			else
 				BUFFERRESOLV+="\nnameserver $6"
 			fi
 		fi
-
 		# Process /etc/network/interfaces
 	        if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
 
@@ -396,44 +432,6 @@ function readNetworkConfigurationFn() {
 	fi
 }
 
-# Validate a given ip address
-# Arguments
-#  $1 Ip address
-# Return
-#  1: Valid
-#  0: Invalid
-function checkValidIpNumberFn() {
-        if case $1 in
-                *[!.0-9]* | *.*.*.*.* | *..* | [!0-9]* | *[!0-9] ) false ;;
-                *25[6-9]* | *2[6-9][0-9]* | *[3-9][0-9][0-9]* | *[0-9][0-9][0-9][0-9]* ) false ;;
-                [!1-9].*.*.* | *.*.*.[!1-9] ) false ;;
-                *.*.*.* ) true ;;
-                *) false ;;
-        esac; then
-		# Ip were valid
-		return 1;
-	else
-		# Ip were invalid
-		return 0;
-        fi
-}
-
-# Validate a given netmask
-# Arguments
-#  $1 Netmask
-# Return
-#  1: Valid
-#  0: Invalid
-function checkValidIpNetmaskFn() {
-        if case $1 in
-                255.0.0.0 | 255.255.0.0 | 255.255.255.0 | 255.255.255.255 ) true ;;
-                *) false ;;
-        esac; then
-		return 1
-	else
-		return 0
-        fi
-}
 
 # Validate a given netmask
 # Arguments
