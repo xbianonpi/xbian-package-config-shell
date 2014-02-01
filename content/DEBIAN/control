@@ -1,13 +1,13 @@
 Origin: XBian
 Package: xbian-package-config-shell
-Version: 2.1.6-58b
+Version: 2.1.6-60e
 Section: utils
 Essential: No
 Priority: optional
 Architecture: armhf
-Pre-Depends: anacron
+Pre-Depends: anacron, openbsd-inetd
 Replaces: xbian-package-config
-Depends: ipcalc, parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian2), kpartx
+Depends: ipcalc, xbian-package-xbianhome, parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian2), kpartx, f2fs-tools
 Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
 Conflicts: xbian-package-config
 Maintainer: mk01 <development@xbian.org>

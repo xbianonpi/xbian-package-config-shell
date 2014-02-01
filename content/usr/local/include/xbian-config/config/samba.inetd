@@ -1,3 +1,2 @@
 netbios-ssn stream tcp nowait root /usr/sbin/smbd smbd
 microsoft-ds stream tcp nowait root /usr/sbin/smbd smbd
-

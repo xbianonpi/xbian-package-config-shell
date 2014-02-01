@@ -128,9 +128,11 @@ function disableAutoStartFn() {
 }
 
 function enableAutoStartFn() {
-        [ -e $BASEPATH/config/$1.inetd ] && { 	while read service details; do
+        [ -e $BASEPATH/config/$1.inetd ] && { 	while read service; do
+						    details="$service"
 						    [ -z "$service" ] && continue
 						    service=$(echo $service | awk '{print $1}')
+						    grep $service /etc/inetd.conf || echo "$details" >> /etc/inetd.conf
 						    update-inetd --enable $service || return 1
 						done < $BASEPATH/config/$1.inetd; return 0; }
 
