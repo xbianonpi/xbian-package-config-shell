@@ -6,8 +6,11 @@ if [ $1 == "configure" ]; then
 
 	[ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
 
-	msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.po 
-	msgfmt -o /usr/share/locale/sk/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.sk.po 
+	for l in $(find /usr/local/include/xbian-config/gettext -type f); do
+	    a=$(basename $l)
+	    a=${a#*\.};a=${a%\.*}
+	    [ -d /usr/share/locale/$a/LC_MESSAGES ] && msgfmt -o /usr/share/locale/$a/LC_MESSAGES/xbian.mo $l
+	done
 
 	. /etc/bash_completion.d/xbian-config.sh >/dev/null
 
@@ -73,8 +76,12 @@ if [ $1 == "configure" ]; then
     fi
     :
 
-    grep -v "netbios-ns dgram udp wait root /usr/sbin/nmbd nmbd" /etc/inetd.conf > /etc/inetd.conf.new
-    mv /etc/inetd.conf.new /etc/inetd.conf
+    if [ -e /etc/inetd.conf ]; then
+        grep -v "netbios-ns dgram udp wait root /usr/sbin/nmbd nmbd" /etc/inetd.conf > /etc/inetd.conf.new
+        mv /etc/inetd.conf.new /etc/inetd.conf
+    fi
     insserv -f samba >/dev/null 2>&1
 
 fi
+
+exit 0

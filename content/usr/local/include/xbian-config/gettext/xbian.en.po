@@ -1037,8 +1037,13 @@ msgid "xbian-config.xbiancopy.description"
 msgstr "XBIAN system copy tool (to usb, img file ...)"
 
 msgid "xbian-config.xbiancopy.dialog.wrongblkdev"
-msgstr "Wrong destination block device (doesn't exist or is not a partition"
+msgstr "Wrong destination block device (doesn't exist or is not a partition)"
 
+msgid "xbian-config.xbiancopy.dialog.exportwrong"
+msgstr "NFS export does not meet requirements"
+
+msgid "xbian-config.xbiancopy.dialog.preperror"
+msgstr "Can't prepare destination filesystem"
 #
 #       backuphome
 #
