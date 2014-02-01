@@ -17,6 +17,22 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
+function showUmountFormatError() {
+        wrapTxtFn "$(_ xbiancopy.dialog.preperror)" $(($DEFAULTWIDTH-4))
+        centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
+        valignTxtFn "$CENTEREDTXT"
+        showInfoDlg "$ALIGNEDTXT" $HEIGHT
+        return $?;
+}
+
+function showNFSerror() {
+        wrapTxtFn "$(_ xbiancopy.dialog.exportwrong)" $(($DEFAULTWIDTH-4))
+        centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
+        valignTxtFn "$CENTEREDTXT"
+        showInfoDlg "$ALIGNEDTXT" $HEIGHT
+        return $?;
+}
+
 function showWrongBlockDev() {
         wrapTxtFn "$(_ xbiancopy.dialog.wrongblkdev)" $(($DEFAULTWIDTH-4))
         centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
@@ -38,9 +54,13 @@ function showConfigDialog() {
 If you want to create .img file with /boot partition and your system, specify \"file:\" as prefix to destination 
 (e.g. file:/media/exthdd/xbian.img)
     
+If you want to convert to NFS ROOT installation, put \"nfs:\" as prefix to NFS export specification
+(use IP address, not host-names. NFS export needs \"no_root_squash\" option)
+(e.g. nfs:192.168.3.12:/nas-exports/rpi-nfs-root)
+    
 Otherwise specify block device 
 (e.g. /dev/sda2)
     
-!!! PARTITION WILL BE REFORMATTED !!!
-" 17 75
+!!! PARTITION/NFS-EXPORT WILL BE REFORMATTED !!!
+" 23 75
 } 

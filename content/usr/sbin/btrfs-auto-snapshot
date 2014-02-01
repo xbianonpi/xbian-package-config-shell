@@ -408,7 +408,7 @@ DATE=$(date +%F-%H%M)
 COUNTER='0'
 while true; do
         if $(mkdir "${tmp_dir}" > /dev/null 2>&1); then 
-                if ! $(mount -t btrfs -o subvol=/ $opt_dev $opt_mountpoint); then
+                if ! $(mount -t btrfs -o subvol=/ $opt_dev $opt_mountpoint 2>/dev/null); then
                         print_log error "unable to mount the filesystem"
                         rmdir ${tmp_dir}
                         exit 100
@@ -532,6 +532,7 @@ case $opt_command in
 		do_rename $(dirname $1)/@$tmpd $1_rollback
                 ;;
 	(xbiancopy)
+		(
 		sysctl -w fs.file-max=80000 > /dev/null 2>/dev/null
 		[ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
 		[ "$(readlink -e $1)" = "$(readlink -e $2)" ] && { echo "source and destination can not be the same block device"; exit 5; }
@@ -567,20 +568,22 @@ case $opt_command in
 		mount -t btrfs -o noatime,subvol=/ $1 /tmp/btrfs-source
 		{ eval $opt_remotecmd findmnt -n $2 | grep -qw $2; } && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
 		if [ -z "$opt_nocreate" ]; then
-		    mfs=$(eval $opt_remotecmd mkfs.btrfs -l 16384 -m single -L $opt_clonename -f $2 2>&1)
+		    mfs=$(eval $opt_remotecmd mkfs.btrfs -L $opt_clonename -f $2 2>&1)
 		    if [ $? -gt 0 ]; then
 			echo $mfs | grep -q "SMALL VOLUME" && eval $opt_remotecmd mkfs.btrfs -m single -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; exit 5; }
 		    fi
 		fi
 		eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
-		eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1,nossd $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
+		eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
 
 		if grep -q "rootflags=subvol=" /proc/cmdline; then
 		    subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
 		    snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootflags=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
 		fi
+		) | dialog --progressbox "Preparing devices" 7 60
+#$(tput lines) $(tput cols)
 
-		BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
+		( BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
 		snapextra=$(printf "%s\n%s\n" "@$snapextra" "@"| sort | uniq)
 		for v in $BTRFS_LIST; do
 		    [ -n "$v" ] || continue
@@ -591,29 +594,34 @@ case $opt_command in
 		        echo "DEBUG: v = $v, s = $s"
 		        [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
 		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue 
-		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro"
-		        nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v"
+		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro" 
+			siz=$(du -sxb "/tmp/btrfs-source/$v/$s.ro" | awk '{print $1}') 
+		        ( nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | pv -n -s $siz |eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v" ) 2>&1 | \
+			    while read a; do printf "XXX\n$a\n$(printf \"Cloning %s/%s. Total $d. Done $d\" $v $s $siz $((siz/100*a)))\nXXX\n"; done
+
 		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
 		        eval $opt_remotecmd mv "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
-		        printf "\n%s\n" "---> DONE COPYING SUB-VOLUME $v SNAPSHOT $s" 
+#		        printf "\n%s\n" "---> DONE COPYING SUB-VOLUME $v SNAPSHOT $s" 
 		    done
-		    printf "\n%s\n\n" "DONE COPYING SUB-VOLUME $v" 
-		done
+#		    printf "\n%s\n\n" "DONE COPYING SUB-VOLUME $v" 
+		done )  2>&1 | dialog --gauge "Cloning all subvolumes. Please wait..." 10 60
 
 		eval $opt_remotecmd umount /tmp/btrfs-dest; eval $opt_remotecmd rmdir /tmp/btrfs-dest > /dev/null 2>&1
 		umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
-		echo ""
-		echo "for users on xbian version below beta2 (beta1.1, beta1). beta2 handles this automaticaly."
-		echo "/etc/fstab file needs to be adapted for /home to be mounted properly on the new xbian copy."
-		echo "do the following steps:"
-		echo "1) mount -t btrfs -o subvol=root/@ LABEL=xbian-copy /mnt"
-		echo "2) nano /mnt/etc/fstab"
-		echo "3) change all lines starting with LABEL=xbian-root-btrfs to LABEL=xbian-copy ....... "
-		echo "4) umount /mnt"
-		echo ""
-		echo "for all users - change /boot/cmdline.txt if you want to boot from the copy just created. change root=LABEL=xbian-root-btrfs to root=LABEL=xbian-copy"
-		echo ""
-		echo "if you created img file, cmdline.txt was updated automatically. "
+		dialog --clear --msgbox "Done!
+ 
+for users on xbian version below beta2 (beta1.1, beta1). beta2 handles this automaticaly.
+/etc/fstab file needs to be adapted for /home to be mounted properly on the new xbian copy.
+do the following steps:
+ 
+1) mount -t btrfs -o subvol=root/@ LABEL=xbian-copy /mnt
+2) nano /mnt/etc/fstab
+3) change all lines starting with LABEL=xbian-root-btrfs to LABEL=xbian-copy .......
+4) umount /mnt
+ 
+for all users - change /boot/cmdline.txt if you want to boot from the copy just created. change root=LABEL=xbian-root-btrfs to root=LABEL=xbian-copy
+ 
+if you created img file, cmdline.txt was updated automatically." 24 79
 		touch /tmp/xbiancopy.running.$$
 		;;
         (backuphome)

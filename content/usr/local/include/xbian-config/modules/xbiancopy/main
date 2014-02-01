@@ -34,27 +34,84 @@ fi
 #|          Global variables          |
 #|------------------------------------|
 
-
 #|------------------------------------|
 #|           Main program             |
 #|------------------------------------|
 
 # Executes the GUI version of this module
 function showGUIFn() {
+        tm=$(mktemp -d)
+        cleanup () {
+            mountpoint -q $tm && umount $tm 2>/dev/null; rmdir $tm 2>/dev/null
+        }
+        trap 'cd /; cleanup' RETURN EXIT TERM
+
         showConfigDialog
-	if [ $? -eq 0 ]; then
+        if [ $? -eq 0 ]; then
             opt_img=''
             IFS=$'\n';
             DATA=($(echo -e "$RETURN"));
             IFS=$ORIGINALIFS;
-            DEST=${DATA[1]}; echo "$DEST" | grep -q ^'file:' && opt_img='--img'
-            DEST=${DEST##'file:'}
-            [ -n "$opt_img" -o -b ${DATA[1]} ] || { showWrongBlockDev; sleep 5; showGUIFn; }
-            if [ -z "$opt_img" ]; then 
-                echo ${DATA[1]} | grep -q ".*[0-9]$" || { showWrongBlockDev; sleep 5; showGUIFn; }
+            DEST=${DATA[1]}; 
+
+            if echo "$DEST" | grep -q ^'nfs:'; then
+                DEST=${DEST##'nfs:'}
+                mount $DEST $tm && { rm -fr $tm/root $tm/xbian || :; } && touch $tm/root && touch $tm/xbian && chown xbian:xbian $tm/xbian && \
+                    [ "$(stat -c %U $tm/root)" = root -a "$(stat -c %U $tm/xbian)" = xbian ] || \
+                        { showNFSerror; sleep 5; umount -l $tm 2>/dev/null; rmdir $tm 2>/dev/null; return 1; }
+
+                tt=nfs
+            elif echo "$DEST" | grep -q ^'f2fs:'; then
+                DEST=${DEST##'f2fs:'}
+                tt=f2fs
+            elif echo "$DEST" | grep -q ^'ext4:'; then
+                DEST=${DEST##'ext4:'}
+                tt=ext4
+            else 
+                echo "$DEST" | grep -q ^'file:' && opt_img='--img'
+                DEST=${DEST##'file:'}
+                tt=btrfs
             fi
-            { btrfs-auto-snapshot xbiancopy $opt_img  ${DATA[0]} "$DEST"; } >&1 2>&1 | dialog --programbox "Please wait until OK button appears"  $(tput lines) $(tput cols)
-	fi
+            # check for block device
+            if [ -z "$opt_img" -a "$tt" != nfs ]; then
+                { [ -b $DEST ] && echo $DEST | grep -q ".*[0-9]$"; } || { showWrongBlockDev; sleep 5; return 1; }
+                if [ "$tt" != btrfs ]; then
+                     { ! mountpoint -q $DEST || umount $DEST; } && mkfs.$tt $DEST >/dev/null 2>&1 && mount -t $tt $DEST $tm || { showUmountFormatError; sleep 5; return 1; }
+                fi
+            fi
+
+            # copy data
+            case $tt in
+                btrfs)
+                    btrfs-auto-snapshot xbiancopy $opt_img  ${DATA[0]} "$DEST"
+                    ;;
+                nfs|f2fs|ext4)
+                    rm -fr $tm/* && mkdir $tm/home && mkdir -p $tm/lib/modules && mkdir -p $tm/home/xbian/.xbmc
+                    cd $tm/
+                    ( tar c --one-file-system /home  | pv -n -s $(du -sbx  /home| awk '{print $1}')| tar x -v >/run/f.txt) 2>&1 | while read a; do printf "XXX\n$a\n$(printf "%-.55s" $(tail -1 /run/f.txt))\nXXX\n"; done | dialog --gauge 'Progress' 8 60
+                    ( tar c --one-file-system /home/xbian/.xbmc  | pv -n -s $(du -sbx  /home/xbian/.xbmc| awk '{print $1}')| tar x -v >/run/f.txt) 2>&1 | while read a; do printf "XXX\n$a\n$(printf "%-.55s" $(tail -1 /run/f.txt))\nXXX\n"; done | dialog --gauge 'Progress' 8 60
+                    ( tar c --one-file-system /lib/modules  | pv -n -s $(du -sbx  /lib/modules| awk '{print $1}')| tar x -v >/run/f.txt) 2>&1 | while read a; do printf "XXX\n$a\n$(printf "%-.55s" $(tail -1 /run/f.txt))\nXXX\n"; done | dialog --gauge 'Progress' 8 60
+                    ( tar c --one-file-system /  | pv -n -s $(du -sbx  /| awk '{print $1}')| tar x -v >/run/f.txt) 2>&1 | while read a; do printf "XXX\n$a\n$(printf "%-.55s" $(tail -1 /run/f.txt))\nXXX\n"; done | dialog --gauge 'Progress' 8 60
+                    ;;
+                *)
+                    ;;
+            esac
+
+            # update /boot
+            case $tt in
+                nfs)
+                    sed -i 's%iface eth0 inet dhcp%iface eth0 inet manual%' $tm/etc/network/interfaces
+
+                    cmd=$(tr " " "\n" < /boot/cmdline.txt | grep -v 'rootfstype=\|root=\|rootflags=\|nfsroot=')
+                    cmd="root=/dev/nfs nfsroot=$DEST,wsize=2048,rsize=2048,tcp,vers=3 rootfstype=nfs ip=dhcp $cmd "
+                    mv /boot/cmdline.txt /boot/cmdline.txt.nfs
+                    echo "$cmd" > /boot/cmdline.txt
+                    ;;
+                *)
+                    ;;
+            esac
+
+        fi
 }
 
 # Executes the command line version of this module
