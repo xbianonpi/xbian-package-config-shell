@@ -595,12 +595,13 @@ case $opt_command in
 		        [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
 		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue 
 		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro" 
-			siz=$(du -sxb "/tmp/btrfs-source/$v/$s.ro" | awk '{print $1}') 
+			export siz=$(du -sxb "/tmp/btrfs-source/$v/$s.ro" | awk '{print $1}'); export sn=$s; export vln=$v; 
 		        ( nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | pv -n -s $siz |eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v" ) 2>&1 | \
-			    while read a; do printf "XXX\n$a\n$(printf \"Cloning %s/%s. Total $d. Done $d\" $v $s $siz $((siz/100*a)))\nXXX\n"; done
+			    while read a; do printf "XXX\n$a\n$(printf 'Cloning %s/%s. Total %d. Done %d' $v $s $siz $((siz*a/100)))\nXXX\n"; done
 
 		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
-		        eval $opt_remotecmd mv "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
+		        eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
+		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" && eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro"
 #		        printf "\n%s\n" "---> DONE COPYING SUB-VOLUME $v SNAPSHOT $s" 
 		    done
 #		    printf "\n%s\n\n" "DONE COPYING SUB-VOLUME $v" 
