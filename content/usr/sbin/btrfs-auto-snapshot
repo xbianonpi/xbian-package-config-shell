@@ -627,15 +627,12 @@ if you created img file, cmdline.txt was updated automatically." 24 79
 		touch /tmp/xbiancopy.running.$$
 		;;
         (backuphome)
-                dr=$(mktemp -d)
-                mount -o subvol=/ /dev/root $dr
-                btrfs sub snap -r "$dr/home/@" "$dr/home/@ro"
-                find /xbmc-backup -type f -print0 | xargs -0 rm -f  || :
-                mkdir /xbmc-backup/temp; touch /xbmc-backup/temp/backup_home_$DATE.img.gz; chattr +C /xbmc-backup/temp/backup_home_$DATE.img.gz; ret=1
-                ( btrfs send -v "$dr/home/@ro" | pv -n -s $(du -sxb $dr/home/@ro| awk '{print $1}') | gzip -1 >> /xbmc-backup/temp/backup_home_$DATE.img.gz; ret=$? )  2>&1 | dialog --gauge "Cloning home. Please wait..." 10 60
-                btrfs sub delete "$dr/home/@ro" && btrfs fi sync $dr
-                umount $dr && rmdir $dr
-                [ $ret -ne 0 ] && { rm -f /xbmc-backup/temp/backup_home_$DATE.img.gz; exit 1; }
+                btrfs sub snap -r "/tmp/btrfs-snap/home/@" "/tmp/btrfs-snap/home/@ro"
+                find /xbmc-backup -type f -print0 | xargs -0 rm -f  || :; packcmd=$(which lz4) || packcmd=gzip
+                mkdir /xbmc-backup/temp; touch /xbmc-backup/temp/backup_home_$DATE.img.gz; chattr +C /xbmc-backup/temp/backup_home_$DATE.img.gz; echo 999>/tmp/backuphome.status
+                ( btrfs send -v "/tmp/btrfs-snap/home/@ro" | pv -n -s $(du -sxb /tmp/btrfs-snap/home/@ro| awk '{print $1}') | $packcmd -1 >> /xbmc-backup/temp/backup_home_$DATE.img.gz; echo $?>/tmp/backuphome.status)  2>&1 | dialog --gauge "Cloning home. Please wait..." 10 60
+                btrfs sub delete "/tmp/btrfs-snap/home/@ro" && btrfs fi sync /tmp/btrfs-snap
+                [ $(cat /tmp/backuphome.status) -eq 0 ] || { rm -f /xbmc-backup/temp/backup_home_$DATE.img.gz; exit 1; }
                 mv /xbmc-backup/temp/backup_home_$DATE.img.gz /xbmc-backup/backup_home_$DATE.img.gz; rmdir /xbmc-backup/temp
                 mkdir -p /xbmc-backup/put_here_to_restore
                 [ -e "/tmp/backuphome.running" ] && touch /xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)
