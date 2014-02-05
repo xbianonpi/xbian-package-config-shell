@@ -640,7 +640,7 @@ if you created img file, cmdline.txt was updated automatically." 24 79
         (restorehome)
                 [ -e $1 ] || exit 500
                 mv $1 $1.working
-                gunzip --suffix .working -t $1.working || exit 500
+                gunzip --suffix .working -t $1.working || lz4 -t $1.working || exit 500
                 btrfs sub delete /tmp/btrfs-snap/home/@ro > /dev/null 2>&1
                 gunzip -cd < $1.working | btrfs receive -v /tmp/btrfs-snap/home
                 [ $? -ne 0 ] && exit 1
