@@ -5,7 +5,7 @@ _btrfs-auto-snapshot()
         cur="${COMP_WORDS[COMP_CWORD]}"
         prev="${COMP_WORDS[COMP_CWORD-1]}"
         if [ "${prev}" == "rollback" ]; then
-                arguments=$(btrfs-auto-snapshot list);
+                arguments=$(btrfs-auto-snapshot list | grep -v /@$);
                 COMPREPLY=($(compgen -W "${arguments}" -- $cur))
                 return 0;
         elif [ "${COMP_WORDS[COMP_CWORD-2]}" != "btrfs-auto-snapshot" ]; then

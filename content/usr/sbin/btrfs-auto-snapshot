@@ -601,7 +601,8 @@ case $opt_command in
 
 		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
 		        eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
-		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" && eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro"
+		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s"
+		        eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v"
 #		        printf "\n%s\n" "---> DONE COPYING SUB-VOLUME $v SNAPSHOT $s" 
 		    done
 #		    printf "\n%s\n\n" "DONE COPYING SUB-VOLUME $v" 
