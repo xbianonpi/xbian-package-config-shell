@@ -398,26 +398,21 @@ function readNetworkConfigurationFn() {
 		# Get current state
 		STATE=$(ip addr | grep state | grep "$1" | sed 's/.*state/state/g' | cut -f 2 -d" ")
 
-	        # Read nameservers from /etc/resolv.conf
-	        NS1="";
-	        NS2="";
-	        if [ $(grep -c nameserver /etc/resolv.conf) -gt 0 ]; then
-	           NS=($(grep nameserver /etc/resolv.conf | sed 's/nameserver //g' ))
-	           if [ ${#NS[@]} -gt 0 ]; then
-	              NS1=$(echo -e "${NS[0]}");
-	           fi
-	           if [ ${#NS[@]} -gt 1 ]; then
-	              NS2=$(echo -e "${NS[1]}");
-	           fi
-	        fi
-
 		echo "mode $MODE"
 		echo "state $STATE"
 		echo "ip $CIP"
 		echo "netmask $CSM"
 		echo "gateway $CGW"
-		echo "nameserver1 $NS1"
-		echo "nameserver2 $NS2"
+		DNS=(); c=1
+
+	        # Read nameservers from /etc/resolv.conf
+		while read  a b; do
+		    [[ $a =~ nameserver ]] || continue
+		    [ -z "$b" ] && b=$(echo $a | awk '{print $2}')
+		    DNS+=("nameserver$c $b"); c=$((c+1))
+		done < <(echo -e "$(grep -w nameserver  /etc/resolv.conf)")
+		printf "%s\n" "${DNS[@]}"
+
 		if [ ! -z "$PROTECTION" ]; then
 			echo "protection $PROTECTION"
 			if [ "$GUIMODE" -eq 1 ]; then
