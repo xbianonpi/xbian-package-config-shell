@@ -6,9 +6,11 @@ if [ $1 == "configure" ]; then
 
 	[ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
 
+        echo "Installing language files..."
 	for l in $(find /usr/local/include/xbian-config/gettext -type f); do
 	    a=$(basename $l)
 	    a=${a#*\.};a=${a%\.*}
+	    echo $a
 	    [ -d /usr/share/locale/$a/LC_MESSAGES ] && msgfmt -o /usr/share/locale/$a/LC_MESSAGES/xbian.mo $l
 	done
 

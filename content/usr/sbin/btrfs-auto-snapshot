@@ -228,7 +228,7 @@ do_snapshot ()
 do_remove_kpartx () 
 {
     [ -e /run/kpartxmap.xbiancopy.$$ ] && read img < /run/kpartxmap.xbiancopy.$$
-    [ -n "$img" ] && [ -f "$img" ] && while ! kpartx -d $img 2>/dev/null; do sleep 5; done
+    [ -n "$img" ] && [ -f "$img" ] && while ! kpartx -d $img 1>/dev/null 2>&1; do sleep 5; done
 
     sysctl -p /etc/sysctl.d/xbian.conf > /dev/null 2>/dev/null
 }
@@ -556,7 +556,7 @@ case $opt_command in
 		    echo "71680,+,83,," | sfdisk -u S -N2 -H 4 -S 16 -q $2 > /dev/null 2>&1
 		    loopd=$(kpartx -s -l $2 -av | tail -1 | awk '{print $3}'); loopd=${loopd%%p?}; echo $2 > /run/kpartxmap.xbiancopy.$$
 		    mkfs.msdos -F 16 -n xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2; mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
-		    cp -ar /boot/* /tmp/btrfs-dest
+		    cp -ar /boot/* /tmp/btrfs-dest > /dev/null 2>&1
 		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootflags=*}
 		    cat /boot/cmdline.txt | eval $(echo "sed 's%$z%root=LABEL=$opt_clonename%'") > /tmp/btrfs-dest/cmdline.txt
 		    sed -i 's/^#initramfs /initramfs /' /tmp/btrfs-dest/config.txt
