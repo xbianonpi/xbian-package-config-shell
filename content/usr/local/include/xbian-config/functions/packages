@@ -64,11 +64,11 @@ function downloadPackageListFn() {
 				m=${m%%/mirror.txt}; m=${m%%/}
 				if [ $(wget --spider $m >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
 				    wget -O - $m >> $BASEPATH/config/pkglist.new 2>/dev/null
-				    touch /var/lib/apt/periodic/package-success-stamp
 				    RETURN=$(( $RETURN + 1 ))
 				fi
 				[ $RETURN -eq $(grep -c . /tmp/sources) ] && { mv $BASEPATH/config/pkglist.new $BASEPATH/config/pkglist; break; }
 			done < /tmp/sources
+			touch /var/lib/apt/periodic/package-success-stamp
 		done
 		IFS=$ORIGINALIFS;
 	fi
