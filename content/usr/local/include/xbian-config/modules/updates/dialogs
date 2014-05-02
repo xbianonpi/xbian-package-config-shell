@@ -158,6 +158,7 @@ function showAvailableUpdatesDlg() {
 #	IFS=$'\n';
 	ARRAY=($1);
 	MENU=();
+	MENU+=(0,"\ZbUpdate all available,\Zb");
 	I=0;
 	for VALUE in ${ARRAY[@]}; do
 		IFS=";";
