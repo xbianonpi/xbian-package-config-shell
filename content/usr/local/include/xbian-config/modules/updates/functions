@@ -91,7 +91,7 @@ function updatePackagesFn() {
 	if [ $1 -eq 1 ]; then
 		eval apt-get install -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		{ rm -f /tmp/aptupdates; DEBIAN_FRONTEND=noninteractive eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
+		{ rm -f /tmp/aptupdates; DEBIAN_FRONTEND=noninteractive eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST 2>&1; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
 	elif [ $1 -eq 2 ]; then
 		{ DEBIAN_FRONTEND=noninteractive eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
 	fi
