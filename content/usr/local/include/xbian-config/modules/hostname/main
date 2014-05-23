@@ -69,13 +69,13 @@ function showGUIFn() {
 function showCMDFn() {
 	case $1 in
 		"select")
-			getCurrentHostnameFn HOSTNAME;
+			getCurrentHostnameFn
 			echo $HOSTNAME;
 		;;
 		"update")
 			shift;
 			if [ $# -eq 1 ]; then
-				getCurrentHostnameFn HOSTNAME
+				getCurrentHostnameFn
 				setHostnameFn $1 $HOSTNAME;
 				echo $?;
 			else

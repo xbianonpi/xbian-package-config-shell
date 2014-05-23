@@ -37,7 +37,6 @@ function rootPasswordSetFn() {
 #  - 0: Failed
 function enableSSHRootLoginFn() {
 	sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
-	/etc/init.d/ssh restart >/dev/null
 	isSSHRootLoginEnabledFn
 	return $?;
 }
@@ -49,7 +48,6 @@ function enableSSHRootLoginFn() {
 #  - 0: Failed
 function disableSSHRootLoginFn() {
 	sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-	/etc/init.d/ssh restart >/dev/null
 	isSSHRootLoginEnabledFn
 	if [ $? -eq 0 ]; then
 		return 1;

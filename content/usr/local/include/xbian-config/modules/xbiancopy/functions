@@ -21,7 +21,7 @@
 backupImgPlanFn() {
     [ -z "$1" ] && { grep IMGPLAN= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
     case $1 in
-        daily|weekly|monthly)
+        none|daily|weekly|monthly)
             eval sed -i 's/IMGPLAN=.*/IMGPLAN=$1/' /etc/default/xbian-snap
             echo 1
             ;;
@@ -51,10 +51,45 @@ backupImgDestFn() {
             ;;
         file)
             ! touch "$1" 2>/dev/null && { echo -1; exit 0; }
+            [ "$(df -P "$1" | tail -1 | awk '{print $1}')" = "$(readlink -e /dev/root)" ] && { echo -2; exit 0; }
             ;;
         *)
             { echo -1; exit 0; }
     esac
     eval sed -i 's%IMGDEST=.*%IMGDEST=$1%' /etc/default/xbian-snap
     echo 1
+}
+
+getImgPartitionsFn(){
+    printf "%s;" $(blkid | grep -v "$(readlink -e /dev/root)\|mmcblk0p1\|zram\|loop\|$(blkid -t TYPE=swap -o device)"| awk -F':' '{print $1}')
+}
+
+dailySnapFn() {
+    sch=0
+    case $1 in
+        '')
+            grep -q ENABLEDSCHEDULE=yes /etc/default/xbian-snap && sch=1
+            nr=$(grep KEEPDAYS= /etc/default/xbian-snap| awk -F'=' '{print $2}')
+            [ $sch -eq 1 -a $nr -gt 0 ] && echo "1 $nr" || echo "0"
+            ;;
+        *)
+            eval sed -i 's/KEEPDAYS=.*/KEEPDAYS=$1/' /etc/default/xbian-snap
+            grep -q KEEPDAYS=$1 /etc/default/xbian-snap && echo 1 || echo 0
+            ;;
+    esac
+}
+
+weeklySnapFn() {
+    sch=0
+    case $1 in
+        '')
+            grep -q ENABLEDSCHEDULE=yes /etc/default/xbian-snap && sch=1
+            nr=$(grep KEEPWEEKS= /etc/default/xbian-snap| awk -F'=' '{print $2}')
+            [ $sch -eq 1 -a $nr -gt 0 ] && echo "1 $nr" || echo "0"
+            ;;
+        *)
+            eval sed -i 's/KEEPWEEKS=.*/KEEPWEEKS=$1/' /etc/default/xbian-snap
+            grep -q KEEPWEEKS=$1 /etc/default/xbian-snap && echo 1 || echo 0
+            ;;
+    esac
 }

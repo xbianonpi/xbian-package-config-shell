@@ -228,6 +228,7 @@ msgstr "There is only one kernel installed"
 # xbian-config general licenses
 #
 
+
 msgid "xbian-config.license.inserted"
 msgstr "%s successfully inserted"
 
@@ -307,6 +308,7 @@ msgstr "No network interfaces available or connected"
 msgid "xbian-config.network.interfaces.select"
 msgstr "Select interface to configure"
 
+
 msgid "xbian-config.network.label.dhcp"
 msgstr "DHCP"
 
@@ -318,6 +320,9 @@ msgstr "Interface is now configured using DHCP"
 
 msgid "xbian-config.network.label.static"
 msgstr "Static IP"
+
+msgid "xbian-config.network.label.status"
+msgstr "Status"
 
 msgid "xbian-config.network.label.ipaddress"
 msgstr "IP Address"
@@ -519,6 +524,9 @@ msgstr "Information"
 msgid "xbian-config.packages.label.install_update"
 msgstr "Install/Update"
 
+msgid "xbian-config.packages.label.install"
+msgstr "Install"
+
 msgid "xbian-config.packages.label.remove"
 msgstr "Remove"
 
@@ -624,6 +632,9 @@ msgstr "Stopping service..."
 msgid "xbian-config.services.stop_failed"
 msgstr "Failed to stop the service..."
 
+msgid "xbian-config.services.refresh"
+msgstr "Failed to refresh the service..."
+
 msgid "xbian-config.services.autostart.enabling"
 msgstr "Enabling the autostart of the service..."
 
@@ -663,14 +674,26 @@ msgstr "Action"
 msgid "xbian-config.services.label.autostart"
 msgstr "Autostart"
 
+msgid "xbian-config.services.label.noautostart"
+msgstr "Disable autostart"
+
 msgid "xbian-config.services.label.running"
 msgstr "Running"
 
 msgid "xbian-config.services.label.start_restart"
 msgstr "(Re)Start"
 
+msgid "xbian-config.services.label.start"
+msgstr "Start"
+
+msgid "xbian-config.services.label.restart"
+msgstr "Restart"
+
 msgid "xbian-config.services.label.stop"
 msgstr "Stop"
+
+msgid "xbian-config.services.refresh_gui"
+msgstr "Refresh"
 
 msgid "xbian-config.services.label.stopped"
 msgstr "Stopped"
@@ -686,6 +709,9 @@ msgstr "Delete"
 
 msgid "xbian-config.services.label.name"
 msgstr "Name"
+
+msgid "xbian-config.services.label.confirminsert"
+msgstr "Do you want to insert %s"
 
 msgid "xbian-config.services.label.daemons"
 msgstr "Daemon(s)"
@@ -752,6 +778,8 @@ msgstr "You didn't select a timezone"
 msgid "xbian-config.timezone.no_location_selected"
 msgstr "You didn't select a location"
 
+msgid "xbian-config.timezone.notset"
+msgstr "Not Set"
 #
 # xbian-config modules updates
 #
@@ -854,8 +882,24 @@ msgstr "Up-to-date"
 msgid "xbian-config.updates.label.upgrade"
 msgstr "Upgrade"
 
+msgid "xbian-config.updates.label.autoupdates"
+msgstr "Automatic updates"
+
+msgid "xbian-config.updates.label.autoinstallupdates"
+msgstr "Auto install available updates"
+
+msgid "xbian-config.updates.label.aptsnapshot"
+msgstr "Do a snapshot with APT-GET transaction"
+
+msgid "xbian-config.updates.label.autoupdaterepo"
+msgstr "Auto update package inventory"
+
+msgid "xbian-config.updates.label.autoupdaterepointerval"
+msgstr "interval (days)"
+
 msgid "xbian-config.updates.uptodate"
 msgstr "Your install already contains the latest versions of XBian packages"
+
 
 #
 # xbian-config module videoflags
@@ -977,6 +1021,50 @@ msgstr "GUI Resolution"
 msgid "xbian-config.xbmc.label.actions"
 msgstr "Actions"
 
+msgid "xbian-config.xbmc.label.tvoff_screensaver"
+msgstr "Turn CEC capable TV OFF with screensaver"
+
+msgid "xbian-config.xbmc.label.tvoff_screensaver_delay"
+msgstr "delay (min)"
+
+msgid "xbian-config.xbmc.label.tvon_exit"
+msgstr "Turn CEC capable TV ON when XBMC exits"
+
+msgid "xbian-config.xbmc.label.tvoff_shutdown"
+msgstr "Turn CEC capable TV OFF on RPI shutdown"
+
+msgid "xbian-config.xbmc.label.usbhotplug"
+msgstr "USB HotPlug"
+
+msgid "xbian-config.xbmc.label.automount"
+msgstr "Enable USB disk automounting"
+
+msgid "xbian-config.xbmc.label.share"
+msgstr "Make automounted disks available via SMB"
+
+msgid "xbian-config.xbmc.label.sharerw"
+msgstr "Shares should be world  writable (including anonymous access)"
+
+msgid "xbian-config.xbmc.label.uuid"
+msgstr "Include partition UUID in mnt folder name"
+
+msgid "xbian-config.xbmc.label.dyn_priority"
+msgstr "XBMC Dynamic Priority"
+
+msgid "xbian-config.xbmc.label.lownice"
+msgstr "Lower Nice priority"
+
+msgid "xbian-config.xbmc.label.highnice"
+msgstr "Higher Nice priority"
+
+msgid "xbian-config.xbmc.label.spindown"
+msgstr "Spin Down HDD"
+
+msgid "xbian-config.xbmc.label.sync"
+msgstr "Mount with sync option"
+
+
+
 #
 # xbian-config module preferences
 #
@@ -987,11 +1075,17 @@ msgstr "Preferences"
 msgid "xbian-config.preferences.label.advanced_mode"
 msgstr "Advanced Mode"
 
+msgid "xbian-config.preferences.label.advanced"
+msgstr "Advanced"
+
 msgid "xbian-config.preferences.update.error"
 msgstr "Error while updating setting"
 
 msgid "xbian-config.preferences.update.success"
 msgstr "Successfully updated setting"
+
+msgid "xbian-config.preferences.label.notify"
+msgstr "Notifications"
 
 msgid "xbian-config.preferences.notify.on_error"
 msgstr "Notify on error"
@@ -1004,21 +1098,6 @@ msgstr "Ask confirmation before saving new settings"
 
 msgid "xbian-config.preferences.label.notification"
 msgstr "Notification"
-
-msgid "xbian-config.preferences.label.update"
-msgstr "Update"
-
-msgid "xbian-config.preferences.update.check_on_boot"
-msgstr "Check update on noot"
-
-msgid "xbian-config.preferences.update.check_periodicly"
-msgstr "Check periodicly for updates"
-
-msgid "xbian-config.preferences.update.automatic"
-msgstr "Automatic update"
-
-msgid "xbian-config.preferences.label.confirm_modification"
-msgstr "Confirm Modification"
 
 #
 #	xbiancopy
@@ -1037,7 +1116,63 @@ msgid "xbian-config.xbiancopy.description"
 msgstr "XBIAN system copy tool (to usb, img file ...)"
 
 msgid "xbian-config.xbiancopy.dialog.wrongblkdev"
-msgstr "Wrong destination block device"
+msgstr "Wrong destination block device (doesn't exist or is not a partition)"
+
+msgid "xbian-config.xbiancopy.dialog.exportwrong"
+msgstr "NFS export does not meet requirements"
+
+msgid "xbian-config.xbiancopy.dialog.preperror"
+msgstr "Can't prepare destination filesystem"
+
+
+msgid "xbian-config.backup.category.snasphot"
+msgstr "Manage snapshot"
+
+msgid "xbian-config.backup.category.home"
+msgstr "Home backup"
+
+msgid "xbian-config.backup.category.system"
+msgstr "System backup"
+
+msgid "xbian-config.backup.category.snapshot"
+msgstr "Snapshot"
+
+msgid "xbian-config.backup.category.autosnapshot"
+msgstr "Auto snapshot"
+
+msgid "xbian-config.backup.daily_snapshot"
+msgstr "Enable daily snapshot"
+
+msgid "xbian-config.backup.nbautosnap"
+msgstr "Number of snapshot to keep"
+
+msgid "xbian-config.backup.weekly_snapshot"
+msgstr "Enable weekly snapshot"
+
+msgid "xbian-config.backup.auto_system_image"
+msgstr "Auto image"
+
+msgid "xbian-config.backup.destype"
+msgstr "Destination type"
+
+msgid "xbian-config.backup.blockdev"
+msgstr "Block device"
+
+msgid "xbian-config.backup.filedest"
+msgstr "Destination"
+
+msgid "xbian-config.backup.start"
+msgstr "Start backup now"
+
+msgid "xbian-config.backup.confirm_write"
+msgstr "Write backup to %s?"
+
+msgid "xbian-config.backup.warning_write"
+msgstr "This will erase ALL data on %s, continue?"
+
+msgid "xbian-config.backup.selectdevice"
+msgstr "Select Device"
+
 
 #
 #       backuphome
@@ -1058,6 +1193,33 @@ msgstr "Backup file is prepared at /xbmc-backup. Please grab the file over netwo
 msgid "xbian-config.backuphome.failed"
 msgstr "Backup /home process failed!"
 
+msgid "xbian-config.backuphome.desc1"
+msgstr "It can take several minutes depending on size of your /home/xbian directory"
+
+msgid "xbian-config.backuphome.desc2"
+msgstr "File will be created under /xbian-backup, which is also accessible through smb share"
+
+msgid "xbian-config.backuphome.desc3"
+msgstr "Until finished, there will be just temp folder. Once ready, .img file will appear."
+
+msgid "xbian-config.backuphome.desc4"
+msgstr "You can copy the file directly to you computer (the file will be deleted during reboots!)"
+
+msgid "xbian-config.backuphome.desc5"
+msgstr "To restore your XBMC, just copy .img file to /xbian-backup/put_to_restore folder."
+
+msgid "xbian-config.backuphome.restore"
+msgstr "Restore backup"
+
+msgid "xbian-config.backuphome.selectimage"
+msgstr "Select Home Image"
+
+msgid "xbian-config.backuphome.restore_home_confirm"
+msgstr "%s : Do you want to restore home from %s?"
+
+msgid "xbian-config.backuphome.restore_home_info"
+msgstr "It can take several minutes depending on size of your backup image."
+
 #
 #	enable auto updates
 #
@@ -1076,3 +1238,135 @@ msgstr "Automatic updates are disabled"
 
 msgid "xbian-config.updates.enableauto.enabled"
 msgstr "Automatic updates are enabled"
+
+#
+# manage snapshot
+#
+msgid "xbian-config.snapshot.mountsnap"
+msgstr "Mount a snapshot"
+
+msgid "xbian-config.snapshot.loadingvolume"
+msgstr "Loading volumes..."
+
+msgid "xbian-config.snapshot.volume"
+msgstr "Btrfs volume"
+
+msgid "xbian-config.snapshot.rollback"
+msgstr "Rollback to a snapshot"
+
+msgid "xbian-config.snapshot.delete_snasphot"
+msgstr "Delete a snapshot"
+
+msgid "xbian-config.snapshot.create_snapshot"
+msgstr "Create a snapshot"
+
+msgid "xbian-config.snapshot.name_snapshot"
+msgstr "Snapshot name"
+
+msgid "xbian-config.snapshot.backup"
+msgstr "Backup"
+
+#
+# util
+#
+msgid "xbian-config.util.valuegreater"
+msgstr "Value must be greater than %d"
+
+msgid "xbian-config.util.valuelower"
+msgstr "Value must be lower than %d"
+
+#
+#  wizard
+#
+msgid "xbian-config.wizard.welcome.title"
+msgstr "Welcome to XBian"
+
+msgid "xbian-config.wizard.welcome.smalltitle"
+msgstr "Welcome"
+
+msgid "xbian-config.wizard.welcome.description"
+msgstr "Thanks for choosing XBian.[CR][CR]XBian is a free Open Source media centre distribution for the Raspberry Pi.[CR]Our slogans is \"XBMC on Raspberry Pi, the Bleeding edge\" as our main focus is on delivering the fasted media centre for the Raspberry Pi.[CR][CR]We believe that everyone can make XBian better.[CR]Please visit our www.xbian.org for support. If you have any questions, suggestions or contributions, please share them with us!"
+
+msgid "xbian-config.wizard.network.title"
+msgstr "Configure your network"
+
+msgid "xbian-config.wizard.network.smalltitle"
+msgstr "Network"
+
+msgid "xbian-config.wizard.network.description"
+msgstr "Configuring your wired or wireless connection in XBian is really easy. XBian can run without internet access but you will have a better experience with it."
+
+msgid "xbian-config.wizard.license.title"
+msgstr "Enter your License key"
+
+msgid "xbian-config.wizard.license.smalltitle"
+msgstr "License key"
+
+msgid "xbian-config.wizard.license.description"
+msgstr "The Raspberry Pi can decode the majority of video and audio formats, however, in order to decode VC-1 (Used in some BluRay discs) and MPEG-2, you will need to purchase a license key for these.[CR]They are available at http://www.raspberrypi.com/license-keys/[CR][CR]If you already have a license key, you can enter it now."
+
+msgid "xbian-config.wizard.backup.title"
+msgstr "Restore Home"
+
+msgid "xbian-config.wizard.backup.smalltitle"
+msgstr "Restore"
+
+msgid "xbian-config.wizard.backup.description"
+msgstr "XBian will offer you an easy way to backup your setup.[CR]If you have a previous backup of your home[CR](it contain your XBMC configuration, addons, settings including Libraries...),[CR]you can restore now.[CR][CR]Later, if you want to do a backup, create a snapshot and many more,[CR],go to system->xbian->backup"
+
+msgid "xbian-config.wizard.update.title"
+msgstr "Update XBian"
+
+msgid "xbian-config.wizard.update.smalltitle"
+msgstr "update"
+
+msgid "xbian-config.wizard.update.description"
+msgstr "You can now choose how XBian will be updated and how often to check for updates.[CR][CR]By default, XBian will not be updated automatically, but you will be advised when a new update is available.[CR][CR]To update go to System -> XBian -> Update and select the packages to upgrade.[CR][CR]If you wish XBian to be updated automatically, you can set it now."
+
+msgid "xbian-config.wizard.package.title"
+msgstr "Install new packages"
+
+msgid "xbian-config.wizard.package.smalltitle"
+msgstr "package"
+
+msgid "xbian-config.wizard.package.description"
+msgstr "XBian comes with everything needed for XBMC but you can easily add pre-configured  packages like Torrent, Newsbin, CouchPotatoe and many more.[CR][CR]Users can create their own package and share it with others. If you feel you have something that others may like, go to the XBian Forum and post a thread, and someone will get back to you with information.[CR][CR]Please be patient while the package list is loading."
+
+msgid "xbian-config.wizard.finish.title"
+msgstr "It's time to play"
+
+msgid "xbian-config.wizard.finish.smalltitle"
+msgstr "Finish"
+
+msgid "xbian-config.wizard.finish.description"
+msgstr "You now have a fully configured XBian.[CR]We hope it will give you a great experience.[CR][CR]If you want to manage additional XBian settings: Go System -> XBian.[CR]If you want to rerun this Wizard at a later date: Select tab XBian Wizard under System"
+
+#
+#   commom
+#
+msgid "xbian-config.common.pleasewait"
+msgstr "Please wait..."
+
+msgid "xbian-config.common.initialisation"
+msgstr "Initialisation..."
+
+msgid "xbian-config.common.loading"
+msgstr "Loading"
+
+msgid "xbian-config.common.doyouwanto"
+msgstr "Do you want to %s"
+
+msgid "xbian-config.common.error"
+msgstr "ERROR : cannot save setting"
+
+msgid "xbian-config.common.ok"
+msgstr "Setting has been saved"
+
+msgid "xbian-config.common.confirmation"
+msgstr "Are you sure to apply modification?"
+
+msgid "xbian-config.common.badentry"
+msgstr "Data you have enter is not correct"
+
+msgid "xbian-config.common.clicktoload"
+msgstr "Click to activate"

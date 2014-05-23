@@ -5,7 +5,14 @@ if [ $1 == "configure" ]; then
 	echo $(date) > /home/xbian/xbian-config-update.log
 
 	[ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
-	msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo /usr/local/include/xbian-config/gettext/xbian.po 
+
+        echo "Installing language files..."
+	for l in $(find /usr/local/include/xbian-config/gettext -type f); do
+	    a=$(basename $l)
+	    a=${a#*\.};a=${a%\.*}
+	    echo $a
+	    [ -d /usr/share/locale/$a/LC_MESSAGES ] && msgfmt -o /usr/share/locale/$a/LC_MESSAGES/xbian.mo $l
+	done
 
 	. /etc/bash_completion.d/xbian-config.sh >/dev/null
 
@@ -28,7 +35,7 @@ if [ $1 == "configure" ]; then
         mv /home/xbian/.bashrc.new /home/xbian/.bashrc
         chown xbian:xbian /home/xbian/.bashrc
 
-    mv /var/tmp/20apt-show-versions /etc/apt/apt.conf.d/20apt-show-versions
+    rm -f /etc/apt/apt.conf.d/20apt-show-versions
 
     # update config
     if [ ! -e /etc/default/xbian-snap ]; then
@@ -71,4 +78,12 @@ if [ $1 == "configure" ]; then
     fi
     :
 
+    if [ -e /etc/inetd.conf ]; then
+        grep -v "netbios-ns dgram udp wait root /usr/sbin/nmbd nmbd" /etc/inetd.conf > /etc/inetd.conf.new
+        mv /etc/inetd.conf.new /etc/inetd.conf
+    fi
+    insserv -f samba >/dev/null 2>&1
+
 fi
+
+exit 0

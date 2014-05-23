@@ -91,9 +91,12 @@ function showGUIFn() {
 # start return code
 # number - pid of started backup process
 # -1 failed
+# -3 already running
+
 function showCMDFn() {
     case $1 in
         start)
+            [ "$(xbian-config backuphome status)" -eq 0 ] && { echo "-3"; exit 0; }
             nice -n +1 /usr/sbin/btrfs-auto-snapshot backuphome > /dev/null 2>&1 & pid=$!
             echo $pid > /tmp/backuphome.running
             echo $pid

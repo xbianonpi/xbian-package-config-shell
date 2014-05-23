@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -24,10 +24,14 @@ if [ ! $(id -u) -eq 0 ]; then
 	exit 0;
 fi
 
+rmtmp() {
+    rm -f /run/xbian-config.$$
+}
+
 # Disable [ctrl]-c and [ctrl]-z actions
 trap '' 2 20
 #trap "{ test -e /run/xbian-config.umount && mountpoint -q /boot && umount /boot; rm -fr /run/xbian-config.$$ /run/xbian-config.umount; [ $GUIMODE -eq 1 ] && showMainCloseDlg; }" EXIT INT ERR
-trap "{ env | grep -qw GUIMODE=1 && showMainCloseDlg; }" EXIT INT ERR
+trap "{ rmtmp; env | grep -qw GUIMODE=1 && showMainCloseDlg; }" EXIT INT ERR
 
 #|------------------------------------|
 #|          Global variables          |
@@ -79,7 +83,7 @@ function showMainCloseDlg() {
 				DOREBOOT=1;
 			;;
 			1)
-				rm /run/reboot-required
+				:
 			;;
 		esac
 	fi
@@ -127,7 +131,7 @@ function showMainMenuDlg() {
 	#clrMemCacheFn;
 	
 	# Create main menu
-	
+
 	# If a certain menu items has no subitems, than we've reach of final function we want to execute
 	if [ -z "$ITEMS" ]; then
 		
@@ -153,7 +157,7 @@ function showMainMenuDlg() {
 		MENU="";
 		I=1;
 		for ITEM in ${ITEMS[@]}; do
-			MENU+="$I%$(_ ${ITEM}.name)!-!\"$(_ $ITEM.description)\"%";
+			MENU+=$I%$(_ ${ITEM}.name)!\-!$(_ $ITEM.description)%;
 			I=$(($I+1));
 		done;
 		
@@ -161,7 +165,6 @@ function showMainMenuDlg() {
 		# Set the title to the appropriate menu level we're in
 		TITLE="["$CPATH"]"
 
-		
 		# Show the main menu
 		if [ $1 -eq 0 ]; then
 			showMenuDlg "" "$MENU" 10 14 $(($DEFAULTWIDTH+35)) $(_ dialog.select) $(_ dialog.exit);
@@ -197,7 +200,8 @@ if [ $# -eq 0 -o "$1" = goto ]; then
 	#|------------------------------------|
 	#|              GUI Mode              |
 	#|------------------------------------|
-	
+	echo $$ >> /run/lock/xbian-config.gui
+
 	LOADER=0;
 	while ! pgrep dialog > /dev/null; do 
 		for a in \\ \| \/ -; do
@@ -249,7 +253,7 @@ if [ $# -eq 0 -o "$1" = goto ]; then
 	#else
 		showMainMenuDlg 0 "";
 	#fi
-	
+	eval $(echo "sed -i '/$$/d' /run/lock/xbian-config.gui")
 else
 	#|------------------------------------|
 	#|              CLI Mode              |
@@ -272,7 +276,7 @@ else
 	if [ $MODULE == "reboot" ]; then
 		[ -n "$2" ] && [ "$2" -eq 1 ] && { touch /var/run/reboot-required; exit 0; }
 		if [ -f /var/run/reboot-required ]; then
-			{ pgrep dpkg > /dev/null|| pgrep apt-get >/dev/null || ps x | grep -v "grep"| grep -q "/usr/bin/unattended-upgrade" ; } && return 0
+			{ pgrep dpkg > /dev/null|| pgrep apt-get >/dev/null || ps x | grep -v "grep"| grep -q "/usr/bin/unattended-upgrade" ; } && exit 0
 			echo 1;
 		else
 			echo 0;

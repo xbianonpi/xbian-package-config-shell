@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(guires webserver tvoff usbsync usbauto usbshare priority uuidname hddspin sharerw);
+ARGUMENTS=(guires webserver tvoff tvexiton haltoff usbsync usbauto usbshare priority uuidname hddspin sharerw);
 GUIRES=(480 540 720 1080);
 
 #|------------------------------------|
@@ -163,6 +163,22 @@ function showCMDFn() {
                     else
                         getXBMCtvoffFn
                     fi
+                ;;
+                tvexiton)
+                    if [ $# -gt 1 ]; then
+                        setXBMCtvonFn $2
+                    else
+                        getXBMCtvonFn
+                    fi
+                    echo $((1-$?))
+                ;;
+                haltoff)
+                    if [ $# -gt 1 ]; then
+                        setXBMChaltoffFn $2
+                    else
+                        getXBMChaltoffFn
+                    fi
+                    echo $((1-$?))
                 ;;
                 usbauto)
                     if [ $# -eq 2 ]; then

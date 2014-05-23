@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -40,7 +40,7 @@ function showXBMCGUIResDlg() {
 	"#;\Zb"$(_ xbmc.label.guires)\
 	"${MENU[@]}";
 
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11))
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+8))
 	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 12
 }
 

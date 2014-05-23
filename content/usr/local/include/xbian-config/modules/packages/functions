@@ -17,6 +17,11 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
+function getInternetFn() {
+    ping -c 1 8.8.8.8 > /dev/null 2>&1 && return 0
+    return 1
+}
+
 function getPackageCategoryListFn() {
 	CATEGORIES=($(echo -e "$CONTENT" | sed -ne 's/\(Section: \)\(.*\)/\2/p' | sort | uniq | grep -v update));
 }
@@ -33,23 +38,23 @@ function getPackagesFromCategoryFn() {
 
 
 function getPackageStatusFn() {
-	echo -e "$ALLPKGLST" | grep -v "xbian-update" | grep -q "xbian[-A-Za-z]\{1,\}$1[[:space:]]\{1,\}install\|hold$"
+	echo -e "$ALLPKGLST" | grep -v "xbian-update" | grep -wq "xbian-package-$1\|$1"
 	return $((1-$?))
 }
 
 function updateAllPackagesListFn() {
-	ALLPKGLST=$(dpkg --get-selections "xbian*");
+        ALLPKGLST=$(dpkg-query -W --showformat='${Package} %%${Origin}%% %%${Status}%%\n'  | grep -i '%%XBian%%' | grep -w installed%%);
 }
 
 #Gets the package information
 # $1: Package name
 function getPackageInformationFn() {
 	NAME=$1;
-	INFO=$(echo -e "$CONTENT" | awk -vRS='' "/Package:[A-Za-z -]+$NAME/"'{print $0"\n"}' | grep -v "xbian-update");
+	INFO=$(echo -e "$CONTENT" | awk -vRS='' "/Package:[A-Za-z -]+$NAME\n/"'{print $0"\n"}' | grep -v "xbian-update");
 	IFS=$'\n' VERSIONS=($(echo -e "$INFO" | sed -ne 's/\(Version: \)\([0-9\.]\{1,\}\)/\2/p'));
 	X=0; I=0
 	for KEY in ${!VERSIONS[@]}; do
-		if [ "${VERSIONS[$KEY]}" > "$X" ]; then
+		if [[ "${VERSIONS[$KEY]}" > "$X" ]]; then
 			X=${VERSIONS[$KEY]};
 			I=$KEY;
 		fi
@@ -58,7 +63,7 @@ function getPackageInformationFn() {
 	INFO=$(echo -e "$INFO" | awk -vRS='' "/Version: $X/"'{print $0"\n"}');
 	PKGINFO[0]=$(echo -e "$INFO" | sed -ne 's/\(Package: \)\([A-Za-z0-9. -]\{1,\}\)/\2/p' | sort -r);
 	PKGINFO[1]=$X;
-	PKGINFO[2]=$(($(echo -e "$INFO" | sed -ne 's/\(Installed-Size: \)\([0-9]\{1,\}\)/\2/p')*1024))
+	PKGINFO[2]=$(($(echo -e "$INFO " | sed -ne 's/\(Installed-Size: \)\([0-9]\{1,\}\)/\2/p')*1024))
 	PKGINFO[3]=$(echo -e "$INFO" | sed -ne 's/\(^Size: \)\([0-9]\{1,\}\)/\2/p');
 	PKGINFO[4]=$(echo -e "$INFO" | sed -ne 's/\(Description: \)\([A-Za-z0-9\ ]\{1,\}\)/\2/p');
 	PKGINFO[5]=$(echo -e "$INFO" | sed -ne 's/\(Depends: \)\([A-Za-z0-9\ ]\{1,\}\)/\2/p')

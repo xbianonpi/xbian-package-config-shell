@@ -104,12 +104,20 @@ function changeCurrentTZFn() {
 		if [ -f $TZLOCATIONPATH ] || [ -L $TZLOCATIONPATH ]; then
 			ln -s $TZLOCATIONPATH /etc/localtime 2>/dev/null;
 			if [ $? -eq 0 ]; then
-				export city=$2
+				city=$2;area=$1
+				city="${city^}";area="${area^}"
 				cou=$(cat $BASEPATH/config/countries | awk -v c=$city -F'\t' '$6 ~ c {print $5}')
 				if [ -n "$cou" ]; then
-				    eval $(echo "sed -i 's/<timezone>.*<\/timezone>/<timezone>$1\/$2<\/timezone>/' /home/xbian/.xbmc/userdata/guisettings.xml")
-				    eval $(echo "sed -i 's/<timezonecountry>.*<\/timezonecountry>/<timezonecountry>$cou<\/timezonecountry>/' /home/xbian/.xbmc/userdata/guisettings.xml")
+				    mkdir -p /run/xbian-config
+				    echo "eval \$(echo \"sed -i 's/<timezone>.*<\/timezone>/<timezone>$area\/$city<\/timezone>/' /home/xbian/.xbmc/userdata/guisettings.xml\")" >> /run/xbian-config/xbmc-tz
+				    echo "eval \$(echo \"sed -i 's/<timezonecountry>.*<\/timezonecountry>/<timezonecountry>$cou<\/timezonecountry>/' /home/xbian/.xbmc/userdata/guisettings.xml\")" >> /run/xbian-config/xbmc-tz
 				fi
+				if pgrep xbmc.bin > /dev/null; then
+				    cat /run/xbian-config/xbmc-tz >> /run/xbian-config/xbmc-changesettings.sh 2>/dev/null
+				else
+				    sh /run/xbian-config/xbmc-tz
+				fi
+				rm -fr /run/xbian-config/xbmc-tz
 				return 1;
 			else
 				return 0;

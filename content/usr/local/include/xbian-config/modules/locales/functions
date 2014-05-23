@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -89,11 +89,11 @@ function setLocaleFn() {
 	update-locale LANG=$LOCALE
 	CURLANG=$(sed '/<language>/!d;s//\n/;s/[^\n]*\n//;:a;$!{/<\/language/!N;//!ba};y/\n/ /;s/<\/language>/\n/;P;D' /home/xbian/.xbmc/userdata/guisettings.xml | sed -ne 's/\([A-Za-z]\{1,\}\)\([\ ](.*\|.*\)/\1/p'); #)
 	XBMCLANG=$(grep "^$1" $BASEPATH/config/languages | awk '{print $5}' | sed -e 's/_/ /g');
-	if [ ! -z $XBMCLANG ]; then
-		sed -i "s/$CURLANG/$XBMCLANG/g" /home/xbian/.xbmc/userdata/guisettings.xml
+	mkdir -p /run/xbian-config
+	if [ -n $XBMCLANG ]; then
+		echo "sed -i 's%<language>.*</language>%<language>$XBMCLANG</language>%g' /home/xbian/.xbmc/userdata/guisettings.xml" >> /run/xbian-config/xbmc-changesettings.sh
 	else
-		sed -i "s/$CURLANG/English/g" /home/xbian/.xbmc/userdata/guisettings.xml
+		echo "sed -i 's%<language>.*</language>%<language>English</language>%g' /home/xbian/.xbmc/userdata/guisettings.xml" >> /run/xbian-config/xbmc-changesettings.sh
 	fi
-	
-	rm -fr /run/xbian-config.$$
+	pgrep xbmc.bin >/dev/null || { sh /run/xbian-config/xbmc-changesettings.sh && rm -f /run/xbian-config/xbmc-changesettings.sh; }
 }

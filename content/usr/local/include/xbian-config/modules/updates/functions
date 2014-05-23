@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -71,8 +71,8 @@ function getAllUpdatesLisFn() {
 
 function updatePackagesFn() {
 	LIST="";
-        if [ "$2" = '-' ]; then
-            lt=${!PACKAGES[@]}
+        if [ "$2" = '-' ] || [[ "$2" =~ '0' ]]; then
+            lt=${!PACKAGES[*]}
             d=0
         else
             lt=$2
@@ -91,9 +91,9 @@ function updatePackagesFn() {
 	if [ $1 -eq 1 ]; then
 		eval apt-get install -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		{ rm -f /tmp/aptupdates; eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
+		{ rm -f /tmp/aptupdates; DEBIAN_FRONTEND=noninteractive eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST 2>&1; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
 	elif [ $1 -eq 2 ]; then
-		{ eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
+		{ DEBIAN_FRONTEND=noninteractive eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
 	fi
         getAptErrorCodeFn
         return $?
@@ -192,11 +192,11 @@ function updateSystemFn() {
 	else 
 		touch /run/noreboot
 		if [ $1 -eq 1 ]; then
-			eval apt-get install -s ${VERSIONS[0]}"="$NEXTVERSION >/tmp/aptstatus
+			DEBIAN_FRONTEND=noninteractive eval apt-get install -s ${VERSIONS[0]}"="$NEXTVERSION >/tmp/aptstatus
 		elif [ $1 -eq 0 ]; then
-			{ rm -f /tmp/aptupdates; eval apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
+			{ rm -f /tmp/aptupdates; DEBIAN_FRONTEND=noninteractive eval apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
 		elif [ $1 -eq 2 ]; then
-			{ eval nohup apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
+			{ DEBIAN_FRONTEND=noninteractive eval nohup apt-get install -y ${VERSIONS[0]}"="$NEXTVERSION; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
 		fi
                 getAptErrorCodeFn
                 return $?

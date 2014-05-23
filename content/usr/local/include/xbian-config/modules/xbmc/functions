@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -101,6 +101,16 @@ function getXBMCtvoffFn() {
         && { echo "1 $(grep AFTER= /etc/default/xbmc | awk -F'=' '{print $2}')"; return 0; }
     echo "0 0"
     return 1
+}
+
+function getXBMChaltoffFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+    return $(grep -q SCROFFHALT=yes /etc/default/xbmc; echo $?)
+}
+
+function getXBMCtvonFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+    return $(grep -q XBMCEXITON=yes /etc/default/xbmc; echo $?)
 }
 
 function setXBMCtvoffFn() {
@@ -241,6 +251,39 @@ function setXBMCsharerwFn() {
     fi
     return 1
 }
+
+function setXBMChaltoffFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+    if [ $1 -eq 0 ]; then
+        sed -i 's/SCROFFHALT=.*/SCROFFHALT=no/' /etc/default/xbmc
+        grep -q SCROFFHALT=no /etc/default/xbmc
+        return $?
+    elif [ $1 -eq 1 ]; then
+        sed -i 's/SCROFFHALT=.*/SCROFFHALT=yes/' /etc/default/xbmc
+        grep -q SCROFFHALT=yes /etc/default/xbmc
+        return $?
+    else
+        return 0
+    fi
+    return 1
+}
+
+function setXBMCtvonFn() {
+    [ ! -e /etc/default/xbmc ] && return 1
+    if [ $1 -eq 0 ]; then
+        sed -i 's/XBMCEXITON=.*/XBMCEXITON=no/' /etc/default/xbmc
+        grep -q XBMCEXITON=no /etc/default/xbmc
+        return $?
+    elif [ $1 -eq 1 ]; then
+        sed -i 's/XBMCEXITON=.*/XBMCEXITON=yes/' /etc/default/xbmc
+        grep -q XBMCEXITON=yes /etc/default/xbmc
+        return $?
+    else
+        return 0
+    fi
+    return 1
+}
+
 
 function setXBMCpriorityFn() {
     [ ! -e /etc/default/xbmc ] && return 1

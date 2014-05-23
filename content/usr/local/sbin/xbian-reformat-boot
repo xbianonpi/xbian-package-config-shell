@@ -1,3 +1,11 @@
 #!/bin/sh
 
-mount /boot &>/dev/null; mkdir -p /tmp/boot; cp -ar /boot/* /tmp/boot; umount /boot; mkfs.msdos -F 16 /dev/mmcblk0p1 -n boot; mount /boot; cp -ar /tmp/boot/* /boot
+set -x
+
+mountpoint -q /boot || mount /boot
+mkdir -p /tmp/boot
+cp -ar /boot/* /tmp/boot
+umount /boot || exit 1
+mkfs.msdos /dev/mmcblk0p1 -n xbianboot
+mount /boot
+cp -ar /tmp/boot/* /boot
