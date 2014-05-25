@@ -40,7 +40,8 @@ function setHostnameFn() {
 	eval "sed -i 's/$2\./$1\./g' /etc/hosts";
 	eval "sed -i 's/$2\$/$1/g' /etc/hosts";
 	mkdir -p /run/xbian-config
-	echo "eval \"sed -i 's/<devicename>.*<\/devicename>/<devicename>$1<\/devicename>/' /home/xbian/.xbmc/userdata/guisettings.xml\"" >> /run/xbian-config/xbmc-hostname
+	echo "sed -i 's%<devicename.*>.*</devicename>%<devicename>$1</devicename>%' /home/xbian/.xbmc/userdata/guisettings.xml" >> /run/xbian-config/xbmc-hostname
+	echo "sed -i 's%<setting id=\"device_name\" value=\".*\" />%<setting id=\"device_name\" value=\"$1\" />%' /home/xbian/.xbmc/userdata/peripheral_data/*" >> /run/xbian-config/xbmc-hostname
 	if pgrep xbmc.bin > /dev/null; then
 	    cat /run/xbian-config/xbmc-hostname >> /run/xbian-config/xbmc-changesettings.sh
 	else
