@@ -595,13 +595,19 @@ case $opt_command in
 		mount -t btrfs -o noatime,subvol=/ $1 /tmp/btrfs-source
 		{ eval $opt_remotecmd findmnt -n $2 | grep -qw $2; } && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
 		if [ -z "$opt_nocreate" ]; then
-		    mfs=$(eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -L $opt_clonename -f $2 2>&1)
+		    mfs=$(eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1)
 		    if [ $? -gt 0 ]; then
-			echo $mfs | grep -q "SMALL VOLUME" && eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; exit 5; }
+			echo $mfs | grep -q "SMALL VOLUME" && eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -M mixed -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; exit 5; }
 		    fi
 		fi
 		eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
-		eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 /tmp/btrfs-dest || { echo "can not mount destination partition"; exit 6; }
+
+		if ! eval $opt_remotecmd mount -o compress=lz4,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
+		    if ! eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
+			echo "can not mount destination partition"
+			exit 6
+		    fi
+		fi
 
 		if grep -q "rootflags=subvol=" /proc/cmdline; then
 		    subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
