@@ -195,7 +195,7 @@ do_snapshot ()
                 fi
                 if [ ! -d "$opt_mountpoint/$ii/$opt_snapdir$SNAPNAME" ]; then
                         tmp_runningcopyin=$opt_runningcopyin
-                        z=$(findmnt -n | grep /$ii/ -m1 | awk '{print $2}'); z=${z##*\/}; z=${z%%]}
+                        z=$(findmnt -n --mtab | grep /$ii/ -m1 | awk '{print $2}'); z=${z##*\/}; z=${z%%]}
                         [ -n "$z" ] && tmp_runningcopyin=$z 
                         if do_run "btrfs sub snapshot $opt_mountpoint/$ii/$tmp_runningcopyin $opt_mountpoint/$ii/$opt_snapdir$SNAPNAME"; then
                                 SNAPSHOT_COUNT=$(( $SNAPSHOT_COUNT + 1 ))
