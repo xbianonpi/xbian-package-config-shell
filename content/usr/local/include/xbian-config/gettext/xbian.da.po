@@ -1,0 +1,1317 @@
+# msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo xbian.po
+# 
+# Translators:
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: XBian Translation\n"
+"Report-Msgid-Bugs-To: development@xbian.org\n"
+"POT-Creation-Date: 09-03-2013 12:00+0100\n"
+"PO-Revision-Date: 2014-05-25 10:58+0000\n"
+"Last-Translator: belese <besme2@gmail.com>\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/xbian-translation/language/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "distribution"
+msgstr ""
+
+# xbian-config main (menu)
+# 
+msgid "xbian-config.main.title"
+msgstr ""
+
+msgid "xbian-config.main.reboot_question"
+msgstr ""
+
+msgid "xbian-config.settings.name"
+msgstr ""
+
+msgid "xbian-config.settings.description"
+msgstr ""
+
+msgid "xbian-config.system.name"
+msgstr ""
+
+msgid "xbian-config.system.description"
+msgstr ""
+
+msgid "xbian-config.accounts.name"
+msgstr ""
+
+msgid "xbian-config.accounts.description"
+msgstr ""
+
+msgid "xbian-config.licenses.name"
+msgstr ""
+
+msgid "xbian-config.licenses.description"
+msgstr ""
+
+msgid "xbian-config.connectivity.name"
+msgstr ""
+
+msgid "xbian-config.connectivity.description"
+msgstr ""
+
+# xbian-config dialog
+# 
+msgid "xbian-config.dialog.error"
+msgstr ""
+
+msgid "xbian-config.dialog.apply"
+msgstr ""
+
+msgid "xbian-config.dialog.ok"
+msgstr ""
+
+msgid "xbian-config.dialog.yes"
+msgstr ""
+
+msgid "xbian-config.dialog.no"
+msgstr ""
+
+msgid "xbian-config.dialog.on"
+msgstr ""
+
+msgid "xbian-config.dialog.off"
+msgstr ""
+
+msgid "xbian-config.dialog.insert"
+msgstr ""
+
+msgid "xbian-config.dialog.remove"
+msgstr ""
+
+msgid "xbian-config.dialog.update"
+msgstr ""
+
+msgid "xbian-config.dialog.cancel"
+msgstr ""
+
+msgid "xbian-config.dialog.select"
+msgstr ""
+
+msgid "xbian-config.dialog.return"
+msgstr ""
+
+msgid "xbian-config.dialog.unexpected_error"
+msgstr ""
+
+msgid "xbian-config.dialog.close"
+msgstr ""
+
+msgid "xbian-config.dialog.change"
+msgstr ""
+
+msgid "xbian-config.dialog.exit"
+msgstr ""
+
+msgid "xbian-config.dialog.enable"
+msgstr ""
+
+msgid "xbian-config.dialog.disable"
+msgstr ""
+
+msgid "xbian-config.dialog.password"
+msgstr ""
+
+msgid "xbian-config.dialog.confirm"
+msgstr ""
+
+msgid "xbian-config.dialog.retry"
+msgstr ""
+
+msgid "xbian-config.dialog.space_option_select"
+msgstr ""
+
+msgid "xbian-config.dialog.space_check_select"
+msgstr ""
+
+msgid "xbian-config.dialog.loading_module"
+msgstr ""
+
+msgid "xbian-config.dialog.required_packages"
+msgstr ""
+
+msgid "xbian-config.dialog.insufficient_arguments"
+msgstr ""
+
+msgid "xbian-config.dialog.incorrect_arguments"
+msgstr ""
+
+# xbian-config module bootflags
+# 
+msgid "xbian-config.bootflags.name"
+msgstr ""
+
+msgid "xbian-config.bootflags.description"
+msgstr ""
+
+msgid "xbian-config.bootflags.label.bootflags"
+msgstr ""
+
+msgid "xbian-config.bootflags.update_success"
+msgstr ""
+
+msgid "xbian-config.bootflags.splash"
+msgstr ""
+
+msgid "xbian-config.bootflags.logo"
+msgstr ""
+
+msgid "xbian-config.bootflags.quiet"
+msgstr ""
+
+msgid "xbian-config.bootflags.loglevel"
+msgstr ""
+
+# xbian-config module information
+# 
+msgid "xbian-config.information.name"
+msgstr ""
+
+msgid "xbian-config.information.description"
+msgstr ""
+
+msgid "xbian-config.information.text"
+msgstr ""
+
+# xbian-config module hostname
+# 
+msgid "xbian-config.hostname.name"
+msgstr ""
+
+msgid "xbian-config.hostname.label.hostname"
+msgstr ""
+
+msgid "xbian-config.hostname.description"
+msgstr ""
+
+msgid "xbian-config.hostname.changed"
+msgstr ""
+
+# xbian-config module kernel
+# 
+msgid "xbian-config.kernel.name"
+msgstr ""
+
+msgid "xbian-config.kernel.description"
+msgstr ""
+
+msgid "xbian-config.kernel.label.version"
+msgstr ""
+
+msgid "xbian-config.kernel.switch_success"
+msgstr ""
+
+msgid "xbian-config.kernel.same_version"
+msgstr ""
+
+msgid "xbian-config.kernel.single_installed"
+msgstr ""
+
+# xbian-config general licenses
+# 
+msgid "xbian-config.license.inserted"
+msgstr ""
+
+msgid "xbian-config.license.deleted"
+msgstr ""
+
+msgid "xbian-config.license.updated"
+msgstr ""
+
+msgid "xbian-config.license.invalid"
+msgstr ""
+
+# xbian-config module licensempg2
+# 
+msgid "xbian-config.licensempg2.name"
+msgstr ""
+
+msgid "xbian-config.licensempg2.description"
+msgstr ""
+
+# xbian-config module licensevc1
+# 
+msgid "xbian-config.licensevc1.name"
+msgstr ""
+
+msgid "xbian-config.licensevc1.description"
+msgstr ""
+
+# xbian-config module locales
+# 
+msgid "xbian-config.locales.name"
+msgstr ""
+
+msgid "xbian-config.locales.description"
+msgstr ""
+
+msgid "xbian-config.locales.label.letter"
+msgstr ""
+
+msgid "xbian-config.locales.label.name"
+msgstr ""
+
+msgid "xbian-config.locales.label.xbmc"
+msgstr ""
+
+msgid "xbian-config.locales.label.xbian"
+msgstr ""
+
+msgid "xbian-config.locales.updated"
+msgstr ""
+
+# xbian-config module network
+# 
+msgid "xbian-config.network.name"
+msgstr ""
+
+msgid "xbian-config.network.description"
+msgstr ""
+
+msgid "xbian-config.network.label.interfaces"
+msgstr ""
+
+msgid "xbian-config.network.interfaces.loading"
+msgstr ""
+
+msgid "xbian-config.network.interfaces.unavailable"
+msgstr ""
+
+msgid "xbian-config.network.interfaces.select"
+msgstr ""
+
+msgid "xbian-config.network.label.dhcp"
+msgstr ""
+
+msgid "xbian-config.network.label.name"
+msgstr ""
+
+msgid "xbian-config.network.dhcp_selected"
+msgstr ""
+
+msgid "xbian-config.network.label.static"
+msgstr ""
+
+msgid "xbian-config.network.label.status"
+msgstr ""
+
+msgid "xbian-config.network.label.ipaddress"
+msgstr ""
+
+msgid "xbian-config.network.label.netmask"
+msgstr ""
+
+msgid "xbian-config.network.label.gateway"
+msgstr ""
+
+msgid "xbian-config.network.label.nameserver"
+msgstr ""
+
+msgid "xbian-config.network.label.ssid"
+msgstr ""
+
+msgid "xbian-config.network.label.key"
+msgstr ""
+
+msgid "xbian-config.network.label.type"
+msgstr ""
+
+msgid "xbian-config.network.label.protection"
+msgstr ""
+
+msgid "xbian-config.network.label.scan"
+msgstr ""
+
+msgid "xbian-config.network.label.custom"
+msgstr ""
+
+msgid "xbian-config.network.label.wlan"
+msgstr ""
+
+msgid "xbian-config.network.label.not_connected"
+msgstr ""
+
+msgid "xbian-config.network.label.reloading_values"
+msgstr ""
+
+msgid "xbian-config.network.scanning"
+msgstr ""
+
+msgid "xbian-config.network.connection.restart"
+msgstr ""
+
+msgid "xbian-config.network.connection.updating"
+msgstr ""
+
+msgid "xbian-config.network.connection.failed"
+msgstr ""
+
+msgid "xbian-config.network.connection.success"
+msgstr ""
+
+msgid "xbian-config.network.credentials.enter"
+msgstr ""
+
+msgid "xbian-config.network.credentials.wlan.invalid"
+msgstr ""
+
+msgid "xbian-config.network.credentials.wlan.updated"
+msgstr ""
+
+msgid "xbian-config.network.credentials.lan.invalid"
+msgstr ""
+
+msgid "xbian-config.network.credentials.lan.updated"
+msgstr ""
+
+msgid "xbian-config.network.label.wpa"
+msgstr ""
+
+msgid "xbian-config.network.label.wep"
+msgstr ""
+
+msgid "xbian-config.network.label.open"
+msgstr ""
+
+msgid "xbian-config.network.label.signal"
+msgstr ""
+
+# xbian-config module overclocking
+# 
+msgid "xbian-config.overclocking.name"
+msgstr ""
+
+msgid "xbian-config.overclocking.description"
+msgstr ""
+
+msgid "xbian-config.overclocking.warning"
+msgstr ""
+
+msgid "xbian-config.overclocking.alreadyset"
+msgstr ""
+
+msgid "xbian-config.overclocking.changed"
+msgstr ""
+
+msgid "xbian-config.overclocking.label.preset"
+msgstr ""
+
+msgid "xbian-config.overclocking.label.custom"
+msgstr ""
+
+msgid "xbian-config.overclocking.empty_fields"
+msgstr ""
+
+# xbian-config module packages
+# 
+msgid "xbian-config.packages.name"
+msgstr ""
+
+msgid "xbian-config.packages.description"
+msgstr ""
+
+msgid "xbian-config.packages.apt.update"
+msgstr ""
+
+msgid "xbian-config.packages.apt.update_failed"
+msgstr ""
+
+msgid "xbian-config.packages.list.download"
+msgstr ""
+
+msgid "xbian-config.packages.mirrors.download_failed"
+msgstr ""
+
+msgid "xbian-config.packages.loading"
+msgstr ""
+
+msgid "xbian-config.packages.install.confirm"
+msgstr ""
+
+msgid "xbian-config.packages.install.success"
+msgstr ""
+
+msgid "xbian-config.packages.install.retry"
+msgstr ""
+
+msgid "xbian-config.packages.remove.confirm"
+msgstr ""
+
+msgid "xbian-config.packages.remove.success"
+msgstr ""
+
+msgid "xbian-config.packages.already_installed"
+msgstr ""
+
+msgid "xbian-config.packages.unavailable_version"
+msgstr ""
+
+msgid "xbian-config.packages.not_exists"
+msgstr ""
+
+msgid "xbian-config.packages.not_installed"
+msgstr ""
+
+msgid "xbian-config.packages.size_mismatch"
+msgstr ""
+
+msgid "xbian-config.packages.essential"
+msgstr ""
+
+msgid "xbian-config.packages.show_log"
+msgstr ""
+
+msgid "xbian-config.packages.error"
+msgstr ""
+
+msgid "xbian-config.packages.downgrade"
+msgstr ""
+
+msgid "xbian-config.packages.installing"
+msgstr ""
+
+msgid "xbian-config.packages.removing"
+msgstr ""
+
+msgid "xbian-config.packages.label.categories"
+msgstr ""
+
+msgid "xbian-config.packages.label.name"
+msgstr ""
+
+msgid "xbian-config.packages.label.installed"
+msgstr ""
+
+msgid "xbian-config.packages.label.not_installed"
+msgstr ""
+
+msgid "xbian-config.packages.label.information"
+msgstr ""
+
+msgid "xbian-config.packages.label.install_update"
+msgstr ""
+
+msgid "xbian-config.packages.label.install"
+msgstr ""
+
+msgid "xbian-config.packages.label.remove"
+msgstr ""
+
+msgid "xbian-config.packages.label.get_more"
+msgstr ""
+
+msgid "xbian-config.packages.info.fullname"
+msgstr ""
+
+msgid "xbian-config.packages.info.version.available"
+msgstr ""
+
+msgid "xbian-config.packages.info.version.installed"
+msgstr ""
+
+msgid "xbian-config.packages.info.size.installed"
+msgstr ""
+
+msgid "xbian-config.packages.info.size.download"
+msgstr ""
+
+msgid "xbian-config.packages.info.description"
+msgstr ""
+
+msgid "xbian-config.packages.info.dependencies"
+msgstr ""
+
+msgid "xbian-config.packages.label.actions"
+msgstr ""
+
+# xbian-config module resizesd
+# 
+msgid "xbian-config.resizesd.name"
+msgstr ""
+
+msgid "xbian-config.resizesd.description"
+msgstr ""
+
+msgid "xbian-config.resizesd.confirm"
+msgstr ""
+
+msgid "xbian-config.resizesd.not_needed"
+msgstr ""
+
+msgid "xbian-config.resizesd.on_reboot"
+msgstr ""
+
+msgid "xbian-config.resizesd.error"
+msgstr ""
+
+# xbian-config module rootpass
+# 
+msgid "xbian-config.rootpass.name"
+msgstr ""
+
+msgid "xbian-config.rootpass.description"
+msgstr ""
+
+msgid "xbian-config.rootpass.changed"
+msgstr ""
+
+msgid "xbian-config.rootpass.label.password"
+msgstr ""
+
+msgid "xbian-config.rootpass.empty_fields"
+msgstr ""
+
+msgid "xbian-config.rootpass.no_match"
+msgstr ""
+
+# xbian-config module services
+# 
+msgid "xbian-config.services.name"
+msgstr ""
+
+msgid "xbian-config.services.description"
+msgstr ""
+
+msgid "xbian-config.services.loading"
+msgstr ""
+
+msgid "xbian-config.services.restarting"
+msgstr ""
+
+msgid "xbian-config.services.restart_failed"
+msgstr ""
+
+msgid "xbian-config.services.starting"
+msgstr ""
+
+msgid "xbian-config.services.start_failed"
+msgstr ""
+
+msgid "xbian-config.services.stopping"
+msgstr ""
+
+msgid "xbian-config.services.stop_failed"
+msgstr ""
+
+msgid "xbian-config.services.refresh"
+msgstr ""
+
+msgid "xbian-config.services.autostart.enabling"
+msgstr ""
+
+msgid "xbian-config.services.autostart.disabling"
+msgstr ""
+
+msgid "xbian-config.services.autostart.enable_failed"
+msgstr ""
+
+msgid "xbian-config.services.autostart.disable_failed"
+msgstr ""
+
+msgid "xbian-config.services.not_exists"
+msgstr ""
+
+msgid "xbian-config.services.error"
+msgstr ""
+
+msgid "xbian-config.services.delete.confirm"
+msgstr ""
+
+msgid "xbian-config.services.delete.success"
+msgstr ""
+
+msgid "xbian-config.services.inserted"
+msgstr ""
+
+msgid "xbian-config.services.updated"
+msgstr ""
+
+msgid "xbian-config.services.label.service"
+msgstr ""
+
+msgid "xbian-config.services.label.action"
+msgstr ""
+
+msgid "xbian-config.services.label.autostart"
+msgstr ""
+
+msgid "xbian-config.services.label.noautostart"
+msgstr ""
+
+msgid "xbian-config.services.label.running"
+msgstr ""
+
+msgid "xbian-config.services.label.start_restart"
+msgstr ""
+
+msgid "xbian-config.services.label.start"
+msgstr ""
+
+msgid "xbian-config.services.label.restart"
+msgstr ""
+
+msgid "xbian-config.services.label.stop"
+msgstr ""
+
+msgid "xbian-config.services.refresh_gui"
+msgstr ""
+
+msgid "xbian-config.services.label.stopped"
+msgstr ""
+
+msgid "xbian-config.services.label.add_custom"
+msgstr ""
+
+msgid "xbian-config.services.label.edit"
+msgstr ""
+
+msgid "xbian-config.services.label.delete"
+msgstr ""
+
+msgid "xbian-config.services.label.name"
+msgstr ""
+
+msgid "xbian-config.services.label.confirminsert"
+msgstr ""
+
+msgid "xbian-config.services.label.daemons"
+msgstr ""
+
+msgid "xbian-config.services.label.leave_empty"
+msgstr ""
+
+msgid "xbian-config.services.label.separate_space"
+msgstr ""
+
+# xbian-config module sshroot
+# 
+msgid "xbian-config.sshroot.name"
+msgstr ""
+
+msgid "xbian-config.sshroot.description"
+msgstr ""
+
+msgid "xbian-config.sshroot.enable_confirm"
+msgstr ""
+
+msgid "xbian-config.sshroot.empty_password"
+msgstr ""
+
+msgid "xbian-config.sshroot.enabled"
+msgstr ""
+
+msgid "xbian-config.sshroot.disabled"
+msgstr ""
+
+# xbian-config module timezone
+# 
+msgid "xbian-config.timezone.name"
+msgstr ""
+
+msgid "xbian-config.timezone.description"
+msgstr ""
+
+msgid "xbian-config.timezone.loading.timezone"
+msgstr ""
+
+msgid "xbian-config.timezone.loading.location"
+msgstr ""
+
+msgid "xbian-config.timezone.label.timezone"
+msgstr ""
+
+msgid "xbian-config.timezone.label.location"
+msgstr ""
+
+msgid "xbian-config.timezone.old"
+msgstr ""
+
+msgid "xbian-config.timezone.new"
+msgstr ""
+
+msgid "xbian-config.timezone.no_timezone_selected"
+msgstr ""
+
+msgid "xbian-config.timezone.no_location_selected"
+msgstr ""
+
+msgid "xbian-config.timezone.notset"
+msgstr ""
+
+# xbian-config modules updates
+# 
+msgid "xbian-config.aptupdate.name"
+msgstr ""
+
+msgid "xbian-config.aptupdate.description"
+msgstr ""
+
+msgid "xbian-config.updates.name"
+msgstr ""
+
+msgid "xbian-config.updates.description"
+msgstr ""
+
+msgid "xbian-config.updatemirrors.name"
+msgstr ""
+
+msgid "xbian-config.updatemirrors.description"
+msgstr ""
+
+msgid "xbian-config.updatemenu.name"
+msgstr ""
+
+msgid "xbian-config.updatemenu.description"
+msgstr ""
+
+msgid "xbian-config.updates.apt.update"
+msgstr ""
+
+msgid "xbian-config.updates.apt.update_failed"
+msgstr ""
+
+msgid "xbian-config.updates.list.download"
+msgstr ""
+
+msgid "xbian-config.updates.mirror.download"
+msgstr ""
+
+msgid "xbian-config.updates.mirror.download_failed"
+msgstr ""
+
+msgid "xbian-config.updates.upgrade.available"
+msgstr ""
+
+msgid "xbian-config.updates.upgrade.installing"
+msgstr ""
+
+msgid "xbian-config.updates.upgrade.reboot"
+msgstr ""
+
+msgid "xbian-config.updates.update.confirm"
+msgstr ""
+
+msgid "xbian-config.updates.update.running"
+msgstr ""
+
+msgid "xbian-config.updates.update.success"
+msgstr ""
+
+msgid "xbian-config.updates.update.already_installed"
+msgstr ""
+
+msgid "xbian-config.updates.update.not_exists"
+msgstr ""
+
+msgid "xbian-config.updates.update.version_unavailable"
+msgstr ""
+
+msgid "xbian-config.updates.update.show_log"
+msgstr ""
+
+msgid "xbian-config.updates.update.error"
+msgstr ""
+
+msgid "xbian-config.updates.update.size_mismatch"
+msgstr ""
+
+msgid "xbian-config.updates.update.installing"
+msgstr ""
+
+msgid "xbian-config.updates.update.downgrade"
+msgstr ""
+
+msgid "xbian-config.updates.label.updates"
+msgstr ""
+
+msgid "xbian-config.updates.label.update"
+msgstr ""
+
+msgid "xbian-config.updates.label.update_packages"
+msgstr ""
+
+msgid "xbian-config.updates.label.version"
+msgstr ""
+
+msgid "xbian-config.updates.label.update_all"
+msgstr ""
+
+msgid "xbian-config.updates.label.update_to_date"
+msgstr ""
+
+msgid "xbian-config.updates.label.upgrade"
+msgstr ""
+
+msgid "xbian-config.updates.label.autoupdates"
+msgstr ""
+
+msgid "xbian-config.updates.label.autoinstallupdates"
+msgstr ""
+
+msgid "xbian-config.updates.label.aptsnapshot"
+msgstr ""
+
+msgid "xbian-config.updates.label.autoupdaterepo"
+msgstr ""
+
+msgid "xbian-config.updates.label.autoupdaterepointerval"
+msgstr ""
+
+msgid "xbian-config.updates.uptodate"
+msgstr ""
+
+# xbian-config module videoflags
+# 
+msgid "xbian-config.videoflags.name"
+msgstr ""
+
+msgid "xbian-config.videoflags.description"
+msgstr ""
+
+msgid "xbian-config.videoflags.label.videoflags"
+msgstr ""
+
+msgid "xbian-config.videoflags.update_success"
+msgstr ""
+
+msgid "xbian-config.videoflags.hdmi_force_hotplug"
+msgstr ""
+
+msgid "xbian-config.videoflags.hdmi_ignore_hotplug"
+msgstr ""
+
+msgid "xbian-config.videoflags.hdmi_ignore_cec_init"
+msgstr ""
+
+msgid "xbian-config.videoflags.hdmi_ignore_cec"
+msgstr ""
+
+msgid "xbian-config.videoflags.disable_overscan"
+msgstr ""
+
+msgid "xbian-config.videoflags.disable_splash"
+msgstr ""
+
+# xbian-config module xbconfig
+# 
+msgid "xbian-config.xbconfig.name"
+msgstr ""
+
+msgid "xbian-config.xbconfig.description"
+msgstr ""
+
+msgid "xbian-config.xbconfig.label.autostart"
+msgstr ""
+
+msgid "xbian-config.xbconfig.label.actions"
+msgstr ""
+
+msgid "xbian-config.xbconfig.autostart.enable_disable"
+msgstr ""
+
+msgid "xbian-config.xbconfig.autostart.enabled"
+msgstr ""
+
+msgid "xbian-config.xbconfig.autostart.disabled"
+msgstr ""
+
+# xbian-config module xbianpass
+# 
+msgid "xbian-config.xbianpass.name"
+msgstr ""
+
+msgid "xbian-config.xbianpass.description"
+msgstr ""
+
+msgid "xbian-config.xbianpass.changed"
+msgstr ""
+
+msgid "xbian-config.xbianpass.label.password"
+msgstr ""
+
+msgid "xbian-config.xbianpass.empty_fields"
+msgstr ""
+
+msgid "xbian-config.xbianpass.no_match"
+msgstr ""
+
+# xbian-config module xbmc
+# 
+msgid "xbian-config.xbmc.name"
+msgstr ""
+
+msgid "xbian-config.xbmc.description"
+msgstr ""
+
+msgid "xbian-config.xbmc.webserver.enable_disable"
+msgstr ""
+
+msgid "xbian-config.xbmc.webserver.enable.success"
+msgstr ""
+
+msgid "xbian-config.xbmc.webserver.disable.success"
+msgstr ""
+
+msgid "xbian-config.xbmc.webserver.enable.failed"
+msgstr ""
+
+msgid "xbian-config.xbmc.webserver.disable.failed"
+msgstr ""
+
+msgid "xbian-config.xbmc.guires.success"
+msgstr ""
+
+msgid "xbian-config.xbmc.guires.failed"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.webserver"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.guires"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.actions"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.tvoff_screensaver"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.tvoff_screensaver_delay"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.tvon_exit"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.tvoff_shutdown"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.usbhotplug"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.automount"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.share"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.sharerw"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.uuid"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.dyn_priority"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.lownice"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.highnice"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.spindown"
+msgstr ""
+
+msgid "xbian-config.xbmc.label.sync"
+msgstr ""
+
+# xbian-config module preferences
+# 
+msgid "xbian-config.preferences.name"
+msgstr ""
+
+msgid "xbian-config.preferences.label.advanced_mode"
+msgstr ""
+
+msgid "xbian-config.preferences.label.advanced"
+msgstr ""
+
+msgid "xbian-config.preferences.update.error"
+msgstr ""
+
+msgid "xbian-config.preferences.update.success"
+msgstr ""
+
+msgid "xbian-config.preferences.label.notify"
+msgstr ""
+
+msgid "xbian-config.preferences.notify.on_error"
+msgstr ""
+
+msgid "xbian-config.preferences.notify.on_success"
+msgstr ""
+
+msgid "xbian-config.preferences.ask_confirmation"
+msgstr ""
+
+msgid "xbian-config.preferences.label.notification"
+msgstr ""
+
+# 	xbiancopy
+# 
+msgid "xbian-config.xbiancopy.label.source"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.label.dest"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.name"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.description"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.wrongblkdev"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.exportwrong"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.preperror"
+msgstr ""
+
+msgid "xbian-config.backup.category.snasphot"
+msgstr ""
+
+msgid "xbian-config.backup.category.home"
+msgstr ""
+
+msgid "xbian-config.backup.category.system"
+msgstr ""
+
+msgid "xbian-config.backup.category.snapshot"
+msgstr ""
+
+msgid "xbian-config.backup.category.autosnapshot"
+msgstr ""
+
+msgid "xbian-config.backup.daily_snapshot"
+msgstr ""
+
+msgid "xbian-config.backup.nbautosnap"
+msgstr ""
+
+msgid "xbian-config.backup.weekly_snapshot"
+msgstr ""
+
+msgid "xbian-config.backup.auto_system_image"
+msgstr ""
+
+msgid "xbian-config.backup.destype"
+msgstr ""
+
+msgid "xbian-config.backup.blockdev"
+msgstr ""
+
+msgid "xbian-config.backup.filedest"
+msgstr ""
+
+msgid "xbian-config.backup.start"
+msgstr ""
+
+msgid "xbian-config.backup.confirm_write"
+msgstr ""
+
+msgid "xbian-config.backup.warning_write"
+msgstr ""
+
+msgid "xbian-config.backup.selectdevice"
+msgstr ""
+
+#       backuphome
+# 
+msgid "xbian-config.backuphome.name"
+msgstr ""
+
+msgid "xbian-config.backuphome.description"
+msgstr ""
+
+msgid "xbian-config.backuphome.running"
+msgstr ""
+
+msgid "xbian-config.backuphome.done"
+msgstr ""
+
+msgid "xbian-config.backuphome.failed"
+msgstr ""
+
+msgid "xbian-config.backuphome.desc1"
+msgstr ""
+
+msgid "xbian-config.backuphome.desc2"
+msgstr ""
+
+msgid "xbian-config.backuphome.desc3"
+msgstr ""
+
+msgid "xbian-config.backuphome.desc4"
+msgstr ""
+
+msgid "xbian-config.backuphome.desc5"
+msgstr ""
+
+msgid "xbian-config.backuphome.restore"
+msgstr ""
+
+msgid "xbian-config.backuphome.selectimage"
+msgstr ""
+
+msgid "xbian-config.backuphome.restore_home_confirm"
+msgstr ""
+
+msgid "xbian-config.backuphome.restore_home_info"
+msgstr ""
+
+# 	enable auto updates
+# 
+msgid "xbian-config.enableauto.name"
+msgstr ""
+
+msgid "xbian-config.enableauto.description"
+msgstr ""
+
+msgid "xbian-config.updates.enableauto.enable_disable"
+msgstr ""
+
+msgid "xbian-config.updates.enableauto.disabled"
+msgstr ""
+
+msgid "xbian-config.updates.enableauto.enabled"
+msgstr ""
+
+# manage snapshot
+# 
+msgid "xbian-config.snapshot.mountsnap"
+msgstr ""
+
+msgid "xbian-config.snapshot.loadingvolume"
+msgstr ""
+
+msgid "xbian-config.snapshot.volume"
+msgstr ""
+
+msgid "xbian-config.snapshot.rollback"
+msgstr ""
+
+msgid "xbian-config.snapshot.delete_snasphot"
+msgstr ""
+
+msgid "xbian-config.snapshot.create_snapshot"
+msgstr ""
+
+msgid "xbian-config.snapshot.name_snapshot"
+msgstr ""
+
+msgid "xbian-config.snapshot.backup"
+msgstr ""
+
+# util
+# 
+msgid "xbian-config.util.valuegreater"
+msgstr ""
+
+msgid "xbian-config.util.valuelower"
+msgstr ""
+
+#  wizard
+# 
+msgid "xbian-config.wizard.welcome.title"
+msgstr ""
+
+msgid "xbian-config.wizard.welcome.smalltitle"
+msgstr ""
+
+msgid "xbian-config.wizard.welcome.description"
+msgstr ""
+
+msgid "xbian-config.wizard.network.title"
+msgstr ""
+
+msgid "xbian-config.wizard.network.smalltitle"
+msgstr ""
+
+msgid "xbian-config.wizard.network.description"
+msgstr ""
+
+msgid "xbian-config.wizard.license.title"
+msgstr ""
+
+msgid "xbian-config.wizard.license.smalltitle"
+msgstr ""
+
+msgid "xbian-config.wizard.license.description"
+msgstr ""
+
+msgid "xbian-config.wizard.backup.title"
+msgstr ""
+
+msgid "xbian-config.wizard.backup.smalltitle"
+msgstr ""
+
+msgid "xbian-config.wizard.backup.description"
+msgstr ""
+
+msgid "xbian-config.wizard.update.title"
+msgstr ""
+
+msgid "xbian-config.wizard.update.smalltitle"
+msgstr ""
+
+msgid "xbian-config.wizard.update.description"
+msgstr ""
+
+msgid "xbian-config.wizard.package.title"
+msgstr ""
+
+msgid "xbian-config.wizard.package.smalltitle"
+msgstr ""
+
+msgid "xbian-config.wizard.package.description"
+msgstr ""
+
+msgid "xbian-config.wizard.finish.title"
+msgstr ""
+
+msgid "xbian-config.wizard.finish.smalltitle"
+msgstr ""
+
+msgid "xbian-config.wizard.finish.description"
+msgstr ""
+
+# extra
+# 
+msgid "xbian-config.extra.name"
+msgstr ""
+
+#   commom
+# 
+msgid "xbian-config.common.pleasewait"
+msgstr ""
+
+msgid "xbian-config.common.initialisation"
+msgstr ""
+
+msgid "xbian-config.common.loading"
+msgstr ""
+
+msgid "xbian-config.common.doyouwanto"
+msgstr ""
+
+msgid "xbian-config.common.error"
+msgstr ""
+
+msgid "xbian-config.common.ok"
+msgstr ""
+
+msgid "xbian-config.common.confirmation"
+msgstr ""
+
+msgid "xbian-config.common.badentry"
+msgstr ""
