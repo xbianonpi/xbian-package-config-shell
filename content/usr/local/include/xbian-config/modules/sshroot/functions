@@ -36,11 +36,7 @@ function rootPasswordSetFn() {
 #  - 1: Success
 #  - 0: Failed
 function enableSSHRootLoginFn() {
-        if [ $(grep -c "PermitRootLogin without-password" /etc/ssh/sshd_config) -ge 0 ]; then
-                sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
-        elif [ $(grep -c "PermitRootLogin no" /etc/ssh/sshd_config) -ge 0 ]; then
-                sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
-        fi
+	sed -i 's/PermitRootLogin \(no\|without-password\)/PermitRootLogin yes/g' /etc/ssh/sshd_config
 
 	isSSHRootLoginEnabledFn
 	return $?;
