@@ -30,7 +30,6 @@ openbsd-inetd:inetd
 statd:rpc.statd
 idmapd:rpc.idmapd
 gssd:rpc.gssd
-xbian-xbmc-bridge:/usr/local/sbin/upstart-xbmc-bridge.py
 restore-home:
 vnc-server:
 zram-swap:
