@@ -390,7 +390,7 @@ if [ "$opt_command" = listvol ]; then
     exit 0
 elif [ "$opt_command" = volsize ]; then
     md=$(mktemp -d)
-    do_run mount -t btrfs $opt_dev $md
+    do_run mount -t btrfs -o subvolid=0 $opt_dev $md
     [ ! -d $md/$1 ] || printf "$(du -xsb $md/$1 | awk '{print $1}')\n"
     do_run umount $md
     rmdir $md
@@ -619,12 +619,9 @@ case $opt_command in
 
 		mkdir -p /tmp/btrfs-source
 		mount -t btrfs -o noatime,subvol=/ $1 /tmp/btrfs-source
-		{ eval $opt_remotecmd findmnt -n $2 | grep -qw $2; } && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
+		eval $opt_remotecmd findmnt -n -S $2 >/dev/null && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
 		if [ -z "$opt_nocreate" ]; then
-		    mfs=$(eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1)
-		    if [ $? -gt 0 ]; then
-			echo $mfs | grep -q "SMALL VOLUME" && eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -M mixed -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; exit 5; }
-		    fi
+		    eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; exit 5; }
 		fi
 		eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
 
@@ -654,13 +651,13 @@ case $opt_command in
 		        echo "DEBUG: v = $v, s = $s"
 		        [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
 		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue 
-		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro" 
+		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && sync && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro"
 			export siz=$(du -sxb "/tmp/btrfs-source/$v/$s.ro" | awk '{print $1}'); export sn=$s; export vln=$v; 
 		        ( nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | pv -n -s $siz |eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v" ) 2>&1 | \
 			    while read a; do printf "XXX\n$a\n$(printf 'Cloning %s/%s. Total %d. Done %d' $v $s $siz $((siz*a/100)))\nXXX\n"; done
 
-		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
-		        eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s"
+		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && sync && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
+		        eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s" && sync
 		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s"
 		        eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v"
 #		        printf "\n%s\n" "---> DONE COPYING SUB-VOLUME $v SNAPSHOT $s" 
