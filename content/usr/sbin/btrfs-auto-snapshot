@@ -229,8 +229,9 @@ do_snapshot ()
 
 do_remove_kpartx () 
 {
-    [ -e /run/kpartxmap.xbiancopy.$$ ] && read img < /run/kpartxmap.xbiancopy.$$
-    [ -n "$img" ] && [ -f "$img" ] && while ! kpartx -d $img 1>/dev/null 2>&1; do sleep 5; done
+    [ -e /run/kpartxmap.xbiancopy.$$ ] && . /run/kpartxmap.xbiancopy.$$
+    [ -n "$loopd" ] && while ! kpartx -d $loopd 1>/dev/null 2>&1; do sleep 5; done
+    losetup -d $loopd
 
     sysctl -p /etc/sysctl.d/xbian.conf > /dev/null 2>/dev/null
 }
@@ -570,7 +571,7 @@ case $opt_command in
 		    fi
 		    BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
 		    snapextra=$(printf "%s\n%s\n" "@$snapextra" "@"| sort | uniq)
-		    if [ "$opt_size" != "0" ]; then
+		    if [ "$opt_size" = "0" ]; then
 			for v in $BTRFS_LIST; do
 			    [ -n "$v" ] || continue
 			    export v="$v"
@@ -592,13 +593,15 @@ case $opt_command in
 
 		    echo "2048,69632,b,*," | sfdisk -u S -N1 -H 4 -S 16 -q $2 > /dev/null 2>&1
 		    echo "71680,+,83,," | sfdisk -u S -N2 -H 4 -S 16 -q $2 > /dev/null 2>&1
-		    loopd=$(kpartx -s -l $2 -av | tail -1 | awk '{print $3}'); loopd=${loopd%%p?}; echo $2 > /run/kpartxmap.xbiancopy.$$
-		    if [ "$(grep Hardware /proc/cpuinfo | awk '{print $4}')" = "i.MX6" -o "$(grep Hardware /proc/cpuinfo | awk '{print $4}')" = "i.MX" ]; then
+		    loopd=$(losetup -f); losetup $loopd $2
+		    kpartx -a $loopd && echo "loopd=$loopd" > /run/kpartxmap.xbiancopy.$$
+		    loopd=${loopd#/dev/}
+		    if [ "$(xbian-arch)" = iMX6 ]; then
 		        dd if=/etc/uboot-env/SPL of=/dev/$loopd bs=1K seek=1 2>/dev/null 1>&2
 		        dd if=/etc/uboot-env/u-boot.img of=/dev/$loopd bs=1K seek=42 2>/dev/null 1>&2 
 		    fi
 
-		    if [ "$(grep Hardware /proc/cpuinfo | awk '{print $4}')" = "i.MX6" -o "$(grep Hardware /proc/cpuinfo | awk '{print $4}')" = "i.MX" ]; then
+		    if [ "$(xbian-arch)" = iMX6 ]; then
 		        mkfs.ext2 -L xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
 		    else
 		        mkfs.msdos -F 16 -n xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
