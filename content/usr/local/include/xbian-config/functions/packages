@@ -30,7 +30,7 @@ function updateAptMirrorsFn() {
 	    wget -O - $a/mirror.txt >> $BASEPATH/config/aptmirror.new 2>/dev/null
 	done
 
-	mv $BASEPATH/config/aptmirror.new $BASEPATH/config/aptmirror
+	cat $BASEPATH/config/aptmirror.new | sort | uniq > $BASEPATH/config/aptmirror
 	return 0
 }
 
@@ -56,7 +56,7 @@ function downloadPackageListFn() {
 		for MIRROR in ${MIRRORS[@]}; do
 			MIRROR=${MIRROR%%/}
 			RETURN=0; rm /tmp/sources 2>/dev/null
-			subscript=$(cat /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null| grep '^deb.*xbian.*\|^mirror.*xbian.*' | awk '{print $3}')
+			subscript=$(cat /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null| grep '^deb.*xbian.*\|^mirror.*xbian.*' | awk '{print $3}' | sort | uniq)
 			for s in $subscript; do echo $MIRROR/dists/$s/main/binary-armhf/Packages >> /tmp/sources; done
 			[ -e $BASEPATH/config/pkglist.new ] && rm $BASEPATH/config/pkglist.new
 			while read m; do
