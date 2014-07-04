@@ -231,7 +231,7 @@ do_remove_kpartx ()
 {
     [ -e /run/kpartxmap.xbiancopy.$$ ] && . /run/kpartxmap.xbiancopy.$$
     [ -n "$loopd" ] && while ! kpartx -d $loopd 1>/dev/null 2>&1; do sleep 5; done
-    losetup -d $loopd
+    [ -n "$loopd" ] && losetup -d $loopd 1>/dev/null 2>&1
 
     sysctl -p /etc/sysctl.d/xbian.conf > /dev/null 2>/dev/null
 }
