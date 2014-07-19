@@ -19,29 +19,13 @@
 
 function showXBMCSettingsDlg() {
 	MENU=();
-	MENU+=(1,"\Zn"$(_ xbmc.label.guires));
-	MENU+=(2,"\Zn"$(_ xbmc.label.webserver));
+	MENU+=(1,"\Zn"$(_ xbmc.label.webserver));
 	createTableFn "menu"\
 	"#;\Zb"$(_ xbmc.label.actions)\
 	"${MENU[@]}";
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7))
 	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 10
-}
-
-function showXBMCGUIResDlg() {
-	MENU=();
-	I=0;
-	for RES in ${GUIRES[@]}; do
-		I=$(($I+1));
-		MENU+=($I",\Zn"$RES);
-	done
-	createTableFn "menu"\
-	"#;\Zb"$(_ xbmc.label.guires)\
-	"${MENU[@]}";
-
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+8))
-	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 12
 }
 
 function showXBMCWebserverDlg() {
@@ -70,25 +54,11 @@ function showXBMCWebserverFailedEnableDlg() {
 	wrapTxtFn "$(_ xbmc.webserver.enable.failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
-	showMsgDlg "$ALIGNEDTXT" $HEIGHT;	
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
 }
 
 function showXBMCWebserverFailedDisableDlg() {
 	wrapTxtFn "$(_ xbmc.webserver.disable.failed)" $(($DEFAULTWIDTH-4));
-	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
-	valignTxtFn "$CENTEREDTXT"
-	showMsgDlg "$ALIGNEDTXT" $HEIGHT;	
-}
-
-function showXBMCGUIResSuccessDlg() {
-	wrapTxtFn "$(_ xbmc.guires.success)" $(($DEFAULTWIDTH-4));
-	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
-	valignTxtFn "$CENTEREDTXT"
-	showMsgDlg "$ALIGNEDTXT" $HEIGHT;
-}
-
-function showXBMCGUIResFailedDlg() {
-	wrapTxtFn "$(_ xbmc.guires.failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT;

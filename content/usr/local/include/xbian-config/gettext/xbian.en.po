@@ -1006,17 +1006,8 @@ msgstr "Failed to enable XBMC webserver"
 msgid "xbian-config.xbmc.webserver.disable.failed"
 msgstr "Failed to disable XBMC webserver"
 
-msgid "xbian-config.xbmc.guires.success"
-msgstr "XBMC GUI resolution successfully changed"
-
-msgid "xbian-config.xbmc.guires.failed"
-msgstr "Failed to change XBMC GUI resolution"
-
 msgid "xbian-config.xbmc.label.webserver"
 msgstr "Webserver"
-
-msgid "xbian-config.xbmc.label.guires"
-msgstr "GUI Resolution"
 
 msgid "xbian-config.xbmc.label.actions"
 msgstr "Actions"
