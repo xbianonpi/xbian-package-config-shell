@@ -84,6 +84,8 @@ if [ $1 == "configure" ]; then
     fi
     insserv -f samba >/dev/null 2>&1
 
+    /usr/local/bin/busybox --list | xargs -L1 -I%% sh -c 'which %% >/dev/null|| ln -s /usr/local/bin/busybox /usr/local/bin/%%'
+
 fi
 
 exit 0
