@@ -49,5 +49,12 @@ function _() {
         check_locale || echo -e $(env -i LANG=en_US.UTF-8 locale) > /run/xbian-config.$$
     fi
 
-    eval $(cat /run/xbian-config.$$) gettext xbian "xbian-config.$1"
+    msgid="xbian-config.$1"
+    translation=$(eval $(cat /run/xbian-config.$$) gettext xbian $msgid)
+    if [ "$translation" = "$msgid" ]; then
+        # Untranslated string
+        translation=$(eval $(env -i LANG="en_US.UTF-8" locale) gettext xbian $msgid)
+    fi
+
+    echo $translation
 }
