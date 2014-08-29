@@ -1,6 +1,10 @@
 #!/bin/bash
 
-if [ $1 == "configure" ]; then
+if [ $1 = "configure" ]; then
+
+
+    find /usr/local/bin -lname /usr/local/bin/busybox -exec rm {} +
+    /usr/local/bin/busybox --list | grep -v udhcp | xargs -L1 -I%% sh -c 'which %% >/dev/null|| ln -s /usr/local/bin/busybox /usr/local/bin/%%'
 
 	echo $(date) > /home/xbian/xbian-config-update.log
 
@@ -83,8 +87,6 @@ if [ $1 == "configure" ]; then
         mv /etc/inetd.conf.new /etc/inetd.conf
     fi
     insserv -f samba >/dev/null 2>&1
-
-    /usr/local/bin/busybox --list | xargs -L1 -I%% sh -c 'which %% >/dev/null|| ln -s /usr/local/bin/busybox /usr/local/bin/%%'
 
 fi
 
