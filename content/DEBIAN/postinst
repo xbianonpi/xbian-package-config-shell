@@ -35,8 +35,7 @@ if [ $1 = "configure" ]; then
         fi
 
         sed -i '/sudo xbian-config/d' /home/xbian/.bashrc
-        grep -q "/home/xbian/.xbian-config-start.sh" /home/xbian/.bashrc.new || echo ". /home/xbian/.xbian-config-start.sh" >> /home/xbian/.bashrc.new
-        mv /home/xbian/.bashrc.new /home/xbian/.bashrc
+        grep -q "/home/xbian/.xbian-config-start.sh" /home/xbian/.bashrc || echo ". /home/xbian/.xbian-config-start.sh" >> /home/xbian/.bashrc
         chown xbian:xbian /home/xbian/.bashrc
 
     rm -f /etc/apt/apt.conf.d/20apt-show-versions
