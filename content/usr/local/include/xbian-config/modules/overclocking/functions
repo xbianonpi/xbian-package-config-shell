@@ -30,13 +30,13 @@
 function getCurrentOCSettingsFn() {
 	OCOLDSETTINGS=();
 	selectConfigVarFn "arm_freq"
-	OCOLDSETTINGS[0]=$(echo $RETURN | cut -f2 -d'=')
+	OCOLDSETTINGS[0]=${RETURN#*=}
 	selectConfigVarFn "core_freq"
-	OCOLDSETTINGS[1]=$(echo $RETURN | cut -f2 -d'=')
+	OCOLDSETTINGS[1]=${RETURN#*=}
 	selectConfigVarFn "sdram_freq"
-	OCOLDSETTINGS[2]=$(echo $RETURN | cut -f2 -d'=')
+	OCOLDSETTINGS[2]=${RETURN#*=}
 	selectConfigVarFn "over_voltage"
-	OCOLDSETTINGS[3]=$(echo $RETURN | cut -f2 -d'=')
+	OCOLDSETTINGS[3]=${RETURN#*=}
 	CURRENTOC=-1;
 	NREMPTY=0;
 	for KEY in ${!OCSETTINGS[@]}; do
