@@ -6,7 +6,7 @@ if [ $1 = "configure" ]; then
     find /usr/local/bin -lname /usr/local/bin/busybox -exec rm {} +
     /usr/local/bin/busybox --list | grep -v udhcp | xargs -L1 -I%% sh -c 'which %% >/dev/null|| ln -s /usr/local/bin/busybox /usr/local/bin/%%'
 
-	echo $(date) > /home/xbian/xbian-config-update.log
+	date > /home/xbian/xbian-config-update.log
 
 	[ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
 
@@ -34,7 +34,7 @@ if [ $1 = "configure" ]; then
             chown xbian:xbian /home/xbian/.xbian-config-start > /dev/null
         fi
 
-        grep -v "sudo xbian-config" /home/xbian/.bashrc > /home/xbian/.bashrc.new
+        sed -i '/sudo xbian-config/d' /home/xbian/.bashrc
         grep -q "/home/xbian/.xbian-config-start.sh" /home/xbian/.bashrc.new || echo ". /home/xbian/.xbian-config-start.sh" >> /home/xbian/.bashrc.new
         mv /home/xbian/.bashrc.new /home/xbian/.bashrc
         chown xbian:xbian /home/xbian/.bashrc
