@@ -599,10 +599,10 @@ case $opt_command in
 		    kpartx -a $loopd && echo "loopd=$loopd" > /run/kpartxmap.xbiancopy.$$
 		    loopd=${loopd#/dev/}
 
-		    timeout = 0;
+		    timeout=0
 		    while ! [ -L /dev/mapper/${loopd}p1 ]; do
-		        timeout=$(($timeout+1)
-		        if [ $timeout -gt 10]; then
+		        timeout=$(($timeout+1))
+		        if [ $timeout -gt 10 ]; then
 			    echo "Loop device not available";
 			    exit 4;
 		        fi
