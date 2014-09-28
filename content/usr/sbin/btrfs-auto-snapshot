@@ -598,6 +598,17 @@ case $opt_command in
 		    loopd=$(losetup -f); losetup $loopd $2
 		    kpartx -a $loopd && echo "loopd=$loopd" > /run/kpartxmap.xbiancopy.$$
 		    loopd=${loopd#/dev/}
+
+		    timeout = 0;
+		    while ! [ -L /dev/mapper/${loopd}p1 ]; do
+		        timeout=$(($timeout+1)
+		        if [ $timeout -gt 10]; then
+			    echo "Loop device not available";
+			    exit 4;
+		        fi
+		        sleep 1;
+		    done		
+
 		    if [ "$(xbian-arch)" = iMX6 ]; then
 		        dd if=/etc/uboot-env/SPL of=/dev/$loopd bs=1K seek=1 2>/dev/null 1>&2
 		        dd if=/etc/uboot-env/u-boot.img of=/dev/$loopd bs=1K seek=42 2>/dev/null 1>&2 
