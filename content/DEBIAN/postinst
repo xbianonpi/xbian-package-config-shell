@@ -4,7 +4,7 @@ if [ $1 = "configure" ]; then
 
 
     find /usr/local/bin -lname /usr/local/bin/busybox -exec rm {} +
-    /usr/local/bin/busybox --list | grep -v udhcp | xargs -L1 -I%% sh -c 'which %% >/dev/null|| ln -s /usr/local/bin/busybox /usr/local/bin/%%'
+    /usr/local/bin/busybox --list | grep -v 'udhcp\|rpm\|rpm2cpio' | xargs -L1 -I%% sh -c 'which %% >/dev/null|| ln -s /usr/local/bin/busybox /usr/local/bin/%%'
 
 	date > /home/xbian/xbian-config-update.log
 
