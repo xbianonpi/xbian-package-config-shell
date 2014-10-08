@@ -38,6 +38,21 @@ setAuto() {
     return 0
 }
 
+setInterfaceDisableFn() {
+    case $1 in
+        eth?)
+            setAuto wlan0
+            ;;
+        wlan?)
+            sed -i "s%^allow-hotplug.*$1%#allow-hotplug $1%" /etc/network/interfaces
+            ;;
+        *)
+            ;;
+    esac
+    ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null
+    return 1
+}
+
 # Set wlan credentials
 # Arguments
 #  $1 Interface name
@@ -99,16 +114,12 @@ setInterfaceWlanCredentials() {
 			# Re-add subsequent interfaces
 			echo -e "$MORE" >> /etc/network/interfaces
 
-			return 1;
 		else
 			# Interface not present, add it to the end
 			echo -e "iface $1 inet dhcp" >> /etc/network/interfaces
 			echo -e "$WLANBUFFER\n" >> /etc/network/interfaces
-
-			return 1;
 		fi
-
-
+		return 1;
 	else
 		return 3;
 	fi
@@ -141,14 +152,14 @@ setInterfaceDhcpFn() {
 			# Re-add subsequent interfaces
 			echo -e "$MORE" >> /etc/network/interfaces
 
-			return 1;
 		else
 			# Interface not present, add it to the end
 			case $1 in wlan?) echo "allow-hotplug $1" >> /etc/network/interfaces; ;; esac
 			sudo echo -e "iface $1 inet dhcp\n" >> /etc/network/interfaces
 
-			return 1;
 		fi
+		sed -i "s%#allow-hotplug.*$1%allow-hotplug $1%" /etc/network/interfaces
+		return 1;
 	else
 		return 0;
 	fi
@@ -281,11 +292,11 @@ setInterfaceStaticFn() {
 			echo -e "$BUFFERIFACES\n" >> /etc/network/interfaces
 
 		fi
+		sed -i "s%#allow-hotplug.*$1%allow-hotplug $1%" /etc/network/interfaces
 
 		# Process /etc/resolv.conf
 		sed -i "/nameserver/d" /etc/resolv.conf
 		echo -e "$BUFFERRESOLV" >> /etc/resolv.conf
-
 		return 1;
 	else
 		return 0;

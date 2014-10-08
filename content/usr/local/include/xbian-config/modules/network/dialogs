@@ -60,6 +60,7 @@ function showIPModeConfigDlg() {
 	IFS=$ORIGINALIFS;
 	MENU+=(1",\Zn$(_ network.label.dhcp),"$STATUSDHCP);
 	MENU+=(2",\Zn$(_ network.label.static),"$STATUSSTATIC);
+	MENU+=(3",\Zn$(_ dialog.disable),off");
 	
 	createTableFn "radio" \
 	"#;\Zb$(_ network.label.type)"\
