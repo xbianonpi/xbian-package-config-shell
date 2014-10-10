@@ -85,6 +85,8 @@ print_usage ()
     -e, --name         Snapshot name. If specified, -l and -p are overridden
                        and --keep is not considered.
     -q, --quiet        Suppress warnings and notices at the console.
+    -x, --exclude      Exclude those subvolumes from operations (useful with '//')
+                            (comma separated list)
     -s, --syslog       Write messages into the system log.
     -v, --verbose      Print info messages.
     -i, --rootvolid    ID of root volume. All actions are handled in this 
@@ -288,8 +290,8 @@ fi
 
 
 GETOPT=$(getopt \
-        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,size:,fs-name: \
-        --options=p:dvl:i:m:nhtsk:e: \
+        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,size:,fs-name:,exclude: \
+        --options=p:dvl:i:m:nhtsk:e:x: \
         -- "$@" ) \
         || exit 128
 
@@ -301,6 +303,10 @@ do
                 (--img)
                         opt_img=1
                         shift 1
+                        ;;
+                (--exclude|-x)
+                        opt_exclude=$2
+                        shift 2
                         ;;
                 (--no-create)
                         opt_nocreate='1'
@@ -467,6 +473,10 @@ SNAPGLOB="$opt_delim$opt_prefix${opt_label:+?$opt_label}????????????????"
 
 BTRFS_LIST=$(btrfs sub list ${opt_mountpoint} | grep -v "/" | awk '{print $9}' | sort)  \
 	|| { print_log error "unable to get list of volumes"; exit 102; }
+
+for s in $(echo $opt_exclude | tr ',' ' '); do
+	BTRFS_LIST=$(printf "%s\n" "$BTRFS_LIST" | grep -vw $s)
+done
 
 BTRFS_LIST=$(printf "%s\n" "$BTRFS_LIST")
 	test -n "$opt_vroot" && BTRFS_LIST=$(printf ".\n%s\n" "$BTRFS_LIST") 

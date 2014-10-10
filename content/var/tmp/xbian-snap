@@ -18,3 +18,5 @@ IMGTYPE=notset
 # path to img including file name (/media/my_disk/xbian_backup.img) or block device (/dev/sda1)
 IMGDEST=notset
 
+# exclude those subvolumes by default for btrfs-auto-snapshot operations (comma separated list)
+EXCLUDESUB=
