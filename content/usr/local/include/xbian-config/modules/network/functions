@@ -275,7 +275,7 @@ setInterfaceStaticFn() {
 
 			# Extract subsequent ifaces to a separate buffer
 			MORE=$(echo -e "$IFACETMP" | sed -n '/\(allow-hotplug.*\|^iface.*\)/,$p')
-			ME=$(echo -e "$IFACETMP" | sed '/\(allow-hotplug.*\|^iface.*\)/,$d' | sed '/\(^address.*\|^netmask.*\|^gateway.*\)/d')
+			ME=$(echo -e "$IFACETMP" | sed '/\(allow-hotplug.*\|^iface.*\)/,$d' | sed '/\(.*address.*\|.*netmask.*\|.*gateway.*\)/d')
 
 			# Re-add current interface withouth previous cruft
 	                echo -e "iface $1 inet static" >> /etc/network/interfaces
