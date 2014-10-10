@@ -372,9 +372,9 @@ function readNetworkConfigurationFn() {
 		# Extract DHCP or Static
 		MODE=$(echo -e "$TFILEIFACES" | sed -ne "s/\(iface $1 \)\([a-z]\{1,\}\)[\ ]\([a-z]\{1,\}\)/\3/p");
 		[ -z "$MODE" ] && MODE=manual
-		CIP=$(ifconfig -a $1 | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet addr:\([0-9.]\+\).*/\1/gp');
-		CSM=$(ifconfig -a $1 | grep Mask | awk '{print $4}' | cut -f2 -d:);
-		CGW=$(netstat -rn | grep -m1 0.0.0.0 | awk '{print $2}');
+		CIP=$(ip a show $1 | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet \([0-9.]\+\).*/\1/gp');
+		CSM=$(ip a show $1 | grep inet | awk '{print $4}');
+		CGW=$(ip route show | grep -m1 'default\|0.0.0.0' | awk '{print $3}');
 
 		# Extract wlan configuration
 		PROTECTION=""
@@ -448,7 +448,7 @@ function readNetworkConfigurationFn() {
 #  1: Valid
 #  0: Invalid
 function scanWLANNetworksFn() {
-	ifconfig $1 up >/dev/null 2>&1
+	ip link set $1 up >/dev/null 2>&1
 	IFS=$'\n'
 	OUTPUT=($(iwlist $1 scan));
 
