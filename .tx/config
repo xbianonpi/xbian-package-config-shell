@@ -3,7 +3,7 @@ host = https://www.transifex.com
 
 [xbian-translation.xbianpo]
 file_filter = content/usr/local/include/xbian-config/gettext/xbian.<lang>.po
-source_file = content/usr/local/include/xbian-config/gettext/xbian.en.po
-source_lang = en
+source_file = content/usr/local/include/xbian-config/gettext/xbian.pot
+source_lang = none
 type = PO
 
