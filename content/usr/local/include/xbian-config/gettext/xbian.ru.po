@@ -2,12 +2,13 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-05-25 11:00+0000\n"
+"PO-Revision-Date: 2014-10-22 18:57+0000\n"
 "Last-Translator: belese <besme2@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/xbian-translation/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -965,16 +966,7 @@ msgstr ""
 msgid "xbian-config.xbmc.webserver.disable.failed"
 msgstr ""
 
-msgid "xbian-config.xbmc.guires.success"
-msgstr ""
-
-msgid "xbian-config.xbmc.guires.failed"
-msgstr ""
-
 msgid "xbian-config.xbmc.label.webserver"
-msgstr ""
-
-msgid "xbian-config.xbmc.label.guires"
 msgstr ""
 
 msgid "xbian-config.xbmc.label.actions"

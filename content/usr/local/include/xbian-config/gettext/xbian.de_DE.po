@@ -2,14 +2,17 @@
 # 
 # Translators:
 # Translators:
+# Translators:
+# Ettore Atalan <atalanttore@googlemail.com>, 2014
+# Johannes Roesch <johannes.roesch@googlemail.com>, 2014
 # stesser <se@freebsd.org>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-06-01 11:34+0000\n"
-"Last-Translator: stesser <se@freebsd.org>\n"
+"PO-Revision-Date: 2014-10-22 18:57+0000\n"
+"Last-Translator: belese <besme2@gmail.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/projects/p/xbian-translation/language/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,25 +41,25 @@ msgid "xbian-config.system.name"
 msgstr "System"
 
 msgid "xbian-config.system.description"
-msgstr "Größe der SD-Karte, Übertaktung, Hostname"
+msgstr "z.B. Größe der SD-Karte ändern, Übertaktung, Hostname"
 
 msgid "xbian-config.accounts.name"
 msgstr "Konten"
 
 msgid "xbian-config.accounts.description"
-msgstr "Passwörter, SSH-Root-Login"
+msgstr "z.B. Passwörter ändern, SSH-Root-Anmeldung"
 
 msgid "xbian-config.licenses.name"
 msgstr "Lizenzen"
 
 msgid "xbian-config.licenses.description"
-msgstr "Lizenzen hinzufügen/löschen"
+msgstr "Hardware-Lizenzen hinzufügen/entfernen"
 
 msgid "xbian-config.connectivity.name"
 msgstr "Anschlussmöglichkeiten"
 
 msgid "xbian-config.connectivity.description"
-msgstr "Videoausgang"
+msgstr "z.B. Videoausgang"
 
 # xbian-config dialog
 # 
@@ -76,7 +79,7 @@ msgid "xbian-config.dialog.no"
 msgstr "Nein"
 
 msgid "xbian-config.dialog.on"
-msgstr "An"
+msgstr "Ein"
 
 msgid "xbian-config.dialog.off"
 msgstr "Aus"
@@ -85,7 +88,7 @@ msgid "xbian-config.dialog.insert"
 msgstr "Einfügen"
 
 msgid "xbian-config.dialog.remove"
-msgstr "Löschen"
+msgstr "Entfernen"
 
 msgid "xbian-config.dialog.update"
 msgstr "Aktualisieren"
@@ -179,7 +182,7 @@ msgid "xbian-config.information.description"
 msgstr "Information über Xbian"
 
 msgid "xbian-config.information.text"
-msgstr "XBian ist eine kostenlose Open-Source-Media-Center-Distribution für den Raspberry Pi, die auf http://www.xbian.org heruntergeladen werden kann. Unser Motto ist \"XBMC auf Raspberry Pi, und das mit den neuesten Features \", aber unser Hauptfokus liegt die schnellste Mediacenter-Lösung für die Raspberry Pi zu sein. Deshalb glauben wir, dass jeder helfen kann, XBian besser zu machen. Bitte besuche unsere Website für die Unterstützung und wenn du Anregungen, Wünsche oder Beiträge hast, bitte teile sie mit uns!"
+msgstr "XBian ist eine kostenlose quelloffene Media-Center-Distribution für den Raspberry Pi, die auf http://www.xbian.org heruntergeladen werden kann. Unser Motto ist \"XBMC auf Raspberry Pi, und das mit den neuesten Funktionen \", aber unser Hauptfokus ist, die schnellste Media-Center-Lösung für die Raspberry Pi zu sein. Deshalb glauben wir, dass jeder helfen kann, XBian besser zu machen. Bitte besuchen Sie unsere Webseite für die Unterstützung und wenn Sie Anregungen, Wünsche oder Beiträge haben, bitte teilen Sie sie mit uns!"
 
 # xbian-config module hostname
 # 
@@ -210,7 +213,7 @@ msgid "xbian-config.kernel.switch_success"
 msgstr "Kernel-Version erfolgreich gewechselt"
 
 msgid "xbian-config.kernel.same_version"
-msgstr "Du benutzt diese Kernel-Version schon"
+msgstr "Sie verwenden bereits diese Kernel-Version"
 
 msgid "xbian-config.kernel.single_installed"
 msgstr "Es ist nur einen Kernel installiert"
@@ -221,13 +224,13 @@ msgid "xbian-config.license.inserted"
 msgstr "%s erfolgreich eingefügt"
 
 msgid "xbian-config.license.deleted"
-msgstr "%s erfolgreich gelöscht"
+msgstr "%s erfolgreich entfernt"
 
 msgid "xbian-config.license.updated"
 msgstr "%s erfolgreich aktualisiert"
 
 msgid "xbian-config.license.invalid"
-msgstr "Eine %s muss 9 oder 10 Zeichen lang sein und sieht aus wie 0x00000000. Du kannst maximal 8 Lizenzen, durch Komma getrennt angeben."
+msgstr "Eine %s muss 9 oder 10 Zeichen lang sein und sieht aus wie 0x00000000. Sie können maximal 8 Lizenzen, durch Kommata getrennt, angeben."
 
 # xbian-config module licensempg2
 # 
@@ -393,7 +396,7 @@ msgid "xbian-config.overclocking.description"
 msgstr "Übertaktung-Einstellung"
 
 msgid "xbian-config.overclocking.warning"
-msgstr "Extreme Übertaktung kann die Lebensdauer von deinem Raspberry Pi reduzieren. XBian hat verschiedene Übertaktungseinstellungen getestet und erstellt eine am meisten vorzuziehen Kombination von Einstellungen. Turbo-Übertakten kann Dateisystem beschädigen. Übertaktung also auf eigene Gefahr!"
+msgstr "Extreme Übertaktung kann die Lebensdauer von Ihrem Raspberry Pi reduzieren. XBian hat verschiedene Übertaktungseinstellungen getestet und hat eine am besten passende Kombination von Einstellungen erstellt. Turbo-Übertakten kann Ihr Dateisystem beschädigen. Übertaktung also auf eigene Gefahr!"
 
 msgid "xbian-config.overclocking.alreadyset"
 msgstr "Diese Übertaktungseinstellungen sind bereits eingestellt"
@@ -408,7 +411,7 @@ msgid "xbian-config.overclocking.label.custom"
 msgstr "~"
 
 msgid "xbian-config.overclocking.empty_fields"
-msgstr "Du hast nicht alle Felder ausgefüllt"
+msgstr "Sie haben nicht alle Felder ausgefüllt"
 
 # xbian-config module packages
 # 
@@ -434,7 +437,7 @@ msgid "xbian-config.packages.loading"
 msgstr "Lade Paketdatenbankdialog..."
 
 msgid "xbian-config.packages.install.confirm"
-msgstr "Bist du sicher, dass du dieses Pakät installieren oder aktualisieren möchtest?"
+msgstr "Sind Sie sicher, dass Sie dieses Paket installieren oder aktualisieren möchten?"
 
 msgid "xbian-config.packages.install.success"
 msgstr "Das Paket wurde erfolgreich installiert"
@@ -443,7 +446,7 @@ msgid "xbian-config.packages.install.retry"
 msgstr "Bitte versuche erneut diese Pakete zu installieren"
 
 msgid "xbian-config.packages.remove.confirm"
-msgstr "Bist du sicher, dass du dieses Paket entfernen willst?"
+msgstr "Sind Sie sicher, dass Sie dieses Paket entfernen möchten?"
 
 msgid "xbian-config.packages.remove.success"
 msgstr "Dieses Paket wurde erfolgreich entfernt"
@@ -452,10 +455,10 @@ msgid "xbian-config.packages.already_installed"
 msgstr "Die neueste Version dieses Pakets ist bereits installiert"
 
 msgid "xbian-config.packages.unavailable_version"
-msgstr "Die Paket-Version, die du versuchst zu installieren, konnte nicht gefunden werden"
+msgstr "Die Paketversion, die Sie versuchen zu installieren, konnte nicht gefunden werden"
 
 msgid "xbian-config.packages.not_exists"
-msgstr "Das Paket-Version, die du versuchst zu installieren, konnte nicht gefunden werden"
+msgstr "Das Paket, das Sie versuchen zu installieren, konnte nicht gefunden werden"
 
 msgid "xbian-config.packages.not_installed"
 msgstr "Dieses Paket ist nicht installiert"
@@ -464,10 +467,10 @@ msgid "xbian-config.packages.size_mismatch"
 msgstr "Größe entspricht nicht der Remote-Pakete"
 
 msgid "xbian-config.packages.essential"
-msgstr "Das ist ein erforderliches Paket und kann nicht entfernt werden"
+msgstr "Dies ist ein erforderliches Paket und kann nicht entfernt werden"
 
 msgid "xbian-config.packages.show_log"
-msgstr "Möchstes du das Protokoll zum installierten Paket sehen?"
+msgstr "Möchten Sie das Installationsprotokoll zum Paket sehen?"
 
 msgid "xbian-config.packages.error"
 msgstr "Ein schwerwiegender Fehler ist aufgetreten beim verarbeiten dieses Paket"
@@ -541,7 +544,7 @@ msgid "xbian-config.resizesd.description"
 msgstr "Erweitere die Root Partition um SD-Karte zu füllen"
 
 msgid "xbian-config.resizesd.confirm"
-msgstr "Bist du sicher, dass du die größe der SD-Karte ändern möchtest?"
+msgstr "Sind Sie sicher, dass Sie die Größe der SD-Karte ändern möchten?"
 
 msgid "xbian-config.resizesd.not_needed"
 msgstr "Diese SD-Karte ist bereits angepasst. Wird abgebrochen."
@@ -567,7 +570,7 @@ msgid "xbian-config.rootpass.label.password"
 msgstr "Passwort:"
 
 msgid "xbian-config.rootpass.empty_fields"
-msgstr "Du musst ein Passwort eingeben und dieses nochmal bestätigen"
+msgstr "Sie müssen sowohl ein neues Passwort als auch eine Bestätigung eingeben"
 
 msgid "xbian-config.rootpass.no_match"
 msgstr "Passwörter stimmen nicht überein."
@@ -602,7 +605,7 @@ msgid "xbian-config.services.stop_failed"
 msgstr "Fehler, der Dienst konnte nicht gestoppt werden..."
 
 msgid "xbian-config.services.refresh"
-msgstr ""
+msgstr "Das Aktualisieren des Dienstes ist fehlgeschlagen..."
 
 msgid "xbian-config.services.autostart.enabling"
 msgstr "Aktivieren des Autostart des Dienstes..."
@@ -623,7 +626,7 @@ msgid "xbian-config.services.error"
 msgstr "Unbekannter Fehler"
 
 msgid "xbian-config.services.delete.confirm"
-msgstr "Bist du sicher, dass du diesen Dienst aus der Liste löschen möchtest?"
+msgstr "Sind Sie sicher, dass Sie diesen Dienst aus der Liste löschen möchten?"
 
 msgid "xbian-config.services.delete.success"
 msgstr "Der Dienst wurde erfolgreich entfernt"
@@ -700,10 +703,10 @@ msgid "xbian-config.sshroot.description"
 msgstr "De-/aktivieren des SSH-Root-Login"
 
 msgid "xbian-config.sshroot.enable_confirm"
-msgstr "Möchtest du den SSH-Root-Login de-/aktivieren?"
+msgstr "Möchten Sie die SSH-Root-Anmeldung de-/aktivieren?"
 
 msgid "xbian-config.sshroot.empty_password"
-msgstr "Der Benutzer \"Root\" hat ein leeres Passwort, ohne Kennwort kann man sich nicht über SSH einloggen, du musst erst ein Password festlegen."
+msgstr "Der Benutzer root hat ein leeres Passwort, aber ohne Passwort kann man sich nicht über SSH anmelden. Bitte legen Sie zuerst ein Passwort fest."
 
 msgid "xbian-config.sshroot.enabled"
 msgstr "SSH-Root-Login erfolgreich aktiviert"
@@ -788,16 +791,16 @@ msgid "xbian-config.updates.mirror.download_failed"
 msgstr "Es ist ein Fehler beim abrufen der Download-Mirrors aufgetreten, es wird daher eine lokale Liste (möglicherweise veraltet) verwendet"
 
 msgid "xbian-config.updates.upgrade.available"
-msgstr "Eine neue XBian-Version ist verfügbar, möchtest du es jetzt installieren? Das System wird dann automatisch neu gestartet, wenn die Aktualisierung beendet ist"
+msgstr "Eine neue XBian-Version ist verfügbar, möchten Sie sie jetzt installieren? Das System wird dann automatisch neu gestartet, wenn die Aktualisierung abgeschlossen ist"
 
 msgid "xbian-config.updates.upgrade.installing"
-msgstr "XBian wird auf eine neue Version aktualisiert, bitte nicht neustarten oder den Netzstecker ziehen, denn das kann zu einem defekten System führen. Je nach Internet-Verbindung, kann dieser Vorgang einige Zeit in Anspruch nehmen..."
+msgstr "XBian wird auf eine neue Version aktualisiert, bitte nicht neu starten oder den Netzstecker ziehen, denn das kann zu einem defekten System führen. Je nach Internetverbindung kann dieser Vorgang einige Zeit in Anspruch nehmen..."
 
 msgid "xbian-config.updates.upgrade.reboot"
-msgstr "XBian wird automatisch neu gestartet, wenn du das Fenster schließst"
+msgstr "XBian wird automatisch neu gestartet, wenn Sie das Fenster schließen"
 
 msgid "xbian-config.updates.update.confirm"
-msgstr "Bist du sicher, dass du diese Pakete aktualisieren möchtest?"
+msgstr "Sind Sie sicher, dass Sie diese Pakete aktualisieren möchten?"
 
 msgid "xbian-config.updates.update.running"
 msgstr "Bitte warte, bis die Aktualisierung abgeschlossen ist..."
@@ -809,13 +812,13 @@ msgid "xbian-config.updates.update.already_installed"
 msgstr "Die neuesten Versionen dieser Pakete sind bereits installiert"
 
 msgid "xbian-config.updates.update.not_exists"
-msgstr "Die Pakete, die du versuchst zu installieren, konnten nicht gefunden werden"
+msgstr "Die Pakete, die Sie versuchen zu installieren, konnten nicht gefunden werden"
 
 msgid "xbian-config.updates.update.version_unavailable"
-msgstr "Die Paket-Version, die du versuchst zu installieren, konnten nicht gefunden werden"
+msgstr "Die Paketversionen, die Sie versuchen zu installieren, konnten nicht gefunden werden"
 
 msgid "xbian-config.updates.update.show_log"
-msgstr "Möchtest du das Installationsprotokoll sehen?"
+msgstr "Möchten Sie das Installationsprotokoll sehen?"
 
 msgid "xbian-config.updates.update.error"
 msgstr "Ein beim Verarbeiten dieser Pakete ist ein schwerwiegender Fehler aufgetreten"
@@ -827,7 +830,7 @@ msgid "xbian-config.updates.update.installing"
 msgstr "Die Pakete werden aktualisiert, das könnte mehrere Minuten dauern, bitte warten..."
 
 msgid "xbian-config.updates.update.downgrade"
-msgstr "Du hast bereits die neuere Versione dieses Paket installiert"
+msgstr "Sie haben bereits die neuere Version dieses Paket installiert"
 
 msgid "xbian-config.updates.label.updates"
 msgstr "Aktualisierung"
@@ -857,7 +860,7 @@ msgid "xbian-config.updates.label.autoinstallupdates"
 msgstr "Aktualisierungen automatisch installieren"
 
 msgid "xbian-config.updates.label.aptsnapshot"
-msgstr ""
+msgstr "Einen Schnappschuss mit dem APT-GET-Vorgang ausführen"
 
 msgid "xbian-config.updates.label.autoupdaterepo"
 msgstr "Paket-Verzeichnis automatisch aktualisieren"
@@ -874,7 +877,7 @@ msgid "xbian-config.videoflags.name"
 msgstr "Videoausgang"
 
 msgid "xbian-config.videoflags.description"
-msgstr "Ändern der HDMI, CEC und Overscan Einstellungen"
+msgstr "Ändern der HDMI-, CEC- und Übertastungseinstellungen"
 
 msgid "xbian-config.videoflags.label.videoflags"
 msgstr "Video-Flags"
@@ -895,7 +898,7 @@ msgid "xbian-config.videoflags.hdmi_ignore_cec"
 msgstr "CEC deaktivieren"
 
 msgid "xbian-config.videoflags.disable_overscan"
-msgstr "Overscan deaktivieren"
+msgstr "Übertastung deaktivieren"
 
 msgid "xbian-config.videoflags.disable_splash"
 msgstr "Deaktivieren des \"Regenbogen\"-Bildschirm-Logo beim starten RPi"
@@ -915,7 +918,7 @@ msgid "xbian-config.xbconfig.label.actions"
 msgstr "Aktionen"
 
 msgid "xbian-config.xbconfig.autostart.enable_disable"
-msgstr "Möchtest du automatisch Xbian-Config starten, wenn du dich als Benutzer xbian in der SSH anmeldest?"
+msgstr "Möchten Sie xbian-config automatisch starten, wenn Sie sich als Benutzer xbian in der SSH anmelden?"
 
 msgid "xbian-config.xbconfig.autostart.enabled"
 msgstr "Erfolgreiche Aktivierung des \"Xbian-Config-Autostarts\""
@@ -926,19 +929,19 @@ msgstr "Erfolgreiche Deaktivierung des \"Xbian-Config-Autostarts\""
 # xbian-config module xbianpass
 # 
 msgid "xbian-config.xbianpass.name"
-msgstr "xbian-Passwort"
+msgstr "XBian-Passwort"
 
 msgid "xbian-config.xbianpass.description"
-msgstr "Passwort für \"xbian\"-User ändern"
+msgstr "Passwort für xbian-User ändern"
 
 msgid "xbian-config.xbianpass.changed"
-msgstr "\"xbian\"-Passwort geändert"
+msgstr "xbian-Passwort erfolgreich geändert"
 
 msgid "xbian-config.xbianpass.label.password"
 msgstr "Passwort:"
 
 msgid "xbian-config.xbianpass.empty_fields"
-msgstr "Du musst ein Passwort eingeben und dieses nochmal bestätigen"
+msgstr "Sie müssen sowohl ein neues Passwort als auch eine Bestätigung eingeben"
 
 msgid "xbian-config.xbianpass.no_match"
 msgstr "Passwörter stimmen nicht überein"
@@ -952,7 +955,7 @@ msgid "xbian-config.xbmc.description"
 msgstr "Änderung der XBMC-Einstellung"
 
 msgid "xbian-config.xbmc.webserver.enable_disable"
-msgstr "Möchtest Du den XBMC-Webserver de-/aktivieren?"
+msgstr "Möchten Sie den XBMC-Webserver de-/aktivieren?"
 
 msgid "xbian-config.xbmc.webserver.enable.success"
 msgstr "XBMC-Webserver erfolgreich aktiviert"
@@ -966,62 +969,53 @@ msgstr "Es ist ein Fehler beim Aktivieren vom XBMC-Webserver aufgetreten"
 msgid "xbian-config.xbmc.webserver.disable.failed"
 msgstr "Es ist ein Fehler beim Deaktivieren vom XBMC-Webserver aufgetreten"
 
-msgid "xbian-config.xbmc.guires.success"
-msgstr "XBMC-GUI-Auflösung erfolgreich geändert"
-
-msgid "xbian-config.xbmc.guires.failed"
-msgstr "Es ist ein Fehler beim Ändern der XBMC-GUI-Auflösung aufgetreten"
-
 msgid "xbian-config.xbmc.label.webserver"
 msgstr "Webserver"
-
-msgid "xbian-config.xbmc.label.guires"
-msgstr "GUI-Auflösung"
 
 msgid "xbian-config.xbmc.label.actions"
 msgstr "Aktionen"
 
 msgid "xbian-config.xbmc.label.tvoff_screensaver"
-msgstr ""
+msgstr "CEC-fähigen FERNSEHER mit dem Bildschirmschoner AUSSCHALTEN"
 
 msgid "xbian-config.xbmc.label.tvoff_screensaver_delay"
 msgstr "Wartezeit (Minuten)"
 
 msgid "xbian-config.xbmc.label.tvon_exit"
-msgstr ""
+msgstr "CEC-fähigen FERNSEHER EINSCHALTEN, wenn XBMC beendet wird"
 
 msgid "xbian-config.xbmc.label.tvoff_shutdown"
-msgstr ""
+msgstr "CEC-fähigen FERNSEHER beim Herunterfahren des RPI AUSSCHALTEN"
 
 msgid "xbian-config.xbmc.label.usbhotplug"
-msgstr ""
+msgstr "USB HotPlug"
 
 msgid "xbian-config.xbmc.label.automount"
-msgstr ""
+msgstr "Automatisches Einhängen einer USB-Festplatte aktivieren"
 
 msgid "xbian-config.xbmc.label.share"
-msgstr ""
+msgstr "Automatisch eingehängte Festplatten über SMB verfügbar machen"
 
 msgid "xbian-config.xbmc.label.sharerw"
-msgstr ""
+msgstr "Freigaben sollten von allen beschreibbar sein (einschließlich anonymen Zugriffs)"
 
 msgid "xbian-config.xbmc.label.uuid"
-msgstr ""
+msgstr "Partitions-UUID in mnt-Ordnername miteinbeziehen"
 
 msgid "xbian-config.xbmc.label.dyn_priority"
-msgstr ""
+msgstr "XBMC Dynamische Priorität"
 
 msgid "xbian-config.xbmc.label.lownice"
-msgstr ""
+msgstr "Niedrigere dynamische Priorität"
 
 msgid "xbian-config.xbmc.label.highnice"
-msgstr ""
+msgstr "Höhere dynamische Priorität"
 
 msgid "xbian-config.xbmc.label.spindown"
 msgstr "Festplatte herunterfahren"
 
 msgid "xbian-config.xbmc.label.sync"
-msgstr ""
+msgstr "Einhängen mit Synchronisierungsoption"
 
 # xbian-config module preferences
 # 
@@ -1032,7 +1026,7 @@ msgid "xbian-config.preferences.label.advanced_mode"
 msgstr "Erweiterter Modus"
 
 msgid "xbian-config.preferences.label.advanced"
-msgstr ""
+msgstr "Erweitert"
 
 msgid "xbian-config.preferences.update.error"
 msgstr "Fehler beim Aktualisieren-Einstellung"
@@ -1058,13 +1052,13 @@ msgstr "Benachrichtigung"
 # 	xbiancopy
 # 
 msgid "xbian-config.xbiancopy.label.source"
-msgstr "Quelle:"
+msgstr "Quelllaufwerk/-partition:"
 
 msgid "xbian-config.xbiancopy.label.dest"
 msgstr "Ziel:"
 
 msgid "xbian-config.xbiancopy.name"
-msgstr "Xbian Kopierer"
+msgstr "Xbian-Kopierer"
 
 msgid "xbian-config.xbiancopy.description"
 msgstr "Xbian Systemkopie-Tool (auf USB, img-Datei ...)"
@@ -1073,13 +1067,13 @@ msgid "xbian-config.xbiancopy.dialog.wrongblkdev"
 msgstr "Falsches Ziel (existiert nicht oder keine eine Partition)"
 
 msgid "xbian-config.xbiancopy.dialog.exportwrong"
-msgstr ""
+msgstr "NFS-Export entspricht nicht den Anforderungen"
 
 msgid "xbian-config.xbiancopy.dialog.preperror"
-msgstr ""
+msgstr "Zieldateisystem kann nicht vorbereitet werden"
 
 msgid "xbian-config.backup.category.snasphot"
-msgstr ""
+msgstr "Schnappschuss verwalten"
 
 msgid "xbian-config.backup.category.home"
 msgstr "Benutzerdateien sichern"
@@ -1088,28 +1082,28 @@ msgid "xbian-config.backup.category.system"
 msgstr "Systemdateien sichern"
 
 msgid "xbian-config.backup.category.snapshot"
-msgstr ""
+msgstr "Schnappschuss"
 
 msgid "xbian-config.backup.category.autosnapshot"
-msgstr ""
+msgstr "Automatischer Schnappschuss"
 
 msgid "xbian-config.backup.daily_snapshot"
-msgstr ""
+msgstr "Täglichen Schnappschuss aktivieren"
 
 msgid "xbian-config.backup.nbautosnap"
-msgstr ""
+msgstr "Anzahl an Schnappschüssen, die behalten werden sollen"
 
 msgid "xbian-config.backup.weekly_snapshot"
-msgstr ""
+msgstr "Wöchentlichen Schnappschuss aktivieren"
 
 msgid "xbian-config.backup.auto_system_image"
-msgstr ""
+msgstr "Automatisches Abbild"
 
 msgid "xbian-config.backup.destype"
-msgstr ""
+msgstr "Zieltyp"
 
 msgid "xbian-config.backup.blockdev"
-msgstr ""
+msgstr "Blockgerät"
 
 msgid "xbian-config.backup.filedest"
 msgstr "Ziel:"
@@ -1121,7 +1115,7 @@ msgid "xbian-config.backup.confirm_write"
 msgstr "Datensicherung unter %s speichern?"
 
 msgid "xbian-config.backup.warning_write"
-msgstr ""
+msgstr "Diese wird ALLE Daten auf %s löschen. Fortsetzen?"
 
 msgid "xbian-config.backup.selectdevice"
 msgstr "Gerät auswählen"
@@ -1147,19 +1141,19 @@ msgid "xbian-config.backuphome.desc1"
 msgstr "Es kann mehrere Minuten dauern, abhängig von der Größe ihres /home/xbian Verzeichnisses."
 
 msgid "xbian-config.backuphome.desc2"
-msgstr ""
+msgstr "Datei wird unter /xbian-backup erstellt, das ebenfalls durch eine SMB-Freigabe erreichbar ist"
 
 msgid "xbian-config.backuphome.desc3"
 msgstr ""
 
 msgid "xbian-config.backuphome.desc4"
-msgstr ""
+msgstr "Sie können die Datei direkt auf Ihren Computer kopieren (die Datei wird bei Neustarts gelöscht!)"
 
 msgid "xbian-config.backuphome.desc5"
 msgstr "Zum Wiederherstellen von XBMC kopieren Sie die .img-Datei in das Verzeichnis /xbian-backup/put_to_restore."
 
 msgid "xbian-config.backuphome.restore"
-msgstr ""
+msgstr "Backup wiederherstellen"
 
 msgid "xbian-config.backuphome.selectimage"
 msgstr ""
@@ -1179,7 +1173,7 @@ msgid "xbian-config.enableauto.description"
 msgstr "Automatische Aktualisierung-Mechanismus einstellen"
 
 msgid "xbian-config.updates.enableauto.enable_disable"
-msgstr "Willst du automatische Aktualisierung aktivieren?"
+msgstr "Möchten Sie automatische Aktualisierungen aktivieren?"
 
 msgid "xbian-config.updates.enableauto.disabled"
 msgstr "Automatische Aktualisierung deaktiviert"
@@ -1190,25 +1184,25 @@ msgstr "Automatische Aktualisierung aktiviert"
 # manage snapshot
 # 
 msgid "xbian-config.snapshot.mountsnap"
-msgstr ""
+msgstr "Schnappschuss einhängen"
 
 msgid "xbian-config.snapshot.loadingvolume"
-msgstr ""
+msgstr "Volumina werden geladen..."
 
 msgid "xbian-config.snapshot.volume"
-msgstr ""
+msgstr "Btrfs-Volumen"
 
 msgid "xbian-config.snapshot.rollback"
-msgstr ""
+msgstr "Auf einen Schnappschuss zurückversetzen"
 
 msgid "xbian-config.snapshot.delete_snasphot"
-msgstr ""
+msgstr "Schnappschuss löschen"
 
 msgid "xbian-config.snapshot.create_snapshot"
-msgstr ""
+msgstr "Schnappschuss erstellen"
 
 msgid "xbian-config.snapshot.name_snapshot"
-msgstr ""
+msgstr "Schnappschussname"
 
 msgid "xbian-config.snapshot.backup"
 msgstr "Datensicherung"
@@ -1224,7 +1218,7 @@ msgstr "Wert muss kleiner sein als %d"
 #  wizard
 # 
 msgid "xbian-config.wizard.welcome.title"
-msgstr ""
+msgstr "Willkommen auf XBian"
 
 msgid "xbian-config.wizard.welcome.smalltitle"
 msgstr "Willkommen"

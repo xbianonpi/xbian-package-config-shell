@@ -2,14 +2,15 @@
 # 
 # Translators:
 # Translators:
+# Translators:
 # choldimir <jordimipa@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-06-08 11:49+0000\n"
-"Last-Translator: choldimir <jordimipa@gmail.com>\n"
+"PO-Revision-Date: 2014-10-22 18:57+0000\n"
+"Last-Translator: belese <besme2@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/xbian-translation/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -966,17 +967,8 @@ msgstr "Error al habilitar servidor web XBMC"
 msgid "xbian-config.xbmc.webserver.disable.failed"
 msgstr "Error al deshabilitar servidor web XBMC"
 
-msgid "xbian-config.xbmc.guires.success"
-msgstr "Resolución XBMC GUI cambiada correctamente"
-
-msgid "xbian-config.xbmc.guires.failed"
-msgstr "No se ha podido cambiar la resolución XBMC GUI"
-
 msgid "xbian-config.xbmc.label.webserver"
 msgstr "Servidor web"
-
-msgid "xbian-config.xbmc.label.guires"
-msgstr "Resolución GUI"
 
 msgid "xbian-config.xbmc.label.actions"
 msgstr "Acciones"

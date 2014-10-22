@@ -2,12 +2,14 @@
 # 
 # Translators:
 # Translators:
+# Translators:
+# Philip Østli <philip.ostli@hotmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-05-25 10:59+0000\n"
+"PO-Revision-Date: 2014-10-22 18:57+0000\n"
 "Last-Translator: belese <besme2@gmail.com>\n"
 "Language-Team: Norwegian (http://www.transifex.com/projects/p/xbian-translation/language/no/)\n"
 "MIME-Version: 1.0\n"
@@ -17,139 +19,139 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "distribution"
-msgstr ""
+msgstr "XBian"
 
 # xbian-config main (menu)
 # 
 msgid "xbian-config.main.title"
-msgstr ""
+msgstr "Konfigurer"
 
 msgid "xbian-config.main.reboot_question"
-msgstr ""
+msgstr "En omstart er nødvendig. Vil du starte på nytt nå?"
 
 msgid "xbian-config.settings.name"
-msgstr ""
+msgstr "Instillinger"
 
 msgid "xbian-config.settings.description"
-msgstr ""
+msgstr "Endre system instillinger"
 
 msgid "xbian-config.system.name"
-msgstr ""
+msgstr "System"
 
 msgid "xbian-config.system.description"
-msgstr ""
+msgstr "f.eks Endre SD, Overklokking, Tjenernavn"
 
 msgid "xbian-config.accounts.name"
-msgstr ""
+msgstr "Kontoer"
 
 msgid "xbian-config.accounts.description"
-msgstr ""
+msgstr "f.eks Bytte passord, SSH innlogging"
 
 msgid "xbian-config.licenses.name"
-msgstr ""
+msgstr "Lisenser"
 
 msgid "xbian-config.licenses.description"
-msgstr ""
+msgstr "Legg til/Fjern maskinvare lisenser"
 
 msgid "xbian-config.connectivity.name"
 msgstr ""
 
 msgid "xbian-config.connectivity.description"
-msgstr ""
+msgstr "f.eks Video utgang"
 
 # xbian-config dialog
 # 
 msgid "xbian-config.dialog.error"
-msgstr ""
+msgstr "Feilmelding"
 
 msgid "xbian-config.dialog.apply"
-msgstr ""
+msgstr "Bruk"
 
 msgid "xbian-config.dialog.ok"
-msgstr ""
+msgstr "OK"
 
 msgid "xbian-config.dialog.yes"
-msgstr ""
+msgstr "Ja"
 
 msgid "xbian-config.dialog.no"
-msgstr ""
+msgstr "Nei"
 
 msgid "xbian-config.dialog.on"
-msgstr ""
+msgstr "På"
 
 msgid "xbian-config.dialog.off"
-msgstr ""
+msgstr "Av"
 
 msgid "xbian-config.dialog.insert"
-msgstr ""
+msgstr "Sett inn"
 
 msgid "xbian-config.dialog.remove"
-msgstr ""
+msgstr "Fjern"
 
 msgid "xbian-config.dialog.update"
-msgstr ""
+msgstr "Oppdater"
 
 msgid "xbian-config.dialog.cancel"
-msgstr ""
+msgstr "Avbryt"
 
 msgid "xbian-config.dialog.select"
-msgstr ""
+msgstr "Velg"
 
 msgid "xbian-config.dialog.return"
-msgstr ""
+msgstr "Tilbake"
 
 msgid "xbian-config.dialog.unexpected_error"
-msgstr ""
+msgstr "En uventet feil har oppstått"
 
 msgid "xbian-config.dialog.close"
-msgstr ""
+msgstr "Lukk"
 
 msgid "xbian-config.dialog.change"
-msgstr ""
+msgstr "Endre"
 
 msgid "xbian-config.dialog.exit"
-msgstr ""
+msgstr "Avslutt"
 
 msgid "xbian-config.dialog.enable"
-msgstr ""
+msgstr "Aktiver"
 
 msgid "xbian-config.dialog.disable"
-msgstr ""
+msgstr "Deaktiver"
 
 msgid "xbian-config.dialog.password"
-msgstr ""
+msgstr "Passord"
 
 msgid "xbian-config.dialog.confirm"
-msgstr ""
+msgstr "Bekreft:"
 
 msgid "xbian-config.dialog.retry"
-msgstr ""
+msgstr "Prøv igjen"
 
 msgid "xbian-config.dialog.space_option_select"
-msgstr ""
+msgstr "Trykk [mellomrom] for neste alternativ"
 
 msgid "xbian-config.dialog.space_check_select"
-msgstr ""
+msgstr "Trykk [mellomrom] for å aktivere eller deaktivere et alternativ"
 
 msgid "xbian-config.dialog.loading_module"
-msgstr ""
+msgstr "Laster modul. Vennligst vent..."
 
 msgid "xbian-config.dialog.required_packages"
-msgstr ""
+msgstr "Programet krever følgende pakker:"
 
 msgid "xbian-config.dialog.insufficient_arguments"
-msgstr ""
+msgstr "Manglende argument"
 
 msgid "xbian-config.dialog.incorrect_arguments"
-msgstr ""
+msgstr "Feil argument type"
 
 # xbian-config module bootflags
 # 
 msgid "xbian-config.bootflags.name"
-msgstr ""
+msgstr "Oppstarts instillinger"
 
 msgid "xbian-config.bootflags.description"
-msgstr ""
+msgstr "Endre oppstarts instillinger"
 
 msgid "xbian-config.bootflags.label.bootflags"
 msgstr ""
@@ -158,52 +160,52 @@ msgid "xbian-config.bootflags.update_success"
 msgstr ""
 
 msgid "xbian-config.bootflags.splash"
-msgstr ""
+msgstr "Vis XBian velkomstbilde ved oppstart"
 
 msgid "xbian-config.bootflags.logo"
-msgstr ""
+msgstr "Deaktiver kernel oppstarts logo"
 
 msgid "xbian-config.bootflags.quiet"
-msgstr ""
+msgstr "Ikke vis kernel utdata"
 
 msgid "xbian-config.bootflags.loglevel"
-msgstr ""
+msgstr "Kernel loggnivå"
 
 # xbian-config module information
 # 
 msgid "xbian-config.information.name"
-msgstr ""
+msgstr "Informasjon"
 
 msgid "xbian-config.information.description"
-msgstr ""
+msgstr "Informasjon om denne distribusjonen"
 
 msgid "xbian-config.information.text"
-msgstr ""
+msgstr "XBian er en gratis, Open Source media senter distribusjon for Raspberry Pi, som kan lastes ned på http://www.xbian.org. Vårt motto er \"XBMC på Raspberry Pi, bleeding edge\" for vårt hovedfokus er å levere den raskeste mediasenter løsningen for Raspberry Pi. Vi tror at alle kan hjelpe til å gjøre XBian bedre. Besøk vår webside for support og hvis du har spørsmål, ønsker eller bidrag, bare del dem med oss!"
 
 # xbian-config module hostname
 # 
 msgid "xbian-config.hostname.name"
-msgstr ""
+msgstr "Tjernernavn"
 
 msgid "xbian-config.hostname.label.hostname"
-msgstr ""
+msgstr "Tjernernavn:"
 
 msgid "xbian-config.hostname.description"
-msgstr ""
+msgstr "Endre standard tjenernavn"
 
 msgid "xbian-config.hostname.changed"
-msgstr ""
+msgstr "Tjenernavn endret"
 
 # xbian-config module kernel
 # 
 msgid "xbian-config.kernel.name"
-msgstr ""
+msgstr "Kernel"
 
 msgid "xbian-config.kernel.description"
 msgstr ""
 
 msgid "xbian-config.kernel.label.version"
-msgstr ""
+msgstr "Versjon"
 
 msgid "xbian-config.kernel.switch_success"
 msgstr ""
@@ -226,23 +228,23 @@ msgid "xbian-config.license.updated"
 msgstr ""
 
 msgid "xbian-config.license.invalid"
-msgstr ""
+msgstr "En %s må være 9 eller 10 tegn lang og e ut som 0x00000000. Du kan spesifisere maximalt 8 lisenser, separert med komma."
 
 # xbian-config module licensempg2
 # 
 msgid "xbian-config.licensempg2.name"
-msgstr ""
+msgstr "MPG2 lisens"
 
 msgid "xbian-config.licensempg2.description"
-msgstr ""
+msgstr "Behandle din MPG2 lisens"
 
 # xbian-config module licensevc1
 # 
 msgid "xbian-config.licensevc1.name"
-msgstr ""
+msgstr "VC1 lisens"
 
 msgid "xbian-config.licensevc1.description"
-msgstr ""
+msgstr "Behandle din VC1 lisens"
 
 # xbian-config module locales
 # 
@@ -250,27 +252,27 @@ msgid "xbian-config.locales.name"
 msgstr ""
 
 msgid "xbian-config.locales.description"
-msgstr ""
+msgstr "Endre systemspråk"
 
 msgid "xbian-config.locales.label.letter"
-msgstr ""
+msgstr "Bokstav"
 
 msgid "xbian-config.locales.label.name"
-msgstr ""
+msgstr "Navn"
 
 msgid "xbian-config.locales.label.xbmc"
-msgstr ""
+msgstr "XBMC"
 
 msgid "xbian-config.locales.label.xbian"
-msgstr ""
+msgstr "XBian"
 
 msgid "xbian-config.locales.updated"
-msgstr ""
+msgstr "System, XBian, og XBMC språk oppdatert"
 
 # xbian-config module network
 # 
 msgid "xbian-config.network.name"
-msgstr ""
+msgstr "Nettverk"
 
 msgid "xbian-config.network.description"
 msgstr ""
@@ -965,16 +967,7 @@ msgstr ""
 msgid "xbian-config.xbmc.webserver.disable.failed"
 msgstr ""
 
-msgid "xbian-config.xbmc.guires.success"
-msgstr ""
-
-msgid "xbian-config.xbmc.guires.failed"
-msgstr ""
-
 msgid "xbian-config.xbmc.label.webserver"
-msgstr ""
-
-msgid "xbian-config.xbmc.label.guires"
 msgstr ""
 
 msgid "xbian-config.xbmc.label.actions"
