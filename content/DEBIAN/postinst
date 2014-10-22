@@ -11,7 +11,7 @@ if [ $1 = "configure" ]; then
 	[ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
 
         echo "Installing language files..."
-	for l in $(find /usr/local/include/xbian-config/gettext -type f); do
+	for l in $(find /usr/local/include/xbian-config/gettext -type f -name "*.po"); do
 	    a=$(basename $l)
 	    a=${a#*\.};a=${a%\.*}
 	    echo $a
