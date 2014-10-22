@@ -1,26 +1,27 @@
-#
 # msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo xbian.po
-#
-
+# 
+# Translators:
+# Translators:
+# Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: XBian 1.0 Beta 1\n"
+"Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 09-03-2013 12:00+0100\n"
-"Last-Translator: CurlyMo <development@xbian.org>\n"
-"Language-Team: CurlyMo <development@xbian.org>\n"
+"PO-Revision-Date: 2014-10-22 18:57+0000\n"
+"Last-Translator: belese <besme2@gmail.com>\n"
+"Language-Team: English (http://www.transifex.com/projects/p/xbian-translation/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "distribution"
 msgstr "XBian"
 
-#
 # xbian-config main (menu)
-#
-
+# 
 msgid "xbian-config.main.title"
 msgstr "Config"
 
@@ -57,10 +58,8 @@ msgstr "Connectivity"
 msgid "xbian-config.connectivity.description"
 msgstr "e.g. Video output"
 
-#
 # xbian-config dialog
-#
-
+# 
 msgid "xbian-config.dialog.error"
 msgstr "Error"
 
@@ -145,10 +144,8 @@ msgstr "Insufficient number of arguments"
 msgid "xbian-config.dialog.incorrect_arguments"
 msgstr "Incorrect argument type"
 
-#
 # xbian-config module bootflags
-#
-
+# 
 msgid "xbian-config.bootflags.name"
 msgstr "Boot settings"
 
@@ -173,10 +170,8 @@ msgstr "Suppress kernel output"
 msgid "xbian-config.bootflags.loglevel"
 msgstr "Kernel loglevel"
 
-#
 # xbian-config module information
-#
-
+# 
 msgid "xbian-config.information.name"
 msgstr "Information"
 
@@ -186,10 +181,8 @@ msgstr "Information about this distribution"
 msgid "xbian-config.information.text"
 msgstr "XBian is a free, Open Source media center distribution for the Raspberry Pi, which can be downloaded at http://www.xbian.org. Our slogan is \"XBMC on Raspberry Pi, bleeding edge\" as our main focus is delivering the fastest mediacenter solution for the Raspberry Pi. We believe that everyone can help make XBian better. Please visit our website for support and if you have suggestions, wishes or contributions, please share them with us!"
 
-#
 # xbian-config module hostname
-#
-
+# 
 msgid "xbian-config.hostname.name"
 msgstr "Hostname"
 
@@ -202,10 +195,8 @@ msgstr "Change the default hostname"
 msgid "xbian-config.hostname.changed"
 msgstr "Hostname successfully changed"
 
-#
 # xbian-config module kernel
-#
-
+# 
 msgid "xbian-config.kernel.name"
 msgstr "Kernel"
 
@@ -224,11 +215,8 @@ msgstr "You're already running this kernel version"
 msgid "xbian-config.kernel.single_installed"
 msgstr "There is only one kernel installed"
 
-#
 # xbian-config general licenses
-#
-
-
+# 
 msgid "xbian-config.license.inserted"
 msgstr "%s successfully inserted"
 
@@ -241,30 +229,24 @@ msgstr "%s successfully updated"
 msgid "xbian-config.license.invalid"
 msgstr "A %s must be 9 or 10 characters long and looks like 0x00000000. You can specify maximum 8 licenses, separated by comma."
 
-#
 # xbian-config module licensempg2
-#
-
+# 
 msgid "xbian-config.licensempg2.name"
 msgstr "MPG2 license"
 
 msgid "xbian-config.licensempg2.description"
 msgstr "Manage your MPG2 license"
 
-#
 # xbian-config module licensevc1
-#
-
+# 
 msgid "xbian-config.licensevc1.name"
 msgstr "VC1 license"
 
 msgid "xbian-config.licensevc1.description"
 msgstr "Manage your VC1 license"
 
-#
 # xbian-config module locales
-#
-
+# 
 msgid "xbian-config.locales.name"
 msgstr "System locale"
 
@@ -286,10 +268,8 @@ msgstr "XBian"
 msgid "xbian-config.locales.updated"
 msgstr "System, XBian, and XBMC language successfully updated"
 
-#
 # xbian-config module network
-#
-
+# 
 msgid "xbian-config.network.name"
 msgstr "Network"
 
@@ -307,7 +287,6 @@ msgstr "No network interfaces available or connected"
 
 msgid "xbian-config.network.interfaces.select"
 msgstr "Select interface to configure"
-
 
 msgid "xbian-config.network.label.dhcp"
 msgstr "DHCP"
@@ -405,10 +384,8 @@ msgstr "Open"
 msgid "xbian-config.network.label.signal"
 msgstr "Signal"
 
-#
 # xbian-config module overclocking
-#
-
+# 
 msgid "xbian-config.overclocking.name"
 msgstr "Overclocking"
 
@@ -433,10 +410,8 @@ msgstr "~"
 msgid "xbian-config.overclocking.empty_fields"
 msgstr "You didn't fill in all fields"
 
-#
 # xbian-config module packages
-#
-
+# 
 msgid "xbian-config.packages.name"
 msgstr "Packages"
 
@@ -557,10 +532,8 @@ msgstr "Dependencies:"
 msgid "xbian-config.packages.label.actions"
 msgstr "Actions"
 
-#
 # xbian-config module resizesd
-#
-
+# 
 msgid "xbian-config.resizesd.name"
 msgstr "Resize SD"
 
@@ -579,10 +552,8 @@ msgstr "Root partition has been resized. The filesystem will be enlarged upon th
 msgid "xbian-config.resizesd.error"
 msgstr "An error occurred. It is possible that the system will become unbootable. Please make a backup of your files before rebooting."
 
-#
 # xbian-config module rootpass
-#
-
+# 
 msgid "xbian-config.rootpass.name"
 msgstr "Root password"
 
@@ -601,10 +572,8 @@ msgstr "You have to enter both a new password and a confirmation"
 msgid "xbian-config.rootpass.no_match"
 msgstr "Passwords didn't match"
 
-#
 # xbian-config module services
-#
-
+# 
 msgid "xbian-config.services.name"
 msgstr "Services"
 
@@ -722,10 +691,8 @@ msgstr "Leave empty if none"
 msgid "xbian-config.services.label.separate_space"
 msgstr "Separate by spaces"
 
-#
 # xbian-config module sshroot
-#
-
+# 
 msgid "xbian-config.sshroot.name"
 msgstr "SSH root login"
 
@@ -744,10 +711,8 @@ msgstr "SSH root login successfully enabled"
 msgid "xbian-config.sshroot.disabled"
 msgstr "SSH root login successfully disabled"
 
-#
 # xbian-config module timezone
-#
-
+# 
 msgid "xbian-config.timezone.name"
 msgstr "Timezone"
 
@@ -780,15 +745,15 @@ msgstr "You didn't select a location"
 
 msgid "xbian-config.timezone.notset"
 msgstr "Not Set"
-#
-# xbian-config modules updates
-#
 
+# xbian-config modules updates
+# 
 msgid "xbian-config.aptupdate.name"
 msgstr "apt-get update"
 
 msgid "xbian-config.aptupdate.description"
 msgstr "Run apt-get update"
+
 msgid "xbian-config.updates.name"
 msgstr "Check deb upgrades"
 
@@ -797,10 +762,13 @@ msgstr "Run apt-get upgrade"
 
 msgid "xbian-config.updatemirrors.name"
 msgstr "Update mirrors"
+
 msgid "xbian-config.updatemirrors.description"
 msgstr "Update informations about mirror sites available"
+
 msgid "xbian-config.updatemenu.name"
 msgstr "Updates"
+
 msgid "xbian-config.updatemenu.description"
 msgstr "Check for system updates"
 
@@ -900,11 +868,8 @@ msgstr "interval (days)"
 msgid "xbian-config.updates.uptodate"
 msgstr "Your install already contains the latest versions of XBian packages"
 
-
-#
 # xbian-config module videoflags
-#
-
+# 
 msgid "xbian-config.videoflags.name"
 msgstr "Video output"
 
@@ -934,10 +899,9 @@ msgstr "Disable overscan"
 
 msgid "xbian-config.videoflags.disable_splash"
 msgstr "Disable the 'rainbow' screen at really start of RPI"
-#
-# xbian-config module xbconfig
-#
 
+# xbian-config module xbconfig
+# 
 msgid "xbian-config.xbconfig.name"
 msgstr "XBian config"
 
@@ -959,10 +923,8 @@ msgstr "Successfully enabled xbian-config autostart"
 msgid "xbian-config.xbconfig.autostart.disabled"
 msgstr "Successfully disabled xbian-config autostart"
 
-#
 # xbian-config module xbianpass
-#
-
+# 
 msgid "xbian-config.xbianpass.name"
 msgstr "XBian password"
 
@@ -981,10 +943,8 @@ msgstr "You have to enter both a new password and a confirmation"
 msgid "xbian-config.xbianpass.no_match"
 msgstr "Passwords didn't match"
 
-#
 # xbian-config module xbmc
-#
-
+# 
 msgid "xbian-config.xbmc.name"
 msgstr "XBMC"
 
@@ -1054,12 +1014,8 @@ msgstr "Spin Down HDD"
 msgid "xbian-config.xbmc.label.sync"
 msgstr "Mount with sync option"
 
-
-
-#
 # xbian-config module preferences
-#
-
+# 
 msgid "xbian-config.preferences.name"
 msgstr "Preferences"
 
@@ -1090,10 +1046,8 @@ msgstr "Ask confirmation before saving new settings"
 msgid "xbian-config.preferences.label.notification"
 msgstr "Notification"
 
-#
-#	xbiancopy
-#
-
+# 	xbiancopy
+# 
 msgid "xbian-config.xbiancopy.label.source"
 msgstr "Source drive/partition: "
 
@@ -1114,7 +1068,6 @@ msgstr "NFS export does not meet requirements"
 
 msgid "xbian-config.xbiancopy.dialog.preperror"
 msgstr "Can't prepare destination filesystem"
-
 
 msgid "xbian-config.backup.category.snasphot"
 msgstr "Manage snapshot"
@@ -1164,11 +1117,8 @@ msgstr "This will erase ALL data on %s, continue?"
 msgid "xbian-config.backup.selectdevice"
 msgstr "Select Device"
 
-
-#
 #       backuphome
-#
-
+# 
 msgid "xbian-config.backuphome.name"
 msgstr "Backup /home to file"
 
@@ -1211,10 +1161,8 @@ msgstr "%s : Do you want to restore home from %s?"
 msgid "xbian-config.backuphome.restore_home_info"
 msgstr "It can take several minutes depending on size of your backup image."
 
-#
-#	enable auto updates
-#
-
+# 	enable auto updates
+# 
 msgid "xbian-config.enableauto.name"
 msgstr "Auto updates"
 
@@ -1230,9 +1178,8 @@ msgstr "Automatic updates are disabled"
 msgid "xbian-config.updates.enableauto.enabled"
 msgstr "Automatic updates are enabled"
 
-#
 # manage snapshot
-#
+# 
 msgid "xbian-config.snapshot.mountsnap"
 msgstr "Mount a snapshot"
 
@@ -1257,18 +1204,16 @@ msgstr "Snapshot name"
 msgid "xbian-config.snapshot.backup"
 msgstr "Backup"
 
-#
 # util
-#
+# 
 msgid "xbian-config.util.valuegreater"
 msgstr "Value must be greater than %d"
 
 msgid "xbian-config.util.valuelower"
 msgstr "Value must be lower than %d"
 
-#
 #  wizard
-#
+# 
 msgid "xbian-config.wizard.welcome.title"
 msgstr "Welcome to XBian"
 
@@ -1332,9 +1277,13 @@ msgstr "Finish"
 msgid "xbian-config.wizard.finish.description"
 msgstr "You now have a fully configured XBian.[CR]We hope it will give you a great experience.[CR][CR]If you want to manage additional XBian settings: Go System -> XBian.[CR]If you want to rerun this Wizard at a later date: Select tab XBian Wizard under System"
 
-#
+# extra
+# 
+msgid "xbian-config.extra.name"
+msgstr "extra"
+
 #   commom
-#
+# 
 msgid "xbian-config.common.pleasewait"
 msgstr "Please wait..."
 
@@ -1358,6 +1307,3 @@ msgstr "Are you sure to apply modification?"
 
 msgid "xbian-config.common.badentry"
 msgstr "Data you have enter is not correct"
-
-msgid "xbian-config.common.clicktoload"
-msgstr "Click to activate"
