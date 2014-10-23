@@ -728,7 +728,7 @@ if you created img file, cmdline.txt was updated automatically." 24 79
                 gunzip -cd < $1.working | btrfs receive -v /tmp/btrfs-snap/home
                 [ $? -ne 0 ] && exit 1
                 rm -fr $1.working
-                pgrep xbmc.bin > /dev/null && { touch /run/start.xbmc; stop -q xbmc; }
+                { pgrep xbmc.bin >/dev/null || pgrep kodi.bin >/dev/null; } && { touch /run/start.xbmc; stop -q xbmc; }
                 stop -q zram-swap
 
                 locks=$(lsof | grep "/home" | awk '{print $2}' | sort | uniq)
