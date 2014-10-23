@@ -87,13 +87,15 @@ function setLocaleFn() {
 	fi
 	sed -i "s/# $LOCALE/$LOCALE/g" /etc/locale.gen
 	update-locale LANG=$LOCALE
-	CURLANG=$(sed '/<language>/!d;s//\n/;s/[^\n]*\n//;:a;$!{/<\/language/!N;//!ba};y/\n/ /;s/<\/language>/\n/;P;D' /home/xbian/.xbmc/userdata/guisettings.xml | sed -ne 's/\([A-Za-z]\{1,\}\)\([\ ](.*\|.*\)/\1/p'); #)
+
+	[ -d /home/xbian/.kodi ] && XBMC_KODI_DIR="/home/xbian/.kodi" || XBMC_KODI_DIR="/home/xbian/.xbmc"
+	CURLANG=$(sed '/<language>/!d;s//\n/;s/[^\n]*\n//;:a;$!{/<\/language/!N;//!ba};y/\n/ /;s/<\/language>/\n/;P;D' $XBMC_KODI_DIR/userdata/guisettings.xml | sed -ne 's/\([A-Za-z]\{1,\}\)\([\ ](.*\|.*\)/\1/p'); #)
 	XBMCLANG=$(grep "^$1" $BASEPATH/config/languages | awk '{print $5}' | sed -e 's/_/ /g');
 	mkdir -p /run/xbian-config
 	if [ -n $XBMCLANG ]; then
-		echo "sed -i 's%<language>.*</language>%<language>$XBMCLANG</language>%g' /home/xbian/.xbmc/userdata/guisettings.xml" >> /run/xbian-config/xbmc-changesettings.sh
+		echo "sed -i 's%<language>.*</language>%<language>$XBMCLANG</language>%g' $XBMC_KODI_DIR/userdata/guisettings.xml" >> /run/xbian-config/xbmc-changesettings.sh
 	else
-		echo "sed -i 's%<language>.*</language>%<language>English</language>%g' /home/xbian/.xbmc/userdata/guisettings.xml" >> /run/xbian-config/xbmc-changesettings.sh
+		echo "sed -i 's%<language>.*</language>%<language>English</language>%g' $XBMC_KODI_DIR/userdata/guisettings.xml" >> /run/xbian-config/xbmc-changesettings.sh
 	fi
-	pgrep xbmc.bin >/dev/null || { sh /run/xbian-config/xbmc-changesettings.sh && rm -f /run/xbian-config/xbmc-changesettings.sh; }
+	{ pgrep xbmc.bin >/dev/null || pgrep kodi.bin >/dev/null; } || { sh /run/xbian-config/xbmc-changesettings.sh && rm -f /run/xbian-config/xbmc-changesettings.sh; }
 }
