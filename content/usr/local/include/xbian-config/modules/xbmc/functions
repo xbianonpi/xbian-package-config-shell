@@ -28,17 +28,19 @@ function setXBMCWebserverFn() {
         else
                 NEWSET="true";
         fi
-        OLDSET=$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' /home/xbian/.xbmc/userdata/advancedsettings.xml);
+
+        [ -d /home/xbian/.kodi ] && XBMC_KODI_DIR="/home/xbian/.kodi" || XBMC_KODI_DIR="/home/xbian/.xbmc"
+        OLDSET=$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' $XBMC_KODI_DIR/userdata/advancedsettings.xml);
         if [ -z "$OLDSET" ]; then
-                if [ $(grep -c "lookandfeel" /home/xbian/.xbmc/userdata/advancedsettings.xml) -eq 2 ]; then
-                        sed -i "s/<\/lookandfeel>/     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
+                if [ $(grep -c "lookandfeel" $XBMC_KODI_DIR/userdata/advancedsettings.xml) -eq 2 ]; then
+                        sed -i "s/<\/lookandfeel>/     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>/g" $XBMC_KODI_DIR/userdata/advancedsettings.xml
                 else
-                        sed -i "s/<\/advancedsettings>/   <lookandfeel>\n     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>\n<\/advancedsettings>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
+                        sed -i "s/<\/advancedsettings>/   <lookandfeel>\n     <webserver>$NEWSET<\/webserver>\n   <\/lookandfeel>\n<\/advancedsettings>/g" $XBMC_KODI_DIR/userdata/advancedsettings.xml
                 fi
         else
-                sed -i "s/<webserver>$OLDSET<\/webserver>/<webserver>$NEWSET<\/webserver>/g" /home/xbian/.xbmc/userdata/advancedsettings.xml
+                sed -i "s/<webserver>$OLDSET<\/webserver>/<webserver>$NEWSET<\/webserver>/g" $XBMC_KODI_DIR/userdata/advancedsettings.xml
         fi
-        if [ "$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' /home/xbian/.xbmc/userdata/advancedsettings.xml)" == "$NEWSET" ]; then
+        if [ "$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' $XBMC_KODI_DIR/userdata/advancedsettings.xml)" == "$NEWSET" ]; then
                 return 1;
         else
                 return 0;
@@ -50,7 +52,8 @@ function setXBMCWebserverFn() {
 # - 0: Disabled
 # - 1: Enabled
 function getXBMCWebserverFn() {
-	CURSET=$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' /home/xbian/.xbmc/userdata/advancedsettings.xml);
+        [ -d /home/xbian/.kodi ] && XBMC_KODI_DIR="/home/xbian/.kodi" || XBMC_KODI_DIR="/home/xbian/.xbmc"
+	CURSET=$(sed -ne 's/\(.*<webserver>\)\([a-z]\{1,5\}\)\(<\/webserver>\)/\2/p' $XBMC_KODI_DIR/userdata/advancedsettings.xml);
 	if [ -z "$CURSET" ] || [ "$CURSET" == "false" ]; then
 		return 0;
 	else
