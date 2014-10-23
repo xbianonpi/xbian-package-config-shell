@@ -109,10 +109,11 @@ function changeCurrentTZFn() {
 				cou=$(cat $BASEPATH/config/countries | awk -v c=$city -F'\t' '$6 ~ c {print $5}')
 				if [ -n "$cou" ]; then
 				    mkdir -p /run/xbian-config
-				    echo "eval \$(echo \"sed -i 's/<timezone>.*<\/timezone>/<timezone>$area\/$city<\/timezone>/' /home/xbian/.xbmc/userdata/guisettings.xml\")" >> /run/xbian-config/xbmc-tz
-				    echo "eval \$(echo \"sed -i 's/<timezonecountry>.*<\/timezonecountry>/<timezonecountry>$cou<\/timezonecountry>/' /home/xbian/.xbmc/userdata/guisettings.xml\")" >> /run/xbian-config/xbmc-tz
+				    [ -d /home/xbian/.kodi ] && XBMC_KODI_DIR="/home/xbian/.kodi" || XBMC_KODI_DIR="/home/xbian/.xbmc"
+				    echo "eval \$(echo \"sed -i 's/<timezone>.*<\/timezone>/<timezone>$area\/$city<\/timezone>/' $XBMC_KODI_DIR/userdata/guisettings.xml\")" >> /run/xbian-config/xbmc-tz
+				    echo "eval \$(echo \"sed -i 's/<timezonecountry>.*<\/timezonecountry>/<timezonecountry>$cou<\/timezonecountry>/' $XBMC_KODI_DIR/userdata/guisettings.xml\")" >> /run/xbian-config/xbmc-tz
 				fi
-				if pgrep xbmc.bin > /dev/null; then
+				if pgrep xbmc.bin >/dev/null || pgrep kodi.bin >/dev/null; then
 				    cat /run/xbian-config/xbmc-tz >> /run/xbian-config/xbmc-changesettings.sh 2>/dev/null
 				else
 				    sh /run/xbian-config/xbmc-tz
