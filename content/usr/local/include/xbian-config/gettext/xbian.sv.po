@@ -3,12 +3,13 @@
 # Translators:
 # Translators:
 # Translators:
+# Hushpad <johan.winkler@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-10-22 18:57+0000\n"
+"PO-Revision-Date: 2014-10-25 13:07+0000\n"
 "Last-Translator: belese <besme2@gmail.com>\n"
 "Language-Team: Swedish (http://www.transifex.com/projects/p/xbian-translation/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "distribution"
-msgstr ""
+msgstr "XBian"
 
 # xbian-config main (menu)
 # 
@@ -26,34 +27,34 @@ msgid "xbian-config.main.title"
 msgstr ""
 
 msgid "xbian-config.main.reboot_question"
-msgstr ""
+msgstr "En omstart krävs. Vill du starta om nu?"
 
 msgid "xbian-config.settings.name"
-msgstr ""
+msgstr "Inställningar"
 
 msgid "xbian-config.settings.description"
-msgstr ""
+msgstr "Ändra systeminställningar"
 
 msgid "xbian-config.system.name"
-msgstr ""
+msgstr "System"
 
 msgid "xbian-config.system.description"
 msgstr ""
 
 msgid "xbian-config.accounts.name"
-msgstr ""
+msgstr "Konton"
 
 msgid "xbian-config.accounts.description"
-msgstr ""
+msgstr "ex. Ändra lösenord, SSH root inloggning"
 
 msgid "xbian-config.licenses.name"
-msgstr ""
+msgstr "Licenser"
 
 msgid "xbian-config.licenses.description"
-msgstr ""
+msgstr "Lägg till/Ta bort hårdvarulicenser"
 
 msgid "xbian-config.connectivity.name"
-msgstr ""
+msgstr "Anslutning"
 
 msgid "xbian-config.connectivity.description"
 msgstr ""
@@ -61,55 +62,55 @@ msgstr ""
 # xbian-config dialog
 # 
 msgid "xbian-config.dialog.error"
-msgstr ""
+msgstr "Fel"
 
 msgid "xbian-config.dialog.apply"
-msgstr ""
+msgstr "Använd"
 
 msgid "xbian-config.dialog.ok"
-msgstr ""
+msgstr "Ok"
 
 msgid "xbian-config.dialog.yes"
-msgstr ""
+msgstr "Ja"
 
 msgid "xbian-config.dialog.no"
-msgstr ""
+msgstr "Nej"
 
 msgid "xbian-config.dialog.on"
-msgstr ""
+msgstr "På"
 
 msgid "xbian-config.dialog.off"
-msgstr ""
+msgstr "Av"
 
 msgid "xbian-config.dialog.insert"
-msgstr ""
+msgstr "Infoga"
 
 msgid "xbian-config.dialog.remove"
-msgstr ""
+msgstr "Ta bort"
 
 msgid "xbian-config.dialog.update"
-msgstr ""
+msgstr "Uppdatera"
 
 msgid "xbian-config.dialog.cancel"
-msgstr ""
+msgstr "Ångra"
 
 msgid "xbian-config.dialog.select"
-msgstr ""
+msgstr "Välj"
 
 msgid "xbian-config.dialog.return"
-msgstr ""
+msgstr "Återgå"
 
 msgid "xbian-config.dialog.unexpected_error"
-msgstr ""
+msgstr "Ett oväntat fel har uppstått"
 
 msgid "xbian-config.dialog.close"
-msgstr ""
+msgstr "Stäng"
 
 msgid "xbian-config.dialog.change"
-msgstr ""
+msgstr "Ändra"
 
 msgid "xbian-config.dialog.exit"
-msgstr ""
+msgstr "Avsluta"
 
 msgid "xbian-config.dialog.enable"
 msgstr ""
@@ -118,13 +119,13 @@ msgid "xbian-config.dialog.disable"
 msgstr ""
 
 msgid "xbian-config.dialog.password"
-msgstr ""
+msgstr "Lösenord:"
 
 msgid "xbian-config.dialog.confirm"
-msgstr ""
+msgstr "Bekräfta:"
 
 msgid "xbian-config.dialog.retry"
-msgstr ""
+msgstr "Försök igen"
 
 msgid "xbian-config.dialog.space_option_select"
 msgstr ""
@@ -133,10 +134,10 @@ msgid "xbian-config.dialog.space_check_select"
 msgstr ""
 
 msgid "xbian-config.dialog.loading_module"
-msgstr ""
+msgstr "Laddar modul. Var god vänta..."
 
 msgid "xbian-config.dialog.required_packages"
-msgstr ""
+msgstr "Detta program kräver följande paket:"
 
 msgid "xbian-config.dialog.insufficient_arguments"
 msgstr ""
@@ -173,10 +174,10 @@ msgstr ""
 # xbian-config module information
 # 
 msgid "xbian-config.information.name"
-msgstr ""
+msgstr "Information"
 
 msgid "xbian-config.information.description"
-msgstr ""
+msgstr "Information om denna distribution"
 
 msgid "xbian-config.information.text"
 msgstr ""
@@ -204,7 +205,7 @@ msgid "xbian-config.kernel.description"
 msgstr ""
 
 msgid "xbian-config.kernel.label.version"
-msgstr ""
+msgstr "Version"
 
 msgid "xbian-config.kernel.switch_success"
 msgstr ""
@@ -232,18 +233,18 @@ msgstr ""
 # xbian-config module licensempg2
 # 
 msgid "xbian-config.licensempg2.name"
-msgstr ""
+msgstr "MPG2 licens"
 
 msgid "xbian-config.licensempg2.description"
-msgstr ""
+msgstr "Hantera din MPG2 licens"
 
 # xbian-config module licensevc1
 # 
 msgid "xbian-config.licensevc1.name"
-msgstr ""
+msgstr "VC1 licens"
 
 msgid "xbian-config.licensevc1.description"
-msgstr ""
+msgstr "Hantera din VC1 licens"
 
 # xbian-config module locales
 # 
@@ -251,111 +252,111 @@ msgid "xbian-config.locales.name"
 msgstr ""
 
 msgid "xbian-config.locales.description"
-msgstr ""
+msgstr "Ändra systemspråk"
 
 msgid "xbian-config.locales.label.letter"
 msgstr ""
 
 msgid "xbian-config.locales.label.name"
-msgstr ""
+msgstr "Namn"
 
 msgid "xbian-config.locales.label.xbmc"
-msgstr ""
+msgstr "XBMC"
 
 msgid "xbian-config.locales.label.xbian"
-msgstr ""
+msgstr "XBian"
 
 msgid "xbian-config.locales.updated"
-msgstr ""
+msgstr "System, XBian och XBMC språkuppdatering lyckad"
 
 # xbian-config module network
 # 
 msgid "xbian-config.network.name"
-msgstr ""
+msgstr "Nätverk"
 
 msgid "xbian-config.network.description"
-msgstr ""
+msgstr "Konfigurera nätverksgränssnitt"
 
 msgid "xbian-config.network.label.interfaces"
-msgstr ""
+msgstr "Gränssnitt"
 
 msgid "xbian-config.network.interfaces.loading"
-msgstr ""
+msgstr "Laddar gränssnitt, var god vänta..."
 
 msgid "xbian-config.network.interfaces.unavailable"
-msgstr ""
+msgstr "Inga nätverksgränssnitt tillgängliga eller anslutna"
 
 msgid "xbian-config.network.interfaces.select"
-msgstr ""
+msgstr "Välj gränssnitt att konfigurera"
 
 msgid "xbian-config.network.label.dhcp"
-msgstr ""
+msgstr "DHCP"
 
 msgid "xbian-config.network.label.name"
-msgstr ""
+msgstr "Nätverk"
 
 msgid "xbian-config.network.dhcp_selected"
 msgstr ""
 
 msgid "xbian-config.network.label.static"
-msgstr ""
+msgstr "Statisk IP"
 
 msgid "xbian-config.network.label.status"
 msgstr ""
 
 msgid "xbian-config.network.label.ipaddress"
-msgstr ""
+msgstr "IP Adress"
 
 msgid "xbian-config.network.label.netmask"
-msgstr ""
+msgstr "Netmask"
 
 msgid "xbian-config.network.label.gateway"
-msgstr ""
+msgstr "Gateway"
 
 msgid "xbian-config.network.label.nameserver"
-msgstr ""
+msgstr "Nameserver"
 
 msgid "xbian-config.network.label.ssid"
-msgstr ""
+msgstr "SSID"
 
 msgid "xbian-config.network.label.key"
-msgstr ""
+msgstr "Nyckel"
 
 msgid "xbian-config.network.label.type"
 msgstr ""
 
 msgid "xbian-config.network.label.protection"
-msgstr ""
+msgstr "Skydd"
 
 msgid "xbian-config.network.label.scan"
-msgstr ""
+msgstr "Sök"
 
 msgid "xbian-config.network.label.custom"
 msgstr ""
 
 msgid "xbian-config.network.label.wlan"
-msgstr ""
+msgstr "WLAN"
 
 msgid "xbian-config.network.label.not_connected"
-msgstr ""
+msgstr "Ej ansluten"
 
 msgid "xbian-config.network.label.reloading_values"
 msgstr ""
 
 msgid "xbian-config.network.scanning"
-msgstr ""
+msgstr "Söker efter tillgängliga nätverk..."
 
 msgid "xbian-config.network.connection.restart"
-msgstr ""
+msgstr "Startar om %s"
 
 msgid "xbian-config.network.connection.updating"
-msgstr ""
+msgstr "Var god vänta. Försöker ansluta till %s"
 
 msgid "xbian-config.network.connection.failed"
-msgstr ""
+msgstr "Misslyckades att ansluta till %s"
 
 msgid "xbian-config.network.connection.success"
-msgstr ""
+msgstr "Lyckades att ansluta till %s"
 
 msgid "xbian-config.network.credentials.enter"
 msgstr ""
@@ -373,10 +374,10 @@ msgid "xbian-config.network.credentials.lan.updated"
 msgstr ""
 
 msgid "xbian-config.network.label.wpa"
-msgstr ""
+msgstr "WPA"
 
 msgid "xbian-config.network.label.wep"
-msgstr ""
+msgstr "WEP"
 
 msgid "xbian-config.network.label.open"
 msgstr ""
@@ -387,10 +388,10 @@ msgstr ""
 # xbian-config module overclocking
 # 
 msgid "xbian-config.overclocking.name"
-msgstr ""
+msgstr "Överklockning"
 
 msgid "xbian-config.overclocking.description"
-msgstr ""
+msgstr "Konfigurera överklockning"
 
 msgid "xbian-config.overclocking.warning"
 msgstr ""
@@ -402,27 +403,27 @@ msgid "xbian-config.overclocking.changed"
 msgstr ""
 
 msgid "xbian-config.overclocking.label.preset"
-msgstr ""
+msgstr "Förinställningar"
 
 msgid "xbian-config.overclocking.label.custom"
-msgstr ""
+msgstr "~"
 
 msgid "xbian-config.overclocking.empty_fields"
-msgstr ""
+msgstr "Alla fällt är inte ifyllda"
 
 # xbian-config module packages
 # 
 msgid "xbian-config.packages.name"
-msgstr ""
+msgstr "Paket"
 
 msgid "xbian-config.packages.description"
-msgstr ""
+msgstr "Lägg till eller ta bort paket"
 
 msgid "xbian-config.packages.apt.update"
-msgstr ""
+msgstr "Uppdaterar lokal paketdatabas..."
 
 msgid "xbian-config.packages.apt.update_failed"
-msgstr ""
+msgstr "Ett fel uppstod under uppdateringen av paketdatabasen"
 
 msgid "xbian-config.packages.list.download"
 msgstr ""
@@ -434,7 +435,7 @@ msgid "xbian-config.packages.loading"
 msgstr ""
 
 msgid "xbian-config.packages.install.confirm"
-msgstr ""
+msgstr "Är du säker på att du vill lägga till eller uppdatera detta paket?"
 
 msgid "xbian-config.packages.install.success"
 msgstr ""
@@ -449,16 +450,16 @@ msgid "xbian-config.packages.remove.success"
 msgstr ""
 
 msgid "xbian-config.packages.already_installed"
-msgstr ""
+msgstr "Den senaste versionen av detta paket är redan installerad"
 
 msgid "xbian-config.packages.unavailable_version"
 msgstr ""
 
 msgid "xbian-config.packages.not_exists"
-msgstr ""
+msgstr "Paketet som försökte installeras kunde inte hittas"
 
 msgid "xbian-config.packages.not_installed"
-msgstr ""
+msgstr "Paketet är inte installerat"
 
 msgid "xbian-config.packages.size_mismatch"
 msgstr ""
@@ -476,34 +477,34 @@ msgid "xbian-config.packages.downgrade"
 msgstr ""
 
 msgid "xbian-config.packages.installing"
-msgstr ""
+msgstr "Installerar/uppdaterar detta paket, detta kan ta flera minuter. Var god vänta..."
 
 msgid "xbian-config.packages.removing"
-msgstr ""
+msgstr "Tar bort detta paket, detta kan ta flera minuter. Var god vänta..."
 
 msgid "xbian-config.packages.label.categories"
-msgstr ""
+msgstr "Kategorier"
 
 msgid "xbian-config.packages.label.name"
-msgstr ""
+msgstr "Namn"
 
 msgid "xbian-config.packages.label.installed"
-msgstr ""
+msgstr "Installerad"
 
 msgid "xbian-config.packages.label.not_installed"
-msgstr ""
+msgstr "Ej installerad"
 
 msgid "xbian-config.packages.label.information"
-msgstr ""
+msgstr "Information"
 
 msgid "xbian-config.packages.label.install_update"
-msgstr ""
+msgstr "Installera/Uppdatera"
 
 msgid "xbian-config.packages.label.install"
 msgstr ""
 
 msgid "xbian-config.packages.label.remove"
-msgstr ""
+msgstr "Ta bort"
 
 msgid "xbian-config.packages.label.get_more"
 msgstr ""
@@ -512,19 +513,19 @@ msgid "xbian-config.packages.info.fullname"
 msgstr ""
 
 msgid "xbian-config.packages.info.version.available"
-msgstr ""
+msgstr "Tillgänglig version:"
 
 msgid "xbian-config.packages.info.version.installed"
-msgstr ""
+msgstr "Installerad version:"
 
 msgid "xbian-config.packages.info.size.installed"
-msgstr ""
+msgstr "Installerad storlek:"
 
 msgid "xbian-config.packages.info.size.download"
-msgstr ""
+msgstr "Nedladdningsstorlek:"
 
 msgid "xbian-config.packages.info.description"
-msgstr ""
+msgstr "Beskrivning:"
 
 msgid "xbian-config.packages.info.dependencies"
 msgstr ""
@@ -555,22 +556,22 @@ msgstr ""
 # xbian-config module rootpass
 # 
 msgid "xbian-config.rootpass.name"
-msgstr ""
+msgstr "Root lösenord"
 
 msgid "xbian-config.rootpass.description"
-msgstr ""
+msgstr "Ändra lösenord för root användare"
 
 msgid "xbian-config.rootpass.changed"
 msgstr ""
 
 msgid "xbian-config.rootpass.label.password"
-msgstr ""
+msgstr "Lösenord:"
 
 msgid "xbian-config.rootpass.empty_fields"
 msgstr ""
 
 msgid "xbian-config.rootpass.no_match"
-msgstr ""
+msgstr "Lösenord matchade inte"
 
 # xbian-config module services
 # 
@@ -671,13 +672,13 @@ msgid "xbian-config.services.label.add_custom"
 msgstr ""
 
 msgid "xbian-config.services.label.edit"
-msgstr ""
+msgstr "Ändra"
 
 msgid "xbian-config.services.label.delete"
-msgstr ""
+msgstr "Ta bort"
 
 msgid "xbian-config.services.label.name"
-msgstr ""
+msgstr "Namn"
 
 msgid "xbian-config.services.label.confirminsert"
 msgstr ""
@@ -714,22 +715,22 @@ msgstr ""
 # xbian-config module timezone
 # 
 msgid "xbian-config.timezone.name"
-msgstr ""
+msgstr "Tidszon"
 
 msgid "xbian-config.timezone.description"
-msgstr ""
+msgstr "Ändra tidszon för ditt RPi"
 
 msgid "xbian-config.timezone.loading.timezone"
-msgstr ""
+msgstr "Hämtar nuvarande tidszon..."
 
 msgid "xbian-config.timezone.loading.location"
 msgstr ""
 
 msgid "xbian-config.timezone.label.timezone"
-msgstr ""
+msgstr "Tidszon"
 
 msgid "xbian-config.timezone.label.location"
-msgstr ""
+msgstr "Plats"
 
 msgid "xbian-config.timezone.old"
 msgstr ""
@@ -738,10 +739,10 @@ msgid "xbian-config.timezone.new"
 msgstr ""
 
 msgid "xbian-config.timezone.no_timezone_selected"
-msgstr ""
+msgstr "Ingen vald tidszon"
 
 msgid "xbian-config.timezone.no_location_selected"
-msgstr ""
+msgstr "Ingen vald plats"
 
 msgid "xbian-config.timezone.notset"
 msgstr ""
@@ -767,10 +768,10 @@ msgid "xbian-config.updatemirrors.description"
 msgstr ""
 
 msgid "xbian-config.updatemenu.name"
-msgstr ""
+msgstr "Uppdateringar"
 
 msgid "xbian-config.updatemenu.description"
-msgstr ""
+msgstr "Sök efter systemuppdateringar"
 
 msgid "xbian-config.updates.apt.update"
 msgstr ""
