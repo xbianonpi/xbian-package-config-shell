@@ -373,7 +373,7 @@ function readNetworkConfigurationFn() {
 		MODE=$(echo -e "$TFILEIFACES" | sed -ne "s/\(iface $1 \)\([a-z]\{1,\}\)[\ ]\([a-z]\{1,\}\)/\3/p");
 		[ -z "$MODE" ] && MODE=manual
 		CIP=$(ip a show $1 | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet \([0-9.]\+\).*/\1/gp');
-		CSM=$(ip a show $1 | grep inet | awk '{print $4}');
+		CSM=$(ipcalc $(ip -4 -o a show $1 | awk '{print $4}') | grep Netmask | awk '{print $2}');
 		CGW=$(ip route show | grep -m1 'default\|0.0.0.0' | awk '{print $3}');
 
 		# Extract wlan configuration
@@ -554,7 +554,7 @@ function getWLANConnectStatusFn() {
 	STATUS=0;
 	if [ -f /tmp/wlanstatus ]; then
 		STATUS=1
-		if grep -qw "bound" /tmp/wlanstatus; then
+		if grep -qw "bound" /tmp/wlanstatus || grep "iface $1" /etc/network/interfaces | grep -q static; then
 			STATUS=2;
 		elif grep -qw 'DHCPOFFERS\|Terminated\|RTNETLINK' /tmp/wlanstatus; then
 			STATUS=3;

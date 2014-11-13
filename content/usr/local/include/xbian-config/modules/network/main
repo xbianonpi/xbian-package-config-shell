@@ -291,7 +291,7 @@ function showWlanRestartGUIFn() {
 		showWLANConnectingDlg $2
 		sleep 1
 	done
-	getWLANConnectStatusFn
+	getWLANConnectStatusFn $1
 
 	if [ $STATUS -eq 2 ]; then
 		showWLANConnectionSuccessDlg $2
