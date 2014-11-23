@@ -552,6 +552,7 @@ function restartLANAdapterFn() {
 #  3: Failed to connected to network
 function getWLANConnectStatusFn() {
 	STATUS=0;
+	[ -n "$1" ] && ifc=$1 || ifc=XXXXXXXX
 	if [ -f /tmp/wlanstatus ]; then
 		STATUS=1
 		if grep -qw "bound" /tmp/wlanstatus || grep "iface $1" /etc/network/interfaces | grep -q static; then

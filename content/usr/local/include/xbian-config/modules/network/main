@@ -538,7 +538,7 @@ function showCMDFn() {
 			if kill -0 $(cat /tmp/wlanstatus.pid) 2>/dev/null; then
 				echo 2
 			else
-				getWLANConnectStatusFn;
+				getWLANConnectStatusFn $2;
 				if [ $STATUS -eq 0 ]; then
 					echo -12;
 				elif [ $STATUS -eq 1 ]; then
