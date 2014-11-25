@@ -312,8 +312,8 @@ function showWlanRestartGUIFn() {
 #    $2 Interface [String]
 #  static
 #    $3 IP [String]
-#    $4 Gateway [String]
-#    $5 Netmask [String]
+#    $4 Netmask [String]
+#    $5 Gateway [String]
 #    $6 Nameserver 1 [String] (optional)
 #    $7 Nameserver 2 [String] (optional)
 #  credentials (No arguments return current settings)
@@ -402,8 +402,8 @@ function showCMDFn() {
 				if [ $? -eq 1 ]; then
 
 					# $3 = IP
-					# $4 = Gateway
-					# $5 = Netmask
+					# $4 = Netmask
+					# $5 = Gateway
 					# $6 = Nameserver1
 					# $7 = Nameserver2
 
@@ -420,7 +420,7 @@ function showCMDFn() {
 					fi
 
 					# Validation of arguments is done inside this function
-					RESULT=$(setInterfaceStaticFn "$2" "$3" "$5" "$4" "$NAMESERVER1" "$NAMESERVER2"; echo $?)
+					RESULT=$(setInterfaceStaticFn "$2" "$3" "$4" "$5" "$NAMESERVER1" "$NAMESERVER2"; echo $?)
 					case $RESULT in
 						6)
 							echo -6;

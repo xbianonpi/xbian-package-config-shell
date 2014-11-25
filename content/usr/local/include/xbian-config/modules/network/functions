@@ -45,6 +45,8 @@ setInterfaceDisableFn() {
             ;;
         wlan?)
             sed -i "s%^allow-hotplug.*$1%#allow-hotplug $1%" /etc/network/interfaces
+            sed -i "s%^iface.*$1%#iface $1%" /etc/network/interfaces
+            setAuto eth0
             ;;
         *)
             ;;
@@ -89,6 +91,7 @@ setInterfaceWlanCredentials() {
 			;;
 		esac
 
+		sed -i "s/^#iface $1/iface $1/" /etc/network/interfaces
 	        if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
 
 			# Interface already present, store it + any subsequent ifaces in an buffer
