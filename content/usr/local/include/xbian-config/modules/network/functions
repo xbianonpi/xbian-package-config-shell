@@ -51,7 +51,7 @@ setInterfaceDisableFn() {
         *)
             ;;
     esac
-    ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null
+    ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null; ip link set dev $1 down >&/dev/null
     return 1
 }
 
@@ -69,7 +69,7 @@ setInterfaceDisableFn() {
 setInterfaceWlanCredentials() {
 
 	# Check that supplied interface is valid
-    isValidInterfaceFn "$1"
+	isValidInterfaceFn "$1"
 	if [ $? -eq 1 ]; then
 
 		# Create buffer for holding configuration
@@ -91,8 +91,7 @@ setInterfaceWlanCredentials() {
 			;;
 		esac
 
-		sed -i "s/^#iface $1/iface $1/" /etc/network/interfaces
-	        if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
+		if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
 
 			# Interface already present, store it + any subsequent ifaces in an buffer
 			IFACEBUFFER=$(grep -A100 "^iface $1" /etc/network/interfaces | sed '1d');
@@ -132,9 +131,11 @@ setInterfaceWlanCredentials() {
 # Arguments
 #  $1 Interface name
 setInterfaceDhcpFn() {
-        isValidInterfaceFn "$1"
+	isValidInterfaceFn "$1"
 	if [ $? -eq 1 ]; then
-	        if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
+		sed -i "s/^#iface $1/iface $1/" /etc/network/interfaces
+		sed -i "s/^#allow hotplug $1/allow hotplug $1/" /etc/network/interfaces
+		if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
 
 			# Interface already present, store it + any subsequent ifaces in an buffer
 			IFACEBUFFER=$(grep -A100 "^iface $1" /etc/network/interfaces | sed '1d');
@@ -267,8 +268,11 @@ setInterfaceStaticFn() {
 				BUFFERRESOLV+="\nnameserver $6"
 			fi
 		fi
+
+		sed -i "s/^#iface $1/iface $1/" /etc/network/interfaces
+		sed -i "s/^#allow hotplug $1/allow hotplug $1/" /etc/network/interfaces
 		# Process /etc/network/interfaces
-	        if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
+		if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
 
 			# Interface already present, store it + any subsequent ifaces in an buffer
 			IFACETMP=$(grep -A100 "^iface $1" /etc/network/interfaces | sed '1d');
@@ -451,7 +455,7 @@ function readNetworkConfigurationFn() {
 #  1: Valid
 #  0: Invalid
 function scanWLANNetworksFn() {
-	ip link set $1 up >/dev/null 2>&1
+	ip link set $1 up >/dev/null 2>&1; sleep 3
 	IFS=$'\n'
 	OUTPUT=($(iwlist $1 scan));
 
