@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/)" ] && exit 0
+[ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/ 2>/dev/null)" ] && exit 0
 
 # btrfs-auto-snapshot for Linux.
 # Automatically create, rotate, and destroy periodic BTRFS snapshots.
