@@ -51,13 +51,12 @@ function setSnapApt(){
 }
 
 function retrieveUpdateListFn() {
-	xbian-apt-show-versions -u >/tmp/aptupdates 2>/dev/null
-        apt-mark showhold > /tmp/apthold
+	xbian-apt-show-versions -nu >/tmp/aptupdates 2>/dev/null
 }
 
 function getAllPackagesLisFn() {
 	if [ -f "/tmp/aptupdates" ]; then
-		PACKAGES=($(grep -vw -f /tmp/apthold /tmp/aptupdates | sed 's/\/[a-z]*//g' | awk '{print $1";"$2";"$5}' | sort | uniq));
+		PACKAGES=($(cat /tmp/aptupdates | sed 's/\/[a-z]*//g' | awk '{print $1";"$2";"$5}' | sort | uniq));
                 [ -z "${PACKAGES[0]}" ] && unset PACKAGES
 		return 1;
 	else
