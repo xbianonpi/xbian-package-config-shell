@@ -710,11 +710,11 @@ if you created img file, cmdline.txt was updated automatically." 24 79
 		touch /tmp/xbiancopy.running.$$
 		;;
         (backuphome)
-                btrfs sub snap -r "/tmp/btrfs-snap/home/@" "/tmp/btrfs-snap/home/@ro"
+                btrfs sub snap -r "${tmp_dir}/home/@" "${tmp_dir}/home/@ro"
                 find /xbmc-backup -type f -print0 | xargs -0 rm -f  || :; packcmd=$(which lz4) || packcmd=gzip
                 mkdir /xbmc-backup/temp; touch /xbmc-backup/temp/backup_home_$DATE.img.gz; chattr +C /xbmc-backup/temp/backup_home_$DATE.img.gz; echo 999>/tmp/backuphome.status
-                ( btrfs send -v "/tmp/btrfs-snap/home/@ro" | pv -n -s $(du -sxb /tmp/btrfs-snap/home/@ro| awk '{print $1}') | $packcmd -1 >> /xbmc-backup/temp/backup_home_$DATE.img.gz; echo $?>/tmp/backuphome.status)  2>&1 | dialog --gauge "Cloning home. Please wait..." 10 60
-                btrfs sub delete "/tmp/btrfs-snap/home/@ro" && btrfs fi sync /tmp/btrfs-snap
+                ( btrfs send -v "${tmp_dir}/home/@ro" | pv -n -s $(du -sxb ${tmp_dir}/home/@ro| awk '{print $1}') | $packcmd -1 >> /xbmc-backup/temp/backup_home_$DATE.img.gz; echo $?>/tmp/backuphome.status)  2>&1 | dialog --gauge "Cloning home. Please wait..." 10 60
+                btrfs sub delete "${tmp_dir}/home/@ro" && btrfs fi sync ${tmp_dir}
                 [ $(cat /tmp/backuphome.status) -eq 0 ] || { rm -f /xbmc-backup/temp/backup_home_$DATE.img.gz; exit 1; }
                 mv /xbmc-backup/temp/backup_home_$DATE.img.gz /xbmc-backup/$(hostname)_backup_home_$DATE.img.gz; rmdir /xbmc-backup/temp
                 mkdir -p /xbmc-backup/put_here_to_restore
@@ -724,8 +724,8 @@ if you created img file, cmdline.txt was updated automatically." 24 79
                 [ -e $1 ] || exit 500
                 mv $1 $1.working
                 gunzip --suffix .working -t $1.working || lz4 -t $1.working || exit 500
-                btrfs sub delete /tmp/btrfs-snap/home/@ro > /dev/null 2>&1
-                gunzip -cd < $1.working | btrfs receive -v /tmp/btrfs-snap/home
+                btrfs sub delete ${tmp_dir}/home/@ro > /dev/null 2>&1
+                gunzip -cd < $1.working | btrfs receive -v ${tmp_dir}/home
                 [ $? -ne 0 ] && exit 1
                 rm -fr $1.working
                 { pgrep xbmc.bin >/dev/null || pgrep kodi.bin >/dev/null; } && { touch /run/start.xbmc; stop -q xbmc; }
@@ -745,9 +745,9 @@ if you created img file, cmdline.txt was updated automatically." 24 79
 
                 for m in $(mount | awk '{print $3}' | grep "/home" | sort -r); do while mountpoint -q "$m"; do umount "$m" || sleep 1; done; done
 
-                btrfs sub delete /tmp/btrfs-snap/home/@
-                btrfs sub snap /tmp/btrfs-snap/home/@ro /tmp/btrfs-snap/home/@
-                btrfs sub delete /tmp/btrfs-snap/home/@ro
+                btrfs sub delete ${tmp_dir}/home/@
+                btrfs sub snap ${tmp_dir}/home/@ro ${tmp_dir}/home/@
+                btrfs sub delete ${tmp_dir}/home/@ro
                 start zram-swap
                 mount /home
                 [ -e /run/start.xbmc ] && { rm /run/start.xbmc; start -qn xbmc; }
