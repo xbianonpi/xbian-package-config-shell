@@ -14,4 +14,10 @@ while initctl list | grep "^xbian-xbmc-player" | grep -q "start/running"; do
   sleep 300 # 5 minutes
 done
 
-btrfs-auto-snapshot -l daily -k $KEEPDAYS -v -x $EXCLUDESUB //
+if [ -z "$EXCLUDESUB" ];
+then
+  TMPEXCLUDESUB=
+else
+  TMPEXCLUDESUB="-x $EXCLUDESUB"
+fi
+btrfs-auto-snapshot -l daily -k $KEEPDAYS -v $TMPEXCLUDESUB //
