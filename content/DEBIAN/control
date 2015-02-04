@@ -1,6 +1,6 @@
 Origin: XBian
 Package: xbian-package-config-shell
-Version: 2.1.15-2
+Version: 2.1.15-3
 Section: utils
 Essential: No
 Priority: optional
