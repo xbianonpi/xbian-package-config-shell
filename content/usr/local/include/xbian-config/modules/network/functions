@@ -51,7 +51,7 @@ setInterfaceDisableFn() {
         *)
             ;;
     esac
-    ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null; ip link set dev $1 down >&/dev/null
+    ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null; ip link set dev $1 down >&/dev/null; ip a flush dev $1
     return 1
 }
 
