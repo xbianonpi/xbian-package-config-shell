@@ -157,11 +157,11 @@ function showMainMenuDlg() {
 		MENU="";
 		I=1;
 		for ITEM in ${ITEMS[@]}; do
-			MENU+=$I%$(_ ${ITEM}.name)!\-!$(_ $ITEM.description)%;
+			MENU+="$I"$DEFAULTDELIMITER"$(_ ${ITEM}.name)"$DEFAULTCOLSEP"-"$DEFAULTCOLSEP"$(_ $ITEM.description)"$DEFAULTDELIMITER;
 			I=$(($I+1));
 		done;
 		
-		IFS="%";
+		IFS=$DEFAULTDELIMITER;
 		# Set the title to the appropriate menu level we're in
 		TITLE="["$CPATH"]"
 
