@@ -175,6 +175,7 @@ function showMenuDlg() {
 		NOLABEL=$7
 	fi
 
+        IFS=$DEFAULTDELIMITER;
 	RETURN=$( \
 		dialog \
 			--no-kill \
