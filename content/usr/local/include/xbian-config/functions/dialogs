@@ -21,7 +21,7 @@
 [ -z "$DEFAULTWIDTH" ] && DEFAULTWIDTH=55
 DEFAULTHEIGHT=9;
 DEFAULTCOLSEP="!"
-DEFAULTDELIMITER="%"
+DEFAULTDELIMITER="π"
 
 # Show a normal dialog (messagebox)
 #  $1 Text
@@ -175,24 +175,6 @@ function showMenuDlg() {
 		NOLABEL=$7
 	fi
 
-	# Some of our translations use specifier characters like this:
-	#
-	# The old timezone: %s
-	#
-	# The percentage sign used in the specifier is removed
-	# when we don't restore the IFS to its state of before the
-	# dialog. Therefor, the string we want to print is outputted
-	# like this:
-	#
-	# The old timezone: s
-	#
-	# The second string specifier character can't be used
-	# in printf functions and therefor the result is a wrongly
-	# formatted output.
-	#
-
-	CURIFS=$IFS;
-	IFS=$DEFAULTDELIMITER;
 	RETURN=$( \
 		dialog \
 			--no-kill \
@@ -205,7 +187,6 @@ function showMenuDlg() {
                         --no-collapse \
 			--menu "\n$1" $HEIGHT $WIDTH $ROWS \
 			$2 3>&1 1>&2 2>&3)
-	IFS=$CURIFS;
 }
 
 # Show radio list
@@ -242,7 +223,7 @@ function showRadioDlg() {
 	if [ $# -gt 6 ]; then
 		NOLABEL=$7
 	fi
-	CURIFS=$IFS;
+
 	IFS=$DEFAULTDELIMITER;
 	RETURN=$( \
 		dialog \
@@ -256,7 +237,6 @@ function showRadioDlg() {
 			--no-collapse \
 			--radiolist "\n$CENTEREDTXT\n  $HEADER" $HEIGHT $WIDTH $ROWS \
 			$2 3>&1 1>&2 2>&3);
-	IFS=$CURIFS;
 }
 
 # Show checklist
@@ -299,7 +279,6 @@ function showChecklistDlg() {
 		OPTLABEL="$8"
 	fi
 
-	CURIFS=$IFS;
 	IFS=$DEFAULTDELIMITER;
 	RETURN=$( \
 		dialog \
@@ -313,7 +292,6 @@ function showChecklistDlg() {
 			--no-collapse \
 			--checklist "\n$CENTEREDTXT\n  $HEADER" $HEIGHT $WIDTH $ROWS \
 			$2 3>&1 1>&2 2>&3);
-	IFS=$CURIFS;
 }
 
 # Show input dialog
