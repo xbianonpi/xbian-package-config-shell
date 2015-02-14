@@ -49,6 +49,7 @@ function localPackageDBOutdatedFn() {
 }
 
 function downloadPackageListFn() {
+	test -n "$(find /var/lib/apt/periodic/package-success-stamp -cmin -10 2>/dev/null)" && return 1
 	RETURN=1;
 	if [ -f "$BASEPATH/config/aptmirror" ]; then
 		IFS=$'\n';
