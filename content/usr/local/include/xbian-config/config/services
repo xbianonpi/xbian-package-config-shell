@@ -1,4 +1,4 @@
-xbmc:xbmc.bin
+xbmc:
 lirc:
 apache2:
 ssh:%%inetd
