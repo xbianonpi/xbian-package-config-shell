@@ -70,7 +70,7 @@ function getAllUpdatesLisFn() {
 
 function updatePackagesFn() {
 	LIST="";
-        if [ "$2" = '-' ] || [[ "$2" =~ '0' ]]; then
+        if [ "$2" = '-' -o "$2" = '0' ]; then
             lt=${!PACKAGES[*]}
             d=0
         else
