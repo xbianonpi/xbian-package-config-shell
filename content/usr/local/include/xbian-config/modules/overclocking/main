@@ -25,19 +25,31 @@
 ARGUMENTS=(select update values list);
 
 declare -A OCSETTINGS
-# Names of the overclock settings
-OCNAMES=(None Modest XBian Medium High Turbo);
+if grep -q BCM2709 /proc/cpuinfo; then
+	# Names of the overclock settings
+	OCNAMES=(None RPi2);
 
-# Values of the overclock settings
-OCSETTINGS[0]="700 250 400 0";
-OCSETTINGS[1]="800 250 400 0";
-OCSETTINGS[2]="840 320 400 0";
-OCSETTINGS[3]="900 333 450 0";
-OCSETTINGS[4]="950 450 500 2";
-OCSETTINGS[5]="1000 500 500 6";
+	# Values of the overclock settings
+	OCSETTINGS[0]="900 250 450 0";
+	OCSETTINGS[1]="1000 500 500 2";
 
-# Define the (possible) dangerous overclock settings
-OCDANGEROUS=(Turbo)
+	# Define the (possible) dangerous overclock settings
+	OCDANGEROUS=()
+elif grep -q BCM2708 /proc/cpuinfo; then
+	# Names of the overclock settings
+	OCNAMES=(None Modest XBian Medium High Turbo);
+
+	# Values of the overclock settings
+	OCSETTINGS[0]="700 250 400 0";
+	OCSETTINGS[1]="800 250 400 0";
+	OCSETTINGS[2]="840 320 400 0";
+	OCSETTINGS[3]="900 333 450 0";
+	OCSETTINGS[4]="950 450 500 2";
+	OCSETTINGS[5]="1000 500 500 6";
+
+	# Define the (possible) dangerous overclock settings
+	OCDANGEROUS=(Turbo)
+fi
 
 # Define the safe overclock settings
 OCSAFE=(None Modest XBian)
@@ -61,6 +73,9 @@ source $BASEPATH/functions/config
 
 # Executes the GUI version of this module
 function showGUIFn() {
+	if [ $(xbian-arch) != "RPI" ]; then
+		return 0;
+	fi
 	if [ $OCWARNING -eq 0 ]; then
 		showOCWarningDlg;
 		OCWARNING=1;
