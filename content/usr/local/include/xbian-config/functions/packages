@@ -57,23 +57,27 @@ function downloadPackageListFn() {
 		for MIRROR in ${MIRRORS[@]}; do
 			MIRROR=${MIRROR%%/}
 			RETURN=0; rm /tmp/sources 2>/dev/null
-			subscript=$(cat /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null| grep '^deb.*xbian.*\|^mirror.*xbian.*' | awk '{print $3}' | sort | uniq)
-			for s in $subscript; do echo $MIRROR/dists/$s/main/binary-armhf/Packages >> /tmp/sources; done
-			[ -e $BASEPATH/config/pkglist.new ] && rm $BASEPATH/config/pkglist.new
+			IFS=$'\ ';
+			rm -f $BASEPATH/config/pkglist.new
+			err=0
+			cat /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null| grep '^deb.*xbian.*\|^mirror.*xbian.*' | awk '{print "dists/"$3"/{"$4","$5"}/binary-armhf/Packages"}' | \
 			while read m; do
-				m=$(echo $m | sed 's%mirror://%http://%')
-				m=${m%%/mirror.txt}; m=${m%%/}
-				if [ $(wget --spider $m >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
-				    wget -O - $m >> $BASEPATH/config/pkglist.new 2>/dev/null
-				    RETURN=$(( $RETURN + 1 ))
+			    m=$(eval echo $m)
+			    for n in $m; do
+				n=$(echo $MIRROR/$n | sed 's%mirror://%http://%')
+				n=${n%%/mirror.txt}; n=${n%%/}
+				if [ $(wget --spider $n >/dev/null 1>/dev/null 2>/dev/null; echo $?) -eq 0 ]; then
+				    wget -O - $n >> $BASEPATH/config/pkglist.new 2>/dev/null
+				    err=$((err + $?))
 				fi
-				[ $RETURN -eq $(grep -c . /tmp/sources) ] && { mv $BASEPATH/config/pkglist.new $BASEPATH/config/pkglist; break; }
-			done < /tmp/sources
+			    done
+			done
+			[ $err -ne 0 ] || { mv $BASEPATH/config/pkglist.new $BASEPATH/config/pkglist; break; }
 			touch /var/lib/apt/periodic/package-success-stamp
 		done
 		IFS=$ORIGINALIFS;
 	fi
-	[ $RETURN -ne 0 ] && return $RETURN || return 0
+	return $err
 }
 
 #Retrieves the package version
