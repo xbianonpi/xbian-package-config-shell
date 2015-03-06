@@ -217,7 +217,7 @@ function showCMDFn() {
 		list)
                         int=$(grep "APT::Periodic::Update-Package-Lists" /etc/apt/apt.conf.d/10xbian-periodic 2>/dev/null| grep -o "[0-9]*")
                         [ -z "$int" -o "$int" -eq 0 ] && int=1440 || int=$((int*24*60))
-                        [ -z "$(eval find /var/lib/apt/periodic/package-success-stamp -cmin -$int 2>/dev/null)" ] && getInternetFn  && { echo -3; exit 0; }
+                        [ -z "$(eval find /var/lib/apt/periodic/update-success-stamp -cmin -$int 2>/dev/null)" ] && getInternetFn  && { echo -3; exit 0; }
  
 			if [ $# -eq 1 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
