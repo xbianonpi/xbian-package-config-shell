@@ -29,6 +29,15 @@
 #  - 3 Over voltage
 function getCurrentOCSettingsFn() {
 	OCOLDSETTINGS=();
+    if test "$(xbian-arch)" = "iMX6"; then
+	RETURN=$(grep overclock /boot/boot.scr.txt)
+	if [ "0$(echo ${RETURN##*overclock=} | awk '{print $1}')" -eq 1 ]; then
+		OC=1200
+	else
+		OC=996
+	fi
+	OCOLDSETTINGS[0]=${OC}
+    else
 	selectConfigVarFn "arm_freq"
 	OCOLDSETTINGS[0]=${RETURN#*=}
 	selectConfigVarFn "core_freq"
@@ -37,6 +46,7 @@ function getCurrentOCSettingsFn() {
 	OCOLDSETTINGS[2]=${RETURN#*=}
 	selectConfigVarFn "over_voltage"
 	OCOLDSETTINGS[3]=${RETURN#*=}
+    fi
 	CURRENTOC=-1;
 	NREMPTY=0;
 	for KEY in ${!OCSETTINGS[@]}; do
@@ -45,6 +55,8 @@ function getCurrentOCSettingsFn() {
 		I=0;
 		for KEY1 in ${!SETTINGS[@]}; do
 			if [ ! -z "${OCOLDSETTINGS[$KEY1]}" -a "${SETTINGS[$KEY1]}" = "${OCOLDSETTINGS[$KEY1]}" ]; then
+				I=$(($I+1));
+			elif [ -z "${OCOLDSETTINGS[$KEY1]}" -a "${SETTINGS[$KEY1]}" = '.' ]; then
 				I=$(($I+1));
 			fi
 			if [ $I -eq ${#SETTINGS[@]} ]; then
@@ -85,11 +97,12 @@ function createOCDLGMenuFn() {
 			ROW+="\Zn";
 			SAFE=1;
 		fi
-		ROW+="${OCNAMES[$KEY]}";
+		ROW+=${OCNAMES[$KEY]};
 		SETTINGS=(${OCSETTINGS[$KEY]});
 		I=0;
 		for KEY1 in ${!SETTINGS[@]}; do
 			I=$(($I+1));
+			[ "${SETTINGS[$KEY1]}" != '.' ] || continue
 			ROW+=",";
 			if [ $SAFE -eq -1 ]; then
 				ROW+="\Z1";
@@ -100,7 +113,6 @@ function createOCDLGMenuFn() {
 			fi
 			ROW+=${SETTINGS[$KEY1]};
 		done
-
 		if [ $1 -eq $KEY ]; then
 			ROW+=",on";
 		else
@@ -112,12 +124,16 @@ function createOCDLGMenuFn() {
 	if [ $1 -eq -1 ]; then
 		STATUS="on";
 	fi
-	if [ $CURRENTOC -eq -1 ]; then
-		OCMENU+=($(($KEY+2)),"\Z1"$(_ overclocking.label.custom),"\Z1"${OCOLDSETTINGS[0]},"\Z1"${OCOLDSETTINGS[1]},"\Z1"${OCOLDSETTINGS[2]},"\Z1"${OCOLDSETTINGS[3]},$STATUS)
-	else
-		OCMENU+=($(($KEY+2)),"\Z1"$(_ overclocking.label.custom),"\Z1...","\Z1...","\Z1...","\Z1...",$STATUS)
-	fi
 	IFS=$ORIGINALIFS;
+
+	test "$(xbian-arch)" = "iMX6" && return 0
+	if [ $CURRENTOC -eq -1 ]; then
+		test "$(xbian-arch)" = "iMX6" && OCMENU+=($(($KEY+2)),"\Z1"$(_ overclocking.label.custom),$STATUS) || \
+			OCMENU+=($(($KEY+2)),"\Z1"$(_ overclocking.label.custom),"\Z1"${OCOLDSETTINGS[0]},"\Z1"${OCOLDSETTINGS[1]},"\Z1"${OCOLDSETTINGS[2]},"\Z1"${OCOLDSETTINGS[3]},$STATUS)
+	else
+		test "$(xbian-arch)" = "iMX6" && OCMENU+=($(($KEY+2)),"\Z1"$(_ overclocking.label.custom),$STATUS) || \
+			OCMENU+=($(($KEY+2)),"\Z1"$(_ overclocking.label.custom),"\Z1...","\Z1...","\Z1...","\Z1...",$STATUS)
+	fi
 }
 
 # Update the overclock settings to predefined values
@@ -131,16 +147,25 @@ function updateOCSettingsFn() {
 	NEWOCVALUES=(${OCSETTINGS[$NEWOCSETTING]});
 	NUMERIC=1
 	for VALUES in ${NEWOCVALUES[@]}; do
+		[ "${VALUES}" != '.' ] || continue
 		if ! [[ "$VALUES" =~ ^[0-9]+$ ]]; then
 			NUMERIC=0
 		fi
 	done
-	if [ $NUMERIC -eq 1 ]; then	
-		updateConfigVarFn "arm_freq" ${NEWOCVALUES[0]};
-		updateConfigVarFn "core_freq" ${NEWOCVALUES[1]};
-		updateConfigVarFn "sdram_freq" ${NEWOCVALUES[2]};
-		updateConfigVarFn "over_voltage" ${NEWOCVALUES[3]};
-		IFS=$ORIGINALIFS;
+	if [ $NUMERIC -eq 1 ]; then
+		if test "$(xbian-arch)" = "iMX6"; then
+			if test ${NEWOCVALUES[0]} -eq 1200; then
+				sed -i 's/overclock=./overclock=1/' /boot/boot.scr.txt
+			else
+				sed -i 's/overclock=./overclock=0/' /boot/boot.scr.txt
+			fi
+		else
+			updateConfigVarFn "arm_freq" ${NEWOCVALUES[0]};
+			updateConfigVarFn "core_freq" ${NEWOCVALUES[1]};
+			updateConfigVarFn "sdram_freq" ${NEWOCVALUES[2]};
+			updateConfigVarFn "over_voltage" ${NEWOCVALUES[3]};
+			IFS=$ORIGINALIFS;
+		fi
 		getCurrentOCSettingsFn
 
 		if [ $CURRENTOC -eq $NEWOCSETTING ]; then

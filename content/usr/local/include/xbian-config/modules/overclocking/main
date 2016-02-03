@@ -25,7 +25,18 @@
 ARGUMENTS=(select update values list);
 
 declare -A OCSETTINGS
-if grep -q BCM2709 /proc/cpuinfo; then
+if test "$(xbian-arch)" = "iMX6"; then
+	grep -q 'overclock=.' /boot/boot.scr.txt || exit 0
+	# Names of the overclock settings
+	OCNAMES=(Default OC);
+
+	# Values of the overclock settings
+	OCSETTINGS[0]="996 . . ."
+	OCSETTINGS[1]="1200 . . ."
+
+	# Define the (possible) dangerous overclock settings
+	OCDANGEROUS=(default)
+elif grep -q BCM2709 /proc/cpuinfo; then
 	# Names of the overclock settings
 	OCNAMES=(None RPi2);
 
@@ -52,7 +63,7 @@ elif grep -q BCM2708 /proc/cpuinfo; then
 fi
 
 # Define the safe overclock settings
-OCSAFE=(None Modest XBian)
+OCSAFE=(None Modest XBian Default)
 
 # Did we already show the warning
 OCWARNING=0;
@@ -73,15 +84,12 @@ source $BASEPATH/functions/config
 
 # Executes the GUI version of this module
 function showGUIFn() {
-	if [ $(xbian-arch) != "RPI" ]; then
-		return 0;
-	fi
 	if [ $OCWARNING -eq 0 ]; then
 		showOCWarningDlg;
 		OCWARNING=1;
 	fi
 	showLoadingDlg;
-	getCurrentOCSettingsFn;	
+	getCurrentOCSettingsFn;
 	createOCDLGMenuFn $CURRENTOC;
 	showOCSettingsDlg $OCMENU;
 	if [ $? -eq 0 ]; then
@@ -167,7 +175,7 @@ function showCMDFn() {
 		;;
 		"update")
 			shift;
-			if [ ${1,,} == "custom" ]; then
+			if [ "${1,,}" == "custom" ]; then
 				shift
 				if [ $# -eq 4 ]; then
 					NEWSETTINGS=($@);
@@ -235,6 +243,7 @@ function showCMDFn() {
 			for NAME in ${OCNAMES[@]}; do
 				echo $NAME;
 			done;
+			test $(xbian-arch) != iMX6 || return 0
 			echo "Custom"
 		;;
 	esac 
