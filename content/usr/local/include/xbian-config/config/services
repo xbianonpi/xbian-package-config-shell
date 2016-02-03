@@ -2,6 +2,7 @@ xbmc:
 lirc:
 apache2:
 ssh:%%inetd
+ssh6:%%inetd
 transmission:
 headphones:
 sickbeard:

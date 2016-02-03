@@ -116,7 +116,7 @@ function disableAutoStartFn() {
         [ -e $BASEPATH/config/$1.inetd ] && { 	while read service details; do
 						    [ -z "$service" ] && continue
 						    service=$(echo $service | awk '{print $1}')
-						    update-inetd --disable $service || return 1
+						    update-inetd --multi --disable $service || return 1
 						done < $BASEPATH/config/$1.inetd; return 0; }
 
 	if [ -f "/etc/init/$1.conf" ]; then
@@ -131,9 +131,10 @@ function enableAutoStartFn() {
         [ -e $BASEPATH/config/$1.inetd ] && { 	while read service; do
 						    details="$service"
 						    [ -z "$service" ] && continue
-						    service=$(echo $service | awk '{print $1}')
-						    grep $service /etc/inetd.conf || echo "$details" >> /etc/inetd.conf
-						    update-inetd --enable $service || return 1
+						    service=$(echo "$service" | sed -r 's/[\\ ]+/[\\t\\ ]\*/g' | sed 's/-/\\-/g' )
+						    grep -q '$service' /etc/inetd.conf || echo "$details" >> /etc/inetd.conf
+						    update-inetd --multi --enable $(echo $details |awk '{print $1}') || return 1
+						    restart openbsd-inetd >/dev/null 2>&1 ||:
 						done < $BASEPATH/config/$1.inetd; return 0; }
 
 
