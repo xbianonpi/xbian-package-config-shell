@@ -286,7 +286,11 @@ if [ $SUMMARY == Y -a $RAW == N ]; then
   BOOT_DIR=$(mount|grep mmcblk0p1|awk '{ print $3 }')
   CONFIG_TXT=${BOOT_DIR}/config.txt
 
-  MEM_MAX=$(cat /proc/cpuinfo |grep Revision| sed "s/: 1/: /"| awk -F": " '{ REV=int(sprintf("%d", "0x" $2)); print (REV>10)?512:256 }')
+  if [ $(awk -F": " '$1 ~ /Hardware/ {print $2}' /proc/cpuinfo) = 'BCM2709' ]; then
+    MEM_MAX=1024
+  else
+    MEM_MAX=$(cat /proc/cpuinfo |grep Revision| sed "s/: 1/: /"| awk -F": " '{ REV=int(sprintf("%d", "0x" $2)); print (REV>10)?512:256 }')
+  fi
   MEM_GPU_XXX=$(grep "^[   ]*gpu_mem_${MEM_MAX}[ =]" $CONFIG_TXT|awk -F"=" '{print $2}')
   MEM_GPU_GLB=$(grep "^[   ]*gpu_mem[ =]" $CONFIG_TXT|awk -F"=" '{print $2}')
   [ -z "$MEM_GPU_GLB" ] && MEM_GPU_GLB=64
