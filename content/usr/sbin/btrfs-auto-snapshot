@@ -674,6 +674,7 @@ case $opt_command in
 		    export v="$v"
 		    for s in $snapextra; do
 		        [ -n "$s" ] || continue
+		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue
 		        echo "DEBUG: v = $v, s = $s"
 		        [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
 		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue 
