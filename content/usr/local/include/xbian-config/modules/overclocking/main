@@ -26,7 +26,7 @@ ARGUMENTS=(select update values list);
 
 declare -A OCSETTINGS
 if test "$(xbian-arch)" = "iMX6"; then
-	grep -q 'overclock=.' /boot/boot.scr.txt || exit 0
+	grep -q 'overclock=.' /boot/boot.scr.txt || sed -i 's/setenv customcmdline /setenv customcmdline overclock=0 /' /boot/boot.scr.txt
 	# Names of the overclock settings
 	OCNAMES=(Default OC);
 

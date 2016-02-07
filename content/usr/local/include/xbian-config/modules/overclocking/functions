@@ -159,6 +159,7 @@ function updateOCSettingsFn() {
 			else
 				sed -i 's/overclock=./overclock=0/' /boot/boot.scr.txt
 			fi
+			[ -x /boot/mks ] && /boot/mks > /dev/null || :
 		else
 			updateConfigVarFn "arm_freq" ${NEWOCVALUES[0]};
 			updateConfigVarFn "core_freq" ${NEWOCVALUES[1]};
