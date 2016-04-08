@@ -3,7 +3,7 @@
 . /etc/default/xbian-snap
 
 [ "$ENABLEDSCHEDULE" = yes ] || exit 0
-[ "$KEEPWEEKS" -ne 0 ] || exit 0
+[ "$KEEPMONTHS" -ne 0 ] || exit 0
 
 while initctl list | grep "^xbian-xbmc-player" | grep -q "start/running"; do
   if status xbmc-screensaver | grep -q "start/running"; then
@@ -18,8 +18,8 @@ then
 else
   TMPEXCLUDESUB="-x $EXCLUDESUB"
 fi
-btrfs-auto-snapshot -l weekly -k $KEEPWEEKS -v $TMPEXCLUDESUB //
+btrfs-auto-snapshot -l monthly -k $KEEPMONTHS -v $TMPEXCLUDESUB //
 
-[ "$IMGPLAN" = weekly ] || exit 0 
+[ "$IMGPLAN" = monthly ] || exit 0 
 [ "$IMGTYPE" = file ] && opt_img='--img'   
 nice -n +1 /usr/sbin/btrfs-auto-snapshot xbiancopy $opt_img /dev/root $IMGDEST  > /dev/null 2>&1   

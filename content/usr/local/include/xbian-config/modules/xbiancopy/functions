@@ -43,20 +43,24 @@ backupImgTypeFn() {
     esac
 }
 backupImgDestFn() {
-    [ -z "$1" ] && { grep IMGDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
+    [ -z "$1" ] && { grep IMGDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \"; exit 0; }
+    [ "$1" = "?" ] && { . /etc/default/xbian-snap; echo $IMGDEST; exit 0; }
     tt=$(backupImgTypeFn)
     case $tt in
         block)
             [ ! -b "$1" ] && { echo -1; exit 0; }
             ;;
         file)
-            ! touch "$1" 2>/dev/null && { echo -1; exit 0; }
-            [ "$(df -P "$1" | tail -1 | awk '{print $1}')" = "$(readlink -e /dev/root)" ] && { echo -2; exit 0; }
+            echo f=\"$1\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
+            [ ! -e "$f" ] && fdel=1
+            ! touch "$f" 2>/dev/null && { echo -1; exit 0; }
+            [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; exit 0; }
+            [ -n "$fdel" ] && rm "$f"
             ;;
         *)
             { echo -1; exit 0; }
     esac
-    eval sed -i 's%IMGDEST=.*%IMGDEST=$1%' /etc/default/xbian-snap
+    eval sed -i 's\@IMGDEST=.*@IMGDEST=\"$1\"@' /etc/default/xbian-snap
     echo 1
 }
 
@@ -90,6 +94,21 @@ weeklySnapFn() {
         *)
             eval sed -i 's/KEEPWEEKS=.*/KEEPWEEKS=$1/' /etc/default/xbian-snap
             grep -q KEEPWEEKS=$1 /etc/default/xbian-snap && echo 1 || echo 0
+            ;;
+    esac
+}
+
+monthlySnapFn() {
+    sch=0
+    case $1 in
+        '')
+            grep -q ENABLEDSCHEDULE=yes /etc/default/xbian-snap && sch=1
+            nr=$(grep KEEPMONTHS= /etc/default/xbian-snap| awk -F'=' '{print $2}')
+            [ $sch -eq 1 -a $nr -gt 0 ] && echo "1 $nr" || echo "0"
+            ;;
+        *)
+            eval sed -i 's/KEEPMONTHS=.*/KEEPMONTHS=$1/' /etc/default/xbian-snap
+            grep -q KEEPMONTHS=$1 /etc/default/xbian-snap && echo 1 || echo 0
             ;;
     esac
 }

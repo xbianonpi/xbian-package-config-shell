@@ -289,6 +289,8 @@ else
 			# Check if it's a valid argument
 			case "${ARGUMENTS[@]}" in 
 				*"$1"*)
+					# Spaces allowed for xbiancopy arguments
+					[ "$MODULE" = "xbiancopy" ] && IFS=$'\n'
 					# Quotation marks to preserve newlines
                                         showCMDFn "$@"
 				;;
