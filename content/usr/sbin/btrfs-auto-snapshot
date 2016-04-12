@@ -534,6 +534,7 @@ fi
 case $opt_command in
         (createvol)
                 btrfs sub create ${opt_mountpoint}/$1
+                btrfs sub create ${opt_mountpoint}/$1/@
                 ;;
         (list)
                 for t in $TARGETS; do
