@@ -2,6 +2,7 @@
 ENABLEDSCHEDULE=yes
 KEEPDAYS=3
 KEEPWEEKS=2
+KEEPMONTHS=0
 
 # enable creating of snapshot before APT operations. if wrong packages installed or something stopped working, 
 # restoration will take few seconds to state before APT run

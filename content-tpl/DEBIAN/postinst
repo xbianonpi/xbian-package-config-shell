@@ -56,6 +56,10 @@ if [ $1 = "configure" ]; then
             us=$(grep KEEPWEEKS= /etc/default/xbian-snap )
             eval $(echo "sed -i 's%KEEPWEEKS=2%$us%' /var/tmp/xbian-snap")
         fi
+        if grep -q "KEEPMONTHS=" /etc/default/xbian-snap; then
+            us=$(grep KEEPMONTHS= /etc/default/xbian-snap )
+            eval $(echo "sed -i 's%KEEPMONTHS=0%$us%' /var/tmp/xbian-snap")
+        fi
         if grep -q "ENABLEDAPT=" /etc/default/xbian-snap; then
             us=$(grep ENABLEDAPT= /etc/default/xbian-snap)
             eval $(echo "sed -i 's%ENABLEDAPT=yes%$us%' /var/tmp/xbian-snap")
@@ -73,8 +77,10 @@ if [ $1 = "configure" ]; then
             eval $(echo "sed -i 's%IMGTYPE=notset%$us%' /var/tmp/xbian-snap")
         fi
         if grep -q "IMGDEST=" /etc/default/xbian-snap; then
-            us=$(grep IMGDEST= /etc/default/xbian-snap)
-            eval $(echo "sed -i 's%IMGDEST=notset%$us%' /var/tmp/xbian-snap")
+            IFS=$'\n'
+            us=$(grep IMGDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \")
+            eval sed -i 's\@IMGDEST=.*@IMGDEST=\"$us\"@' /var/tmp/xbian-snap
+            unset IFS
         fi
 
         mv /var/tmp/xbian-snap /etc/default/xbian-snap

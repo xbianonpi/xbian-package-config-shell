@@ -19,7 +19,7 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 # The arguments this module accepts
-ARGUMENTS=(start status  imgplan imgdest imgtype getpart dodaily doweekly);
+ARGUMENTS=(start status  imgplan imgdest imgtype getpart dodaily doweekly domonthly);
 
 #|------------------------------------|
 #|          Include files             |
@@ -139,6 +139,7 @@ function showCMDFn() {
             [ -n "$5" ] && size="--size"
             echo "$3" | grep -q ^'file:' && opt_img='--img'
             dest="$3" && dest=${dest##'file:'}
+            echo dest=\"$dest\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
             nice -n +1 /usr/sbin/btrfs-auto-snapshot xbiancopy $size $5 $opt_img $2 $dest  > /dev/null 2>&1 & pid=$!
             echo $pid > /tmp/xbiancopy.running
             echo $pid
@@ -171,6 +172,9 @@ function showCMDFn() {
             ;;
         doweekly)
             echo $(weeklySnapFn $2)
+            ;;
+        domonthly)
+            echo $(monthlySnapFn $2)
             ;;
     esac
 

@@ -1,0 +1,1310 @@
+# msgfmt -o /usr/share/locale/en/LC_MESSAGES/xbian.mo xbian.po
+# 
+# Translators:
+# Translators:
+# Translators:
+# Gábor Szurgent <szurgent@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: XBian Translation\n"
+"Report-Msgid-Bugs-To: development@xbian.org\n"
+"POT-Creation-Date: 09-03-2013 12:00+0100\n"
+"PO-Revision-Date: 2016-04-06 09:19+0000\n"
+"Last-Translator: Gábor Szurgent <szurgent@gmail.com>\n"
+"Language-Team: Hungarian (Hungary) (http://www.transifex.com/teamxbian/xbian-translation/language/hu_HU/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hu_HU\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "distribution"
+msgstr "XBian"
+
+# xbian-config main (menu)
+# 
+msgid "xbian-config.main.title"
+msgstr "Config"
+
+msgid "xbian-config.main.reboot_question"
+msgstr "Újraindítás szükséges. Akarod most újraindítani?"
+
+msgid "xbian-config.settings.name"
+msgstr "Beállítások"
+
+msgid "xbian-config.settings.description"
+msgstr "Rendszer beállítások"
+
+msgid "xbian-config.system.name"
+msgstr "Rendszer"
+
+msgid "xbian-config.system.description"
+msgstr "pl.: SD átméretezés, órajel emelés, gépnév"
+
+msgid "xbian-config.accounts.name"
+msgstr "Felhasználói fiókok"
+
+msgid "xbian-config.accounts.description"
+msgstr "pl.: jelszavak, SSH root bejelentkezés"
+
+msgid "xbian-config.licenses.name"
+msgstr "Licencek"
+
+msgid "xbian-config.licenses.description"
+msgstr "Hardware licenc hozzáadás/eltávolítás"
+
+msgid "xbian-config.connectivity.name"
+msgstr "Kapcsolat a kijelzővel"
+
+msgid "xbian-config.connectivity.description"
+msgstr "pl.: Video kimenet"
+
+# xbian-config dialog
+# 
+msgid "xbian-config.dialog.error"
+msgstr "Hiba"
+
+msgid "xbian-config.dialog.apply"
+msgstr "Alkalmaz"
+
+msgid "xbian-config.dialog.ok"
+msgstr "OK"
+
+msgid "xbian-config.dialog.yes"
+msgstr "Igen"
+
+msgid "xbian-config.dialog.no"
+msgstr "Nem"
+
+msgid "xbian-config.dialog.on"
+msgstr "Be"
+
+msgid "xbian-config.dialog.off"
+msgstr "Ki"
+
+msgid "xbian-config.dialog.insert"
+msgstr "Hozáad"
+
+msgid "xbian-config.dialog.remove"
+msgstr "Eltávolít"
+
+msgid "xbian-config.dialog.update"
+msgstr "Frissítés"
+
+msgid "xbian-config.dialog.cancel"
+msgstr "Mégsem"
+
+msgid "xbian-config.dialog.select"
+msgstr "Kiválasztás"
+
+msgid "xbian-config.dialog.return"
+msgstr "Vissza"
+
+msgid "xbian-config.dialog.unexpected_error"
+msgstr "Váratlan hiba történt"
+
+msgid "xbian-config.dialog.close"
+msgstr "Bezár"
+
+msgid "xbian-config.dialog.change"
+msgstr "Változtat"
+
+msgid "xbian-config.dialog.exit"
+msgstr "Kilép"
+
+msgid "xbian-config.dialog.enable"
+msgstr "Engedélyez"
+
+msgid "xbian-config.dialog.disable"
+msgstr "Tilt"
+
+msgid "xbian-config.dialog.password"
+msgstr "Jelszó:"
+
+msgid "xbian-config.dialog.confirm"
+msgstr "Megerősít:"
+
+msgid "xbian-config.dialog.retry"
+msgstr "Újra"
+
+msgid "xbian-config.dialog.space_option_select"
+msgstr "A [space] gombbal választhatsz"
+
+msgid "xbian-config.dialog.space_check_select"
+msgstr "A [space] gombbal engedélyezheted/tilthatod"
+
+msgid "xbian-config.dialog.loading_module"
+msgstr "Modul betöltése, kérlek várj..."
+
+msgid "xbian-config.dialog.required_packages"
+msgstr "A programnak a következő csomagokra van szüksége:"
+
+msgid "xbian-config.dialog.insufficient_arguments"
+msgstr "Kevesebb paraméter mint szükséges"
+
+msgid "xbian-config.dialog.incorrect_arguments"
+msgstr "Érvénytelen argumentum típus"
+
+# xbian-config module bootflags
+# 
+msgid "xbian-config.bootflags.name"
+msgstr "Indulási beállítások"
+
+msgid "xbian-config.bootflags.description"
+msgstr "Indulási beállítások megváltoztatása"
+
+msgid "xbian-config.bootflags.label.bootflags"
+msgstr "Indulási beállítások"
+
+msgid "xbian-config.bootflags.update_success"
+msgstr "Indulási beállítások sikeresen frissítve"
+
+msgid "xbian-config.bootflags.splash"
+msgstr "XBian animáció megjelenítése induláskor"
+
+msgid "xbian-config.bootflags.logo"
+msgstr "Kernel indulási logó tiltása"
+
+msgid "xbian-config.bootflags.quiet"
+msgstr "Kernel kimenet tiltása"
+
+msgid "xbian-config.bootflags.loglevel"
+msgstr "Kernel hibanaplózási szint"
+
+# xbian-config module information
+# 
+msgid "xbian-config.information.name"
+msgstr "Információ"
+
+msgid "xbian-config.information.description"
+msgstr "Információ erről a kiadásról"
+
+msgid "xbian-config.information.text"
+msgstr "Az XBian egy ingyenes nyílt forráskódu média kezelő Raspberryre ami letölthető a http://www.xbian.org oldalról. Szlogenünk: \"XBMC on Raspberry Pi, the Bleeding edge\", célkitűzésünk egy gyors média center Raspberry Pire.Hisszük, hogy mindenki segíthet az XBian fejlesztésében. Segítségért látogasd meg honlapunkat: www.xbian.org. Ha kérdésed, javaslatod van vagy hozzájárulnál a munkánkhoz, fordulj hozzánk bizalommal."
+
+# xbian-config module hostname
+# 
+msgid "xbian-config.hostname.name"
+msgstr "Gépnév"
+
+msgid "xbian-config.hostname.label.hostname"
+msgstr "Gépnév:"
+
+msgid "xbian-config.hostname.description"
+msgstr "Alapértelmezett gépnév megváltoztatása"
+
+msgid "xbian-config.hostname.changed"
+msgstr "Gépnév sikeresen megváltoztatva"
+
+# xbian-config module kernel
+# 
+msgid "xbian-config.kernel.name"
+msgstr "Kernel"
+
+msgid "xbian-config.kernel.description"
+msgstr "Átkapcsolás a telepített kernelek között"
+
+msgid "xbian-config.kernel.label.version"
+msgstr "Verzió"
+
+msgid "xbian-config.kernel.switch_success"
+msgstr "Kernel verzió sikeresen lecserélve"
+
+msgid "xbian-config.kernel.same_version"
+msgstr "Pillanatnyilag is ezt a kernelt futtatod"
+
+msgid "xbian-config.kernel.single_installed"
+msgstr "Csak egyetlen kernel verzió van installálva"
+
+# xbian-config general licenses
+# 
+msgid "xbian-config.license.inserted"
+msgstr "%s sikeresen hozzáadva"
+
+msgid "xbian-config.license.deleted"
+msgstr "%s sikeresen eltávolítva"
+
+msgid "xbian-config.license.updated"
+msgstr "%s sikeresen frissítve"
+
+msgid "xbian-config.license.invalid"
+msgstr "A %s 9 vagy 10 karakteres, a fornátuma 0x00000000. Maximum 8 licence adható meg vesszővel elválasztva."
+
+# xbian-config module licensempg2
+# 
+msgid "xbian-config.licensempg2.name"
+msgstr "MPG2 licenc"
+
+msgid "xbian-config.licensempg2.description"
+msgstr "MPG2 licenc kezelése"
+
+# xbian-config module licensevc1
+# 
+msgid "xbian-config.licensevc1.name"
+msgstr "VC1 licenc"
+
+msgid "xbian-config.licensevc1.description"
+msgstr "VC1 licenc kezelése"
+
+# xbian-config module locales
+# 
+msgid "xbian-config.locales.name"
+msgstr "Területi beállítások"
+
+msgid "xbian-config.locales.description"
+msgstr "Rendszer nyelv beállítása"
+
+msgid "xbian-config.locales.label.letter"
+msgstr "Betü"
+
+msgid "xbian-config.locales.label.name"
+msgstr "Név"
+
+msgid "xbian-config.locales.label.xbmc"
+msgstr "XBMC"
+
+msgid "xbian-config.locales.label.xbian"
+msgstr "XBian"
+
+msgid "xbian-config.locales.updated"
+msgstr "Rendszer, XBian és XBMC nyelv sikeresen frissítve"
+
+# xbian-config module network
+# 
+msgid "xbian-config.network.name"
+msgstr "Hálózat"
+
+msgid "xbian-config.network.description"
+msgstr "Hálózati interfészek beállítása"
+
+msgid "xbian-config.network.label.interfaces"
+msgstr "Interfészek"
+
+msgid "xbian-config.network.interfaces.loading"
+msgstr "Interfészek betöltése..."
+
+msgid "xbian-config.network.interfaces.unavailable"
+msgstr "Hálózati interfész nincs csatlakoztata vagy nem érhető el."
+
+msgid "xbian-config.network.interfaces.select"
+msgstr "Válaszd ki a beállítandó interfészt"
+
+msgid "xbian-config.network.label.dhcp"
+msgstr "DHCP"
+
+msgid "xbian-config.network.label.name"
+msgstr "Hálózat"
+
+msgid "xbian-config.network.dhcp_selected"
+msgstr "Az interfész DHCP használatával be lett állítva"
+
+msgid "xbian-config.network.label.static"
+msgstr "Statikus IP"
+
+msgid "xbian-config.network.label.status"
+msgstr "Állapot"
+
+msgid "xbian-config.network.label.ipaddress"
+msgstr "IP cím"
+
+msgid "xbian-config.network.label.netmask"
+msgstr "Hálózati maszk"
+
+msgid "xbian-config.network.label.gateway"
+msgstr "Átjáró"
+
+msgid "xbian-config.network.label.nameserver"
+msgstr "Névszerver"
+
+msgid "xbian-config.network.label.ssid"
+msgstr "SSID"
+
+msgid "xbian-config.network.label.key"
+msgstr "Kulcs"
+
+msgid "xbian-config.network.label.type"
+msgstr "Mód"
+
+msgid "xbian-config.network.label.protection"
+msgstr "Védelem"
+
+msgid "xbian-config.network.label.scan"
+msgstr "Keresés"
+
+msgid "xbian-config.network.label.custom"
+msgstr "Egyedi"
+
+msgid "xbian-config.network.label.wlan"
+msgstr "WIFI"
+
+msgid "xbian-config.network.label.not_connected"
+msgstr "Nincs csatlakoztatva"
+
+msgid "xbian-config.network.label.reloading_values"
+msgstr "%s értékeinek újratöltése"
+
+msgid "xbian-config.network.scanning"
+msgstr "Elérhető hálózatok kereése..."
+
+msgid "xbian-config.network.connection.restart"
+msgstr "%s újraindítása"
+
+msgid "xbian-config.network.connection.updating"
+msgstr "Csatlakozási kísérlet a következőhöz: %s"
+
+msgid "xbian-config.network.connection.failed"
+msgstr "%s: sikertelen csatlakozás"
+
+msgid "xbian-config.network.connection.success"
+msgstr "%s csatlakozva"
+
+msgid "xbian-config.network.credentials.enter"
+msgstr "Add meg a kiválasztot interfész hitelesítő adatait."
+
+msgid "xbian-config.network.credentials.wlan.invalid"
+msgstr "Érvénytelen WLAN hitelesítő adatok! Az SSID és a kulcs megadása is kötelező."
+
+msgid "xbian-config.network.credentials.wlan.updated"
+msgstr "WLAN hitelesítés sikeresen frissítve"
+
+msgid "xbian-config.network.credentials.lan.invalid"
+msgstr "A megadott statikus IP beállítások érvenytelenek, próbáld meg újra"
+
+msgid "xbian-config.network.credentials.lan.updated"
+msgstr "Statikus IP beállítások frissítve"
+
+msgid "xbian-config.network.label.wpa"
+msgstr "WPA"
+
+msgid "xbian-config.network.label.wep"
+msgstr "WEP"
+
+msgid "xbian-config.network.label.open"
+msgstr "Nyitott"
+
+msgid "xbian-config.network.label.signal"
+msgstr "Jel"
+
+# xbian-config module overclocking
+# 
+msgid "xbian-config.overclocking.name"
+msgstr "Órajel emelés"
+
+msgid "xbian-config.overclocking.description"
+msgstr "Órajel emelési beállítások"
+
+msgid "xbian-config.overclocking.warning"
+msgstr "Az órajel megemelése csökkentheti a Raspberry PI élettartamát. A XBian tesztelve lett megemelt órajelle is, előkészítettünk néhány általunk javasolt kombinációt. A Tutrbo órajel emelés fájlrendszeri hibákat okozhat,  használata csak csaját felelősségre."
+
+msgid "xbian-config.overclocking.alreadyset"
+msgstr "Most is ezek az órajel emelési értékek vannak beállítva"
+
+msgid "xbian-config.overclocking.changed"
+msgstr "Új órajel értékek beállítva"
+
+msgid "xbian-config.overclocking.label.preset"
+msgstr "Előre beállított értékek"
+
+msgid "xbian-config.overclocking.label.custom"
+msgstr "~"
+
+msgid "xbian-config.overclocking.empty_fields"
+msgstr "Nem töltöttél ki minden mezőt"
+
+# xbian-config module packages
+# 
+msgid "xbian-config.packages.name"
+msgstr "Csomagok"
+
+msgid "xbian-config.packages.description"
+msgstr "Csomag telepítés vagy eltávolítás"
+
+msgid "xbian-config.packages.apt.update"
+msgstr "Helyi csomaglista frissítése..."
+
+msgid "xbian-config.packages.apt.update_failed"
+msgstr "Hiba történt a csomaglista frissítésekor"
+
+msgid "xbian-config.packages.list.download"
+msgstr "Távoli csomaglista letöltése..."
+
+msgid "xbian-config.packages.mirrors.download_failed"
+msgstr "Letöltési tükrök fogadása sikertelen, így az esetlegesen elavult helyi csomaglista lesz használva"
+
+msgid "xbian-config.packages.loading"
+msgstr "Csomaglista párbeszédpanel betöltése..."
+
+msgid "xbian-config.packages.install.confirm"
+msgstr "Biztosan akarod telepíteni/frissíteni ezt a csomagot?"
+
+msgid "xbian-config.packages.install.success"
+msgstr "Csomag sikeresen telepítve"
+
+msgid "xbian-config.packages.install.retry"
+msgstr "Próbáld újra a csomag telepítését"
+
+msgid "xbian-config.packages.remove.confirm"
+msgstr "Biztosan eltávolítod a csomagot?"
+
+msgid "xbian-config.packages.remove.success"
+msgstr "Csomag sikeresen eltávolítva"
+
+msgid "xbian-config.packages.already_installed"
+msgstr "A csomag legfrissebb verziója már telepítve van"
+
+msgid "xbian-config.packages.unavailable_version"
+msgstr "A csomag telepíteni kivánt verziója nem található"
+
+msgid "xbian-config.packages.not_exists"
+msgstr "A telepíteni kívánt csomag nem található"
+
+msgid "xbian-config.packages.not_installed"
+msgstr "Ez a csomag nincs telepítve"
+
+msgid "xbian-config.packages.size_mismatch"
+msgstr "Méret eltérés a távoli csomaghoz képest"
+
+msgid "xbian-config.packages.essential"
+msgstr "Ez egy létfontosságú csomag, nem távolítható el"
+
+msgid "xbian-config.packages.show_log"
+msgstr "Szeretnéd látni a csomag telepítési logokat?"
+
+msgid "xbian-config.packages.error"
+msgstr "A csomag feldolgozása közben súlyos hiba történt"
+
+msgid "xbian-config.packages.downgrade"
+msgstr "A csomagból frissebbet futtatsz, mint a hivatalos verzió"
+
+msgid "xbian-config.packages.installing"
+msgstr "A csomag telepítése/frissítése eltarthat néhány percig, türelem..."
+
+msgid "xbian-config.packages.removing"
+msgstr "A csomag törlése eltarthat néhány percig, türelem..."
+
+msgid "xbian-config.packages.label.categories"
+msgstr "Kategóriák"
+
+msgid "xbian-config.packages.label.name"
+msgstr "Név"
+
+msgid "xbian-config.packages.label.installed"
+msgstr "Telepítve van"
+
+msgid "xbian-config.packages.label.not_installed"
+msgstr "Nincs telepítve"
+
+msgid "xbian-config.packages.label.information"
+msgstr "Információ"
+
+msgid "xbian-config.packages.label.install_update"
+msgstr "Telepítés/Frissítés"
+
+msgid "xbian-config.packages.label.install"
+msgstr "Telepítés"
+
+msgid "xbian-config.packages.label.remove"
+msgstr "Eltávolítás"
+
+msgid "xbian-config.packages.label.get_more"
+msgstr "Még több..."
+
+msgid "xbian-config.packages.info.fullname"
+msgstr "Teljes név:"
+
+msgid "xbian-config.packages.info.version.available"
+msgstr "Elérhető verzió:"
+
+msgid "xbian-config.packages.info.version.installed"
+msgstr "Telepített verzió:"
+
+msgid "xbian-config.packages.info.size.installed"
+msgstr "Telepített méret:"
+
+msgid "xbian-config.packages.info.size.download"
+msgstr "Letöltési méret:"
+
+msgid "xbian-config.packages.info.description"
+msgstr "Leírás:"
+
+msgid "xbian-config.packages.info.dependencies"
+msgstr "Függőségek:"
+
+msgid "xbian-config.packages.label.actions"
+msgstr "Műveletek"
+
+# xbian-config module resizesd
+# 
+msgid "xbian-config.resizesd.name"
+msgstr "Memória kártya átméretezés"
+
+msgid "xbian-config.resizesd.description"
+msgstr "root partició kiterjesztése a teljes memória kártyára"
+
+msgid "xbian-config.resizesd.confirm"
+msgstr "Biztosan átméretezed a memória kártyát?"
+
+msgid "xbian-config.resizesd.not_needed"
+msgstr "A memória kártya már át volt méretezve. Magszakítva."
+
+msgid "xbian-config.resizesd.on_reboot"
+msgstr "A root partició át lett méretezve, a fájlrendszer mérete úraindulás után növekszik meg."
+
+msgid "xbian-config.resizesd.error"
+msgstr "Hiba történt! Lehet, hogy a rendszer nem képes többé az elindulásra. Ments el minden adatodat újraindulás előtt pl.: hálózati meghajtóra."
+
+# xbian-config module rootpass
+# 
+msgid "xbian-config.rootpass.name"
+msgstr "root jelszó"
+
+msgid "xbian-config.rootpass.description"
+msgstr "root felhasználó jelszavának megváltoztatása"
+
+msgid "xbian-config.rootpass.changed"
+msgstr "root felhasználó jelszava sikeresen megváltoztatva"
+
+msgid "xbian-config.rootpass.label.password"
+msgstr "Jelszó:"
+
+msgid "xbian-config.rootpass.empty_fields"
+msgstr "Meg kell adnod az új jelszót majd megerősítésként meg kell ismételni"
+
+msgid "xbian-config.rootpass.no_match"
+msgstr "A megadott jelszavak nem azonosak"
+
+# xbian-config module services
+# 
+msgid "xbian-config.services.name"
+msgstr "Szolgáltatások"
+
+msgid "xbian-config.services.description"
+msgstr "Szolgáltatás kezelés, indítás/leállítás"
+
+msgid "xbian-config.services.loading"
+msgstr "Szolgáltatás állapotok betöltése..."
+
+msgid "xbian-config.services.restarting"
+msgstr "Szolgáltatás újraindítása..."
+
+msgid "xbian-config.services.restart_failed"
+msgstr "Szolgáltatás újraíndítás sikertelen..."
+
+msgid "xbian-config.services.starting"
+msgstr "Szolgáltatás indítása..."
+
+msgid "xbian-config.services.start_failed"
+msgstr "Szolgáltatás indítás sikertelen..."
+
+msgid "xbian-config.services.stopping"
+msgstr "Szolgáltatás leállítása..."
+
+msgid "xbian-config.services.stop_failed"
+msgstr "Szolgáltatás leállítás sikertelen..."
+
+msgid "xbian-config.services.refresh"
+msgstr "Szolgáltatás frissítés sikertelen..."
+
+msgid "xbian-config.services.autostart.enabling"
+msgstr "Szolgáltatás automatikus indításának engedélyezése..."
+
+msgid "xbian-config.services.autostart.disabling"
+msgstr "Szolgáltatás automatikus indításának tiltása..."
+
+msgid "xbian-config.services.autostart.enable_failed"
+msgstr "Szolgáltatás automatikus indításának engedélyezése sikertelen..."
+
+msgid "xbian-config.services.autostart.disable_failed"
+msgstr "Szolgáltatás automatikus indításának tiltása sikertelen..."
+
+msgid "xbian-config.services.not_exists"
+msgstr "Szolgáltatás nem létezik..."
+
+msgid "xbian-config.services.error"
+msgstr "Ismeretlen hiba"
+
+msgid "xbian-config.services.delete.confirm"
+msgstr "Biztosan törölni akarod ezt a szolgáltatást a listáról?"
+
+msgid "xbian-config.services.delete.success"
+msgstr "Szolgáltatás sikeresen törölve"
+
+msgid "xbian-config.services.inserted"
+msgstr "Szolgáltatás sikeresen hozzásadva"
+
+msgid "xbian-config.services.updated"
+msgstr "Szolgáltatás sikeresen frissítve"
+
+msgid "xbian-config.services.label.service"
+msgstr "Szolgáltatás"
+
+msgid "xbian-config.services.label.action"
+msgstr "Művelet"
+
+msgid "xbian-config.services.label.autostart"
+msgstr "Automatikus indulás"
+
+msgid "xbian-config.services.label.noautostart"
+msgstr "Automatikus indulás tiltása"
+
+msgid "xbian-config.services.label.running"
+msgstr "Fut"
+
+msgid "xbian-config.services.label.start_restart"
+msgstr "(Újra)Indítás"
+
+msgid "xbian-config.services.label.start"
+msgstr "Elindítás"
+
+msgid "xbian-config.services.label.restart"
+msgstr "Újraindítás"
+
+msgid "xbian-config.services.label.stop"
+msgstr "Megállítás"
+
+msgid "xbian-config.services.refresh_gui"
+msgstr "Frissítés"
+
+msgid "xbian-config.services.label.stopped"
+msgstr "Megállítva"
+
+msgid "xbian-config.services.label.add_custom"
+msgstr "További szolgáltatás hozzáadása"
+
+msgid "xbian-config.services.label.edit"
+msgstr "Szerkesztés"
+
+msgid "xbian-config.services.label.delete"
+msgstr "Törlés"
+
+msgid "xbian-config.services.label.name"
+msgstr "Név"
+
+msgid "xbian-config.services.label.confirminsert"
+msgstr "Biztoasan hozzáadod a következőt: %s?"
+
+msgid "xbian-config.services.label.daemons"
+msgstr "Démon(ok)"
+
+msgid "xbian-config.services.label.leave_empty"
+msgstr "Hagyd üresen, ha nincs"
+
+msgid "xbian-config.services.label.separate_space"
+msgstr "Szóközzel elválasztva"
+
+# xbian-config module sshroot
+# 
+msgid "xbian-config.sshroot.name"
+msgstr "SSH bejelentkezés root felhasználóval"
+
+msgid "xbian-config.sshroot.description"
+msgstr "SSH root bejelentkezés engedélyezése/tiltása"
+
+msgid "xbian-config.sshroot.enable_confirm"
+msgstr "Szeretnéd engedélyezni vagy tiltani az SSH root bejelentkezést?"
+
+msgid "xbian-config.sshroot.empty_password"
+msgstr "A root felhasználónak nincsen jelszava. Jelszó nélkül a root felhasználó nem jelentkezhet be SSH-val. Előbb állíts be jelszót a root felhasználónak."
+
+msgid "xbian-config.sshroot.enabled"
+msgstr "SSH root bejelentkezés engedélyezve"
+
+msgid "xbian-config.sshroot.disabled"
+msgstr "SSH root bejelentkezés letiltva"
+
+# xbian-config module timezone
+# 
+msgid "xbian-config.timezone.name"
+msgstr "Időzóna"
+
+msgid "xbian-config.timezone.description"
+msgstr "RPi időzónájának megváltoztatása"
+
+msgid "xbian-config.timezone.loading.timezone"
+msgstr "Aktuális időzóna lekérdezése..."
+
+msgid "xbian-config.timezone.loading.location"
+msgstr "Helyek betöltése..."
+
+msgid "xbian-config.timezone.label.timezone"
+msgstr "Időzóna"
+
+msgid "xbian-config.timezone.label.location"
+msgstr "Hely"
+
+msgid "xbian-config.timezone.old"
+msgstr "A régi időzóza: %s"
+
+msgid "xbian-config.timezone.new"
+msgstr "Az új időzóna: %s"
+
+msgid "xbian-config.timezone.no_timezone_selected"
+msgstr "Időzóna nincs kiválasztva"
+
+msgid "xbian-config.timezone.no_location_selected"
+msgstr "Nem választottál ki helyet"
+
+msgid "xbian-config.timezone.notset"
+msgstr "Nincs megadva"
+
+# xbian-config modules updates
+# 
+msgid "xbian-config.aptupdate.name"
+msgstr "apt-get update"
+
+msgid "xbian-config.aptupdate.description"
+msgstr "apt-get update futtatása"
+
+msgid "xbian-config.updates.name"
+msgstr "Deb frissítések ellenőrzése"
+
+msgid "xbian-config.updates.description"
+msgstr "apt-get upgrade futtatása"
+
+msgid "xbian-config.updatemirrors.name"
+msgstr "Tükrözések frissítése"
+
+msgid "xbian-config.updatemirrors.description"
+msgstr "Érvényes tükröző helyek listájának frisítése"
+
+msgid "xbian-config.updatemenu.name"
+msgstr "Frissítések"
+
+msgid "xbian-config.updatemenu.description"
+msgstr "Rendszer frissítések ellenőrzése"
+
+msgid "xbian-config.updates.apt.update"
+msgstr "Helyi telepítő csomag adatbázis frissítése..."
+
+msgid "xbian-config.updates.apt.update_failed"
+msgstr "Hiba történt a csomaglista frissítésekor"
+
+msgid "xbian-config.updates.list.download"
+msgstr "Frissíthető csomagok keresése..."
+
+msgid "xbian-config.updates.mirror.download"
+msgstr "Távoli csomaglista letöltése..."
+
+msgid "xbian-config.updates.mirror.download_failed"
+msgstr "Letöltési tükrök fogadása sikertelen, így az esetlegesen elavult helyi csomaglista lesz használva"
+
+msgid "xbian-config.updates.upgrade.available"
+msgstr "Új XBian verzió érhető el, szeretnéd telepíteni? Telepítés után a rendszer automatikusan újraindul."
+
+msgid "xbian-config.updates.upgrade.installing"
+msgstr "XBian frissítése új verzióra. Kérlek ne indítsd újra és ne áramtalanítsd mert az hibákhoz vezethet. A folyamat az internet kapcsolatod sebességétől függően hosszabb ideig is eltarthat..."
+
+msgid "xbian-config.updates.upgrade.reboot"
+msgstr "Az XBian újra fog indulni az ablak becsukásakor"
+
+msgid "xbian-config.updates.update.confirm"
+msgstr "Biztosan frissíteni akarod ezeket a csomagokat?"
+
+msgid "xbian-config.updates.update.running"
+msgstr "Várj míg a frissítés befejeződik..."
+
+msgid "xbian-config.updates.update.success"
+msgstr "A csomagok sikeresen frissítve"
+
+msgid "xbian-config.updates.update.already_installed"
+msgstr "A csomag legfrissebb verziója már telepítve van"
+
+msgid "xbian-config.updates.update.not_exists"
+msgstr "A telepítendő csomag nem található"
+
+msgid "xbian-config.updates.update.version_unavailable"
+msgstr "A csomag telepítendő verziója nem található"
+
+msgid "xbian-config.updates.update.show_log"
+msgstr "Szeretnéd látni a csomag telepítési logokat?"
+
+msgid "xbian-config.updates.update.error"
+msgstr "Súlyos hiba történt a csomag feldolgozásakor"
+
+msgid "xbian-config.updates.update.size_mismatch"
+msgstr "Méret eltérés a távoli csomaghoz képest"
+
+msgid "xbian-config.updates.update.installing"
+msgstr "Csomagok frissítése, türelem..."
+
+msgid "xbian-config.updates.update.downgrade"
+msgstr "A rendelkezésre állónál egy frissebb csomag van már telepítve"
+
+msgid "xbian-config.updates.label.updates"
+msgstr "Frissítések"
+
+msgid "xbian-config.updates.label.update"
+msgstr "Frissítés"
+
+msgid "xbian-config.updates.label.update_packages"
+msgstr "Csomagok frissítése"
+
+msgid "xbian-config.updates.label.version"
+msgstr "Verzió"
+
+msgid "xbian-config.updates.label.update_all"
+msgstr "Az összes frissítése"
+
+msgid "xbian-config.updates.label.update_to_date"
+msgstr "Naprakész"
+
+msgid "xbian-config.updates.label.upgrade"
+msgstr "Frissítés"
+
+msgid "xbian-config.updates.label.autoupdates"
+msgstr "Automatikus frissítés"
+
+msgid "xbian-config.updates.label.autoinstallupdates"
+msgstr "Rendelkezésre álló frissítések automatikus telepítése"
+
+msgid "xbian-config.updates.label.aptsnapshot"
+msgstr "Rendszer-visszaállítási pont létrehozása a frissítés előtt"
+
+msgid "xbian-config.updates.label.autoupdaterepo"
+msgstr "Csomaglista automatikus frissítése"
+
+msgid "xbian-config.updates.label.autoupdaterepointerval"
+msgstr "Frissítési időköz (napokban)"
+
+msgid "xbian-config.updates.uptodate"
+msgstr "A telepítésed már tartalmazza a legfrissebb XBian csomagot"
+
+# xbian-config module videoflags
+# 
+msgid "xbian-config.videoflags.name"
+msgstr "Video kimenet"
+
+msgid "xbian-config.videoflags.description"
+msgstr "HDMI, CEC és képméretezés (overscan) beállítások"
+
+msgid "xbian-config.videoflags.label.videoflags"
+msgstr "Video beállítások"
+
+msgid "xbian-config.videoflags.update_success"
+msgstr "Video beállítások sikeresen frissítve"
+
+msgid "xbian-config.videoflags.hdmi_force_hotplug"
+msgstr "HDMI kimenet használata akkor is ha nem érzékelhető rajta TV"
+
+msgid "xbian-config.videoflags.hdmi_ignore_hotplug"
+msgstr "HDMI kimenet tiltása akkor is ha érzékelhető rajta TV"
+
+msgid "xbian-config.videoflags.hdmi_ignore_cec_init"
+msgstr "CEC iniciálás kihagyása, hogy a TV ne ébredjen fel újrainduláskor"
+
+msgid "xbian-config.videoflags.hdmi_ignore_cec"
+msgstr "CEC tiltása"
+
+msgid "xbian-config.videoflags.disable_overscan"
+msgstr "Képméret növelés (overscan) tiltása"
+
+msgid "xbian-config.videoflags.disable_splash"
+msgstr "Raspberry 'szivárvány' indulási képernyőjének tiltása"
+
+# xbian-config module xbconfig
+# 
+msgid "xbian-config.xbconfig.name"
+msgstr "XBian config"
+
+msgid "xbian-config.xbconfig.description"
+msgstr "XBian config beállításai"
+
+msgid "xbian-config.xbconfig.label.autostart"
+msgstr "Automatikus indulás"
+
+msgid "xbian-config.xbconfig.label.actions"
+msgstr "Műveletek"
+
+msgid "xbian-config.xbconfig.autostart.enable_disable"
+msgstr "Akarod, hogy automatikusan elinduljon az xbian-config amikor bejelentkezel az xbian felhasználóval?"
+
+msgid "xbian-config.xbconfig.autostart.enabled"
+msgstr "xbian-cinfig automatikus indítása engedélyezve"
+
+msgid "xbian-config.xbconfig.autostart.disabled"
+msgstr "xbian-cinfig automatikus indítása letiltva"
+
+# xbian-config module xbianpass
+# 
+msgid "xbian-config.xbianpass.name"
+msgstr "xbian jelszó"
+
+msgid "xbian-config.xbianpass.description"
+msgstr "xbian felhasználó jelszavának megváltoztatása"
+
+msgid "xbian-config.xbianpass.changed"
+msgstr "xbian felhasználó jelszava sikeresen megváltoztatva"
+
+msgid "xbian-config.xbianpass.label.password"
+msgstr "Jelszó:"
+
+msgid "xbian-config.xbianpass.empty_fields"
+msgstr "Meg kell adnod az új jelszót majd megerősítésként meg kell ismételni"
+
+msgid "xbian-config.xbianpass.no_match"
+msgstr "A megadott jelszavak nem azonosak"
+
+# xbian-config module xbmc
+# 
+msgid "xbian-config.xbmc.name"
+msgstr "XBMC"
+
+msgid "xbian-config.xbmc.description"
+msgstr "XBMC beállítások"
+
+msgid "xbian-config.xbmc.webserver.enable_disable"
+msgstr "Szeretnéd engedélyezni vagy tiltani az XBMC webszervert?"
+
+msgid "xbian-config.xbmc.webserver.enable.success"
+msgstr "XBMC webszerver engedélyezve"
+
+msgid "xbian-config.xbmc.webserver.disable.success"
+msgstr "XBMC webszerver letiltva"
+
+msgid "xbian-config.xbmc.webserver.enable.failed"
+msgstr "Hiba történt az XBMC webszerver engedélyezésekor"
+
+msgid "xbian-config.xbmc.webserver.disable.failed"
+msgstr "Hiba történt az XBMC webszerver letiltásakor"
+
+msgid "xbian-config.xbmc.label.webserver"
+msgstr "Webszerver"
+
+msgid "xbian-config.xbmc.label.actions"
+msgstr "Műveletek"
+
+msgid "xbian-config.xbmc.label.tvoff_screensaver"
+msgstr "CEC kompatibilis TV kikapcsolása a képernyővédővel "
+
+msgid "xbian-config.xbmc.label.tvoff_screensaver_delay"
+msgstr "késleltetés (perc)"
+
+msgid "xbian-config.xbmc.label.tvon_exit"
+msgstr "CEC kompatibilis TV bekapcsolása az XBMC-ből kilépéskor"
+
+msgid "xbian-config.xbmc.label.tvoff_shutdown"
+msgstr "CEC kompatibilis TV kikapcsolása az RPI kikapcsolásakor"
+
+msgid "xbian-config.xbmc.label.usbhotplug"
+msgstr "USB HotPlug"
+
+msgid "xbian-config.xbmc.label.automount"
+msgstr "USB kötöetek automatikus felcsatolásának engedélyezése"
+
+msgid "xbian-config.xbmc.label.share"
+msgstr "A felcsatlakoztatott kötetek legyenek elérhetőek SMB megosztással"
+
+msgid "xbian-config.xbmc.label.sharerw"
+msgstr "A megosztott kötetek legyenek írjhatóak (beleértve az anonymous elérést)"
+
+msgid "xbian-config.xbmc.label.uuid"
+msgstr "A felcsatolt kötet neve tartalmazza a UUID-t is."
+
+msgid "xbian-config.xbmc.label.dyn_priority"
+msgstr "XBMC dinamikus prioritás (-20-tól 19-ig, hozzértőknek)"
+
+msgid "xbian-config.xbmc.label.lownice"
+msgstr "Alacsonyabb prioritáshoz tartozó nice érték"
+
+msgid "xbian-config.xbmc.label.highnice"
+msgstr "Magasabb prioritáshoz tartozó nice érték"
+
+msgid "xbian-config.xbmc.label.spindown"
+msgstr "HDD leállítás (spin down)"
+
+msgid "xbian-config.xbmc.label.sync"
+msgstr "Csatolás [I]sync[/I] opcióval (lassabb, de biztonságosabb)"
+
+# xbian-config module preferences
+# 
+msgid "xbian-config.preferences.name"
+msgstr "Beállítások"
+
+msgid "xbian-config.preferences.label.advanced_mode"
+msgstr "Haladó mód"
+
+msgid "xbian-config.preferences.label.advanced"
+msgstr "Haladó"
+
+msgid "xbian-config.preferences.update.error"
+msgstr "Hiba történt a rendszer frissítésekor"
+
+msgid "xbian-config.preferences.update.success"
+msgstr "Beállítás frissítve"
+
+msgid "xbian-config.preferences.label.notify"
+msgstr "Értesítések"
+
+msgid "xbian-config.preferences.notify.on_error"
+msgstr "Értesítés a sikertelen műveletekről"
+
+msgid "xbian-config.preferences.notify.on_success"
+msgstr "Értesítés a sikeres műveletekről"
+
+msgid "xbian-config.preferences.ask_confirmation"
+msgstr "Megerősítés az új beállítások mentése előtt"
+
+msgid "xbian-config.preferences.label.notification"
+msgstr "Értesítések"
+
+# 	xbiancopy
+# 
+msgid "xbian-config.xbiancopy.label.source"
+msgstr "Forrás meghajtó/partició:"
+
+msgid "xbian-config.xbiancopy.label.dest"
+msgstr "Cél:"
+
+msgid "xbian-config.xbiancopy.name"
+msgstr "XBian másoló"
+
+msgid "xbian-config.xbiancopy.description"
+msgstr "Rendszer másoló eszköz (USB-re, img fájlba...)"
+
+msgid "xbian-config.xbiancopy.dialog.wrongblkdev"
+msgstr "Hibás cél blokk eszköz (nem létezik vagy nem egy partició)"
+
+msgid "xbian-config.xbiancopy.dialog.exportwrong"
+msgstr "NFS export nem felel meg a követelményeknek"
+
+msgid "xbian-config.xbiancopy.dialog.preperror"
+msgstr "Nem sikerült a cél fájlrendszer előkészítése"
+
+msgid "xbian-config.backup.category.snasphot"
+msgstr "Rendszer-visszaállítási pontok kezelése"
+
+msgid "xbian-config.backup.category.home"
+msgstr "Home kötet mentése"
+
+msgid "xbian-config.backup.category.system"
+msgstr "Rendszer mentése"
+
+msgid "xbian-config.backup.category.snapshot"
+msgstr "Rendszer-visszaállítási pont"
+
+msgid "xbian-config.backup.category.autosnapshot"
+msgstr "Rendszer-visszaállítási pont készítő"
+
+msgid "xbian-config.backup.daily_snapshot"
+msgstr "Készítés naponta"
+
+msgid "xbian-config.backup.nbautosnap"
+msgstr "Visszamenőleg megtatrandó mentések száma"
+
+msgid "xbian-config.backup.weekly_snapshot"
+msgstr "Készítés hetente"
+
+msgid "xbian-config.backup.auto_system_image"
+msgstr "Automatikus lemezkép mentés"
+
+msgid "xbian-config.backup.destype"
+msgstr "Cél típusa"
+
+msgid "xbian-config.backup.blockdev"
+msgstr "Blokk eszköz"
+
+msgid "xbian-config.backup.filedest"
+msgstr "Cél"
+
+msgid "xbian-config.backup.start"
+msgstr "Mentés indítás"
+
+msgid "xbian-config.backup.confirm_write"
+msgstr "Indulhat a mentés ide: %s?"
+
+msgid "xbian-config.backup.warning_write"
+msgstr "%s MINDEN adata el fog veszni, folytatod?"
+
+msgid "xbian-config.backup.selectdevice"
+msgstr "Eszköz kiválasztása"
+
+#       backuphome
+# 
+msgid "xbian-config.backuphome.name"
+msgstr "/home kötet mentése fájlba"
+
+msgid "xbian-config.backuphome.description"
+msgstr "XBMC beállítások, könyvtárak és fájlok mentése"
+
+msgid "xbian-config.backuphome.running"
+msgstr "Várj míg a mentés befejeződik..."
+
+msgid "xbian-config.backuphome.done"
+msgstr "A mentés elkészült az /xbmc-backup mappába. A mentés elmásolhatod helyi mappába vagy a hálózaton keresztül."
+
+msgid "xbian-config.backuphome.failed"
+msgstr "/home kötet mentése sikertelen!"
+
+msgid "xbian-config.backuphome.desc1"
+msgstr "Ez hosszabb ideig is eltarthat a /home/xbian kötet méretétől függően"
+
+msgid "xbian-config.backuphome.desc2"
+msgstr "A fájl az /xbian-backup mappába kerül majd, ami elérhet SMB megosztásként a hálózatról is."
+
+msgid "xbian-config.backuphome.desc3"
+msgstr "Az elkészültéig átmeneti mappában van, ha elkészült akkor lesz elérhető az .img fájl."
+
+msgid "xbian-config.backuphome.desc4"
+msgstr "A fájlt el kell másolnod a saját gépedre (törölve lesz újraindításkor)"
+
+msgid "xbian-config.backuphome.desc5"
+msgstr "Az XBMC visszaállításához másold az .img fájlt a /xbian-backup/put_to_restore mappába"
+
+msgid "xbian-config.backuphome.restore"
+msgstr "Mentett lemezkép visszaállítása"
+
+msgid "xbian-config.backuphome.selectimage"
+msgstr "Válaszd ki a Home kötet lemezképét"
+
+msgid "xbian-config.backuphome.restore_home_confirm"
+msgstr "%s: Vissza akarod állítani a Home kötetet ebből: %s?"
+
+msgid "xbian-config.backuphome.restore_home_info"
+msgstr "Ez hosszabb ideig is eltarthat a lemezkép méretétől függően"
+
+# 	enable auto updates
+# 
+msgid "xbian-config.enableauto.name"
+msgstr "Biztosan aktiválod az automatikus frissítést?"
+
+msgid "xbian-config.enableauto.description"
+msgstr "Automatikus frissítési mód beállítása"
+
+msgid "xbian-config.updates.enableauto.enable_disable"
+msgstr "Aktiválod az automatikus frissítése?"
+
+msgid "xbian-config.updates.enableauto.disabled"
+msgstr "Automatikus frissítés letiltva"
+
+msgid "xbian-config.updates.enableauto.enabled"
+msgstr "Automatikus frissítés engedélyezve"
+
+# manage snapshot
+# 
+msgid "xbian-config.snapshot.mountsnap"
+msgstr "Visszaállítási pont felcsatolása (mount)"
+
+msgid "xbian-config.snapshot.loadingvolume"
+msgstr "Kötetek betöltése"
+
+msgid "xbian-config.snapshot.volume"
+msgstr "Btrfs kötet"
+
+msgid "xbian-config.snapshot.rollback"
+msgstr "Visszaállás egy korábbi Rendszer-visszaállítási pontra"
+
+msgid "xbian-config.snapshot.delete_snasphot"
+msgstr "Rendszer-visszaállítási pont törlése"
+
+msgid "xbian-config.snapshot.create_snapshot"
+msgstr "Rendszer-visszaállítási pont készítése"
+
+msgid "xbian-config.snapshot.name_snapshot"
+msgstr "Rendszer-visszaállítási pont neve"
+
+msgid "xbian-config.snapshot.backup"
+msgstr "Mentés"
+
+# util
+# 
+msgid "xbian-config.util.valuegreater"
+msgstr "Az érték magasabb kell legyen mint %d"
+
+msgid "xbian-config.util.valuelower"
+msgstr "Az érték alacsonyabb kell legyen mint %d"
+
+#  wizard
+# 
+msgid "xbian-config.wizard.welcome.title"
+msgstr "Jó szórakozást kíván az XBian!"
+
+msgid "xbian-config.wizard.welcome.smalltitle"
+msgstr "Jó szórakozást!"
+
+msgid "xbian-config.wizard.welcome.description"
+msgstr "Köszönjük, hogy a XBian-t választottad.[CR][CR]Az XBian egy ingyenes nyílt forráskódu média kezelő Raspberryre.[CR]Szlogenünk: \"XBMC on Raspberry Pi, the Bleeding edge\", célkitűzésünk egy gyors média center Raspberry Pire.[CR][CR]Hisszük, hogy mindenki segíthet az XBian fejlesztésében.[CR]Segítségért látogasd meg honlapunkat: www.xbian.org. Ha kérdésed, javaslatod van vagy hozzájárulnál a munkánkhoz, fordulj hozzánk bizalommal."
+
+msgid "xbian-config.wizard.network.title"
+msgstr "Hálózati beállítások"
+
+msgid "xbian-config.wizard.network.smalltitle"
+msgstr "Hálózat"
+
+msgid "xbian-config.wizard.network.description"
+msgstr "A vezetékes és vezeték nélküli hálózat beállítása egyszerű az XBianban. Internet hozzáféréssel még nagyobb élményben lehet részed de az XBian annélkül is használható."
+
+msgid "xbian-config.wizard.license.title"
+msgstr "Add meg a licenc kulcsodat"
+
+msgid "xbian-config.wizard.license.smalltitle"
+msgstr "Licenc kulcs"
+
+msgid "xbian-config.wizard.license.description"
+msgstr "A Raspberry Pi dekódolni tudja a főbb video és audio formátumokat, de a VC-1 (némely BluRay lemezek kódolása) és MPEG-2 dekódoláshoz licenc kulcsot kell vásárolni, ami a következő oldalon lehetséges:[CR]http://www.raspberrypi.com/license-keys/[CR][CR]Ha már van licenc kulcsod, akkor most megadhatod."
+
+msgid "xbian-config.wizard.backup.title"
+msgstr "Home kötet visszaállítása"
+
+msgid "xbian-config.wizard.backup.smalltitle"
+msgstr "Visszaállítás"
+
+msgid "xbian-config.wizard.backup.description"
+msgstr "Az XBian lehetővé teszi a beállításaid egyszerű mentését.[CR]Ha van korábbi home kötet mentésed[CR](amiben megvan az XBMC beállítás, add-onok, könyvtárak)[CR]most visszaállíthatod.[CR]A későbbiekben készíthetsz rendszer-visszaállítási pontokat és mentéseket is.[CR] Keresd a Rendszer -> Beállítások -> XBian -> Mentés menüpontot"
+
+msgid "xbian-config.wizard.update.title"
+msgstr "XBian frissítése"
+
+msgid "xbian-config.wizard.update.smalltitle"
+msgstr "frissítés"
+
+msgid "xbian-config.wizard.update.description"
+msgstr "Most kiválaszthatod a frissítés módját és gyakoriságát.[CR][CR]Alapértelmezésben az XBian nem frissül automatikusan de értesít a frissítésekről.[CR][CR]A frissétes a Rendszer-> Beállítások -> XBian -> Frissítés menüben lehetséges a frissítendő csomag kiválasztásával.[CR][CR]Ha szeretnéd, hogy automatikus legyen a frissítés, most beállíthatod."
+
+msgid "xbian-config.wizard.package.title"
+msgstr "Új csomagok telepítése"
+
+msgid "xbian-config.wizard.package.smalltitle"
+msgstr "csomag"
+
+msgid "xbian-config.wizard.package.description"
+msgstr "Az XBiannal mindent megkapsz ami szükséges az XBMC-hez de könnyen hozzáadhatsz kiegészítőket, mint a Torrent, Newsbin, CouchPotatoe és hasonlóak.[CR][CR] A fálhasználók a maguk készítette csomagokokat is megoszthatják egymással. Ha úgy érzed bekerülhetne még valami hasznos, nyiss róla témát az XBian fórumon majd elfogadás esetén várd ki míg megjelenik a friss csomag lista amiben benne van. "
+
+msgid "xbian-config.wizard.finish.title"
+msgstr "Szórakozásra fel!"
+
+msgid "xbian-config.wizard.finish.smalltitle"
+msgstr "Vége"
+
+msgid "xbian-config.wizard.finish.description"
+msgstr "Elkészült a teljesen beállított XBianod[CR]Reméljük egy élmény lesz a használata.[CR]További CBian beállításokat a  Rendszer -> Beállítások -> XBian  menüpontban találsz.[CR]Ha újra szeretnéd futtatni ezt a varázslót, keresd az XBian varázsót a beállításokban."
+
+# extra
+# 
+msgid "xbian-config.extra.name"
+msgstr "Extra"
+
+#   commom
+# 
+msgid "xbian-config.common.pleasewait"
+msgstr "Egy kis türelmet..."
+
+msgid "xbian-config.common.initialisation"
+msgstr "Inicializálás..."
+
+msgid "xbian-config.common.loading"
+msgstr "Töltés"
+
+msgid "xbian-config.common.doyouwanto"
+msgstr "Biztosan akarod ezt: %s?"
+
+msgid "xbian-config.common.error"
+msgstr "HIBA: beállítások mentése sikertelen"
+
+msgid "xbian-config.common.ok"
+msgstr "Beállítások elmentve"
+
+msgid "xbian-config.common.confirmation"
+msgstr "Biztosan alkalmazod a módosításokat?"
+
+msgid "xbian-config.common.badentry"
+msgstr "Hibás adatokat adtál meg"

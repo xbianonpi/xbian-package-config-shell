@@ -21,3 +21,7 @@ else
   TMPEXCLUDESUB="-x $EXCLUDESUB"
 fi
 btrfs-auto-snapshot -l daily -k $KEEPDAYS -v $TMPEXCLUDESUB //
+
+[ "$IMGPLAN" = daily ] || exit 0
+[ "$IMGTYPE" = file ] && opt_img='--img'
+nice -n +1 /usr/sbin/btrfs-auto-snapshot xbiancopy $opt_img /dev/root $IMGDEST  > /dev/null 2>&1
