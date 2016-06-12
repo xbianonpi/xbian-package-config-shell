@@ -63,6 +63,77 @@ backupImgDestFn() {
     eval sed -i 's\@IMGDEST=.*@IMGDEST=\"$1\"@' /etc/default/xbian-snap
     echo 1
 }
+backupImgKeepFn() {
+    sch=0
+    case $1 in
+        '')
+            grep -q ENABLEDSCHEDULE=yes /etc/default/xbian-snap && sch=1
+            nr=$(grep IMGKEEP= /etc/default/xbian-snap| awk -F'=' '{print $2}')
+            [ $sch -eq 1 -a $nr -gt 0 ] && echo "$nr" || echo "0"
+            ;;
+        *)
+            eval sed -i 's/IMGKEEP=.*/IMGKEEP=$1/' /etc/default/xbian-snap
+            grep -q IMGKEEP=$1 /etc/default/xbian-snap && echo 1 || echo 0
+            ;;
+    esac
+}
+
+backupHomePlanFn() {
+    [ -z "$1" ] && { grep HOMEPLAN= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
+    case $1 in
+        none|daily|weekly|monthly)
+            eval sed -i 's/HOMEPLAN=.*/HOMEPLAN=$1/' /etc/default/xbian-snap
+            echo 1
+            ;;
+        *)
+            echo -1
+            ;;
+    esac
+}
+backupHomeDestFn() {
+    [ -z "$1" ] && { grep HOMEDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \"; exit 0; }
+    [ "$1" = "?" ] && { . /etc/default/xbian-snap; echo $HOMEDEST; exit 0; }
+    echo f=\"$1\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
+    [ ! -e "$f" ] && fdel=1
+    ! touch "$f" 2>/dev/null && { echo -1; exit 0; }
+    [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; exit 0; }
+    [ -n "$fdel" ] && rm "$f"
+    eval sed -i 's\@HOMEDEST=.*@HOMEDEST=\"$1\"@' /etc/default/xbian-snap
+    echo 1
+}
+backupHomeKeepFn() {
+    sch=0
+    case $1 in
+        '')
+            grep -q ENABLEDSCHEDULE=yes /etc/default/xbian-snap && sch=1
+            nr=$(grep HOMEKEEP= /etc/default/xbian-snap| awk -F'=' '{print $2}')
+            [ $sch -eq 1 -a $nr -gt 0 ] && echo "$nr" || echo "0"
+            ;;
+        *)
+            eval sed -i 's/HOMEKEEP=.*/HOMEKEEP=$1/' /etc/default/xbian-snap
+            grep -q HOMEKEEP=$1 /etc/default/xbian-snap && echo 1 || echo 0
+            ;;
+    esac
+}
+
+backupDoCleanFn() {
+    logger -t $(basename $0) "doclean $1 $2"
+    ret=0
+    if [ "$2" -gt 0 ]; then
+        p=$(echo $1 | sed 's/file://' | sed 's/$(hostname)/'$(hostname)/ | sed 's/$(.*)/'*/)
+        logger -t $(basename $0) "doclean ls -t1 $p"
+        n=0
+        for f in $(ls -t1 $p); do
+            let n+=1
+            if (( $n > $2 )); then
+                logger -t $(basename $0) "doclean rm -rf $f"
+                rm -rf $f
+                [ $? -eq 0 ] || ret=$?
+            fi
+        done
+    fi
+    echo $ret
+}
 
 getImgPartitionsFn(){
     printf "%s;" $(blkid | grep -v "$(readlink -e /dev/root)\|mmcblk0p1\|zram\|loop\|$(blkid -t TYPE=swap -o device)"| awk -F':' '{print $1}')

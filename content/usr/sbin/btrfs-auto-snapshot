@@ -70,7 +70,7 @@ print_usage ()
              createvol
 
              xbiancopy [--no-create] [[--img]] [[[--size]]] [[[[--fs-name]]]] source dest
-             backuphome
+             backuphome [dest]
 
                        If not given, snapshot is assumed.
     --dev              Device which is part of the btrfs filesystem (by default
@@ -603,8 +603,9 @@ case $opt_command in
 
 		    parted -s $2 mklabel msdos
 
-		    echo "2048,69632,b,*," | sfdisk -u S -N1 -H 4 -S 16 -q $2 > /dev/null 2>&1
-		    echo "71680,+,83,," | sfdisk -u S -N2 -H 4 -S 16 -q $2 > /dev/null 2>&1
+		    config_offset_root=141312
+		    echo "2048,$((config_offset_root-2048)),b,*," | sfdisk -u S -N1 -H 4 -S 16 -q $2 > /dev/null 2>&1
+		    echo "$config_offset_root,+,83,," | sfdisk -u S -N2 -H 4 -S 16 -q $2 > /dev/null 2>&1
 		    loopd=$(losetup -f); losetup $loopd $2
 		    kpartx -a $loopd && echo "loopd=$loopd" > /run/kpartxmap.xbiancopy.$$
 		    loopd=${loopd#/dev/}
@@ -711,14 +712,25 @@ if you created img file, cmdline.txt was updated automatically." 24 79
 		touch /tmp/xbiancopy.running.$$
 		;;
         (backuphome)
+                if [ "$(dirname $1)" = "/xbmc-backup" -o "$1" = "//" ]; then
+                    FILE="/xbmc-backup/temp/backup_home_$DATE.img.gz"
+                    mkdir /xbmc-backup/temp
+                    find /xbmc-backup -type f -print0 | xargs -0 rm -f || :
+                else
+                    FILE="$1"
+                    [ -e $FILE ] && rm -rf $FILE
+                fi
+                packcmd=$(which lz4) || packcmd=gzip
                 btrfs sub snap -r "${tmp_dir}/home/@" "${tmp_dir}/home/@ro"
-                find /xbmc-backup -type f -print0 | xargs -0 rm -f  || :; packcmd=$(which lz4) || packcmd=gzip
-                mkdir /xbmc-backup/temp; touch /xbmc-backup/temp/backup_home_$DATE.img.gz; chattr +C /xbmc-backup/temp/backup_home_$DATE.img.gz; echo 999>/tmp/backuphome.status
-                ( btrfs send -v "${tmp_dir}/home/@ro" | pv -n -s $(du -sxb ${tmp_dir}/home/@ro| awk '{print $1}') | $packcmd -1 >> /xbmc-backup/temp/backup_home_$DATE.img.gz; echo $?>/tmp/backuphome.status)  2>&1 | dialog --gauge "Cloning home. Please wait..." 10 60
+                touch $FILE; chattr +C $FILE
+                echo 999>/tmp/backuphome.statusx
+                ( btrfs send -v "${tmp_dir}/home/@ro" | pv -n -s $(du -sxb ${tmp_dir}/home/@ro | awk '{print $1}') | $packcmd -1 >> $FILE; echo $?>/tmp/backuphome.status) 2>&1 | dialog --gauge "Cloning home. Please wait..." 10 60
                 btrfs sub delete "${tmp_dir}/home/@ro" && btrfs fi sync ${tmp_dir}
-                [ $(cat /tmp/backuphome.status) -eq 0 ] || { rm -f /xbmc-backup/temp/backup_home_$DATE.img.gz; exit 1; }
-                mv /xbmc-backup/temp/backup_home_$DATE.img.gz /xbmc-backup/$(hostname)_backup_home_$DATE.img.gz; rmdir /xbmc-backup/temp
-                mkdir -p /xbmc-backup/put_here_to_restore
+                [ $(cat /tmp/backuphome.status) -eq 0 ] || { rm -f $FILE; exit 1; }
+                if [ "$(dirname $1)" = "/xbmc-backup" -o "$1" = "//" ]; then
+                    [ "$1" = "//" ] && mv $FILE /xbmc-backup/$(hostname)_backup_home_$DATE.img.gz || mv $FILE $1; rmdir /xbmc-backup/temp
+                    mkdir -p /xbmc-backup/put_here_to_restore
+                fi
                 [ -e "/tmp/backuphome.running" ] && touch /xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)
                 ;;
         (restorehome)
@@ -731,6 +743,8 @@ if you created img file, cmdline.txt was updated automatically." 24 79
                 rm -fr $1.working
                 { pgrep xbmc.bin >/dev/null || pgrep kodi.bin >/dev/null; } && { touch /run/start.xbmc; stop -q xbmc; }
                 stop -q zram-swap
+
+                hm=""; for m in $(mount | awk '{print $3}'| grep "/home"); do hm=$hm" "$m; done
 
                 locks=$(lsof | grep "/home" | awk '{print $2}' | sort | uniq)
                 i=0; sig='-SIGTERM' 
@@ -749,8 +763,8 @@ if you created img file, cmdline.txt was updated automatically." 24 79
                 btrfs sub delete ${tmp_dir}/home/@
                 btrfs sub snap ${tmp_dir}/home/@ro ${tmp_dir}/home/@
                 btrfs sub delete ${tmp_dir}/home/@ro
+                for m in $hm; do mount $m; done
                 start zram-swap
-                mount /home
                 [ -e /run/start.xbmc ] && { rm /run/start.xbmc; start -qn xbmc; }
                 ;;
         (*)
