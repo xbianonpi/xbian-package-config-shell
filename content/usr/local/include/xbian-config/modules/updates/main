@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
+#Copyright 2012 - 2016 CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(list progress updatedb install installtest enableauto snapapt autoinventory);
+ARGUMENTS=(list progress updatedb install installtest enableauto snapapt enablerepo autoinventory);
 
 #|------------------------------------|
 #|          Include files             |
@@ -210,6 +210,10 @@ function showCMDFn() {
 			;;
 		snapapt)
 			setSnapApt $2
+			echo $?
+			;;
+		enablerepo)
+			setEnableRepo $2 $3
 			echo $?
 			;;
 		list)

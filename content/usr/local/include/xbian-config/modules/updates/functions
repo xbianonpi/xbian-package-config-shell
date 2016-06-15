@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
+#Copyright 2012 - 2016 CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -48,6 +48,24 @@ function setSnapApt(){
 	[ $1 -eq 1 ] && sed -i 's/ENABLEDAPT=.*/ENABLEDAPT=yes/' /etc/default/xbian-snap && return $(xbian-config updates snapapt)
 	[ $1 -eq 0 ] && sed -i 's/ENABLEDAPT=.*/ENABLEDAPT=no/' /etc/default/xbian-snap && return $((1 - $(xbian-config updates snapapt) ))
     fi
+}
+
+function setEnableRepo() {
+        sed -i 's/^[ \t]*//' /etc/apt/sources.list.d/xbian.list
+        sed -i 's/\t/ /g' /etc/apt/sources.list.d/xbian.list
+        if [ -z "$2" ]; then
+            grep $1 /etc/apt/sources.list.d/xbian.list | grep -q ^"deb " && return 1
+            return 0
+        elif [ "$2" -eq 0 ]; then
+            sed -i "/$1/s/^deb /### deb /g" /etc/apt/sources.list.d/xbian.list
+        elif ! grep $1 /etc/apt/sources.list.d/xbian.list | grep -q ^"deb "; then
+            if grep $1 /etc/apt/sources.list.d/xbian.list | grep -q ^"### deb "; then
+                sed -i "/$1/s/^### deb /deb /g" /etc/apt/sources.list.d/xbian.list
+            else
+                sed -i "/$1/s/^#.*deb /deb /g" /etc/apt/sources.list.d/xbian.list
+            fi
+        fi
+        return $2
 }
 
 function retrieveUpdateListFn() {
