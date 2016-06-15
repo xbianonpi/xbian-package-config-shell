@@ -652,7 +652,7 @@ case $opt_command in
 		fi
 		eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
 
-		if ! eval $opt_remotecmd mount -o compress=lz4,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
+		if ! eval findmnt -n / | grep -q "compress=lz4" || ! eval $opt_remotecmd mount -o compress=lz4,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
 		    if ! eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
 			echo "can not mount destination partition"
 			exit 6
