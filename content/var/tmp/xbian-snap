@@ -29,7 +29,7 @@ IMGTYPE=notset
 # path to img including file name (/media/my_disk/xbian_backup.img) or block device (/dev/sda1)
 IMGDEST=notset
 
-# how many images should be kept (0 means imlimited)
+# how many images should be kept (0 means unlimited)
 IMGKEEP=0
 
 # auto backup of /home should be run: none/daily/weekly/monthly
@@ -38,5 +38,5 @@ HOMEPLAN=none
 # path to img.gz including file name (/media/my_disk/xbian_home_backup.img.gz)
 HOMEDEST=notset
 
-# how many /home images should be kept (0 means imlimited)
+# how many /home images should be kept (0 means unlimited)
 HOMEKEEP=0
