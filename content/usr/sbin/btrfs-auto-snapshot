@@ -58,6 +58,8 @@ SNAPSHOT_COUNT='0'
 DESTROY_COUNT='0'
 WARNING_COUNT='0'
 
+. /usr/local/include/xbian-config/modules/xbiancopy/functions
+
 print_usage ()
 {
     echo "Usage: $0 command [options] <'//' | name [name...]>
@@ -446,7 +448,7 @@ while true; do
                     rmdir '${tmp_dir}' > /dev/null; \
                     mountpoint -q /tmp/btrfs-dest && umount -l /tmp/btrfs-dest; \
                     mountpoint -q /tmp/btrfs-source && umount -l /tmp/btrfs-source; \
-                    do_remove_kpartx; rm -f kpartxmap.xbiancopy.$$; " INT TERM EXIT
+                    do_remove_kpartx; rm -f kpartxmap.xbiancopy.$$; mapAndMountFn umount; " INT TERM EXIT
                 break
         fi
 
@@ -573,6 +575,7 @@ case $opt_command in
 
 		mkdir -p /tmp/btrfs-dest
 		if [ -n "$opt_img" ]; then
+		    set -- $1 $(mapAndMountFn mount $2)
 		    [ -e "$2" ] && rm -f "$2"; touch "$2" || { echo "can not create img file"; exit 5; }
 		    [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; exit 5; }
 
@@ -712,6 +715,7 @@ if you created img file, cmdline.txt was updated automatically." 24 79
 		touch /tmp/xbiancopy.running.$$
 		;;
         (backuphome)
+                set -- $(mapAndMountFn mount $1)
                 if [ "$(dirname $1)" = "/xbmc-backup" -o "$1" = "//" ]; then
                     FILE="/xbmc-backup/temp/backup_home_$DATE.img.gz"
                     mkdir /xbmc-backup/temp
