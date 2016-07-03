@@ -437,8 +437,8 @@ function readNetworkConfigurationFn() {
 				echo "ssid $SSID"
 				echo "key $WLANKEY"
 			else
-				echo "ssid $(echo $SSID | base64)"
-				echo "key $(echo $WLANKEY | base64)"
+				echo "ssid $(echo $SSID | base64 --wrap=0)"
+				echo "key $(echo $WLANKEY | base64 --wrap=0)"
 			fi
 		fi
 		return 1;
