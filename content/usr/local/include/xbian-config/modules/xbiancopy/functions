@@ -167,7 +167,7 @@ backupDoCleanFn() {
     logger -t $(basename $0) "doclean $1 $2"
     ret=0
     if [ "$2" -gt 0 ]; then
-        p=$(echo $(mapAndMountFn mount $1) | sed 's/file://' | sed 's/$(hostname)/'$(hostname)/ | sed 's/$(.*)/'*/)
+        p=$(echo $(mapAndMountFn mount $(echo $1 | sed 's/file://')) | sed 's/$(hostname)/'$(hostname)/ | sed 's/$(.*)/'*/)
         logger -t $(basename $0) "doclean ls -t1 $p"
         n=0
         for f in $(ls -t1 $p); do
