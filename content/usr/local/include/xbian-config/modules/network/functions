@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-#Copyright 2012 - 2013 Hexagon & CurlyMo & mk01 <development@xbian.org>
+#Copyright 2012 - 2016 Hexagon, CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -368,7 +368,7 @@ function readNetworkConfigurationFn() {
 	isValidInterfaceFn "$1"
 	if [ $? -eq 1 ]; then
 		# Read network configuration from /etc/network/interfaces
-		TFILEIFACES=$(cat /etc/network/interfaces)
+		TFILEIFACES=$(cat /etc/network/interfaces | sed 's/^[ \t]*//;s/[ \t]*$//')
 
 		# Place everything after matching iface in a variable
 		CONTENT=$(echo -e "$TFILEIFACES" | grep -A20 "^iface $1 inet" | sed '1d');
