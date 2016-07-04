@@ -414,7 +414,7 @@ function readNetworkConfigurationFn() {
 		fi
 
 		# Get current state
-		STATE=$(ip addr | grep state | grep "$1" | sed 's/.*state/state/g' | cut -f 2 -d" ")
+		STATE=$(ip addr | grep state | grep "${1}:" | sed 's/.*state/state/g' | cut -f 2 -d" ")
 
 		echo "mode $MODE"
 		echo "state $STATE"
