@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2016 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -110,4 +110,16 @@ function createKernelsMenu() {
 			KERNELMENU+=($I",\Zn"$VALUE",off");
 		fi
 	done;
+}
+
+initRamFn() {
+    case $1 in
+        '')
+            grep -q ^FORCEINITRAM= /etc/default/xbian-initramfs && grep ^FORCEINITRAM= /etc/default/xbian-initramfs | cut -d '=' -f2 || echo "no"
+            ;;
+        *)
+            eval sed -i 's/FORCEINITRAM=.*/FORCEINITRAM=$1/' /etc/default/xbian-initramfs
+            echo "1"
+            ;;
+    esac
 }
