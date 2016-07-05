@@ -318,7 +318,7 @@ setInterfaceStaticFn() {
 #  1: Success
 #  0: Error
 function listNetworkInterfacesFn() {
-	IFACES=$(ip addr | grep state | grep -vw 'lo\|dummy0' | cut -f 2 -d":" | sed 's/ //g');
+	IFACES=$(ip addr | grep state | grep -vw 'lo\|dummy[0-9]\|tun[0-9]' | cut -f 2 -d":" | sed 's/ //g' | sort);
 	if [ ! -z "$IFACES" ]; then
 		echo -e "$IFACES"
 		return 1
