@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2016 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -17,6 +17,51 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
+
+mapAndMountFn() {
+    mountpath="/run/kodimap"
+    logger -t $(basename $0) "xbiancopy $1 $2"
+
+    case $1 in
+        mount)
+            if echo $2 | grep -qE ^"(nfs://|smb://|cifs://)"; then
+                type=$(echo $2 | cut -f 1 -d ':')
+                [ "$type" = smb ] && type="cifs"
+                server=$(echo $2 | cut -f 3 -d '/')
+                pf="/$(echo $2 | cut -f 4- -d '/')"
+                path=${pf%/*}
+                name=${pf##*/}
+                logger -t $(basename $0) "xbiancopy type=$type, server=$server, path=$path, name=$name"
+                mkdir -p $mountpath
+                if [ "$type" = cifs ]; then
+                    pwread=0
+                    if [ -e /home/xbian/.kodi/userdata/passwords.xml ]; then
+                        while read line; do
+                            if echo $line | grep -q "from pathversion"; then
+                                echo $line | grep -q "$server" && pwread=1 || pwread=0
+                            elif [ "$pwread" -eq 1 ] && echo $line | grep -q "to pathversion"; then
+                                user=$(echo $line | cut -f 1 -d '@' | cut -f 3 -d '/' | cut -f 1 -d ':')
+                                passwd=$(echo $line | cut -f 1 -d '@' | cut -f 3 -d '/' | cut -f 2 -d ':')
+                            fi
+                        done < /home/xbian/.kodi/userdata/passwords.xml
+                    else
+                        user="unknown"; passwd="unknown"
+                    fi
+                    logger -t $(basename $0) "xbiancopy user=$user, passwd=$passwd"
+                    mount -t $type "//"$server$path -o username=$user,password=$passwd,actimeo=120 $mountpath >/dev/null 2>&1
+                else
+                    mount -t $type $server:$path $mountpath >/dev/null 2>&1
+                fi
+                echo $mountpath/$name
+            else
+                echo $2
+            fi
+            ;;
+        umount)
+            mountpoint -q $mountpath && umount $mountpath >/dev/null 2>&1
+            ;;
+    esac
+}
 
 backupImgPlanFn() {
     [ -z "$1" ] && { grep IMGPLAN= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
@@ -51,17 +96,91 @@ backupImgDestFn() {
             [ ! -b "$1" ] && { echo -1; exit 0; }
             ;;
         file)
-            echo f=\"$1\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
+            echo f=\"$(mapAndMountFn mount $1)\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
             [ ! -e "$f" ] && fdel=1
-            ! touch "$f" 2>/dev/null && { echo -1; exit 0; }
-            [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; exit 0; }
+            ! touch "$f" 2>/dev/null && { echo -1; mapAndMountFn umount; exit 0; }
+            [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; mapAndMountFn umount; exit 0; }
             [ -n "$fdel" ] && rm "$f"
+            mapAndMountFn umount
             ;;
         *)
             { echo -1; exit 0; }
     esac
     eval sed -i 's\@IMGDEST=.*@IMGDEST=\"$1\"@' /etc/default/xbian-snap
     echo 1
+}
+backupImgKeepFn() {
+    sch=0
+    case $1 in
+        '')
+            grep -q ENABLEDSCHEDULE=yes /etc/default/xbian-snap && sch=1
+            nr=$(grep IMGKEEP= /etc/default/xbian-snap| awk -F'=' '{print $2}')
+            [ $sch -eq 1 -a $nr -gt 0 ] && echo "$nr" || echo "0"
+            ;;
+        *)
+            eval sed -i 's/IMGKEEP=.*/IMGKEEP=$1/' /etc/default/xbian-snap
+            grep -q IMGKEEP=$1 /etc/default/xbian-snap && echo 1 || echo 0
+            ;;
+    esac
+}
+
+backupHomePlanFn() {
+    [ -z "$1" ] && { grep HOMEPLAN= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
+    case $1 in
+        none|daily|weekly|monthly)
+            eval sed -i 's/HOMEPLAN=.*/HOMEPLAN=$1/' /etc/default/xbian-snap
+            echo 1
+            ;;
+        *)
+            echo -1
+            ;;
+    esac
+}
+backupHomeDestFn() {
+    [ -z "$1" ] && { grep HOMEDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \"; exit 0; }
+    [ "$1" = "?" ] && { . /etc/default/xbian-snap; echo $HOMEDEST; exit 0; }
+    echo f=\"$(mapAndMountFn mount $1)\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
+    [ ! -e "$f" ] && fdel=1
+    ! touch "$f" 2>/dev/null && { echo -1; mapAndMountFn umount; exit 0; }
+    [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; mapAndMountFn umount; exit 0; }
+    [ -n "$fdel" ] && rm "$f"
+    mapAndMountFn umount
+    eval sed -i 's\@HOMEDEST=.*@HOMEDEST=\"$1\"@' /etc/default/xbian-snap
+    echo 1
+}
+backupHomeKeepFn() {
+    sch=0
+    case $1 in
+        '')
+            grep -q ENABLEDSCHEDULE=yes /etc/default/xbian-snap && sch=1
+            nr=$(grep HOMEKEEP= /etc/default/xbian-snap| awk -F'=' '{print $2}')
+            [ $sch -eq 1 -a $nr -gt 0 ] && echo "$nr" || echo "0"
+            ;;
+        *)
+            eval sed -i 's/HOMEKEEP=.*/HOMEKEEP=$1/' /etc/default/xbian-snap
+            grep -q HOMEKEEP=$1 /etc/default/xbian-snap && echo 1 || echo 0
+            ;;
+    esac
+}
+
+backupDoCleanFn() {
+    logger -t $(basename $0) "doclean $1 $2"
+    ret=0
+    if [ "$2" -gt 0 ]; then
+        p=$(echo $(mapAndMountFn mount $(echo $1 | sed 's/file://')) | sed 's/$(hostname)/'$(hostname)/ | sed 's/$(.*)/'*/)
+        logger -t $(basename $0) "doclean ls -t1 $p"
+        n=0
+        for f in $(ls -t1 $p); do
+            let n+=1
+            if (( $n > $2 )); then
+                logger -t $(basename $0) "doclean rm -rf $f"
+                rm -rf $f
+                [ $? -eq 0 ] || ret=$?
+            fi
+        done
+        mapAndMountFn umount
+    fi
+    echo $ret
 }
 
 getImgPartitionsFn(){

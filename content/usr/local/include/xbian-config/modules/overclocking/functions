@@ -38,13 +38,13 @@ function getCurrentOCSettingsFn() {
 	fi
 	OCOLDSETTINGS[0]=${OC}
     else
-	selectConfigVarFn "arm_freq"
+	selectConfigVarFn "arm_freq="
 	OCOLDSETTINGS[0]=${RETURN#*=}
-	selectConfigVarFn "core_freq"
+	selectConfigVarFn "core_freq="
 	OCOLDSETTINGS[1]=${RETURN#*=}
-	selectConfigVarFn "sdram_freq"
+	selectConfigVarFn "sdram_freq="
 	OCOLDSETTINGS[2]=${RETURN#*=}
-	selectConfigVarFn "over_voltage"
+	selectConfigVarFn "over_voltage="
 	OCOLDSETTINGS[3]=${RETURN#*=}
     fi
 	CURRENTOC=-1;

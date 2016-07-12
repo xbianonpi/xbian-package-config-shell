@@ -19,7 +19,7 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 # The arguments this module accepts
-ARGUMENTS=(start status  imgplan imgdest imgtype getpart dodaily doweekly domonthly);
+ARGUMENTS=(start status imgplan imgdest imgtype imgkeep homestart homestatus homeplan homedest homekeep doclean getpart dodaily doweekly domonthly);
 
 #|------------------------------------|
 #|          Include files             |
@@ -155,6 +155,23 @@ function showCMDFn() {
                 echo "0"
             fi
             ;;
+        homestart)
+            [ "$(xbian-config backuphome status)" -eq 0 ] && { echo "-3"; exit 0; }
+            nice -n +1 /usr/sbin/btrfs-auto-snapshot backuphome $2 > /dev/null 2>&1 & pid=$!
+            echo $pid > /tmp/backuphome.running
+            echo $pid
+            ;;
+        homestatus)
+            [ -e /tmp/backuphome.running ] || { echo "-2"; exit 0; }
+            if test -e "/xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)"; then
+                rm -f "/xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)"
+                rm -f /tmp/backuphome.running
+                echo "1"
+            else
+                kill -0 $(cat /tmp/backuphome.running) > /dev/null 2>&1 || { echo "-1"; rm -f /tmp/backuphome.running; exit 0; }
+                echo "0"
+            fi
+            ;;
         imgplan)
             echo $(backupImgPlanFn $2)
             ;;
@@ -163,6 +180,21 @@ function showCMDFn() {
             ;;
         imgdest)
             echo $(backupImgDestFn $2)
+            ;;
+        imgkeep)
+            echo $(backupImgKeepFn $2)
+            ;;
+        homeplan)
+            echo $(backupHomePlanFn $2)
+            ;;
+        homedest)
+            echo $(backupHomeDestFn $2)
+            ;;
+        homekeep)
+            echo $(backupHomeKeepFn $2)
+            ;;
+        doclean)
+            echo $(backupDoCleanFn $2 $3)
             ;;
         getpart)
             echo $(getImgPartitionsFn)

@@ -1,4 +1,11 @@
-# enable periodic running (daily / weekly)
+#
+# This is controlfile for xbian-config console application and Kodi's
+# XBian config GUI. Please do not modify this file manually unless you
+# know what you are doing.
+#
+
+
+# enable periodic running (daily / weekly / monthly)
 ENABLEDSCHEDULE=yes
 KEEPDAYS=3
 KEEPWEEKS=2
@@ -8,6 +15,9 @@ KEEPMONTHS=0
 # restoration will take few seconds to state before APT run
 ENABLEDAPT=yes
 KEEPAPT=10
+
+# exclude those subvolumes by default for btrfs-auto-snapshot operations (comma separated list)
+EXCLUDESUB=
 
 # auto clone / image creation should be run: none/daily/weekly/monthly
 IMGPLAN=none
@@ -19,5 +29,14 @@ IMGTYPE=notset
 # path to img including file name (/media/my_disk/xbian_backup.img) or block device (/dev/sda1)
 IMGDEST=notset
 
-# exclude those subvolumes by default for btrfs-auto-snapshot operations (comma separated list)
-EXCLUDESUB=
+# how many images should be kept (0 means unlimited)
+IMGKEEP=0
+
+# auto backup of /home should be run: none/daily/weekly/monthly
+HOMEPLAN=none
+
+# path to img.gz including file name (/media/my_disk/xbian_home_backup.img.gz)
+HOMEDEST=notset
+
+# how many /home images should be kept (0 means unlimited)
+HOMEKEEP=0
