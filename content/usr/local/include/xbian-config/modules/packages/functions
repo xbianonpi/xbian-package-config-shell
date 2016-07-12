@@ -27,7 +27,7 @@ function getPackageCategoryListFn() {
 }
 
 function getAllPackagesFn() {
-	IFS=$'\n' PACKAGES=($(echo -e "$CONTENT" | grep "Package:" | grep -v "xbian-update" | sed 's/Package: \|xbian-package-//g' | sort | uniq));
+	IFS=$'\n' PACKAGES=($(echo -e "$CONTENT" | grep "^Package:" | grep -v "xbian-update" | sed 's/Package: \|xbian-package-//g' | sort | uniq));
 }
 
 function getPackagesFromCategoryFn() {
