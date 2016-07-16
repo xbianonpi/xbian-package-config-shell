@@ -23,6 +23,7 @@ version2=$(cat ./content/DEBIAN/control | grep Version | awk '{print $2}' | awk 
 version1=$(date +%Y%m%d)
 
 version=$version1-$version2
+rsync -a -f"+ */" -f"- *" content-tpl/. content/
 for f in $(find ./content-tpl -type f -printf "%P\n"); do
     cp ./content-tpl/$f content/$f
     sed -i "s%__DATE__%$version%g" ./content/$f
