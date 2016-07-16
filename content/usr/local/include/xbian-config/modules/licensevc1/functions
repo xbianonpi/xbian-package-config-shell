@@ -22,7 +22,7 @@
 # Returns
 #  $LICENSE [String]
 function getCurrentLicenseVC1Fn() {
-	LICENSE=$(cat /boot/config.txt | grep 'decode_WVC1' | cut -f 2 -d=); 
+	LICENSE=$(sed -ne 's/\(decode_WVC1=\)\(.*\)/\2/p' /boot/config.txt);
 }
 
 
@@ -69,7 +69,7 @@ function updateLicenseVC1Fn() {
 #  - 0: Failed
 function deleteLicenseVC1Fn() {
 	sed -i "/decode_WVC1=$1/d" /boot/config.txt;
-	if [ $(cat /boot/config.txt | grep -c $1) -eq 0 ]; then
+	if [ $(grep -c $1 /boot/config.txt) -eq 0 ]; then
 		return 1;
 	else
 		return 0;
