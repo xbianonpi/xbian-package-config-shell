@@ -31,7 +31,7 @@ rmtmp() {
 # Disable [ctrl]-c and [ctrl]-z actions
 trap '' 2 20
 #trap "{ test -e /run/xbian-config.umount && mountpoint -q /boot && umount /boot; rm -fr /run/xbian-config.$$ /run/xbian-config.umount; [ $GUIMODE -eq 1 ] && showMainCloseDlg; }" EXIT INT ERR
-trap "{ rmtmp; env | grep -qw GUIMODE=1 && showMainCloseDlg; }" EXIT INT ERR
+trap "{ rmtmp; env | grep -qw GUIMODE=1 && showMainCloseDlg; eval $(echo "sed -i '/$$/d' /run/lock/xbian-config"); }" EXIT INT ERR
 
 #|------------------------------------|
 #|          Global variables          |
