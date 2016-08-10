@@ -434,6 +434,7 @@ fi
 # ISO style date; fifteen characters: YYYY-MM-DD-HHMM
 # On Solaris %H%M expands to 12h34.
 DATE=$(date +%F-%H%M)
+CONFIGPATH='/home/xbian/.kodi/userdata/addon_data/plugin.xbianconfig'
 
 COUNTER='0'
 while true; do
@@ -714,6 +715,7 @@ for all users - change /boot/cmdline.txt if you want to boot from the copy just 
  
 if you created img file, cmdline.txt was updated automatically." 24 79
 		touch /tmp/xbiancopy.running.$$
+                [ -e ${CONFIGPATH} ] && { echo "$DATE" > ${CONFIGPATH}/$opt_command; chown xbian:xbian ${CONFIGPATH}/${opt_command}; }
 		;;
         (backuphome)
                 set -- $(mapAndMountFn mount $1)
@@ -737,6 +739,8 @@ if you created img file, cmdline.txt was updated automatically." 24 79
                     mkdir -p /xbmc-backup/put_here_to_restore
                 fi
                 [ -e "/tmp/backuphome.running" ] && touch /xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)
+                [ -e ${CONFIGPATH} ] && { echo "$DATE" > ${CONFIGPATH}/$opt_command; chown xbian:xbian ${CONFIGPATH}/${opt_command}; }
+
                 ;;
         (restorehome)
                 [ -e $1 ] || exit 500
