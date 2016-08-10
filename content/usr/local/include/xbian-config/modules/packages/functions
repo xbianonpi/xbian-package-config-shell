@@ -36,33 +36,39 @@ function getPackagesFromCategoryFn() {
         IFS=$'\n' PACKAGES=($(echo -e "$CONTENT" | grep -v "xbian-update" | awk -vRS='' "/Section: $NAME/"'{print $0"\n"}' | grep "Package:" | sed 's/Package: \|xbian-package-//g' | sort | uniq))
 }
 
-
 function getPackageStatusFn() {
-	echo -e "$ALLPKGLST" | grep -v "xbian-update" | grep -wq "xbian-package-$1\|$1"
+	echo -e "$ALLPKGLST" | grep -wq "xbian-package-$1\|$1"
 	return $((1-$?))
 }
 
+function getPackageStatusCountFn() {
+	return $(echo -e "$ALLPKGLST" | grep -wcE "$1")
+}
+
 function updateAllPackagesListFn() {
-        ALLPKGLST=$(dpkg-query -W --showformat='${Package} %%${Origin}%% %%${Status}%%\n'  | grep -i '%%XBian%%' | grep -w installed%%);
+        #ALLPKGLST=$(dpkg-query -W --showformat='${Package} %%${Origin}%% %%${Status}%%\n'  | grep -i '%%XBian%%' | grep -w installed%%);
+        ALLPKGLST=$(dpkg-query -W --showformat='${Package} %%${Origin}%% %%${Status}%%\n' | grep -v "xbian-update" | grep -w installed%%);
 }
 
 #Gets the package information
-# $1: Package name
+# $1: Package name (without prefix xbian-package-)
 function getPackageInformationFn() {
 	NAME=$1;
-	INFO=$(echo -e "$CONTENT" | awk -vRS='' "/Package:[A-Za-z -]+$NAME\n/"'{print $0"\n"}' | grep -v "xbian-update");
+	echo -e "$CONTENT" | grep -q "Package: xbian-package-$NAME" && PREFIX="xbian-package-" || PREFIX=''
+	INFO=$(echo -e "$CONTENT" | awk -vRS='' "/Package:[A-Za-z -]+$PREFIX$NAME\n/"'{print $0"\n"}' | grep -v "xbian-update");
 	IFS=$'\n' VERSIONS=($(echo -e "$INFO" | sed -ne 's/\(Version: \)\([0-9\.]\{1,\}\)/\2/p'));
 	X=0; I=0
 	for KEY in ${!VERSIONS[@]}; do
-		if [[ "${VERSIONS[$KEY]}" > "$X" ]]; then
-			X=${VERSIONS[$KEY]};
+	        V=$(echo ${VERSIONS[$KEY]} | sed 's/~RC[0-9]-/-/g')
+		if [[ "$V" > "$X" ]]; then
+			X=$V;
 			I=$KEY;
 		fi
 	done;
 	PKGINFO=();
-	INFO=$(echo -e "$INFO" | awk -vRS='' "/Version: $X/"'{print $0"\n"}');
+	INFO=$(echo -e "$INFO" | awk -vRS='' "/Version: $(echo $X | sed 's/+/[+]/g')/"'{ if ( ++hit == 1 ) {print $0"\n"} }' );
 	PKGINFO[0]=$(echo -e "$INFO" | sed -ne 's/\(Package: \)\([A-Za-z0-9. -]\{1,\}\)/\2/p' | sort -r);
-	PKGINFO[1]=$X;
+	PKGINFO[1]=${VERSIONS[$I]}
 	PKGINFO[2]=$(($(echo -e "$INFO " | sed -ne 's/\(Installed-Size: \)\([0-9]\{1,\}\)/\2/p')*1024))
 	PKGINFO[3]=$(echo -e "$INFO" | sed -ne 's/\(^Size: \)\([0-9]\{1,\}\)/\2/p');
 	PKGINFO[4]=$(echo -e "$INFO" | sed -ne 's/\(Description: \)\([A-Za-z0-9\ ]\{1,\}\)/\2/p');
@@ -77,19 +83,18 @@ function installPackageFn() {
 	NAME=$2;
 	NAME=${NAME/xbian-package-/}
 	NAME=$(echo $NAME | cut -f 1 -d"=");
-	if [ $(getPackageStatusFn $NAME; echo $?) -eq 1 ]; then
-		return 1;
-	else
-		if [ $1 -eq 1 ]; then
-			eval apt-get install -s $2 &>/tmp/aptstatus
-		elif [ $1 -eq 0 ]; then
-			eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus
-		elif [ $1 -eq 2 ]; then
-			eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus &
-		fi
-		getAptErrorCodeFn;
-		return $?;
+	#if [ $(getPackageStatusFn $NAME; echo $?) -eq 1 ]; then
+	#	return 1;
+	if [ $1 -eq 1 ]; then
+		LC_ALL=C.UTF-8 eval apt-get install -s $2 &>/tmp/aptstatus
+	elif [ $1 -eq 0 ]; then
+		LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus
+	elif [ $1 -eq 2 ]; then
+		LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $2 &>/tmp/aptstatus &
 	fi
+	# Returncode only correct on simulation (1) on real operation (0,2) probably useless
+	getAptErrorCodeFn;
+	return $?;
 }
 
 #Remove a package
@@ -103,7 +108,7 @@ function removePackageFn() {
 		return 1;
 	else
 		if [ $1 -eq 1 ]; then
-			apt-get purge -s $2 &>/tmp/aptstatus
+			LC_ALL=C.UTF-8 apt-get purge -s $2 &>/tmp/aptstatus
 
 			if [ $(grep -c "is not installed, so not removed" /tmp/aptstatus) -eq 1 ]; then
 				return 1;
@@ -115,9 +120,9 @@ function removePackageFn() {
 				return 0;
 			fi
 		elif [ $1 -eq 0 ]; then
-			apt-get purge -y $2 &>/tmp/aptstatus
+			LC_ALL=C.UTF-8 apt-get purge -y $2 &>/tmp/aptstatus
 		elif [ $1 -eq 2 ]; then
-			nohup apt-get purge -y $2 &>/tmp/aptstatus &
+			LC_ALL=C.UTF-8 nohup apt-get purge -y $2 &>/tmp/aptstatus &
 		fi
 	fi
 }
