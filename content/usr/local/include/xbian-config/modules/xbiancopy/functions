@@ -21,6 +21,7 @@
 mapAndMountFn() {
     mountpath="/run/kodimap"
     logger -t $(basename $0) "xbiancopy $1 $2"
+    ret=0
 
     case $1 in
         mount)
@@ -52,6 +53,7 @@ mapAndMountFn() {
                 else
                     mount -t $type $server:$path $mountpath >/dev/null 2>&1
                 fi
+                ret=$?
                 echo $mountpath/$name
             else
                 echo $2
@@ -59,8 +61,10 @@ mapAndMountFn() {
             ;;
         umount)
             mountpoint -q $mountpath && umount $mountpath >/dev/null 2>&1
+            ret=$?
             ;;
     esac
+    return $ret
 }
 
 backupImgPlanFn() {
