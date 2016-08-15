@@ -565,21 +565,24 @@ case $opt_command in
 		do_rename $(dirname $1)/@$tmpd $1_rollback
                 ;;
 	(xbiancopy)
+	        rc=0
 		(
 		sysctl -w fs.file-max=80000 > /dev/null 2>/dev/null
-		[ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
-		[ "$(readlink -e $1)" = "$(readlink -e $2)" ] && { echo "source and destination can not be the same block device"; exit 5; }
+		[ $# -ne 2 ] && { echo "wrong aruments list"; rc=5; exit $rc; }
+		[ "$(readlink -e $1)" = "$(readlink -e $2)" ] && { echo "source and destination can not be the same block device"; rc=5; exit $rc; }
 
 		if [ $opt_dev != $1 ]; then
-		    [ ! -b $1 ] && echo "non existend source device" && exit 5
+		    [ ! -b $1 ] && echo "non existend source device" && { rc=5; exit $rc; }
 		    BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
 		fi
 
 		mkdir -p /tmp/btrfs-dest
 		if [ -n "$opt_img" ]; then
-		    set -- $1 $(mapAndMountFn mount $2)
-		    [ -e "$2" ] && rm -f "$2"; touch "$2" || { echo "can not create img file"; exit 5; }
-		    [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; exit 5; }
+		    fn=$(mapAndMountFn mount $2)
+		    [ "$?" -eq 0 ] || { echo "can not mount fs"; rc=5; exit $rc; }
+		    set -- $1 $fn
+		    [ -e "$2" ] && rm -f "$2"; touch "$2" || { echo "can not create img file"; rc=5; exit $rc; }
+		    [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; rc=5; exit $rc; }
 
 		    if grep -q "rootflags=subvol=" /proc/cmdline; then
 			subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
@@ -602,8 +605,8 @@ case $opt_command in
 			size=$opt_size
 		    fi
 
-		    [ "$(printf "%s\n%s\n" $(df -h $2 | tail -1 | awk '{print $4}') "$size" | sort -rh | grep -m1 .)" = "$size" ] && { echo "not enough free space on destination filesystem"; exit 5; }
-		    chattr +CA $2 &>/dev/null;  truncate -s $size $2 || { echo "can't resize img file to needed size"; exit 5; }
+		    [ "$(printf "%s\n%s\n" $(df -h $2 | tail -1 | awk '{print $4}') "$size" | sort -rh | grep -m1 .)" = "$size" ] && { echo "not enough free space on destination filesystem"; rc=5; exit $rc; }
+		    chattr +CA $2 &>/dev/null;  truncate -s $size $2 || { echo "can't resize img file to needed size"; rc=5; exit $rc; }
 		    modprobe -q loop
 
 		    parted -s $2 mklabel msdos
@@ -620,7 +623,7 @@ case $opt_command in
 		        timeout=$(($timeout+1))
 		        if [ $timeout -gt 10 ]; then
 			    echo "Loop device not available";
-			    exit 4;
+			    rc=4; exit $rc;
 		        fi
 		        sleep 1;
 		    done		
@@ -635,7 +638,7 @@ case $opt_command in
 		    else
 		        mkfs.msdos -F 16 -n xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
 		    fi
-		    mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
+		    mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || { rc=5; exit $rc; }
 
 		    cp -ar /boot/* /tmp/btrfs-dest > /dev/null 2>&1
 		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootflags=*}
@@ -651,27 +654,30 @@ case $opt_command in
 
 		mkdir -p /tmp/btrfs-source
 		mount -t btrfs -o noatime,subvol=/ $1 /tmp/btrfs-source
-		eval $opt_remotecmd findmnt -n -S $2 >/dev/null && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
+		eval $opt_remotecmd findmnt -n -S $2 >/dev/null && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; rc=5; exit $rc; }; }
 		if [ -z "$opt_nocreate" ]; then
-		    eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; exit 5; }
+		    eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; rc=5; exit $rc; }
 		fi
 		eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
 
 		if ! eval findmnt -n / | grep -q "compress=lz4" || ! eval $opt_remotecmd mount -o compress=lz4,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
 		    if ! eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
 			echo "can not mount destination partition"
-			exit 6
+			rc=6; exit $rc
 		    fi
 		fi
 
 		) | dialog --progressbox "Preparing devices" 7 60
+
+		[ "$rc" -ne 0 ] && exit $rc
 
 		if grep -q "rootflags=subvol=" /proc/cmdline; then
 		    subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
 		    export subvolumeextra
 		    snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootflags=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
 		fi
-		( sysctl -w fs.file-max=80000 > /dev/null 2>/dev/null
+		(
+		sysctl -w fs.file-max=80000 > /dev/null 2>/dev/null
 		BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
 		snapextra=$(printf "%s\n%s\n" "@$snapextra" "@"| sort | uniq)
 		for v in $BTRFS_LIST; do
@@ -696,7 +702,8 @@ case $opt_command in
 #		        printf "\n%s\n" "---> DONE COPYING SUB-VOLUME $v SNAPSHOT $s" 
 		    done
 #		    printf "\n%s\n\n" "DONE COPYING SUB-VOLUME $v" 
-		done )  2>&1 | dialog --gauge "Cloning all subvolumes. Please wait..." 10 60
+		done
+		)  2>&1 | dialog --gauge "Cloning all subvolumes. Please wait..." 10 60
 
 		eval $opt_remotecmd umount /tmp/btrfs-dest; eval $opt_remotecmd rmdir /tmp/btrfs-dest > /dev/null 2>&1
 		umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
@@ -718,7 +725,9 @@ if you created img file, cmdline.txt was updated automatically." 24 79
                 [ -e ${CONFIGPATH} ] && { echo "$DATE" > ${CONFIGPATH}/$opt_command; chown xbian:xbian ${CONFIGPATH}/${opt_command}; }
 		;;
         (backuphome)
-                set -- $(mapAndMountFn mount $1)
+                fn=$(mapAndMountFn mount $1)
+                [ "$?" -eq 0 ] || { echo "can not mount fs"; exit 5; }
+                set -- $fn
                 if [ "$(dirname $1)" = "/xbmc-backup" -o "$1" = "//" ]; then
                     FILE="/xbmc-backup/temp/backup_home_$DATE.img.gz"
                     mkdir /xbmc-backup/temp
