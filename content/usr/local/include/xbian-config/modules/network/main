@@ -496,7 +496,7 @@ function showCMDFn() {
 			fi
 		;;
 		scan)
-			if [ $# == 2 ] && [[ "$2" =~ "wlan" ]]; then
+			if [ $# == 2 ] && [[ "$2" =~ "wlan" ]] || [[ "$2" =~ "ra" ]]; then
 				isValidInterfaceFn "$2"
 				if [ $? -eq 1 ]; then
 					scanWLANNetworksFn $2;
