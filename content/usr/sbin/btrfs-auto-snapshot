@@ -641,6 +641,12 @@ case $opt_command in
 		    mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || { rc=5; exit $rc; }
 
 		    cp -ar /boot/* /tmp/btrfs-dest > /dev/null 2>&1
+		    if [ "$(xbian-arch)" = RPI ]; then
+		        sed -i 's/^#initramfs /initramfs /' /tmp/btrfs-dest/config.txt
+		    fi
+		    if [ "$(xbian-arch)" = iMX6 ]; then
+		        [ -e /boot/initramfs.gz.notinuse -a ! -e /boot/initramfs.gz ] && mv /tmp/btrfs-dest/initramfs.gz.notinuse /tmp/btrfs-dest/initramfs.gz
+		    fi
 		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootflags=*}
 
 		    if test -e /boot/cmdline.txt; then
