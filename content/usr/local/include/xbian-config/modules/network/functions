@@ -21,7 +21,7 @@
 setAuto() {
     ni=$1
     case $1 in 
-        wlan?)
+        wlan?|ra?)
             echo "auto lo" > /etc/network/interfaces.new
             grep -vi ^auto /etc/network/interfaces >> /etc/network/interfaces.new
             mv /etc/network/interfaces.new /etc/network/interfaces
@@ -158,7 +158,7 @@ setInterfaceDhcpFn() {
 
 		else
 			# Interface not present, add it to the end
-			case $1 in wlan?) echo "allow-hotplug $1" >> /etc/network/interfaces; ;; esac
+			case $1 in wlan?|ra?) echo "allow-hotplug $1" >> /etc/network/interfaces; ;; esac
 			sudo echo -e "iface $1 inet dhcp\n" >> /etc/network/interfaces
 
 		fi
@@ -294,7 +294,7 @@ setInterfaceStaticFn() {
 
 		else
 			# Interface not present, add it to the end
-			case $1 in wlan?) echo "allow-hotplug $1" >> /etc/network/interfaces; ;; esac
+			case $1 in wlan?|ra?) echo "allow-hotplug $1" >> /etc/network/interfaces; ;; esac
 			sudo echo -e "iface $1 inet static" >> /etc/network/interfaces
 			echo -e "$BUFFERIFACES\n" >> /etc/network/interfaces
 
@@ -396,7 +396,7 @@ function readNetworkConfigurationFn() {
 			PROTECTION="WEP"
 		fi
 
-		[ -z "$PROTECTION" ] && [[ $1 =~ wlan ]] && PROTECTION=open
+		case $1 in wlan?|ra?) [ -z "$PROTECTION" ] && PROTECTION=open;; esac
 
 		# Extract wlan credentials
 		SSID=""
