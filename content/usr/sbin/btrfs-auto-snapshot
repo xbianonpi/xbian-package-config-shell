@@ -650,6 +650,7 @@ case $opt_command in
 		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootflags=*}
 
 		    if test -e /boot/cmdline.txt; then
+			echo $z | grep -q "root=LABEL" || z="root=donotmodify"
 			cat /boot/cmdline.txt | eval $(echo "sed 's%$z%root=LABEL=$opt_clonename%'") > /tmp/btrfs-dest/cmdline.txt
 			sed -i 's/^#initramfs /initramfs /' /tmp/btrfs-dest/config.txt
 		    fi
