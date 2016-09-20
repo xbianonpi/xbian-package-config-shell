@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2013 Hexagon & CurlyMo & mk01 <development@xbian.org>
+#Copyright 2012 - 2013 Hexagon, CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -99,7 +99,7 @@ function showIPModeConfigGUIFn() {
 			else
 				# Configuration done
 				showRestartAdapterDlg "$IFACE"
-				restartLANAdapterFn "$IFACE"
+				restartAdapterFn "$IFACE"
 				setAuto "$IFACE"
 				showGUIFn
 			fi
@@ -142,7 +142,7 @@ function showInterfaceStaticGUIFn() {
 					showWlanScanGUIFn "$1" "$2"
 				else
 					showRestartAdapterDlg $1
-					restartLANAdapterFn $1
+					restartAdapterFn $1
 					setAuto $1
 					showGUIFn;
 				fi
@@ -284,21 +284,21 @@ function showWlanProtectionGUIFn() {
 
 function showWlanRestartGUIFn() {
 	showRestartAdapterDlg $1
-	restartWLANAdapterFn "$1"
+	restartAdapterFn "$1"
 	LASTSTATUS=-1;
 	setAuto $1
-	while kill -0 $(cat /tmp/wlanstatus.pid) 2>/dev/null; do
+	while kill -0 $(cat /tmp/ifup.pid) 2>/dev/null; do
 		showWLANConnectingDlg $2
 		sleep 1
 	done
-	getWLANConnectStatusFn $1
+	getConnectStatusFn $1
 
 	if [ $STATUS -eq 2 ]; then
 		showWLANConnectionSuccessDlg $2
 	elif [ $STATUS -eq 3 ]; then
 		showWLANConnectionFailedDlg $2
 	fi
-	clearWLANStatusFn;
+	clearStatusFn;
 	return $STATUS;
 
 
@@ -338,7 +338,7 @@ function showWlanRestartGUIFn() {
 #  -8: Invalid Gateway
 #  -9: Invalid DNS
 #  -10: Invalid wireless protection
-#  -11: WLAN already restarting
+#  -11: Already restarting
 #  -12: Awaiting progress status
 function showCMDFn() {
 	case $1 in
@@ -513,19 +513,14 @@ function showCMDFn() {
 		;;
 		restart)
 			if [ $# == 2 ]; then
-				getAdapterTypeFn $2;
+				isValidInterfaceFn "$2"
 				if [ $? -eq 1 ]; then
-					isValidInterfaceFn "$2"
-					if [ $? -eq 1 ]; then
-						restartWLANAdapterFn $2
-						if [ "$PROCESSID" -gt 0 ]; then
-							setAuto $2
-							echo 1
-						else
-							echo -11
-						fi
+					restartAdapterFn $2
+					if [ "$PROCESSID" -gt 0 ]; then
+						setAuto $2
+						echo 1
 					else
-						echo -2
+						echo -11
 					fi
 				else
 					echo -2;
@@ -535,20 +530,18 @@ function showCMDFn() {
 			fi
 		;;
 		progress)
-			if kill -0 $(cat /tmp/wlanstatus.pid) 2>/dev/null; then
+			if [ -e /tmp/ifup.pid ] && kill -0 $(cat /tmp/ifup.pid) 2>/dev/null; then
 				echo 2
 			else
-				getWLANConnectStatusFn $2;
-				if [ $STATUS -eq 0 ]; then
+				getConnectStatusFn $2;
+				if [ $STATUS -le 1 ]; then
 					echo -12;
-				elif [ $STATUS -eq 1 ]; then
-					echo 0;
 				elif [ $STATUS -eq 2 ]; then
 					echo 1;
-					clearWLANStatusFn;
+					clearStatusFn;
 				elif [ $STATUS -eq 3 ]; then
 					echo 0;
-					clearWLANStatusFn;
+					clearStatusFn;
 				fi
 
 			fi

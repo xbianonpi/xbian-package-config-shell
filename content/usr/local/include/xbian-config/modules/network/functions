@@ -19,15 +19,29 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
 setAuto() {
-    ni=$1
-    case $1 in 
-        wlan?|ra?)
-            echo "auto lo" > /etc/network/interfaces.new
+    case $1 in
+        eth?|wlan?|ra?)
+            if grep ^auto /etc/network/interfaces > /etc/network/interfaces.new; then
+                if ! grep -q ^"auto.*$1" /etc/network/interfaces.new; then
+                    sed -i "s%auto %auto $1 %" /etc/network/interfaces.new
+                fi
+            else
+                echo "auto $1 lo" > /etc/network/interfaces.new
+            fi
             grep -vi ^auto /etc/network/interfaces >> /etc/network/interfaces.new
             mv /etc/network/interfaces.new /etc/network/interfaces
             ;;
-        eth?)
-            echo "auto $1 lo" > /etc/network/interfaces.new
+        lo)
+            ;;
+    esac
+
+    return 0
+}
+
+resAuto() {
+    case $1 in
+        eth?|wlan?|ra?)
+            grep ^auto /etc/network/interfaces | sed "s% $1%%" > /etc/network/interfaces.new
             grep -vi ^auto /etc/network/interfaces >> /etc/network/interfaces.new
             mv /etc/network/interfaces.new /etc/network/interfaces
             ;;
@@ -41,12 +55,12 @@ setAuto() {
 setInterfaceDisableFn() {
     case $1 in
         eth?)
-            setAuto wlan0
+            resAuto $1
             ;;
-        wlan?)
+        wlan?|ra?)
             sed -i "s%^allow-hotplug.*$1%#allow-hotplug $1%" /etc/network/interfaces
             sed -i "s%^iface.*$1%#iface $1%" /etc/network/interfaces
-            setAuto eth0
+            resAuto $1
             ;;
         *)
             ;;
@@ -212,12 +226,12 @@ function checkValidIpNetmaskFn() {
 #  $1 Interface name
 #  $2 IP
 #  $3 Netmask
-#  $4 Gateway
+#  $4 Gateway (optional)
 #  $5 DNS1 (optional)
 #  $6 DNS2 (optional)
 # Returns
 #  0: Failed
-#  1: Succeede
+#  1: Success
 # Error codes
 #  -3: Invalid interface
 #  -6: Invalid IP
@@ -245,12 +259,14 @@ setInterfaceStaticFn() {
 			BUFFERIFACES+="\nnetmask $3"
 		fi
 		if [ $# -gt 3 ] && [ -n "$4" ]; then
-		    checkValidGwFn "$2" "$3" "$4"
-		    if [ ! $? -eq 1 ]; then
-			return 8;
-		    else
-			BUFFERIFACES+="\ngateway $4"
-		    fi
+			if [ "$4" != "None" ] && [ "$4" != "0.0.0.0" ]; then
+				checkValidGwFn "$2" "$3" "$4"
+				if [ ! $? -eq 1 ]; then
+					return 8;
+				else
+					BUFFERIFACES+="\ngateway $4"
+				fi
+			fi
 		fi
 		if [ $# -gt 4 ] && [ ! -z "$5" ]; then
 			checkIp "$5"
@@ -355,9 +371,9 @@ function isValidInterfaceFn() {
 #	state UP|DOWN
 #       ip X.X.X.X
 #       netmask X.X.X:X
-#       gateway X.X.X.X
+#       gateway X.X.X.X or None
 #       nameserver1 X.X.X.X
-#       namserver2 X.X.X.X
+#       nameserver2 X.X.X.X
 #	protection WEP|WPA|open (only for wlan interfaces)
 #	SSID XXXX (only for wlan interfaces)
 #	WLANKEY XXXX (only for wlan interfaces)
@@ -368,7 +384,7 @@ function readNetworkConfigurationFn() {
 	isValidInterfaceFn "$1"
 	if [ $? -eq 1 ]; then
 		# Read network configuration from /etc/network/interfaces
-		TFILEIFACES=$(cat /etc/network/interfaces | sed 's/^[ \t]*//;s/[ \t]*$//')
+		TFILEIFACES=$(cat /etc/network/interfaces | sed 's/^[ \t]*//;s/[ \t]*$//' | grep -v "^#")
 
 		# Place everything after matching iface in a variable
 		CONTENT=$(echo -e "$TFILEIFACES" | grep -A20 "^iface $1 inet" | sed '1d');
@@ -381,7 +397,8 @@ function readNetworkConfigurationFn() {
 		[ -z "$MODE" ] && MODE=manual
 		CIP=$(ip a show $1 | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet \([0-9.]\+\).*/\1/gp');
 		CSM=$(ipcalc $(ip -4 -o a show $1 | awk '{print $4}') | grep Netmask | awk '{print $2}');
-		CGW=$(ip route show | grep -m1 'default\|0.0.0.0' | awk '{print $3}');
+		CGW=$(echo -e "$CONTENT" | grep ^gateway | awk '{print $2}')
+		[ -z "$CGW" ] && { if [ "$MODE" == "dhcp" ]; then CGW=$(ip route show | grep -m1 'default\|0.0.0.0' | awk '{print $3}'); else CGW="None"; fi; }
 
 		# Extract wlan configuration
 		PROTECTION=""
@@ -455,7 +472,7 @@ function readNetworkConfigurationFn() {
 #  1: Valid
 #  0: Invalid
 function scanWLANNetworksFn() {
-	ip link set $1 up >/dev/null 2>&1; sleep 3
+	ip link set $1 up &>/dev/null; sleep 3
 	IFS=$'\n'
 	OUTPUT=($(iwlist $1 scan));
 
@@ -524,60 +541,58 @@ function scanWLANNetworksFn() {
 	IFS=$ORIGINALIFS;
 }
 
-# Restart a wlan adapter
+# Restart a (w)lan adapter
 # Arguments
 #  $1 Interface name
 # Return
 #  @: Process id of the ifup process
 #  0: Process ifup not running
-function restartWLANAdapterFn() {
+function restartAdapterFn() {
 	ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null
-	pkill wpa_supplicant > /dev/null 2>&1;pkill wpa_cli > /dev/null 2>&1
-	nohup ifup $1 2>/tmp/wlanstatus 1>/dev/null  &
-	PROCESSID=$!; echo $PROCESSID > /tmp/wlanstatus.pid
+	for p in $(ps x | grep -wE "(dhclient|wpa_supplicant|wpa_cli).*$1" | grep -v grep | awk '{ print $1 }'); do kill -TERM "$p" &>/dev/null; done
+	nohup ifup $1 &>/tmp/ifup.out &
+	PROCESSID=$!; echo $PROCESSID > /tmp/ifup.pid
 	return $PROCESSID
 }
 
-# Restart a lan adapter
-# Arguments
-#  $1 Interface name
+# Gets the status of the (w)lan restart
 # Return
-#  @: Process id of the ifup process
-#  0: Process ifup not running
-function restartLANAdapterFn() {
-        [ -n "$1" ] && ifc=$1 || ifc=eth0
-	ifdown $ifc >&/dev/null
-	ifdown --force $ifc >&/dev/null 
-	ifup $ifc >&/dev/null
-}
-
-# Gets the status of the wlan restart
-# Return
-#  0: The wlan status file does not exist
-#  1: Connecting to wlan network
+#  0: The (w)lan status file does not exist
+#  1: Connecting to (w)lan network
 #  2: Successfully connected to network
 #  3: Failed to connected to network
-function getWLANConnectStatusFn() {
-	STATUS=0;
+function getConnectStatusFn() {
 	[ -n "$1" ] && ifc=$1 || ifc=XXXXXXXX
-	if [ -f /tmp/wlanstatus ]; then
-		STATUS=1
-		if grep -qw "bound" /tmp/wlanstatus || grep "iface $1" /etc/network/interfaces | grep -q static; then
+	if [ -f /tmp/ifup.out ]; then
+		if grep -qw ^"iface $1.*static" /etc/network/interfaces && ! ip addr | grep -qw "$1.*DORMANT"; then
 			STATUS=2;
-		elif grep -qw 'DHCPOFFERS\|Terminated\|RTNETLINK' /tmp/wlanstatus; then
+		elif grep -qw "bound" /tmp/ifup.out; then
+			STATUS=2;
+		elif grep -qw 'No DHCPOFFERS\|Terminated\|RTNETLINK' /tmp/ifup.out; then
 			STATUS=3;
+		else
+			STATUS=1;
 		fi
+	else
+		STATUS=0;
 	fi
 	
 	return $STATUS;
 }
 
-function clearWLANStatusFn() {
-	if [ -f /tmp/wlanstatus ]; then
-		rm /tmp/wlanstatus*
+function clearStatusFn() {
+	if [ -f /tmp/ifup.out ]; then
+		# rm -f /tmp/ifup.out
+		rm -f /tmp/ifup.pid
 	fi
 }
 
+# Gets type of adapter
+# Arguments
+#  $1 Interface name
+# Return
+#  1: Adapter is WLAN
+#  0: Adapter is anything else
 function getAdapterTypeFn() {
 	if [ ! -d "/sys/class/net/$1/wireless" ] && [ -d "/sys/class/net/$1" ]; then
 		return 0;
