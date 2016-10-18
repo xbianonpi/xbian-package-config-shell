@@ -728,7 +728,7 @@ do the following steps:
 for all users - change /boot/cmdline.txt if you want to boot from the copy just created. change root=LABEL=xbian-root-btrfs to root=LABEL=xbian-copy
  
 if you created img file, cmdline.txt was updated automatically." 24 79
-		touch /tmp/xbiancopy.running.$$
+		[ -e "/tmp/xbiancopy.running" ] && touch /tmp/xbiancopy.running.$(cat /tmp/xbiancopy.running)
                 [ -e ${CONFIGPATH} ] && { echo "$DATE" > ${CONFIGPATH}/$opt_command; chown xbian:xbian ${CONFIGPATH}/${opt_command}; }
 		;;
         (backuphome)
