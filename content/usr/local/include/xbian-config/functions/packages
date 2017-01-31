@@ -72,8 +72,7 @@ function downloadPackageListFn() {
 				fi
 			    done
 			done
-			[ $err -ne 0 ] || { mv $BASEPATH/config/pkglist.new $BASEPATH/config/pkglist; break; }
-			touch /var/lib/apt/periodic/package-success-stamp
+			[ $err -ne 0 ] || { mv $BASEPATH/config/pkglist.new $BASEPATH/config/pkglist; touch /var/lib/apt/periodic/package-success-stamp; break; }
 		done
 		IFS=$ORIGINALIFS;
 	fi
