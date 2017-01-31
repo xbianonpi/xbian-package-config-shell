@@ -74,6 +74,10 @@ backupImgPlanFn() {
             eval sed -i 's/IMGPLAN=.*/IMGPLAN=$1/' /etc/default/xbian-snap
             echo 1
             ;;
+        none)
+            eval sed -i 's/IMGPLAN=.*/IMGPLAN=no/' /etc/default/xbian-snap
+            echo 1
+            ;;
         *)
             echo -1
             ;;
