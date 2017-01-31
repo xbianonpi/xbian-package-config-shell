@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2016 CurlyMo, mk01 & mkreisl <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -105,7 +105,7 @@ function showGUIFn() {
 					fi
 					[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
 					LOG=1;
-					if [ ! -e /run/noreboot ]; then 
+					if [ ! -e /run/noreboot ]; then
 					    showSystemUpdateRebootDlg;
 					    sleep 10; sudo reboot;
 					fi
@@ -154,9 +154,9 @@ function showGUIFn() {
 					fi
 				fi
 				[ -e /tmp/aptstatus ] && rm /tmp/aptstatus
-                        
+
 				APTUPDATELISTUPDATED=0
-				showGUIFn; 
+				showGUIFn;
 			fi
 		fi
 	fi
@@ -190,7 +190,7 @@ function showGUIFn() {
 #  -  0: Apt is not running
 #  *updatedb - Updates local and remote apt library (when needed)
 #  *enableauto - enable automatic updates
-#  -     no parameter - get actual settings 
+#  -     no parameter - get actual settings
 #  -  1: is enabled or set requested action was success
 #  -  0: is disabled or set requested action was failure
 
@@ -200,7 +200,7 @@ function showCMDFn() {
 			setEnableInventoryAuto $2 $3; rc=$?
 			if [ $rc -gt 0 ]; then
 			    [ -z "$2" ] && echo "1 $rc" || echo "$rc"
-			else 
+			else
 			    echo "$rc 1"
 			fi
 			;;
@@ -300,33 +300,34 @@ function showCMDFn() {
 			else
 				echo -1;
 			fi
-		;;		
+		;;
 		progress)
-			if [ $(ps ax | grep -v 'grep\|sudo' | grep -c "xbian-config updates") -gt 3 ] || pgrep apt-get &>/dev/null; then
+			if [ -e /run/lock/xbian-config-updatedb ] || pgrep apt-get &>/dev/null; then
 				echo 1;
 			else
+				[ x"$2" = x"lock" ] && touch /run/lock/xbian-config-updatedb
 				echo 0;
 			fi
 		;;
 		updatedb)
-			STATUS=0;
-			updateAptMirrorsFn;
-			if [ $? -eq 0 ]; then
-						if [ $(GUIMODE=0 xbian-config updates progress) = '1' ]; then
-                                                    while [ $(GUIMODE=0 xbian-config updates progress) = '1' ]; do
-                                                        sleep 2
-                                                    done
-                                                else
-                                                    updateAptFn
-                                                fi
-                                                retrieveUpdateListFn
-						getAllPackagesLisFn
-						getAllUpdatesLisFn
-						if [ ${#PACKAGES[@]} -ge 1 -o ${#UPDATES[@]} -ge 1 ]; then
-							STATUS=1;
-						else
-							STATUS=0;
-						fi
+			updateAptMirrorsFn
+			if (( $? == 0 )); then
+				if (( $(showCMDFn progress lock) > 0 )); then
+					while (( $(showCMDFn progress lock) > 0 )); do
+						sleep 2
+					done
+				else
+					updateAptFn
+				fi
+				retrieveUpdateListFn
+				getAllPackagesLisFn
+				getAllUpdatesLisFn
+				if [ ${#PACKAGES[@]} -ge 1 -o ${#UPDATES[@]} -ge 1 ]; then
+					STATUS=1;
+				else
+					STATUS=0;
+				fi
+				rm -f /run/lock/xbian-config-updatedb
 			else
 				STATUS=0;
 			fi
