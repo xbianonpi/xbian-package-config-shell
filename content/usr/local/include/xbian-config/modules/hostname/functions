@@ -41,8 +41,12 @@ function setHostnameFn() {
 	sed -i "s/$2\$/$1/g" /etc/hosts
 	mkdir -p /run/xbian-config
 	[ -d /home/xbian/.kodi ] && XBMC_KODI_DIR="/home/xbian/.kodi" || XBMC_KODI_DIR="/home/xbian/.xbmc"
-	echo "sed -i 's%<devicename.*>.*</devicename>%<devicename>$1</devicename>%' $XBMC_KODI_DIR/userdata/guisettings.xml" >> /run/xbian-config/xbmc-hostname
-	echo "sed -i 's%<setting id=\"device_name\" value=\".*\" />%<setting id=\"device_name\" value=\"$1\" />%' $XBMC_KODI_DIR/userdata/peripheral_data/*" >> /run/xbian-config/xbmc-hostname
+	for GUISETTINGSXML in $(find $XBMC_KODI_DIR -name guisettings.xml); do
+		echo "sed -i 's%<devicename.*>.*</devicename>%<devicename>$1</devicename>%' $GUISETTINGSXML" >> /run/xbian-config/xbmc-hostname
+	done
+	for PERIPHERALDATA in $(find $XBMC_KODI_DIR -type d -name peripheral_data); do
+		echo "sed -i 's%<setting id=\"device_name\" value=\".*\" />%<setting id=\"device_name\" value=\"$1\" />%' $PERIPHERALDATA/*" >> /run/xbian-config/xbmc-hostname
+	done
 	if pgrep xbmc.bin >/dev/null || pgrep kodi.bin >/dev/null; then
 	    cat /run/xbian-config/xbmc-hostname >> /run/xbian-config/xbmc-changesettings.sh
 	else
