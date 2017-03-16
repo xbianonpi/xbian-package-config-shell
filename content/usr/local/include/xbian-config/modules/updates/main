@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(list progress updatedb install installtest enableauto snapapt enablerepo autoinventory);
+ARGUMENTS=(list progress install installtest status enableauto snapapt enablerepo distupgrade autoinventory updatedb);
 
 #|------------------------------------|
 #|          Include files             |
@@ -216,6 +216,23 @@ function showCMDFn() {
 			setEnableRepo $2 $3
 			echo $?
 			;;
+		distupgrade)
+			if [ -x /usr/local/sbin/xbian-update-repo ]; then
+				if [ $# -eq 2 ]; then
+					case "$2" in
+						query)   STATUS=$(/usr/local/sbin/xbian-update-repo query) ;;
+						prepare) /usr/local/sbin/xbian-update-repo; STATUS=1       ;;
+						finish)  rm -f /usr/local/sbin/xbian-update-repo; STATUS=1 ;;
+						*)       STATUS=-2 ;;
+					esac
+					echo $STATUS
+				else
+					echo -1
+				fi
+			else
+				echo 0
+			fi
+			;;
 		list)
 			if [ $# -eq 2 ]; then
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
@@ -300,6 +317,11 @@ function showCMDFn() {
 			else
 				echo -1;
 			fi
+		;;
+		status)
+			RESULT=$(grep -i "newly installed" /tmp/aptstatus | awk '{ print $1+$3, $6, $10}')
+			[ "$RESULT" = "" ] && RESULT=-1
+			echo $RESULT
 		;;
 		progress)
 			if [ -e /run/lock/xbian-config-updatedb ] || pgrep apt-get &>/dev/null; then
