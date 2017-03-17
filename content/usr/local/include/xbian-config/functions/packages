@@ -86,7 +86,7 @@ function getPackageVersionFn() {
 }
 
 function updateAptFn() {
-        apt-get clean
+        apt-get -q clean
         if [ "$1" = speak ]; then
                 apt-get update 2>&1 | tee /tmp/aptstatus 
         else
