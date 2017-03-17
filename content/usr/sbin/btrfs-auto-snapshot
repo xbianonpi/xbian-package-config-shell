@@ -612,8 +612,8 @@ case $opt_command in
 		    parted -s $2 mklabel msdos
 
 		    config_offset_root=141312
-		    echo "2048,$((config_offset_root-2048)),b,*," | sfdisk -u S -N1 -H 4 -S 16 -q $2 > /dev/null 2>&1
-		    echo "$config_offset_root,+,83,," | sfdisk -u S -N2 -H 4 -S 16 -q $2 > /dev/null 2>&1
+		    echo "2048,$((config_offset_root-2048)),b,*," | sfdisk -uS -N1 -f -q $2 > /dev/null 2>&1
+		    echo "$config_offset_root,+,83,," | sfdisk -uS -N2 -f -q $2 > /dev/null 2>&1
 		    loopd=$(losetup -f); losetup $loopd $2
 		    kpartx -a $loopd && echo "loopd=$loopd" > /run/kpartxmap.xbiancopy.$$
 		    loopd=${loopd#/dev/}
