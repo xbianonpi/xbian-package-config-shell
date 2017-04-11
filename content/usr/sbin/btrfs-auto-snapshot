@@ -468,6 +468,11 @@ test -d $opt_mountpoint/$opt_snapdir && test -n "$opt_snapdir" && opt_vroot='1'
 
 DATE=$(date +%F-%H%M)
 
+case $(ps -o stat= -p $$) in
+	*+*) BACKGROUND=0 ;;
+	  *) BACKGROUND=1 ;;
+esac
+
 # The snapshot name after the @ symbol.
 SNAPNAME="$opt_delim$opt_prefix${opt_label:+$opt_sep$opt_label-$DATE}"
 
@@ -566,6 +571,15 @@ case $opt_command in
                 ;;
 	(xbiancopy)
 	        rc=0
+	        XBIANCOPYLOG='/tmp/xbiancopy.log'
+	        if [ "$BACKGROUND" == 1 ]; then
+	            echo "$@" > $XBIANCOPYLOG
+	            PIPECMD1="tee -a $XBIANCOPYLOG"
+	            PIPECMD2=$PIPECMD1
+	        else
+	            PIPECMD1="dialog --progressbox \"Preparing devices and copying /boot\" 7 60"
+	            PIPECMD2="dialog --gauge \"Cloning all subvolumes. Please wait...\" 10 60"
+	        fi
 		(
 		sysctl -w fs.file-max=80000 > /dev/null 2>/dev/null
 		[ $# -ne 2 ] && { echo "wrong aruments list"; rc=5; exit $rc; }
@@ -640,7 +654,7 @@ case $opt_command in
 		    fi
 		    mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || { rc=5; exit $rc; }
 
-		    cp -ar /boot/* /tmp/btrfs-dest > /dev/null 2>&1
+		    [ "$BACKGROUND" == 1 ] && cp -av /boot/* /tmp/btrfs-dest || cp -a /boot/* /tmp/btrfs-dest &>/dev/null
 		    if [ "$(xbian-arch)" = RPI ]; then
 		        sed -i 's/^#initramfs /initramfs /' /tmp/btrfs-dest/config.txt
 		    fi
@@ -674,7 +688,7 @@ case $opt_command in
 		    fi
 		fi
 
-		) | dialog --progressbox "Preparing devices" 7 60
+		) | eval "$PIPECMD1"
 
 		[ "$rc" -ne 0 ] && exit $rc
 
@@ -694,27 +708,42 @@ case $opt_command in
 		    for s in $snapextra; do
 		        [ -n "$s" ] || continue
 		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue
-		        echo "DEBUG: v = $v, s = $s"
+		        #echo "DEBUG: v = $v, s = $s"
 		        [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
 		        [ -e "/tmp/btrfs-source/$v/$s" ] || continue 
 		        btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && sync && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro"
-			export siz=$(du -sxb "/tmp/btrfs-source/$v/$s.ro" | awk '{print $1}'); export sn=$s; export vln=$v; 
-		        ( nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | pv -n -s $siz |eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v" ) 2>&1 | \
-			    while read a; do printf "XXX\n$a\n$(printf 'Cloning %s/%s. Total %d. Done %d' $v $s $siz $((siz*a/100)))\nXXX\n"; done
-
+			export siz=$(du -sxb "/tmp/btrfs-source/$v/$s.ro" | awk '{print $1}'); export sn=$s; export vln=$v;
+			[ "$siz" -gt 100000000 ] && export ival=20 || export ival=2
+			ar=0
+		        ( nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | pv -i $ival -n -s $siz | eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v" ) 2>&1 | \
+			    while read a; do
+			        if [ "$BACKGROUND" == 1 ]; then
+			           if ! echo "$a" | grep -q '@'; then
+			               if (( $a > $ar )); then
+			                   echo "$(printf 'Cloning %s/%s, %d of %d, %d%% done' $v $s $((siz*a/100)) $siz $a)"
+			                   ar=$a
+			               fi
+			           fi
+			        else
+			           printf "XXX\n$a\n$(printf 'Cloning %s/%s. Total %d. Done %d' $v $s $siz $((siz*a/100)))\nXXX\n"
+			        fi
+			    done
 		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && sync && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
 		        eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s" && sync
 		        eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s"
 		        eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v"
-#		        printf "\n%s\n" "---> DONE COPYING SUB-VOLUME $v SNAPSHOT $s" 
+		        [ "$BACKGROUND" == 1 ] && printf "%s\n" "Done copying subvolume $v snapshot $s"
 		    done
-#		    printf "\n%s\n\n" "DONE COPYING SUB-VOLUME $v" 
+		   [ "$BACKGROUND" == 1 ] && printf "%s\n" "Done copying subvolume $v"
 		done
-		)  2>&1 | dialog --gauge "Cloning all subvolumes. Please wait..." 10 60
+		) 2>&1 | eval "$PIPECMD2"
 
 		eval $opt_remotecmd umount /tmp/btrfs-dest; eval $opt_remotecmd rmdir /tmp/btrfs-dest > /dev/null 2>&1
 		umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
-		dialog --clear --msgbox "Done!
+		if [ "$BACKGROUND" == 1 ]; then
+		    echo "Done!" >> $XBIANCOPYLOG
+		else
+		    dialog --clear --msgbox "Done!
  
 for users on xbian version below beta2 (beta1.1, beta1). beta2 handles this automaticaly.
 /etc/fstab file needs to be adapted for /home to be mounted properly on the new xbian copy.
@@ -728,10 +757,18 @@ do the following steps:
 for all users - change /boot/cmdline.txt if you want to boot from the copy just created. change root=LABEL=xbian-root-btrfs to root=LABEL=xbian-copy
  
 if you created img file, cmdline.txt was updated automatically." 24 79
+		fi
 		[ -e "/tmp/xbiancopy.running" ] && touch /tmp/xbiancopy.running.$(cat /tmp/xbiancopy.running)
                 [ -e ${CONFIGPATH} ] && { echo "$DATE" > ${CONFIGPATH}/$opt_command; chown xbian:xbian ${CONFIGPATH}/${opt_command}; }
 		;;
         (backuphome)
+	        BACKUPHOMELOG='/tmp/backuphome.log'
+	        if [ "$BACKGROUND" == 1 ]; then
+	            echo "$@" > $BACKUPHOMELOG
+	            PIPECMD="tee $BACKUPHOMELOG"
+	        else
+	            PIPECMD="dialog --gauge \"Cloning home. Please wait...\" 10 60"
+	        fi
                 fn=$(mapAndMountFn mount $1)
                 [ "$?" -eq 0 ] || { echo "can not mount fs"; exit 5; }
                 set -- $fn
@@ -747,7 +784,7 @@ if you created img file, cmdline.txt was updated automatically." 24 79
                 btrfs sub snap -r "${tmp_dir}/home/@" "${tmp_dir}/home/@ro"
                 touch $FILE; chattr +C $FILE
                 echo 999>/tmp/backuphome.statusx
-                ( btrfs send -v "${tmp_dir}/home/@ro" | pv -n -s $(du -sxb ${tmp_dir}/home/@ro | awk '{print $1}') | $packcmd -1 >> $FILE; echo $?>/tmp/backuphome.status) 2>&1 | dialog --gauge "Cloning home. Please wait..." 10 60
+                ( btrfs send -v "${tmp_dir}/home/@ro" | pv -i 20 -n -s $(du -sxb ${tmp_dir}/home/@ro | awk '{print $1}') | $packcmd -1 >> $FILE; echo $?>/tmp/backuphome.status) 2>&1 | eval "$PIPECMD"
                 btrfs sub delete "${tmp_dir}/home/@ro" && btrfs fi sync ${tmp_dir}
                 [ $(cat /tmp/backuphome.status) -eq 0 ] || { rm -f $FILE; exit 1; }
                 if [ "$(dirname $1)" = "/xbmc-backup" -o "$1" = "//" ]; then
