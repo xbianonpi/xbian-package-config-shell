@@ -1,0 +1,42 @@
+#!/bin/bash
+
+PROGNAME=$0
+BASENAME=${0##*/}
+
+RemoveJobs()
+{
+    for JOB in $(ls /var/spool/cron/atjobs); do
+        if grep -q "$PROGNAME" /var/spool/cron/atjobs/$JOB; then
+            JOBHEX=$(echo $JOB | cut -b 2-6)
+            atrm $(echo $((0x$JOBHEX))) &>/dev/null
+        fi
+    done  
+}
+
+pgrep $BASENAME >/dev/null && exit 0 || :
+RemoveJobs
+
+if [ "$1" != run ] || [ "$(xbian-config updates progress)" != 0 ]; then
+    echo "$PROGNAME run" | at -M now + 5min &>/dev/null
+    exit 0
+fi
+
+[ -e /var/run/reboot-required ] && {
+    exec > /run/motd.dynamic
+    uname -snrv
+    /bin/echo -e "\e[5m"; /bin/echo -e "Upgrades have been installed - Please reboot to complete upgrade\e[25m
+"
+    exit 0
+}
+
+[ ! -e /run/motd.dynamic ] || \
+[ $(stat --print=%Y /run/motd.dynamic) -le "$(stat --print=%Y /var/lib/apt/periodic/update-success-stamp 2>/dev/null|| echo 9999999999)" -o -e /var/lib/apt/periodic/dpkg-run ] ||exit 0
+
+rm -f /var/lib/apt/periodic/dpkg-run
+
+exec > /run/motd.dynamic
+uname -snrv 
+. /usr/local/include/xbian-config/modules/updates/functions
+[ -e /tmp/aptupdates ] || retrieveUpdateListFn
+/bin/echo -e "\e[5m$(nr=$(grep -c . /tmp/aptupdates); [ $nr -ne 0 ] && { echo; echo $nr packages can be updated; } )\e[25m
+"
