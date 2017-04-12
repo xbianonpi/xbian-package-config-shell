@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -22,7 +22,7 @@ function updateAptMirrorsFn() {
 	src="$(cat /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null| grep '^deb.*xbian.*\|^mirror.*xbian.*'  | awk '{print $2}' | sort | uniq)"
 	[ -z "$src" ] && URL=$APTBASE || URL=$src
 
-	[ -e $BASEPATH/config/aptmirror.new ] && rm $BASEPATH/config/aptmirror.new
+	rm -f $BASEPATH/config/aptmirror.new
 	for a in $URL; do    
 	    a=$(echo $a | sed 's%mirror://%http://%')
 	    a=${a%%/mirror.txt}; a=${a%%/}
@@ -102,19 +102,19 @@ function getAllPackagesForInstallFn() {
 }
 
 function getAptErrorCodeFn() {
-	if [ $(cat /tmp/aptstatus | grep -c "already the newest version") -eq 1 ]; then
+	if [ $(grep -c "already the newest version" /tmp/aptstatus) -eq 1 ]; then
 		return 1;
-	elif [ $(cat /tmp/aptstatus | grep -c "was not found") -eq 1 ]; then
+	elif [ $(grep -c "was not found" /tmp/aptstatus) -eq 1 ]; then
 		return 2;
-	elif [ $(cat /tmp/aptstatus | grep -c "Unable to locate package") -eq 1 ]; then
+	elif [ $(grep -c "Unable to locate package" /tmp/aptstatus) -eq 1 ]; then
 		return 3;
-	elif [ $(cat /tmp/aptstatus | grep -c "DOWNGRADED") -eq 1 ]; then
+	elif [ $(grep -c "DOWNGRADED" /tmp/aptstatus) -eq 1 ]; then
 		return 4;
-	elif [ $(cat /tmp/aptstatus | grep -c -i "size mismatch") -eq 1 ]; then
+	elif [ $(grep -c -i "size mismatch" /tmp/aptstatus) -eq 1 ]; then
 		return 5;
-	elif [ $(cat /tmp/aptstatus | grep -c -i "returned an error code") -eq 1 ]; then
+	elif [ $(grep -c -i "returned an error code" /tmp/aptstatus) -eq 1 ]; then
 		return 6;
-	elif [ $(cat /tmp/aptstatus | grep -c -i "impossible situation") -eq 1 ]; then
+	elif [ $(grep -c -i "impossible situation" /tmp/aptstatus) -eq 1 ]; then
 		return 6;
 	else
 		return 0;
