@@ -645,9 +645,6 @@ case $opt_command in
 		    if [ "$(xbian-arch)" = iMX6 ]; then
 		        dd if=/etc/uboot-env/SPL of=/dev/$loopd bs=1K seek=1 2>/dev/null 1>&2
 		        dd if=/etc/uboot-env/u-boot.img of=/dev/$loopd bs=1K seek=42 2>/dev/null 1>&2 
-		    fi
-
-		    if [ "$(xbian-arch)" = iMX6 ]; then
 		        mkfs.ext2 -L xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
 		    else
 		        mkfs.msdos -F 16 -n xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
@@ -655,18 +652,27 @@ case $opt_command in
 		    mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || { rc=5; exit $rc; }
 
 		    [ "$BACKGROUND" == 1 ] && cp -av /boot/* /tmp/btrfs-dest || cp -a /boot/* /tmp/btrfs-dest &>/dev/null
+		    sync
+
 		    if [ "$(xbian-arch)" = RPI ]; then
 		        sed -i 's/^#initramfs /initramfs /' /tmp/btrfs-dest/config.txt
 		    fi
 		    if [ "$(xbian-arch)" = iMX6 ]; then
 		        [ -e /boot/initramfs.gz.notinuse -a ! -e /boot/initramfs.gz ] && mv /tmp/btrfs-dest/initramfs.gz.notinuse /tmp/btrfs-dest/initramfs.gz
 		    fi
-		    z=$(grep -o "root=.*" /proc/cmdline);z=${z%%\ rootflags=*}
 
-		    if test -e /boot/cmdline.txt; then
-			echo $z | grep -q "root=LABEL" || z="root=donotmodify"
-			cat /boot/cmdline.txt | eval $(echo "sed 's%$z%root=LABEL=$opt_clonename%'") > /tmp/btrfs-dest/cmdline.txt
-			sed -i 's/^#initramfs /initramfs /' /tmp/btrfs-dest/config.txt
+		    z=$(grep -o "root=[^ ]*" /proc/cmdline)
+		    if echo $z | grep -q "root=LABEL"; then
+		        if test -e /boot/cmdline.txt; then
+			    sed -i "s%$z%root=LABEL=$opt_clonename%" /tmp/btrfs-dest/cmdline.txt
+		        fi
+		        if test -e /boot/boot.scr.txt; then
+			    pushd . >/dev/null
+			    cd  /tmp/btrfs-dest
+			    sed -i "s%$z%root=LABEL=$opt_clonename%" boot.scr.txt
+			    ./mks
+			    popd >/dev/null
+			fi
 		    fi
 
 		    while ! umount /tmp/btrfs-dest; do ! mountpoint -q /tmp/btrfs-dest && break; sleep 1; done; rmdir /tmp/btrfs-dest; sync
