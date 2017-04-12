@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2016 CurlyMo, mk01 & mkreisl <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -69,7 +69,14 @@ function setEnableRepo() {
 }
 
 function retrieveUpdateListFn() {
-	xbian-apt-show-versions -nu >/tmp/aptupdates 2>/dev/null
+        if [[ "$(apt-get -v 2>/dev/null | grep ^apt | awk '{ print $2 }')" > "1.1" ]]; then
+		# apt shipped with Debian Stretch has newer [src]pkgcache.bin database format (v5)
+		# Unfortunately xbian-apt-show-versions is linked against older apt library (v4)
+		# so we have do use a bit slower python version until new version is available
+		xbian-apt-show-versions.py -nu >/tmp/aptupdates 2>/dev/null
+	else
+		xbian-apt-show-versions -nu >/tmp/aptupdates 2>/dev/null
+	fi
 }
 
 function getAllPackagesLisFn() {
@@ -88,29 +95,34 @@ function getAllUpdatesLisFn() {
 
 function updatePackagesFn() {
 	LIST="";
-        if [ "$2" = '-' -o "$2" = '0' -o "$2" = '"0"' ]; then
-            lt=${!PACKAGES[*]}
-            d=0
-        else
-            lt=$2
-            d=1
-        fi
+	if [ "$2" = 'distupgrade' ]; then
+		COMMAND="dist-upgrade"
+	else
+		COMMAND="install"
+		if [ "$2" = '-' -o "$2" = '0' -o "$2" = '"0"' ]; then
+			lt=${!PACKAGES[*]}
+			d=0
+		else
+			lt=$2
+			d=1
+		fi
 
-        ARRAY=($lt);
-        for INDEX in ${ARRAY[@]}; do
-		INDEX=${INDEX/\\/}
-		INDEX=$(echo $INDEX | tr -d "\"")
-		NAME=$(echo ${PACKAGES[$((INDEX-$d))]} | cut -f1 -d";");
-		VERSION=$(echo ${PACKAGES[$((INDEX-$d))]} | cut -f3 -d";");
-		LIST+=" "$NAME"="$VERSION
-	done;
+		ARRAY=($lt);
+		for INDEX in ${ARRAY[@]}; do
+			INDEX=${INDEX/\\/}
+			INDEX=$(echo $INDEX | tr -d "\"")
+			NAME=$(echo ${PACKAGES[$((INDEX-$d))]} | cut -f1 -d";");
+			VERSION=$(echo ${PACKAGES[$((INDEX-$d))]} | cut -f3 -d";");
+			LIST+=" "$NAME"="$VERSION
+		done;
+	fi
 
 	if [ $1 -eq 1 ]; then
-		LC_ALL=C.UTF-8 eval apt-get install -s $LIST>/tmp/aptstatus
+		LC_ALL=C.UTF-8 eval apt-get $COMMAND -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		{ rm -f /tmp/aptupdates; LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST 2>&1; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
+		{ rm -f /tmp/aptupdates; LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval apt-get $COMMAND -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST 2>&1; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
 	elif [ $1 -eq 2 ]; then
-		{ LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; rm -f /tmp/aptupdates; } >/tmp/aptstatus &
+		{ LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval nohup apt-get $COMMAND -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; echo -e "Refreshing package lists... \c"; retrieveUpdateListFn; } >/tmp/aptstatus &
 	fi
         # Returncode only correct on simulation (1) and on real operation (0)
         getAptErrorCodeFn
