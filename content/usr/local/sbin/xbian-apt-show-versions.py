@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 #import os
-#import sys
+import sys
 #import tempfile
 #import re
 #import socket
@@ -26,9 +26,14 @@ def upgradable(distupgrade=False, get_names_only=True):
         packages = [package for package in cache.get_changes()]
     return packages
 
+#
+# TODO: filter packages with origins[0].archive "now" and "run", but need
+#       example first
+#
+
 def show_package_versions():
     cache = apt.Cache()
-    cache.upgrade(True)
+    cache.upgrade(False) # True if we want dist-upgrade
 
     #pkg = cache['xbian-package-xbmc'] # Access the Package object for python-apt
     #print(pkg.candidate.origins)
@@ -38,13 +43,23 @@ def show_package_versions():
     if packages:
         for package in sorted(packages):
             pkg = cache[package.name]
-            print ("{}/{} {} upgradeable to {}".format(
-                package.name,
-                pkg.candidate.origins[0].archive,
-                #pkg.candidate.origins[0].component,
-                package.installed.version,
-                package.candidate.version,
-            ))
+            try:
+                if package.installed:
+                   vinst=package.installed.version
+                else:
+                   vinst="notinstalled"
+                print ("{}/{} {} upgradeable to {}".format(
+                    package.name,
+                    pkg.candidate.origins[0].archive,
+                    #pkg.candidate.origins[0].component,
+                    vinst, package.candidate.version, ))
+            except:
+                if package.installed:
+                   vinst=package.installed.version
+                else:
+                   vinst="notinstalled"
+                print >> sys.stderr, ("Error in package {}/{} {}".format( package.name,pkg.candidate.origins[0].archive,vinst,))
+
     return packages
 
 if __name__ == "__main__":
