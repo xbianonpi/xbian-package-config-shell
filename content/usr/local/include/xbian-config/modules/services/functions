@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -90,18 +90,21 @@ function checkServiceExistsFn() {
 
 function restartServiceFn() {
 
-        [ -e $BASEPATH/config/$1.inetd ] && { restartServiceFn $1 "openbsd-inetd" && return 0 || return 1; }
-        test -z "$2" && c="restart" || c="$2"
+	test -z "$2" && c="restart" || c="$2"
 
-	if [ -f "/etc/init/$1.conf" ]; then
+	if [ -e $BASEPATH/config/$1.inetd ]; then
+		[ "$c" =  stop ] && return 1
+		restartServiceFn "openbsd-inetd" restart && return 0 || return 1
+	elif [ -f "/etc/init/$1.conf" ]; then
 		[ $c = restart ] && c=reload
-                $c -q $1
+		$c -q $1
 	else 
 		/etc/init.d/$1 $c > /dev/null
-        fi
-        r=$?
-        refreshProcessesFn
-        return $r
+	fi
+
+	r=$?
+	refreshProcessesFn
+	return $r
 }
 
 function startServiceFn() {
@@ -132,9 +135,8 @@ function enableAutoStartFn() {
 						    details="$service"
 						    [ -z "$service" ] && continue
 						    service=$(echo "$service" | sed -r 's/[\\ ]+/[\\t\\ ]\*/g' | sed 's/-/\\-/g' )
-						    grep -q '$service' /etc/inetd.conf || echo "$details" >> /etc/inetd.conf
+						    grep -q "$service" /etc/inetd.conf || echo "$details" >> /etc/inetd.conf
 						    update-inetd --multi --enable $(echo $details |awk '{print $1}') || return 1
-						    restart openbsd-inetd >/dev/null 2>&1 ||:
 						done < $BASEPATH/config/$1.inetd; return 0; }
 
 
