@@ -7,7 +7,7 @@ Priority: optional
 Architecture: armhf
 Pre-Depends: anacron, openbsd-inetd, psmisc
 Replaces: xbian-package-config, xbian-update
-Depends: ipcalc, xbian-package-xbianhome, parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian2), kpartx, f2fs-tools, xbian-package-xbmc-scripts (>= 1.0.11), python-apt
+Depends: ipcalc, xbian-package-xbianhome, parted, wget, bc, gettext, dialog, btrfs-tools (>=1.0-xbian2), kpartx, f2fs-tools, xbian-package-xbmc-scripts (>= 1.0.11), at, python-apt
 Breaks: xbian-package-config-xbmc (<<1.1.3-6), xbian-package-initramfs-tools (<<1.0-2.4)
 Conflicts: xbian-package-config
 Maintainer: mk01 <development@xbian.org>
