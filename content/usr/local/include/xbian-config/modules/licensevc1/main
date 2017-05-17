@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -32,6 +32,7 @@ source $BASEPATH/modules/licensevc1/functions
 if [ $GUIMODE -eq 1 ]; then
 	source $BASEPATH/modules/licensevc1/dialogs
 fi
+source $BASEPATH/functions/config
 
 #|------------------------------------|
 #|           Main program             |
