@@ -33,7 +33,7 @@ function showOCSettingsDlg() {
 	"${OCMENU[@]}";
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7))
-	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#OCMENU[@]} 16	
+	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#OCMENU[@]} $((${#OCMENU[@]}+10))
 }
 
 # Shows the overclocking settings not changed dialog
