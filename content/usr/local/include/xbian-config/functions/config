@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -18,23 +18,30 @@
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 #
 
+# remove Raspberry PI config variable
+#  $1 [String] Key
+deleteConfigVarFn() {
+	sed -i "/^$1=/d" /boot/config.txt
+}
+
 # update/insert Raspberry PI config variable
 #  $1 [String] Key
 #  $2 [Mixed] Value
+#  $3 [String] e: Delete empty lines
+#              n: Do now write 0 values
 updateConfigVarFn() {
-	sed -i "/$1=/d" /boot/config.txt
-	echo "$1=$2" >> /boot/config.txt
-	sed -i '/^$/d' /boot/config.txt
+	if [[ x"$3" =~ n ]] && [ "$2" == 0 ]; then
+	    deleteConfigVarFn $1
+	elif grep -q ^"$1" /boot/config.txt; then
+	    sed -i "s/^$1=.*/$1=$2/g" /boot/config.txt
+	else
+	    echo -e "$1=$2" >> /boot/config.txt
+	fi
+	[[ x"$3" =~ e ]] && sed -i '/^$/d' /boot/config.txt
 }
 
 # select Raspberry PI config variable
 #  $1 [String] Key
 selectConfigVarFn() {
 	RETURN="$(sed 's/[ \t]//g' /boot/config.txt | grep ^"${1}")"
-}
-
-# remove Raspberry PI config variable
-#  $1 [String] Key
-deleteConfigVarFn() {
-	sed -i "/$1=/d" /boot/config.txt
 }
