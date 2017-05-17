@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -22,7 +22,7 @@
 # Returns
 #  $LICENSE [String]
 function getCurrentLicenseMPG2Fn() {
-	LICENSE=$(sed -ne 's/\(decode_MPG2=\)\(.*\)/\2/p' /boot/config.txt);
+	LICENSE=$(sed -ne 's/\(^decode_MPG2=\)\(.*\)/\2/p' /boot/config.txt);
 }
 
 # Insert the current license
@@ -32,19 +32,21 @@ function getCurrentLicenseMPG2Fn() {
 #  - 1: Success
 #  - 0: Failed
 function insertLicenseMPG2Fn() {
-	IFS=$',' 
-	set -- $1 
-	[ $# -gt 8 ] && return 2
+        L=$1; OIFS=$IFS; IFS=$','
+	set -- $1
+	[ $# -le 8 ] && rc=1 || rc=2
 	for NEWLICENSE in $@; do
 		if [ "${NEWLICENSE:0:2}" == "0x" ] && [[ "${NEWLICENSE:2:8}" =~ ^[0-9a-f]{1,8}$ ]] && [ ${#NEWLICENSE} -le 10 ] && [ ${#NEWLICENSE} -ge 9 ]; then
 			:
 		else
-			return 2;
+			rc=2
 		fi
 	done
 
-	echo "decode_MPG2=$@" | tr " " "," >> /boot/config.txt
-	return 1;
+	[ $rc == 1 ] && updateConfigVarFn decode_MPG2 "$L"
+
+	IFS=$OIFS
+	return $rc
 }
 
 
@@ -56,8 +58,6 @@ function insertLicenseMPG2Fn() {
 #  - 1: Success
 #  - 0: Failed
 function updateLicenseMPG2Fn() {
-	grep -v ^"decode_MPG2=" /boot/config.txt > /boot/config.new
-	mv /boot/config.new /boot/config.txt
 	insertLicenseMPG2Fn $1
 }
 
@@ -68,7 +68,7 @@ function updateLicenseMPG2Fn() {
 #  - 1: Success
 #  - 0: Failed
 function deleteLicenseMPG2Fn() {
-	sed -i "/decode_MPG2=$1/d" /boot/config.txt;
+	grep -q ^"decode_MPG2=.*$1" /boot/config.txt && updateConfigVarFn decode_MPG2 0x00000000
 	if [ $(grep -c $1 /boot/config.txt) -eq 0 ]; then
 		return 1;
 	else
