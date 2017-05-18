@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -25,30 +25,25 @@
 ARGUMENTS=(select update values list);
 
 declare -A OCSETTINGS
-if test "$(xbian-arch)" = "iMX6"; then
+
+arch=$(xbian-arch revision)
+
+case "$arch" in
+    imx6)
 	grep -q 'overclock=.' /boot/boot.scr.txt || sed -i 's/setenv customcmdline /setenv customcmdline overclock=0 /' /boot/boot.scr.txt
 	# Names of the overclock settings
-	OCNAMES=(Default OC);
+	OCNAMES=(iMX6:None iMX6:High);
 
 	# Values of the overclock settings
-	OCSETTINGS[0]="996 . . ."
-	OCSETTINGS[1]="1200 . . ."
-
-	# Define the (possible) dangerous overclock settings
-	OCDANGEROUS=(default)
-elif grep -q BCM2709 /proc/cpuinfo; then
-	# Names of the overclock settings
-	OCNAMES=(None RPi2);
-
-	# Values of the overclock settings
-	OCSETTINGS[0]="900 250 450 0";
-	OCSETTINGS[1]="1000 500 500 2";
+	OCSETTINGS[0]="996 n/a n/a n/a"
+	OCSETTINGS[1]="1200 n/a n/a n/a"
 
 	# Define the (possible) dangerous overclock settings
 	OCDANGEROUS=()
-elif grep -q BCM2708 /proc/cpuinfo; then
+	;;
+    rpi)
 	# Names of the overclock settings
-	OCNAMES=(None Modest XBian Medium High Turbo);
+	OCNAMES=(Pi:None Pi:Modest Pi:XBian Pi:Medium Pi:High Pi:Turbo);
 
 	# Values of the overclock settings
 	OCSETTINGS[0]="700 250 400 0";
@@ -59,11 +54,63 @@ elif grep -q BCM2708 /proc/cpuinfo; then
 	OCSETTINGS[5]="1000 500 500 6";
 
 	# Define the (possible) dangerous overclock settings
-	OCDANGEROUS=(Turbo)
-fi
+	OCDANGEROUS=(Pi:Turbo)
+	;;
+    rpi2)
+	# Names of the overclock settings
+	OCNAMES=(Pi2:None Pi2:High);
+
+	# Values of the overclock settings
+	OCSETTINGS[0]="900 250 450 0";
+	OCSETTINGS[1]="1000 500 500 2";
+
+	# Define the (possible) dangerous overclock settings
+	OCDANGEROUS=()
+	;;
+    rpi3)
+	# Names of the overclock settings
+	OCNAMES=(Pi3:None Pi3:Turbo);
+
+	# Values of the overclock settings
+	OCSETTINGS[0]="1200 400 450 0";
+	OCSETTINGS[1]="1300 500 500 2";
+
+	# Define the (possible) dangerous overclock settings
+	OCDANGEROUS=(Pi3:Turbo)
+	;;
+    rpi0)
+	# Names of the overclock settings
+	OCNAMES=(PiZero:None);
+
+	# Values of the overclock settings
+	OCSETTINGS[0]="1000 400 450 0";
+
+	# Define the (possible) dangerous overclock settings
+	OCDANGEROUS=()
+	;;
+    rpi0w)
+	# Names of the overclock settings
+	OCNAMES=(PiZeroW:None);
+
+	# Values of the overclock settings
+	OCSETTINGS[0]="1000 400 450 0";
+
+	# Define the (possible) dangerous overclock settings
+	OCDANGEROUS=()
+	;;
+    *)
+	OCNAMES=(Unknown);
+
+	# Values of the overclock settings
+	OCSETTINGS[0]="1000 400 400 0";
+
+	# Define the (possible) dangerous overclock settings
+	OCDANGEROUS=()
+	;;
+esac
 
 # Define the safe overclock settings
-OCSAFE=(None Modest XBian Default)
+OCSAFE=(Pi:None Pi:Modest Pi:XBian Pi2:None Pi3:None PiZero:None PiZeroW:None iMX6:None)
 
 # Did we already show the warning
 OCWARNING=0;
@@ -77,7 +124,6 @@ if [ $GUIMODE -eq 1 ]; then
 	source $BASEPATH/modules/overclocking/dialogs
 fi
 source $BASEPATH/functions/config
-
 #|------------------------------------|
 #|           Main program             |
 #|------------------------------------|
@@ -88,14 +134,16 @@ function showGUIFn() {
 		showOCWarningDlg;
 		OCWARNING=1;
 	fi
-	m="$(_ overclocking.label.preset)"
-	exp=$((${#m}-8)); (( $exp < 0 )) && exp=0
-	DEFAULTWIDTH=$((DEFAULTWIDTH+exp))
 	showLoadingDlg;
 	getCurrentOCSettingsFn;
 	createOCDLGMenuFn $CURRENTOC;
+	m="$(_ overclocking.label.preset)"
+	exp=$((${#m}-8)); (( $exp < 0 )) && exp=0
+	ODW=$DEFAULTWIDTH; DEFAULTWIDTH=$((DEFAULTWIDTH+exp))
 	showOCSettingsDlg $OCMENU;
-	if [ $? -eq 0 ]; then
+	rc=$?
+	DEFAULTWIDTH=$ODW
+	if [ $rc -eq 0 ]; then
 		if [ $RETURN -eq $(($CURRENTOC+1)) ]; then
 			showNoOCChangeDlg;
 			showGUIFn;
@@ -142,7 +190,6 @@ function showGUIFn() {
 			fi
 		fi
 	fi
-	DEFAULTWIDTH=$((DEFAULTWIDTH-exp))
 }
 
 # Executes the command line version of this module

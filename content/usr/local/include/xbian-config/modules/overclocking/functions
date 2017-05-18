@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -17,6 +17,32 @@
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
 
+# Writes or updates overclocking value to file
+#  $1 [Integer] arm_freq
+#  $2 [Integer] core_freq
+#  $3 [Integer] sdram_freq
+#  $4 [Integer] over_voltage
+# Returns
+#  none
+
+function updateOCValuesFn() {
+	if ! grep -q "Raspberry Pi Overclocking" /boot/config.txt; then
+		echo -e "\n\n# ******************************************************************************"   >> /boot/config.txt
+		echo        "# * Raspberry Pi Overclocking                                                  *"   >> /boot/config.txt
+		echo -e     "# ******************************************************************************\n" >> /boot/config.txt
+	fi
+	deleteConfigVarFn "sdram_schmoo"
+	if (( $1 > 1200 )); then
+		OCEXTRA="\nsdram_schmoo=0x02000020"
+	else
+		OCEXTRA=""
+	fi
+	updateConfigVarFn "arm_freq" $1;
+	updateConfigVarFn "core_freq" $2;
+	updateConfigVarFn "sdram_freq" $3;
+	updateConfigVarFn "over_voltage" $4$OCEXTRA;
+}
+
 # Retrieve the current overclocking settings
 # Returns
 #  $CURRENTOC [Integer]
@@ -27,26 +53,27 @@
 #  - 1 Core Frequency
 #  - 2 SDRAM Frequency
 #  - 3 Over voltage
+
 function getCurrentOCSettingsFn() {
 	OCOLDSETTINGS=();
-    if test "$(xbian-arch)" = "iMX6"; then
-	RETURN=$(grep overclock /boot/boot.scr.txt)
-	if [ "0$(echo ${RETURN##*overclock=} | awk '{print $1}')" -eq 1 ]; then
-		OC=1200
+	if test "$(xbian-arch)" = "iMX6"; then
+		RETURN=$(grep overclock /boot/boot.scr.txt)
+		if [ "0$(echo ${RETURN##*overclock=} | awk '{print $1}')" -eq 1 ]; then
+			OC=1200
+		else
+			OC=996
+		fi
+		OCOLDSETTINGS[0]=${OC}
 	else
-		OC=996
+		selectConfigVarFn "arm_freq="
+		OCOLDSETTINGS[0]=${RETURN#*=}
+		selectConfigVarFn "core_freq="
+		OCOLDSETTINGS[1]=${RETURN#*=}
+		selectConfigVarFn "sdram_freq="
+		OCOLDSETTINGS[2]=${RETURN#*=}
+		selectConfigVarFn "over_voltage="
+		OCOLDSETTINGS[3]=${RETURN#*=}
 	fi
-	OCOLDSETTINGS[0]=${OC}
-    else
-	selectConfigVarFn "arm_freq="
-	OCOLDSETTINGS[0]=${RETURN#*=}
-	selectConfigVarFn "core_freq="
-	OCOLDSETTINGS[1]=${RETURN#*=}
-	selectConfigVarFn "sdram_freq="
-	OCOLDSETTINGS[2]=${RETURN#*=}
-	selectConfigVarFn "over_voltage="
-	OCOLDSETTINGS[3]=${RETURN#*=}
-    fi
 	CURRENTOC=-1;
 	NREMPTY=0;
 	for KEY in ${!OCSETTINGS[@]}; do
@@ -56,7 +83,7 @@ function getCurrentOCSettingsFn() {
 		for KEY1 in ${!SETTINGS[@]}; do
 			if [ ! -z "${OCOLDSETTINGS[$KEY1]}" -a "${SETTINGS[$KEY1]}" = "${OCOLDSETTINGS[$KEY1]}" ]; then
 				I=$(($I+1));
-			elif [ -z "${OCOLDSETTINGS[$KEY1]}" -a "${SETTINGS[$KEY1]}" = '.' ]; then
+			elif [ -z "${OCOLDSETTINGS[$KEY1]}" -a "${SETTINGS[$KEY1]}" = 'n/a' ]; then
 				I=$(($I+1));
 			fi
 			if [ $I -eq ${#SETTINGS[@]} ]; then
@@ -147,11 +174,12 @@ function updateOCSettingsFn() {
 	NEWOCVALUES=(${OCSETTINGS[$NEWOCSETTING]});
 	NUMERIC=1
 	for VALUES in ${NEWOCVALUES[@]}; do
-		[ "${VALUES}" != '.' ] || continue
+		[ "${VALUES}" != 'n/a' ] || continue
 		if ! [[ "$VALUES" =~ ^[0-9]+$ ]]; then
 			NUMERIC=0
 		fi
 	done
+	IFS=$ORIGINALIFS;
 	if [ $NUMERIC -eq 1 ]; then
 		if test "$(xbian-arch)" = "iMX6"; then
 			if test ${NEWOCVALUES[0]} -eq 1200; then
@@ -161,11 +189,7 @@ function updateOCSettingsFn() {
 			fi
 			[ -x /boot/mks ] && /boot/mks > /dev/null || :
 		else
-			updateConfigVarFn "arm_freq" ${NEWOCVALUES[0]};
-			updateConfigVarFn "core_freq" ${NEWOCVALUES[1]};
-			updateConfigVarFn "sdram_freq" ${NEWOCVALUES[2]};
-			updateConfigVarFn "over_voltage" ${NEWOCVALUES[3]};
-			IFS=$ORIGINALIFS;
+			updateOCValuesFn ${NEWOCVALUES[@]}
 		fi
 		getCurrentOCSettingsFn
 
@@ -195,10 +219,7 @@ function updateCustomOCSettingsFn() {
 		fi
 	done
 	if [ $NUMERIC -eq 1 ]; then
-		updateConfigVarFn "arm_freq" ${NEWOCVALUES[0]};
-		updateConfigVarFn "core_freq" ${NEWOCVALUES[1]};
-		updateConfigVarFn "sdram_freq" ${NEWOCVALUES[2]};
-		updateConfigVarFn "over_voltage" ${NEWOCVALUES[3]};
+		updateOCValuesFn ${NEWOCVALUES[@]}
 		IFS=$ORIGINALIFS;
 		getCurrentOCSettingsFn
 		if [ "${OCOLDSETTINGS[*]}" == "${NEWOCVALUES[*]}" ]; then
