@@ -88,6 +88,9 @@ function showGUIFn() {
 		showOCWarningDlg;
 		OCWARNING=1;
 	fi
+	m="$(_ overclocking.label.preset)"
+	exp=$((${#m}-8)); (( $exp < 0 )) && exp=0
+	DEFAULTWIDTH=$((DEFAULTWIDTH+exp))
 	showLoadingDlg;
 	getCurrentOCSettingsFn;
 	createOCDLGMenuFn $CURRENTOC;
@@ -139,6 +142,7 @@ function showGUIFn() {
 			fi
 		fi
 	fi
+	DEFAULTWIDTH=$((DEFAULTWIDTH-exp))
 }
 
 # Executes the command line version of this module
