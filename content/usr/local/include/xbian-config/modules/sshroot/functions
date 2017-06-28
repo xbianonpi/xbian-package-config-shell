@@ -36,8 +36,8 @@ function rootPasswordSetFn() {
 #  - 1: Success
 #  - 0: Failed
 function enableSSHRootLoginFn() {
-	sed -i 's/PermitRootLogin \(no\|without-password\|prohibit-password\)/PermitRootLogin yes/g' /etc/ssh/sshd_config
-
+	sed 's/^[# \t]*//' /etc/ssh/sshd_config | grep -q "^PermitRootLogin" || echo "PermitRootLogin" >> /etc/ssh/sshd_config
+	sed -i 's/^[# \t]*PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
 	isSSHRootLoginEnabledFn
 	return $?;
 }
@@ -48,7 +48,8 @@ function enableSSHRootLoginFn() {
 #  - 1: Success
 #  - 0: Failed
 function disableSSHRootLoginFn() {
-	sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+	sed 's/^[# \t]*//' /etc/ssh/sshd_config | grep -q "^PermitRootLogin" || echo "PermitRootLogin" >> /etc/ssh/sshd_config
+	sed -i 's/^[# \t]*PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
 	isSSHRootLoginEnabledFn
 	if [ $? -eq 0 ]; then
 		return 1;
@@ -63,7 +64,7 @@ function disableSSHRootLoginFn() {
 #  - 1: Enabled
 #  - 0: Disabled
 function isSSHRootLoginEnabledFn() {
-	if [ $(grep -c "PermitRootLogin yes" /etc/ssh/sshd_config) -eq 0 ]; then
+	if [ $(sed 's/^[ \t]*//' /etc/ssh/sshd_config | grep -c "^PermitRootLogin yes") -eq 0 ]; then
 		return 0;
 	else
 		return 1;
