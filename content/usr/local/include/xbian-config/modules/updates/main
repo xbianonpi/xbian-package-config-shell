@@ -290,7 +290,7 @@ function showCMDFn() {
 			echo $RESULT
 		;;
 		progress)
-			if [ -e /run/lock/xbian-config-updatedb ] || pgrep -f "apt-get|dpkg|xbian-apt-show-versions" &>/dev/null; then
+			if [ -e /run/lock/xbian-config-updatedb ] || pgrep "apt-get|dpkg" &>/dev/null || pgrep -f "xbian-apt-show-versions" &>/dev/null; then
 				echo 1;
 			else
 				[ x"$2" = x"lock" ] && touch /run/lock/xbian-config-updatedb
