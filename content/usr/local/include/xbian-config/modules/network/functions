@@ -268,7 +268,7 @@ setInterfaceStaticFn() {
 				fi
 			fi
 		fi
-		if [ $# -gt 4 ] && [ ! -z "$5" ]; then
+		if [ $# -gt 4 ] && [ ! -z "$5" ] && [ "$5" != "None" ]; then
 			checkIp "$5"
 			if [ ! $? -eq 1 ]; then
 				return 9;
@@ -276,7 +276,7 @@ setInterfaceStaticFn() {
 				BUFFERRESOLV+="nameserver $5"
 			fi
 		fi
-		if [ $# -gt 5 ] && [ ! -z "$6" ]; then
+		if [ $# -gt 5 ] && [ ! -z "$6" ] && [ "$6" != "None" ]; then
 			checkIp "$6"
 			if [ ! $? -eq 1 ]; then
 				return 9;
