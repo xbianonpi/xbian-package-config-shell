@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-#Copyright 2012 - 2016 Hexagon, CurlyMo, mk01 & mkreisl <development@xbian.org>
+#Copyright 2012 - 2017 Hexagon, CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -147,6 +147,9 @@ setInterfaceWlanCredentials() {
 setInterfaceDhcpFn() {
 	isValidInterfaceFn "$1"
 	if [ $? -eq 1 ]; then
+		# We have to save current configuration for later (restart interface needs this file for shutting down interface properly)
+		cp /etc/network/interfaces /run/interfaces.xbian
+
 		sed -i "s/^#iface $1/iface $1/" /etc/network/interfaces
 		sed -i "s/^#allow hotplug $1/allow hotplug $1/" /etc/network/interfaces
 		if [ $(grep -c "^iface $1" /etc/network/interfaces) -gt 0 ]; then
@@ -268,7 +271,7 @@ setInterfaceStaticFn() {
 				fi
 			fi
 		fi
-		if [ $# -gt 4 ] && [ ! -z "$5" ] && [ "$5" != "None" ]; then
+		if [ $# -gt 4 ] && [ ! -z "$5" ] && [ "$5" != "0.0.0.0" ] && [ "$5" != "None" ]; then
 			checkIp "$5"
 			if [ ! $? -eq 1 ]; then
 				return 9;
@@ -276,7 +279,7 @@ setInterfaceStaticFn() {
 				BUFFERRESOLV+="nameserver $5"
 			fi
 		fi
-		if [ $# -gt 5 ] && [ ! -z "$6" ] && [ "$6" != "None" ]; then
+		if [ $# -gt 5 ] && [ ! -z "$6" ] && [ "$6" != "0.0.0.0" ] && [ "$6" != "None" ]; then
 			checkIp "$6"
 			if [ ! $? -eq 1 ]; then
 				return 9;
@@ -284,6 +287,9 @@ setInterfaceStaticFn() {
 				BUFFERRESOLV+="\nnameserver $6"
 			fi
 		fi
+
+		# We have to save current configuration for later (restart interface needs this file for shutting down interface properly)
+		cp /etc/network/interfaces /run/interfaces.xbian
 
 		sed -i "s/^#iface $1/iface $1/" /etc/network/interfaces
 		sed -i "s/^#allow hotplug $1/allow hotplug $1/" /etc/network/interfaces
@@ -548,8 +554,10 @@ function scanWLANNetworksFn() {
 #  @: Process id of the ifup process
 #  0: Process ifup not running
 function restartAdapterFn() {
+	[ -e /run/interfaces.xbian ] && { mv /etc/network/interfaces /etc/network/interfaces.new; mv /run/interfaces.xbian /etc/network/interfaces; }
 	ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null
 	for p in $(ps x | grep -wE "(dhclient|wpa_supplicant|wpa_cli).*$1" | grep -v grep | awk '{ print $1 }'); do kill -TERM "$p" &>/dev/null; done
+	[ -e /etc/network/interfaces.new ] && mv /etc/network/interfaces.new /etc/network/interfaces
 	nohup ifup $1 &>/tmp/ifup.out &
 	PROCESSID=$!; echo $PROCESSID > /tmp/ifup.pid
 	return $PROCESSID
