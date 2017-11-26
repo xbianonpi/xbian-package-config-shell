@@ -92,13 +92,13 @@ setInterfaceWlanCredentials() {
 		k=$(echo "$4" | sed 's%\\%\\\\%g' )
 		case $2 in
 			"WEP")
-				WLANBUFFER+="\nwireless-essid $n\nnwireless-key $k"
+				WLANBUFFER+="\n    wireless-essid $n\nnwireless-key $k"
 			;;
 			"WPA")
-				WLANBUFFER+="\nwpa-ssid $n\nwpa-psk $k"
+				WLANBUFFER+="\n    wpa-ssid $n\nwpa-psk $k"
 			;;
 			"Open")
-				WLANBUFFER+="\nwireless-mode managed\nwireless-essid $n"
+				WLANBUFFER+="\n    wireless-mode managed\nwireless-essid $n"
 			;;
 			*)
 				return 2
@@ -120,7 +120,7 @@ setInterfaceWlanCredentials() {
 			MORE=$(echo -e "$IFACEBUFFER" | sed -n '/\(allow-hotplug.*\|^iface.*\)/,$p')
 
 			# Get a cleaned verson of current clause
-			ME=$(echo -e "$IFACEBUFFER" | sed '/\(allow-hotplug.*\|^iface.*\)/,$d' | sed '/\(^wireless.*\|^wpa.*\)/d')
+			ME=$(echo -e "$IFACEBUFFER" | sed '/\(allow-hotplug.*\|^iface.*\)/,$d' | sed '/\(^[ \t]*wireless.*\|^[ \t]*wpa.*\)/d')
 
 			# Re-add current interface withouth previous cruft
 	                echo -e "iface $1 inet $MODE" >> /etc/network/interfaces
@@ -253,13 +253,13 @@ setInterfaceStaticFn() {
 		if [ ! $? -eq 1 ]; then
 			return 6;
 		else
-			BUFFERIFACES+="address $2"
+			BUFFERIFACES+="    address $2"
 		fi
 		checkValidIpNetmaskFn "$2" "$3"
 		if [ ! $? -eq 1 ]; then
 			return 7;
 		else
-			BUFFERIFACES+="\nnetmask $3"
+			BUFFERIFACES+="\n    netmask $3"
 		fi
 		if [ $# -gt 3 ] && [ -n "$4" ]; then
 			if [ "$4" != "None" ] && [ "$4" != "0.0.0.0" ]; then
@@ -267,7 +267,7 @@ setInterfaceStaticFn() {
 				if [ ! $? -eq 1 ]; then
 					return 8;
 				else
-					BUFFERIFACES+="\ngateway $4"
+					BUFFERIFACES+="\n    gateway $4"
 				fi
 			fi
 		fi
