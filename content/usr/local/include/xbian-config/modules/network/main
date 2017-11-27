@@ -406,21 +406,16 @@ function showCMDFn() {
 					# $5 = Gateway
 					# $6 = Nameserver1
 					# $7 = Nameserver2
+					# $8 = Method static/manual
 
 					setAuto "$2"
-					# Handle optional name servers
-					NAMESERVER1=""
-					NAMESERVER2=""
-
-					if [ $# -gt 5 ]; then
-						NAMESERVER1="$6"
-					fi
-					if [ $# -gt 6 ]; then
-						NAMESERVER2="$7"
-					fi
+					# Handle optional name servers and method
+					[ $# -gt 5 ] && NAMESERVER1="$6" || NAMESERVER1=""
+					[ $# -gt 6 ] && NAMESERVER2="$7" || NAMESERVER2=""
+					[ $# -gt 7 ] && METHOD="$8"      || METHOD=""
 
 					# Validation of arguments is done inside this function
-					RESULT=$(setInterfaceStaticFn "$2" "$3" "$4" "$5" "$NAMESERVER1" "$NAMESERVER2"; echo $?)
+					RESULT=$(setInterfaceStaticFn "$2" "$3" "$4" "$5" "$NAMESERVER1" "$NAMESERVER2" "$METHOD"; echo $?)
 					case $RESULT in
 						6)
 							echo -6;

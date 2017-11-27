@@ -232,6 +232,7 @@ function checkValidIpNetmaskFn() {
 #  $4 Gateway (optional)
 #  $5 DNS1 (optional)
 #  $6 DNS2 (optional)
+#  $7 Method static/manual (optional)
 # Returns
 #  0: Failed
 #  1: Success
@@ -288,6 +289,9 @@ setInterfaceStaticFn() {
 			fi
 		fi
 
+		method=static
+		[ $# -gt 6 ] && [ ! -z "$7" ] && method=$7
+
 		# We have to save current configuration for later (restart interface needs this file for shutting down interface properly)
 		cp /etc/network/interfaces /run/interfaces.xbian
 
@@ -307,7 +311,7 @@ setInterfaceStaticFn() {
 			ME=$(echo -e "$IFACETMP" | sed '/\(allow-hotplug.*\|^iface.*\)/,$d' | sed '/\(.*address.*\|.*netmask.*\|.*gateway.*\)/d')
 
 			# Re-add current interface withouth previous cruft
-	                echo -e "iface $1 inet static" >> /etc/network/interfaces
+	                echo -e "iface $1 inet $method" >> /etc/network/interfaces
 			echo -e "$ME" >> /etc/network/interfaces
 			echo -e "$BUFFERIFACES\n" >> /etc/network/interfaces
 
@@ -317,7 +321,7 @@ setInterfaceStaticFn() {
 		else
 			# Interface not present, add it to the end
 			case $1 in wlan?|ra?) echo "allow-hotplug $1" >> /etc/network/interfaces; ;; esac
-			sudo echo -e "iface $1 inet static" >> /etc/network/interfaces
+			sudo echo -e "iface $1 inet $method" >> /etc/network/interfaces
 			echo -e "$BUFFERIFACES\n" >> /etc/network/interfaces
 
 		fi
@@ -572,7 +576,7 @@ function restartAdapterFn() {
 function getConnectStatusFn() {
 	[ -n "$1" ] && ifc=$1 || ifc=XXXXXXXX
 	if [ -f /tmp/ifup.out ]; then
-		if grep -qw ^"iface $1.*static" /etc/network/interfaces && ! ip addr | grep -qw "$1.*DORMANT"; then
+		if grep -qwE ^"iface $1.*static|iface $1.*manual" /etc/network/interfaces && ! ip addr | grep -qw "$1.*DORMANT"; then
 			STATUS=2;
 		elif grep -qw "bound" /tmp/ifup.out; then
 			STATUS=2;
