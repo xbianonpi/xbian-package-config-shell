@@ -406,7 +406,9 @@ function readNetworkConfigurationFn() {
 		MODE=$(echo -e "$TFILEIFACES" | sed -ne "s/\(iface $1 \)\([a-z]\{1,\}\)[\ ]\([a-z]\{1,\}\)/\3/p");
 		[ -z "$MODE" ] && MODE=manual
 		CIP=$(ip a show $1 | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet \([0-9.]\+\).*/\1/gp');
+		[ -z "$CIP" ] && CIP=$(echo -e "$CONTENT" | grep -m1 "^[ \t]*address" | awk '{print $2}');
 		CSM=$(ipcalc $(ip -4 -o a show $1 | awk '{print $4}') | grep Netmask | awk '{print $2}');
+		[ -z "$CSM" ] && CSM=$(ipcalc $CIP | grep Netmask | awk '{print $2}');
 		CGW=$(echo -e "$CONTENT" | grep ^gateway | awk '{print $2}')
 		[ -z "$CGW" ] && { if [ "$MODE" == "dhcp" ]; then CGW=$(ip route show | grep -m1 'default\|0.0.0.0' | awk '{print $3}'); else CGW="None"; fi; }
 
