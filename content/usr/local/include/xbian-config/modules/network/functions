@@ -564,6 +564,7 @@ function restartAdapterFn() {
 	ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null
 	for p in $(ps x | grep -wE "(dhclient|wpa_supplicant|wpa_cli).*$1" | grep -v grep | awk '{ print $1 }'); do kill -TERM "$p" &>/dev/null; done
 	[ -e /etc/network/interfaces.new ] && mv /etc/network/interfaces.new /etc/network/interfaces
+	sleep 0.5
 	nohup ifup $1 &>/tmp/ifup.out &
 	PROCESSID=$!; echo $PROCESSID > /tmp/ifup.pid
 	return $PROCESSID
