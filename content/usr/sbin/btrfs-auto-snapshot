@@ -393,20 +393,18 @@ if [ "$(blkid -o value -s TYPE  $opt_dev)" != btrfs ]; then
 fi
 
 if [ "$opt_command" = listvol ]; then
-    md=$(mktemp -d)
+    md=$(mktemp -d /run/lv-XXXXXXX)
+    trap "do_run umount $md; rmdir $md;" INT TERM EXIT
     do_run mount -t btrfs $opt_dev $md
     for lv in $(ls $md/); do
         echo $lv
     done
-    do_run umount $md
-    rmdir $md
     exit 0
 elif [ "$opt_command" = volsize ]; then
-    md=$(mktemp -d)
+    md=$(mktemp -d /run/vs-XXXXXXX)
+    trap "do_run umount $md; rmdir $md;" INT TERM EXIT
     do_run mount -t btrfs -o subvolid=0 $opt_dev $md
     [ ! -d $md/$1 ] || printf "$(du -xsb $md/$1 | awk '{print $1}')\n"
-    do_run umount $md
-    rmdir $md
     exit 0
 fi
 
