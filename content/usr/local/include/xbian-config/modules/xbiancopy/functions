@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2016 CurlyMo & mkreisl <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -30,7 +30,7 @@ mapAndMountFn() {
                 [ "$type" = smb ] && type="cifs"
                 server=$(echo $2 | cut -f 3 -d '/')
                 pf="/$(echo $2 | cut -f 4- -d '/')"
-                path=${pf%/*}
+                eval path=${pf%/*}
                 name=${pf##*/}
                 logger -t $(basename $0) "xbiancopy type=$type, server=$server, path=$path, name=$name"
                 mkdir -p $mountpath
@@ -93,7 +93,7 @@ backupImgTypeFn() {
 }
 backupImgDestFn() {
     [ -z "$1" ] && { grep IMGDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \"; exit 0; }
-    [ "$1" = "?" ] && { . /etc/default/xbian-snap; echo $IMGDEST; exit 0; }
+    [ "$1" = "?" -o "$1" = "exp" ] && { . /etc/default/xbian-snap; echo $IMGDEST; exit 0; }
     tt=$(backupImgTypeFn)
     case $tt in
         block)
@@ -142,7 +142,7 @@ backupHomePlanFn() {
 }
 backupHomeDestFn() {
     [ -z "$1" ] && { grep HOMEDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \"; exit 0; }
-    [ "$1" = "?" ] && { . /etc/default/xbian-snap; echo $HOMEDEST; exit 0; }
+    [ "$1" = "?" -o "$1" = "exp" ] && { . /etc/default/xbian-snap; echo $HOMEDEST; exit 0; }
     echo f=\"$(mapAndMountFn mount $1)\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
     [ ! -e "$f" ] && fdel=1
     ! touch "$f" 2>/dev/null && { echo -1; mapAndMountFn umount; exit 0; }
