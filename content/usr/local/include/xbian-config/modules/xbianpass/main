@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(update);
+ARGUMENTS=(update status);
 
 #|------------------------------------|
 #|          Include files             |
@@ -71,7 +71,7 @@ function showGUIFn() {
 #  - 0: Failed
 function showCMDFn() {
 	case $1 in
-		"update")
+		update)
 			shift;
 			if [ $# -eq 1 ]; then
 				setXbianPassFn $1;
@@ -79,6 +79,9 @@ function showCMDFn() {
 			else
 				echo 0;
 			fi
+		;;
+		status)
+		        [ -e $BASEPATH/config/xbianpass ] && echo 1 || echo 0
 		;;
 	esac
 }
