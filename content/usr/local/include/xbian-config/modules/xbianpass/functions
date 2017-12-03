@@ -27,7 +27,7 @@ function setXbianPassFn() {
 	rc=0
 	if which vncpasswd >/dev/null; then
 		mkdir -p /home/xbian/.vnc
-		echo $1 | vncpasswd -f > /home/xbian/.vnc/passwd
+		echo $1 | vncpasswd -f >/home/xbian/.vnc/passwd 2>/dev/null
 		rc=$(($rc+$?))
 	fi
 	echo "xbian:$1" | chpasswd
