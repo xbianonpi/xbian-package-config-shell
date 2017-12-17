@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -48,19 +48,19 @@ function showConfigDialog() {
 
 	ELEMENTS=();
 	ELEMENTS+=("1,3,$(_ xbiancopy.label.source),/dev/root,27,42,200,0");
-	ELEMENTS+=("2,3,$(_ xbiancopy.label.dest),/dev/sdxx,27,42,200,0");
+	ELEMENTS+=("2,3,$(_ xbiancopy.label.dest),/dev/sdX,27,42,200,0");
 	
 	showInputFormDlg "	
 If you want to create .img file with /boot partition and your system, specify \"file:\" as prefix to destination 
 (e.g. file:/media/exthdd/xbian.img)
     
-If you want to convert to NFS ROOT installation, put \"nfs:\" as prefix to NFS export specification
+If you want to convert to NFS ROOT installation, put \"nfs[{3,4}]:\" as prefix to NFS export specification
 (use IP address, not host-names. NFS export needs \"no_root_squash\" option)
 (e.g. nfs:192.168.3.12:/nas-exports/rpi-nfs-root)
     
 Otherwise specify block device 
 (e.g. /dev/sda2)
     
-!!! PARTITION/NFS-EXPORT WILL BE REFORMATTED !!!
+ !!!  WARNING: Destination partition/NFS export WILL BE WIPED OUT  !!!
 " 23 75
 } 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-#Copyright 2012 CurlyMo <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -42,7 +42,8 @@ fi
 function showGUIFn() {
         tm=$(mktemp -d)
         cleanup () {
-            mountpoint -q $tm && umount $tm 2>/dev/null; rmdir $tm 2>/dev/null
+            mountpoint -q $tm && umount $tm 2>/dev/null; rmdir $tm 2>/dev/null; rm -f /run/f.txt
+            [ -e /etc/default/xbian-initramfs.xc ] && mv /etc/default/xbian-initramfs.xc /etc/default/xbian-initramfs
         }
         trap 'cd /; cleanup' RETURN EXIT TERM
 
@@ -54,10 +55,16 @@ function showGUIFn() {
             IFS=$ORIGINALIFS;
             DEST=${DATA[1]}; 
 
-            if echo "$DEST" | grep -q ^'nfs:'; then
-                DEST=${DEST##'nfs:'}
-                mount $DEST $tm && { rm -fr $tm/root $tm/xbian || :; } && touch $tm/root && touch $tm/xbian && chown xbian:xbian $tm/xbian && \
-                    [ "$(stat -c %U $tm/root)" = root -a "$(stat -c %U $tm/xbian)" = xbian ] || \
+            if echo "$DEST" | grep -q ^'nfs[34]*:'; then
+                tt=${DEST%%:*}; tt=${tt#*nfs}
+                DEST=${DEST#*:}
+                case $tt in
+                    3) service portmap start &>/dev/null; bo=",vers=$tt"; mo="-o vers=$tt"; to='--acls --xattrs' ;;
+                    4) bo=",vers=$tt"; mo="-o vers=$tt"; to='' ;;
+                    *) service portmap status | grep -q running && { bo=''; mo='-o vers=3'; to='--acls --xattrs'; } || { bo=''; mo=''; to=''; } ;;
+                esac
+                mount $DEST $mo $tm && { rm -fr $tm/root~ $tm/xbian~ || :; } && touch $tm/root~ && touch $tm/xbian~ && chown xbian:xbian $tm/xbian~ && \
+                    [ "$(stat -c %U $tm/root~)" = root -a "$(stat -c %U $tm/xbian~)" = xbian ] || \
                         { showNFSerror; sleep 5; umount -l $tm 2>/dev/null; rmdir $tm 2>/dev/null; return 1; }
 
                 tt=nfs
@@ -83,15 +90,22 @@ function showGUIFn() {
             # copy data
             case $tt in
                 btrfs)
-                    btrfs-auto-snapshot xbiancopy $opt_img  ${DATA[0]} "$DEST"
+                    btrfs-auto-snapshot xbiancopy $opt_img ${DATA[0]} "$DEST"
                     ;;
                 nfs|f2fs|ext4)
-                    rm -fr $tm/* && mkdir $tm/home && mkdir -p $tm/lib/modules && mkdir -p $tm/home/xbian/.xbmc
-                    cd $tm/
-                    ( tar c --one-file-system /home  | pv -n -s $(du -sbx  /home| awk '{print $1}')| tar x -v >/run/f.txt) 2>&1 | while read a; do printf "XXX\n$a\n$(printf "%-.55s" $(tail -1 /run/f.txt))\nXXX\n"; done | dialog --gauge 'Progress' 8 60
-                    ( tar c --one-file-system /home/xbian/.xbmc  | pv -n -s $(du -sbx  /home/xbian/.xbmc| awk '{print $1}')| tar x -v >/run/f.txt) 2>&1 | while read a; do printf "XXX\n$a\n$(printf "%-.55s" $(tail -1 /run/f.txt))\nXXX\n"; done | dialog --gauge 'Progress' 8 60
-                    ( tar c --one-file-system /lib/modules  | pv -n -s $(du -sbx  /lib/modules| awk '{print $1}')| tar x -v >/run/f.txt) 2>&1 | while read a; do printf "XXX\n$a\n$(printf "%-.55s" $(tail -1 /run/f.txt))\nXXX\n"; done | dialog --gauge 'Progress' 8 60
-                    ( tar c --one-file-system /  | pv -n -s $(du -sbx  /| awk '{print $1}')| tar x -v >/run/f.txt) 2>&1 | while read a; do printf "XXX\n$a\n$(printf "%-.55s" $(tail -1 /run/f.txt))\nXXX\n"; done | dialog --gauge 'Progress' 8 60
+                    rm -frv $tm/ 2>/dev/null | sed "s%$tm%%g" | dialog --progressbox "Wiping out $DEST ..." 8 70 || :
+                    dirs=$(echo $(sed 's/^[ \t]*//;/^#/d;/subvol=/!d' /etc/fstab | awk '{ print $2 }')" / /home/xbian /home/xbian/.kodi" | tr " " "\n" | sort -u | tr "\n" " ")
+                    for d in $dirs; do
+                        mountpoint -q $d && mkdir -p $tm/$d && ar=0 && ( cd $tm/; tar c --one-file-system $to $d | pv -n -s $(du -sbx $d | awk '{print $1}') | \
+                            tar x $to -v >/run/f.txt) 2>&1 | \
+                                while read a; do
+                                    if echo "$a" | grep -qv ^tar; then
+                                        (( $a >= $ar )) && ar=$a
+                                        printf "XXX\n$ar\n$(printf "%-.66s" $(tail -1 /run/f.txt))\nXXX\n"
+                                    fi
+                                done | dialog --gauge "Copying $d ..." 8 70
+                    done
+                    sed -i '/.*subvol=/s/^/#/;/.*[ \t]\/[ \t]/s/^/#/' $tm/etc/fstab
                     ;;
                 *)
                     ;;
@@ -100,12 +114,48 @@ function showGUIFn() {
             # update /boot
             case $tt in
                 nfs)
-                    sed -i 's%iface eth0 inet dhcp%iface eth0 inet manual%' $tm/etc/network/interfaces
-
-                    cmd=$(tr " " "\n" < /boot/cmdline.txt | grep -v 'rootfstype=\|root=\|rootflags=\|nfsroot=')
-                    cmd="root=/dev/nfs nfsroot=$DEST,wsize=2048,rsize=2048,tcp,vers=3 rootfstype=nfs ip=dhcp $cmd "
-                    mv /boot/cmdline.txt /boot/cmdline.txt.nfs
-                    echo "$cmd" > /boot/cmdline.txt
+                    getused() {
+                         local h=''
+                         for n in $(ip addr | grep state | grep -vwE 'lo|dummy[0-9]|tun[0-9]' | awk '{ sub(":","",$2); print $2; }'); do
+                             [ x"$(ip a show $n | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet \([0-9.]\+\).*/\1/gp')" = x"$1" ] && h=$n" $h"
+                         done
+                         echo $h
+                    }
+                    nd=$(getused $(netstat -nt 2>/dev/null | grep -m1 $(findmnt -n ${tm} | awk '{ sub(".*,addr=",""); sub(",.*",""); print $0; }'):2049 | \
+                        awk '{ split($4, a, ":"); print a[1]; }'))
+                    if grep -q "iface $nd inet static" /etc/network/interfaces; then
+                        nc=$(grep -A10 "iface $nd inet static" /etc/network/interfaces)
+                        ip=$(echo "$nc" | grep -m1 address | awk '{ print $2 }')
+                        nm=$(echo "$nc" | grep -m1 netmask | awk '{ print $2 }')
+                        gw=$(echo "$nc" | grep -m1 gateway | awk '{ print $2 }')
+                        nc="cnet=$ip::$gw:$nm::$nd:off"
+                    else
+                        lsmod | grep -q ^smsc95xx && nc="cnet=$nd" || nc="ip=$nd"
+                    fi
+                    if [ -e /boot/cmdline.txt ]; then
+                        cmd=$(tr " " "\n" < /boot/cmdline.txt | grep -vE 'rootfstype=|root=|rootflags=|nfsroot=|ip=|cnet=')
+                        cmd="root=/dev/nfs nfsroot=$DEST,tcp$bo rootfstype=nfs $nc $cmd"
+                        [ -e /boot/cmdline.txt.nfs ] || mv /boot/cmdline.txt /boot/cmdline.txt.nfs
+                        echo "$cmd" | tr "\n" " " | sed 's/$/&\n/' > /boot/cmdline.txt
+                    fi
+                    if [ -e /boot/boot.scr.txt ]; then
+                        cmd=$(grep '^setenv baseconfig .* root=' /boot/boot.scr.txt | sed "s%setenv baseconfig %%g" | tr " " "\n" | grep -vE 'rootfstype=|root=|rootflags=|nfsroot=|ip=|cnet=')
+                        cmd=$(echo "root=/dev/nfs nfsroot=$DEST,tcp$bo rootfstype=nfs $nc $cmd" | tr "\n" " ")
+                        [ -e /boot/boot.scr.txt.nfs ] || cp -a /boot/boot.scr.txt /boot/boot.scr.txt.nfs
+                        sed -i "s%^setenv baseconfig .*%setenv baseconfig $cmd%g" /boot/boot.scr.txt
+                        ( cd /boot; ./mks; ) &>/dev/null
+                    fi
+                    /etc/xbian-initramfs/initram.switcher.sh update
+                    case $nd in
+                        wlan*|ra*)
+                            if ! grep -q 'LAN=yes' /etc/default/xbian-initramfs; then
+                                cp -a /etc/default/xbian-initramfs /etc/default/xbian-initramfs.xc
+                                sed -i 's/LAN=.*/LAN=yes/g' /etc/default/xbian-initramfs
+                                sed -i 's/LAN=.*/LAN=yes/g' $tm/etc/default/xbian-initramfs
+                                xbian-update-initramfs | dialog --progressbox "Rebuilding initramfs ..." 8 70 || :
+                            fi
+                        ;;
+                    esac
                     ;;
                 *)
                     ;;
