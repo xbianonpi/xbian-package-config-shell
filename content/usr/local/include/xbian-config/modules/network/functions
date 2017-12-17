@@ -344,12 +344,21 @@ setInterfaceStaticFn() {
 #  1: Success
 #  0: Error
 function listNetworkInterfacesFn() {
-	hideDEV=''
-	if findmnt -n -t nfs,nfs4 / >/dev/null; then
-		usedIP=$(netstat -nt | grep -m1 $(findmnt -n / | awk '{ sub(".*,addr=",""); sub(",.*",""); print $0; }'):2049 | awk '{ split($4, a, ":"); print a[1]; }')
+	gethide() {
+	        local h=''
 		for n in $(ip addr | grep state | grep -vwE 'lo|dummy[0-9]|tun[0-9]' | awk '{ sub(":","",$2); print $2; }'); do
-			[ x"$(ip a show $n | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet \([0-9.]\+\).*/\1/gp')" = x"$usedIP" ] && hideDEV="|"$n
+			[ x"$(ip a show $n | sed -n -e 's/:127\.0\.0\.1 //g' -e 's/ *inet \([0-9.]\+\).*/\1/gp')" = x"$1" ] && h="|"$n
 		done
+		echo $h
+	}
+	if findmnt -n -t nfs,nfs4 / >/dev/null; then
+		hideDEV=$(gethide $(netstat -nt | grep -m1 $(findmnt -n / | awk '{ sub(".*,addr=",""); sub(",.*",""); print $0; }'):2049 | \
+		        awk '{ split($4, a, ":"); print a[1]; }'))
+	elif which iscsiadm >/dev/null && iscsiadm -m session >/dev/null; then
+	        hideDEV=$(gethide $(netstat -nt | grep :$(iscsiadm -m session | awk '{ split($3, a, ":"); split(a[2], b, ","); print b[1]; }') | \
+	                awk '{ split($4, a, ":"); print a[1]; }'))
+	else
+	        hideDEV=''
 	fi
 	IFACES=$(ip addr | grep state | grep -vwE "lo|dummy[0-9]|tun[0-9]$hideDEV" | awk '{ sub(":","",$2); print $2; }' | sort);
 	if [ ! -z "$IFACES" ]; then
