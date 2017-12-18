@@ -247,7 +247,7 @@ function showCMDFn() {
             echo $(backupDoCleanFn $2 $3)
             ;;
         getpart)
-            echo $(getImgPartitionsFn)
+            echo $(getImgPartitionsFn $2)
             ;;
         dodaily)
             echo $(dailySnapFn $2)

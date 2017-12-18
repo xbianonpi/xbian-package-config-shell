@@ -187,8 +187,9 @@ backupDoCleanFn() {
     echo $ret
 }
 
-getImgPartitionsFn(){
-    printf "%s;" $(blkid | grep -v "$(readlink -e /dev/root)\|mmcblk0p1\|zram\|loop\|$(blkid -t TYPE=swap -o device)"| awk -F':' '{print $1}')
+getImgPartitionsFn() {
+    [ o"$1" = oall ] && hide='' || hide='\|sd[a-z] \|mmcblk[0-9] '
+    printf "%s;" $(lsblk -alnp | grep -v "$(readlink -e /dev/root)\|$(findmnt -n /boot -o SOURCE)\|zram\|loop\|$(blkid -t TYPE=swap -o device)$hide" | awk -F ' ' '{print $1}')
 }
 
 dailySnapFn() {
