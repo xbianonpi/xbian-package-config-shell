@@ -21,6 +21,9 @@ if [ "$1" != run ] || [ "$(xbian-config updates progress)" != 0 ]; then
     exit 0
 fi
 
+[ $(cat /etc/debian_version | cut -f 1 -d '.') -gt $(grep XBian /etc/issue.net | cut -f 3 -d ' ') ] && \
+    [ -x /var/lib/dpkg/info/xbian-package-repo.postinst ] && /var/lib/dpkg/info/xbian-package-repo.postinst triggered
+
 [ -e /var/run/reboot-required ] && {
     exec > /run/motd.dynamic
     uname -snrv
