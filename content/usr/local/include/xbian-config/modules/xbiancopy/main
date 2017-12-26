@@ -42,32 +42,59 @@ fi
 function showGUIFn() {
         tm=$(mktemp -d)
         cleanup () {
-            mountpoint -q $tm && umount $tm 2>/dev/null; rmdir $tm 2>/dev/null; rm -f /run/f.txt
+            mountpoint -q $tm && umount $tm 2>/dev/null; rmdir $tm 2>/dev/null; rm -f /run/f.txt; rm -f /run/out.xc
             [ -e /etc/default/xbian-initramfs.xc ] && mv /etc/default/xbian-initramfs.xc /etc/default/xbian-initramfs
+            [ -z "$ta" ] || { iscsiadm -m node -T $ta -p $ti --logout &>/dev/null; ta=''; }
+            [ -z "$sa" ] || { service autofs start &>/dev/null; sa=''; }
+            cd /
         }
-        trap 'cd /; cleanup' RETURN EXIT TERM
 
         showConfigDialog
         if [ $? -eq 0 ]; then
-            opt_img=''
+            opt_img=''; ta=''; sa=''; rc=-1
             IFS=$'\n';
             DATA=($(echo -e "$RETURN"));
             IFS=$ORIGINALIFS;
             DEST=${DATA[1]}; 
+            rm -f /tmp/xbiancopy.log
 
             if echo "$DEST" | grep -q ^'nfs[34]*:'; then
                 tt=${DEST%%:*}; tt=${tt#*nfs}
                 DEST=${DEST#*:}
+                to='--warning=none'
                 case $tt in
-                    3) service portmap start &>/dev/null; bo=",vers=$tt"; mo="-o vers=$tt"; to='--acls --xattrs' ;;
-                    4) bo=",vers=$tt"; mo="-o vers=$tt"; to='' ;;
-                    *) service portmap status | grep -q running && { bo=''; mo='-o vers=3'; to='--acls --xattrs'; } || { bo=''; mo=''; to=''; } ;;
+                    3) service portmap start &>/dev/null; bo=",vers=$tt"; mo="-o vers=$tt"; to='--acls --xattrs '$to ;;
+                    4) bo=",vers=$tt"; mo="-o vers=$tt" ;;
+                    *) service portmap status | grep -q running && { bo=''; mo='-o vers=3'; to='--acls --xattrs '$to; } || { bo=''; mo=''; } ;;
                 esac
                 mount $DEST $mo $tm && { rm -fr $tm/root~ $tm/xbian~ || :; } && touch $tm/root~ && touch $tm/xbian~ && chown xbian:xbian $tm/xbian~ && \
                     [ "$(stat -c %U $tm/root~)" = root -a "$(stat -c %U $tm/xbian~)" = xbian ] || \
                         { showNFSerror; sleep 5; umount -l $tm 2>/dev/null; rmdir $tm 2>/dev/null; return 1; }
-
-                tt=nfs
+                tt=nfs; td="NFS Root (export $DEST)"
+            elif echo "$DEST" | grep -q ^'iSCSI:'; then
+                ta=${DEST##iSCSI:}; ti=${ta##*,}; ta=${ta%,*}
+                set -o pipefail
+                dpkg-query -s open-iscsi &>/dev/null || apt-get install -y open-iscsi 2>&1 | tee /tmp/xbiancopy.log | dialog --progressbox "Installing package open-iscsi ..." 10 70
+                [ "$?" -eq 0 ] && (
+                    iscsiadm -m discovery -t sendtargets -p $ti 2>&1 | tee /run/out.xc
+                    grep -q $ta /run/out.xc || { echo "ta=" >/run/vars.xc; exit 2; }
+                    [ "$(iscsiadm -m session 2>&1 | awk '{ split($3, a, ","); print a[1] }')" = "$ti" ] && [ "$(iscsiadm -m session 2>&1 | awk '{ print $4 }')" = "$ta" ] || \
+                        iscsiadm -m node -T $ta -p $ti --login 2>&1 || exit 3
+                    for i in $(seq 0 3); do
+                        DEST=$(parted -l 2>/dev/null | grep -A1 'Model: LIO-ORG' | awk '{ if (NR == 2) { sub(":","",$2); print $2 }; }')
+                        [ -z "$DEST" ] && sleep 1 || { echo "$DEST as iSCSI device detected"; echo "Generate partition table and partition on $DEST"; break; }
+                    done
+                    [ -n "$DEST" ] && parted -s $DEST mklabel msdos && sync && echo '2048,+,83,,' | sfdisk -f $DEST 2>&1 || exit 4
+                    DEST=${DEST}1
+                    echo "Success! Copying data to parttion $DEST now ..."
+                    echo "DEST=$DEST" >/run/vars.xc
+                    sleep 3
+                ) | tee -a /tmp/xbiancopy.log | dialog --progressbox "Connecting to $ta,$ti ..." 10 70
+                rc=$?; [ -e /run/vars.xc ] && . /run/vars.xc
+                set +o pipefail
+                [ "$rc" -eq 0 ] || { sleep 10; showiSCSIerror "$rc"; sleep 5; cleanup; return $rc; }
+                opt_img='--helper'
+                tt=iSCSI; td="iSCSI Target ($ta, $ti)"
             elif echo "$DEST" | grep -q ^'f2fs:'; then
                 DEST=${DEST##'f2fs:'}
                 tt=f2fs
@@ -79,8 +106,9 @@ function showGUIFn() {
                 DEST=${DEST##'file:'}
                 tt=btrfs
             fi
+            trap 'cleanup' RETURN EXIT TERM
             # check for block device
-            if [ -z "$opt_img" -a "$tt" != nfs ]; then
+            if [ -z "$opt_img" -a "$tt" != nfs -a "$tt" != iSCSI ]; then
                 { [ -b $DEST ] && echo $DEST | grep -q ".*[0-9]$"; } || { showWrongBlockDev; sleep 5; return 1; }
                 if [ "$tt" != btrfs ]; then
                      { ! mountpoint -q $DEST || umount $DEST; } && mkfs.$tt $DEST >/dev/null 2>&1 && mount -t $tt $DEST $tm || { showUmountFormatError; sleep 5; return 1; }
@@ -89,31 +117,35 @@ function showGUIFn() {
 
             # copy data
             case $tt in
-                btrfs)
-                    btrfs-auto-snapshot xbiancopy $opt_img ${DATA[0]} "$DEST"
-                    ;;
+                btrfs|iSCSI)
+                    btrfs-auto-snapshot xbiancopy ${opt_img} ${DATA[0]} $DEST
+                    rc=$?; [ "$rc" -eq 0 ] || { showCopyError "$rc"; return $rc; }
+                ;;
                 nfs|f2fs|ext4)
-                    rm -frv $tm/ 2>/dev/null | sed "s%$tm%%g" | dialog --progressbox "Wiping out $DEST ..." 8 70 || :
+                    rm -frv $tm/ 2>/dev/null | sed "s%$tm%%g" | dialog --progressbox "Wiping out $DEST ..." 10 70 || :
+                    service autofs status | grep -q running && { service autofs stop; sa=1; }
                     dirs=$(echo $(sed 's/^[ \t]*//;/^#/d;/subvol=/!d' /etc/fstab | awk '{ print $2 }')" / /home/xbian /home/xbian/.kodi" | tr " " "\n" | sort -u | tr "\n" " ")
+                    set -o pipefail
                     for d in $dirs; do
-                        mountpoint -q $d && mkdir -p $tm/$d && ar=0 && ( cd $tm/; tar c --one-file-system $to $d | pv -n -s $(du -sbx $d | awk '{print $1}') | \
-                            tar x $to -v >/run/f.txt) 2>&1 | \
-                                while read a; do
-                                    if echo "$a" | grep -qv ^tar; then
-                                        (( $a >= $ar )) && ar=$a
-                                        printf "XXX\n$ar\n$(printf "%-.66s" $(tail -1 /run/f.txt))\nXXX\n"
-                                    fi
-                                done | dialog --gauge "Copying $d ..." 8 70
+                        echo "processing $d" >> /tmp/xbiancopy.log
+                        mountpoint -q $d || continue
+                        mkdir -p $tm/$d && ar=0 && ( export LC_ALL=C; cd $tm && tar c --one-file-system $to $d | pv -ns $(du -sbx $d | awk '{print $1}') | tar x $to -v >/run/f.txt) 2>&1 | \
+                            while read a; do
+                                echo "$a" | grep -q ^[0-9] && { (($a > $ar)) && ar=$a; printf "XXX\n$ar\n$(printf "\n %-.64s" $(tail -1 /run/f.txt))\nXXX\n"; } || echo "$a" >>/tmp/xbiancopy.log
+                            done | dialog --gauge "Copying $d ..." 10 70
+                        rc=$?; [ "$rc" -eq 0 ] || break
                     done
+                    set +o pipefail
+                    [ "$rc" -eq 0 ] || { showCopyError "$rc"; return $rc; }
                     sed -i '/.*subvol=/s/^/#/;/.*[ \t]\/[ \t]/s/^/#/' $tm/etc/fstab
-                    ;;
+                ;;
                 *)
-                    ;;
+                ;;
             esac
 
             # update /boot
             case $tt in
-                nfs)
+                nfs|iSCSI)
                     getused() {
                          local h=''
                          for n in $(ip addr | grep state | grep -vwE 'lo|dummy[0-9]|tun[0-9]' | awk '{ sub(":","",$2); print $2; }'); do
@@ -121,41 +153,56 @@ function showGUIFn() {
                          done
                          echo $h
                     }
-                    nd=$(getused $(netstat -nt 2>/dev/null | grep -m1 $(findmnt -n ${tm} | awk '{ sub(".*,addr=",""); sub(",.*",""); print $0; }'):2049 | \
-                        awk '{ split($4, a, ":"); print a[1]; }'))
-                    if grep -q "iface $nd inet static" /etc/network/interfaces; then
+                    if [ "$tt" = nfs ]; then
+                        nd=$(getused $(netstat -nt 2>/dev/null | grep -m1 $(findmnt -n ${tm} | awk '{ sub(".*,addr=",""); sub(",.*",""); print $0; }'):2049 | \
+                            awk '{ split($4, a, ":"); print a[1]; }'))
+                    else
+                        nd=$(getused $(netstat -nt 2>/dev/null | grep :$(iscsiadm -m session | awk '{ split($3, a, ":"); split(a[2], b, ","); print b[1]; }') | \
+                            awk '{ split($4, a, ":"); print a[1]; }'))
+                    fi
+
+                    if grep -q ^"iface $nd inet static" /etc/network/interfaces; then
                         nc=$(grep -A10 "iface $nd inet static" /etc/network/interfaces)
                         ip=$(echo "$nc" | grep -m1 address | awk '{ print $2 }')
                         nm=$(echo "$nc" | grep -m1 netmask | awk '{ print $2 }')
                         gw=$(echo "$nc" | grep -m1 gateway | awk '{ print $2 }')
                         nc="cnet=$ip::$gw:$nm::$nd:off"
                     else
-                        lsmod | grep -q ^smsc95xx && nc="cnet=$nd" || nc="ip=$nd"
+                        { lsmod | grep -q ^smsc95xx && echo $nd | grep -q 'eth[0-9]' || echo $nd | grep -qE 'wlan[0-9]|ra[0-9]'; } && nc="cnet=$nd" || nc="ip=$nd"
                     fi
                     if [ -e /boot/cmdline.txt ]; then
-                        cmd=$(tr " " "\n" < /boot/cmdline.txt | grep -vE 'rootfstype=|root=|rootflags=|nfsroot=|ip=|cnet=')
-                        cmd="root=/dev/nfs nfsroot=$DEST,tcp$bo rootfstype=nfs $nc $cmd"
-                        [ -e /boot/cmdline.txt.nfs ] || mv /boot/cmdline.txt /boot/cmdline.txt.nfs
+                        if [ "$tt" = nfs ]; then
+                            cmd=$(tr " " "\n" < /boot/cmdline.txt | grep -vE 'rootfstype=|root=|rootflags=|nfsroot=|ip=|cnet=')
+                            cmd="root=/dev/nfs nfsroot=$DEST,tcp$bo rootfstype=nfs $nc $cmd"
+                        else
+                            cmd=$(tr " " "\n" < /boot/cmdline.txt | grep -vE 'rootfstype=|root=|nfsroot=|ip=|cnet=')
+                            cmd="root=iSCSI=$ta,$ti,UUID=$(blkid -s UUID -o value $DEST) rootfstype=btrfs $nc $cmd"
+                        fi
+                        [ -e /boot/cmdline.txt.$tt ] || mv /boot/cmdline.txt /boot/cmdline.txt.$tt
                         echo "$cmd" | tr "\n" " " | sed 's/$/&\n/' > /boot/cmdline.txt
                     fi
                     if [ -e /boot/boot.scr.txt ]; then
-                        cmd=$(grep '^setenv baseconfig .* root=' /boot/boot.scr.txt | sed "s%setenv baseconfig %%g" | tr " " "\n" | grep -vE 'rootfstype=|root=|rootflags=|nfsroot=|ip=|cnet=')
-                        cmd=$(echo "root=/dev/nfs nfsroot=$DEST,tcp$bo rootfstype=nfs $nc $cmd" | tr "\n" " ")
-                        [ -e /boot/boot.scr.txt.nfs ] || cp -a /boot/boot.scr.txt /boot/boot.scr.txt.nfs
-                        sed -i "s%^setenv baseconfig .*%setenv baseconfig $cmd%g" /boot/boot.scr.txt
+                        if [ "$tt" = nfs ]; then
+                            cmd=$(grep -wm1 ^'setenv baseconfig' /boot/boot.scr.txt | sed "s%^setenv baseconfig \+%%g;s% \+% \n%g" | grep -vE 'rootfstype=|root=|nfsroot=|ip=|cnet=|rootflags=' | tr -d '\n')
+                            cmd=$(echo "root=/dev/nfs nfsroot=$DEST,tcp$bo $nc $cmd")
+                            sed -i "s%setenv fstype.*%setenv fstype nfs%" /boot/boot.scr.txt
+                        else
+                            cmd=$(grep -wm1 ^'setenv baseconfig' /boot/boot.scr.txt | sed 's%^setenv baseconfig \+%%g;s% \+% \n%g' | grep -vE 'rootfstype=|root=|nfsroot=|ip=|cnet=' | tr -d '\n')
+                            cmd=$(echo "root=iSCSI=$ta,$ti,UUID=$(blkid -s UUID -o value $DEST) $nc $cmd")
+                            sed -i "s%setenv fstype.*%setenv fstype btrfs%" /boot/boot.scr.txt
+                        fi
+                        [ -e /boot/boot.scr.txt.$tt ] || cp -a /boot/boot.scr.txt /boot/boot.scr.txt.$tt
+                        sed -i "0,/^setenv baseconfig.*/s%%setenv baseconfig $cmd%" /boot/boot.scr.txt
                         ( cd /boot; ./mks; ) &>/dev/null
                     fi
                     /etc/xbian-initramfs/initram.switcher.sh update
-                    case $nd in
-                        wlan*|ra*)
-                            if ! grep -q 'LAN=yes' /etc/default/xbian-initramfs; then
-                                cp -a /etc/default/xbian-initramfs /etc/default/xbian-initramfs.xc
-                                sed -i 's/LAN=.*/LAN=yes/g' /etc/default/xbian-initramfs
-                                sed -i 's/LAN=.*/LAN=yes/g' $tm/etc/default/xbian-initramfs
-                                xbian-update-initramfs | dialog --progressbox "Rebuilding initramfs ..." 8 70 || :
-                            fi
-                        ;;
-                    esac
+                    cp -a /etc/default/xbian-initramfs /etc/default/xbian-initramfs.xc
+                    [ "$tt" = iSCSI ] && grep -q 'iSCSI=no' /etc/default/xbian-initramfs && sed -i 's/iSCSI=no/iSCSI=auto/g' /etc/default/xbian-initramfs
+                    if echo $nc | grep -q ^cnet || [ "$tt" = iSCSI ]; then
+                        grep -q 'LAN=yes' /etc/default/xbian-initramfs || sed -i 's/LAN=.*/LAN=yes/g' /etc/default/xbian-initramfs
+                        xbian-update-initramfs | tee -a /tmp/xbiancopy.log | dialog --progressbox "Rebuilding initramfs ..." 10 70 || :
+                    fi
+                    showCloneDone "$td"
                     ;;
                 *)
                     ;;
