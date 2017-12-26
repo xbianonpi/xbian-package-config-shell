@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
+#Copyright 2012 - 2017 CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -44,17 +44,19 @@ check_locale()
 
 }
 
-function _() {
-    if [ ! -e /run/xbian-config.$$ ]; then
-        check_locale || echo -e $(env -i LANG=en_US.UTF-8 locale) > /run/xbian-config.$$
-    fi
+if [ ! -e /run/xbian-config.$$ ]; then
+    check_locale || echo -e $(env -i LANG=en_US.UTF-8 locale) > /run/xbian-config.$$
+    XB_LOCALE=$(cat /run/xbian-config.$$)
+    EN_LOCALE=$(env -i LANG="en_US.UTF-8" locale)
+fi
 
+function _() {
     msgid="xbian-config.$1"
-    translation=$(eval $(cat /run/xbian-config.$$) gettext xbian $msgid)
+    translation=$(eval $XB_LOCALE gettext xbian $msgid)
     if [ "$translation" = "$msgid" ]; then
         # Untranslated string
-        translation=$(eval $(env -i LANG="en_US.UTF-8" locale) gettext xbian $msgid)
+        translation=$(eval $EN_LOCALE gettext xbian $msgid)
     fi
 
-    echo $translation
+    echo $translation | tr '^' ' '
 }
