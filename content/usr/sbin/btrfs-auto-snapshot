@@ -43,6 +43,7 @@ opt_mountpoint=${tmp_dir}
 #opt_snapdir='.btrfs/snapshot/'
 opt_snapdir=''
 opt_img=''
+opt_helper=''
 #opt_remotecmd='rsh -l root media.private '
 opt_remotecmd=''
 
@@ -235,13 +236,9 @@ do_snapshot ()
 
 do_remove_kpartx () 
 {
-	[ -e /run/kpartxmap.xbiancopy.$$ ] && . /run/kpartxmap.xbiancopy.$$
-	[ -n "$loopd" ] && while ! kpartx -d $loopd 1>/dev/null 2>&1; do sleep 5; done
-	[ -n "$loopd" ] && losetup -d $loopd 1>/dev/null 2>&1
-
-	rm -f /run/kpartxmap.xbiancopy.$$
-	rm -f /run/rc.xbiancopy.$$
-	sysctl -p /etc/sysctl.d/xbian.conf > /dev/null 2>/dev/null
+	[ -e /run/vars.xbiancopy.$$ ] && { . /run/vars.xbiancopy.$$; rm -f /run/vars.xbiancopy.$$; }
+	[ -n "$loopd" ] && { while ! kpartx -d $loopd &>/dev/null; do sleep 5; done; losetup -d $loopd &>/dev/null; }
+	sysctl -p /etc/sysctl.d/xbian.conf &>/dev/null
 }
 
 do_rename () 
@@ -294,7 +291,7 @@ fi
 
 
 GETOPT=$(getopt \
-        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,size:,fs-name:,exclude: \
+        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,helper,size:,fs-name:,exclude: \
         --options=p:dvl:i:m:nhtsk:e:x: \
         -- "$@" ) \
         || exit 128
@@ -306,6 +303,10 @@ do
         case "$1" in
                 (--img)
                         opt_img=1
+                        shift 1
+                        ;;
+                (--helper)
+                        opt_helper=1
                         shift 1
                         ;;
                 (--exclude|-x)
@@ -570,33 +571,35 @@ case $opt_command in
 		do_rename $(dirname $1)/@$tmpd $1_rollback
                 ;;
 	(xbiancopy)
-		echo "rc=0" >/run/rc.xbiancopy.$$
 	        XBIANCOPYLOG='/tmp/xbiancopy.log'
+	        echo "$@" > $XBIANCOPYLOG
 	        if [ "$BACKGROUND" == 1 ]; then
-	            echo "$@" > $XBIANCOPYLOG
 	            PIPECMD1="tee -a $XBIANCOPYLOG"
 	            PIPECMD2=$PIPECMD1
 	        else
-	            PIPECMD1="dialog --progressbox \"Preparing devices and copying /boot\" 7 60"
-	            PIPECMD2="dialog --gauge \"Cloning all subvolumes. Please wait...\" 10 60"
+	            PIPECMD1="dialog --progressbox \"Preparing devices and copying /boot\" 10 70"
+	            PIPECMD2="dialog --gauge \"Cloning all subvolumes. Please wait...\" 10 70"
 	        fi
+		echo "fn=" >/run/vars.xbiancopy.$$
+	        set -o pipefail
 		(
-		    sysctl -w fs.file-max=80000 > /dev/null 2>/dev/null
-		    [ $# -ne 2 ] && { echo "wrong aruments list"; rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
-		    [ "$(readlink -e $1)" = "$(readlink -e $2)" ] && { echo "source and destination can not be the same block device"; rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
+		    sysctl -w fs.file-max=80000 &>/dev/null
+		    [ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
+		    [ "$(readlink -e $1)" = "$(readlink -e $2)" ] && { echo "source and destination can not be the same block device"; exit 5; }
 
 		    if [ $opt_dev != $1 ]; then
-		        [ ! -b $1 ] && echo "non existend source device" && { rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
+		        [ ! -b $1 ] && { echo "non existend source device"; exit 5; }
 		        BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
 		    fi
 
 		    mkdir -p /tmp/btrfs-dest
 		    if [ -n "$opt_img" ]; then
 		        fn=$(mapAndMountFn mount $2)
-		        [ "$?" -eq 0 ] || { echo "can not mount fs"; rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
+		        [ "$?" -eq 0 ] || { echo "can not mount fs"; exit 5; }
 		        set -- $1 $fn
-		        [ -e "$2" ] && rm -f "$2"; touch "$2" || { echo "can not create img file"; rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
-		        [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
+			echo "fn=$2" >/run/vars.xbiancopy.$$
+		        [ -e "$2" ] && rm -f "$2"; touch "$2" || { echo "can not create img file"; exit 5; }
+		        [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; exit 5; }
 
 		        if grep -q "rootflags=subvol=" /proc/cmdline; then
 			    subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
@@ -619,9 +622,8 @@ case $opt_command in
 			    size=$opt_size
 		        fi
 
-			echo "fn=$2" >>/run/kpartxmap.xbiancopy.$$
-		        [ "$(printf "%s\n%s\n" $(df -h $2 | tail -1 | awk '{print $4}') "$size" | sort -rh | grep -m1 .)" = "$size" ] && { echo "not enough free space on destination filesystem"; rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
-		        chattr +CA $2 &>/dev/null; truncate -s $size $2 || { echo "can't resize img file to needed size"; rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
+		        [ "$(printf "%s\n%s\n" $(df -h $2 | tail -1 | awk '{print $4}') "$size" | sort -rh | grep -m1 .)" = "$size" ] && { echo "not enough free space on destination filesystem"; exit 5; }
+		        chattr +CA $2 &>/dev/null; truncate -s $size $2 || { echo "can't resize img file to needed size"; exit 5; }
 		        modprobe -q loop
 
 		        parted -s $2 mklabel msdos
@@ -630,16 +632,13 @@ case $opt_command in
 		        echo "2048,$((config_offset_root-2048)),b,*," | sfdisk -uS -N1 -f -q $2 > /dev/null 2>&1
 		        echo "$config_offset_root,+,83,," | sfdisk -uS -N2 -f -q $2 > /dev/null 2>&1
 		        loopd=$(losetup -f); losetup $loopd $2
-		        kpartx -a $loopd && echo "loopd=$loopd" >>/run/kpartxmap.xbiancopy.$$
+		        kpartx -a $loopd && echo "loopd=$loopd" >>/run/vars.xbiancopy.$$
 		        loopd=${loopd#/dev/}
 
 		        timeout=0
 		        while ! [ -L /dev/mapper/${loopd}p1 ]; do
 		            timeout=$(($timeout+1))
-		            if [ $timeout -gt 10 ]; then
-			        echo "Loop device not available";
-			        rc=4; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc;
-		            fi
+		            [ $timeout -gt 10 ] && { echo "Loop device not available"; exit 4; }
 		            sleep 1;
 		        done
 
@@ -650,7 +649,7 @@ case $opt_command in
 		        else
 		            mkfs.msdos -F 16 -n xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
 		        fi
-		        mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || { rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
+		        mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
 
 		        [ "$BACKGROUND" == 1 ] && cp -av /boot/* /tmp/btrfs-dest || cp -a /boot/* /tmp/btrfs-dest &>/dev/null
 		        sync
@@ -662,42 +661,28 @@ case $opt_command in
 		            [ -e /boot/initramfs.gz.notinuse -a ! -e /boot/initramfs.gz ] && mv /tmp/btrfs-dest/initramfs.gz.notinuse /tmp/btrfs-dest/initramfs.gz
 		        fi
 
-		        z=$(grep -o "root=[^ ]*" /proc/cmdline)
-		        if echo $z | grep -q "root=LABEL"; then
-		            if test -e /boot/cmdline.txt; then
-			        sed -i "s%$z%root=LABEL=$opt_clonename%" /tmp/btrfs-dest/cmdline.txt
-		            fi
-		            if test -e /boot/boot.scr.txt; then
-			        pushd . >/dev/null
-			        cd  /tmp/btrfs-dest
-			        sed -i "s%$z%root=LABEL=$opt_clonename%" boot.scr.txt
-			        ./mks
-			        popd >/dev/null
-			    fi
-		        fi
-
 		        while ! umount /tmp/btrfs-dest; do ! mountpoint -q /tmp/btrfs-dest && break; sleep 1; done; rmdir /tmp/btrfs-dest; sync
 		        set -- $1 /dev/mapper/${loopd}p2
 		    fi
 
 		    mkdir -p /tmp/btrfs-source
 		    mount -t btrfs -o noatime,subvol=/ $1 /tmp/btrfs-source
-		    eval $opt_remotecmd findmnt -n -S $2 >/dev/null && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }; }
+		    eval $opt_remotecmd findmnt -n -S $2 >/dev/null && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
 		    if [ -z "$opt_nocreate" ]; then
-		        eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; rc=5; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc; }
+		        eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; exit 5; }
 		    fi
 		    eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
 
 		    if ! eval findmnt -n / | grep -q "compress=lz4" || ! eval $opt_remotecmd mount -o compress=lz4,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
 		        if ! eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
-			    echo "can not mount destination partition"
-			    rc=6; echo "rc=$rc" >/run/rc.xbiancopy.$$; exit $rc
+			    echo "can not mount destination partition"; exit 6
 		        fi
 		    fi
 
 		) | eval "$PIPECMD1"
-
-		. /run/rc.xbiancopy.$$
+		rc=$?
+	        set +o pipefail
+	        . /run/vars.xbiancopy.$$
 
 		if [ "$rc" -eq 0 ]; then
 
@@ -707,11 +692,13 @@ case $opt_command in
 		        snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootflags=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
 		    fi
 
+		    set -o pipefail
 		    (
-		        sysctl -w fs.file-max=80000 > /dev/null 2>/dev/null
+		        sysctl -w fs.file-max=80000 &>/dev/null
 		        BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
 		        snapextra=$(printf "%s\n%s\n" "@$snapextra" "@"| sort | uniq)
-		        [ -n "$opt_debug" ] && [ "$BACKGROUND" == 1 ] && echo "DEBUG: BTRFS_LIST=$BTRFS_LIST, snapextra=$snapextra" >> $XBIANCOPYLOG
+		        echo "Cloning subvolumes $BTRFS_LIST ($snapextra)" | sed ':a;N;$!ba;s/\n/, /g;s/, $//g' >> $XBIANCOPYLOG
+		        set -o pipefail
 		        for v in $BTRFS_LIST; do
 		            [ -n "$v" ] || continue
 		            eval $opt_remotecmd btrfs sub create "/tmp/btrfs-dest/$v"
@@ -719,8 +706,7 @@ case $opt_command in
 		            for s in $snapextra; do
 		                [ -n "$s" ] || continue
 		                [ -e "/tmp/btrfs-source/$v/$s" ] || continue
-		                #echo "DEBUG: v = $v, s = $s"
-		                [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" > /dev/null 2>&1
+		                [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" &>/dev/null
 		                [ -e "/tmp/btrfs-source/$v/$s" ] || continue
 		                btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && sync && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro"
 			        export siz=$(du -sxb "/tmp/btrfs-source/$v/$s.ro" | awk '{print $1}'); export sn=$s; export vln=$v;
@@ -736,38 +722,66 @@ case $opt_command in
 			                        fi
 			                    fi
 			                else
-			                    printf "XXX\n$a\n$(printf 'Cloning %s/%s. Total %d. Done %d' $v $s $siz $((siz*a/100)))\nXXX\n"
+			                    printf "XXX\n$a\n$(printf '\n Cloning %s/%s. Total %d. Done %d' $v $s $siz $((siz*a/100)))\nXXX\n"
 			                fi
 			            done
-		                eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && sync && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro"
-		                eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s" && sync
-		                eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s"
-		                eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v"
+			        [ "$?" -eq 0 ] || { [ "$BACKGROUND" == 1 ] && printf "%s\n" "Copying subvolume $v snapshot $s failed"; exit 10; }
+		                eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && sync && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" || exit 11
+		                eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s" && sync || exit 12
+		                eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" || exit 13
+		                eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v" || exit 14
 		                [ "$BACKGROUND" == 1 ] && printf "%s\n" "Done copying subvolume $v snapshot $s"
 		            done
 		           [ "$BACKGROUND" == 1 ] && printf "%s\n" "Done copying subvolume $v"
 		        done
+		        exit 0
 		    ) 2>&1 | eval "$PIPECMD2"
+		    rc=$?
+		    set +o pipefail
 		fi
 
 		(
+		    loopd=${loopd#/dev/}
+		    if [ "$rc" -eq 0 -a -n "$opt_img" ]; then
+		        UUID=$(blkid -s UUID -o value /dev/mapper/${loopd}p1)
+		        [ "$BACKGROUND" == 1 ] && echo "Setting UUID=$UUID for boot partition in /etc/fstab" >> $XBIANCOPYLOG
+		        eval $opt_remotecmd sed -i \'s%.*/boot%UUID=$UUID        /boot%g\' /tmp/btrfs-dest/root/@/etc/fstab
+		    fi
+
 		    eval $opt_remotecmd umount /tmp/btrfs-dest; eval $opt_remotecmd rmdir /tmp/btrfs-dest
 		    umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
+
+		    if [ "$rc" -eq 0 -a -n "$opt_img" ]; then
+		        mkdir -p /tmp/btrfs-dest
+		        if mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest; then
+		            z=$(grep -o "root=[^ ]*" /proc/cmdline)
+		            UUID=$(blkid -s UUID -o value /dev/mapper/${loopd}p2)
+		            if test -e /boot/cmdline.txt; then
+		                [ "$BACKGROUND" == 1 ] && echo "Setting UUID=$UUID for root partition in cmdline.txt" >> $XBIANCOPYLOG
+		                sed -i "s%$z%root=UUID=$UUID%" /tmp/btrfs-dest/cmdline.txt
+		            fi
+		            if test -e /boot/boot.scr.txt; then
+		                [ "$BACKGROUND" == 1 ] && echo "Setting UUID=$UUID for root partition in boot.scr.txt" >> $XBIANCOPYLOG
+		                ( cd /tmp/btrfs-dest; sed -i "s%$z%root=UUID=$UUID%" boot.scr.txt; ./mks; )
+		            fi
+		            while ! umount /tmp/btrfs-dest; do ! mountpoint -q /tmp/btrfs-dest && break; sleep 1; done; rmdir /tmp/btrfs-dest; sync
+		        fi
+		    fi
 		) &>/dev/null
 
                 if [ "$rc" -eq 0 ]; then
 		    success_msg="Done!"
-                    [ -e ${CONFIGPATH} ] && { echo "$DATE" > ${CONFIGPATH}/$opt_command; chown xbian:xbian ${CONFIGPATH}/${opt_command}; }
-                elif [ -e /run/kpartxmap.xbiancopy.$$ ]; then
+                    [ -z "$opt_helper" -a -e ${CONFIGPATH} ] && { echo "$DATE" > ${CONFIGPATH}/$opt_command; chown xbian:xbian ${CONFIGPATH}/${opt_command}; }
+                else
 		    success_msg="Fail!"
-                    . /run/kpartxmap.xbiancopy.$$
-                    [ "$BACKGROUND" == 1 ] && echo "Removing broken image file ${fn##*/}" >> $XBIANCOPYLOG
-                    rm -f $fn
+                    if [ -n "$fn" ]; then
+                        [ "$BACKGROUND" == 1 ] && echo "Removing broken image file ${fn##*/}" >> $XBIANCOPYLOG
+                        rm -f "$fn"
+                    fi
                 fi
 
-		if [ "$BACKGROUND" == 1 ]; then
-		    echo "$success_msg" >> $XBIANCOPYLOG
-		else
+		echo "$success_msg" >> $XBIANCOPYLOG
+		if [ -z "$opt_helper" ]; then
 		    dialog --clear --msgbox "$success_msg
  
 for users on xbian version below beta2 (beta1.1, beta1). beta2 handles this automaticaly.
@@ -784,6 +798,7 @@ for all users - change /boot/cmdline.txt if you want to boot from the copy just 
 if you created img file, cmdline.txt was updated automatically." 24 79
 		fi
 		[ -e "/tmp/xbiancopy.running" ] && touch /tmp/xbiancopy.running.$(cat /tmp/xbiancopy.running)
+		exit $rc
 		;;
         (backuphome)
 	        BACKUPHOMELOG='/tmp/backuphome.log'
