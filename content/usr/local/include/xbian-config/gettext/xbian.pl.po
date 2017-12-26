@@ -3,57 +3,60 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
+# Kamil S, 2017
+# Krzysztof N <neri@epf.pl>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-10-22 19:51+0000\n"
-"Last-Translator: anaconda\n"
-"Language-Team: Polish (http://www.transifex.com/projects/p/xbian-translation/language/pl/)\n"
+"PO-Revision-Date: 2017-12-23 22:01+0000\n"
+"Last-Translator: belese <mkreisl@xbian.org>\n"
+"Language-Team: Polish (http://www.transifex.com/teamxbian/xbian-translation/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 msgid "distribution"
-msgstr ""
+msgstr "XBian"
 
 # xbian-config main (menu)
 # 
 msgid "xbian-config.main.title"
-msgstr ""
+msgstr "Konfiguracja"
 
 msgid "xbian-config.main.reboot_question"
-msgstr ""
+msgstr "Wymagane ponowne uruchomienie. Uruchomić ponownie teraz?"
 
 msgid "xbian-config.settings.name"
-msgstr ""
+msgstr "Ustawienia"
 
 msgid "xbian-config.settings.description"
-msgstr ""
+msgstr "Zmień różne ustawienia systemu"
 
 msgid "xbian-config.system.name"
-msgstr ""
+msgstr "System"
 
 msgid "xbian-config.system.description"
-msgstr ""
+msgstr "np. Zmień rozmiar karty SD, Overclock, nazwa hosta"
 
 msgid "xbian-config.accounts.name"
-msgstr ""
+msgstr "Konta"
 
 msgid "xbian-config.accounts.description"
-msgstr ""
+msgstr "np. zmiana haseł, logowanie root'a przez SSH"
 
 msgid "xbian-config.licenses.name"
-msgstr ""
+msgstr "Licencje"
 
 msgid "xbian-config.licenses.description"
-msgstr ""
+msgstr "Dodaj/Usuń licencje urządzeń"
 
 msgid "xbian-config.connectivity.name"
-msgstr ""
+msgstr "Połączenie"
 
 msgid "xbian-config.connectivity.description"
 msgstr ""
@@ -61,55 +64,55 @@ msgstr ""
 # xbian-config dialog
 # 
 msgid "xbian-config.dialog.error"
-msgstr ""
+msgstr "Błąd"
 
 msgid "xbian-config.dialog.apply"
-msgstr ""
+msgstr "Dodaj"
 
 msgid "xbian-config.dialog.ok"
-msgstr ""
+msgstr "Ok"
 
 msgid "xbian-config.dialog.yes"
-msgstr ""
+msgstr "Tak"
 
 msgid "xbian-config.dialog.no"
-msgstr ""
+msgstr "Nie"
 
 msgid "xbian-config.dialog.on"
-msgstr ""
+msgstr "Wł"
 
 msgid "xbian-config.dialog.off"
-msgstr ""
+msgstr "Wył"
 
 msgid "xbian-config.dialog.insert"
 msgstr ""
 
 msgid "xbian-config.dialog.remove"
-msgstr ""
+msgstr "Usuń"
 
 msgid "xbian-config.dialog.update"
-msgstr ""
+msgstr "Aktualizacja"
 
 msgid "xbian-config.dialog.cancel"
-msgstr ""
+msgstr "Anuluj"
 
 msgid "xbian-config.dialog.select"
-msgstr ""
+msgstr "Wybierz"
 
 msgid "xbian-config.dialog.return"
 msgstr ""
 
 msgid "xbian-config.dialog.unexpected_error"
-msgstr ""
+msgstr "Wystąpił nieznany błąd"
 
 msgid "xbian-config.dialog.close"
-msgstr ""
+msgstr "Zamknij"
 
 msgid "xbian-config.dialog.change"
-msgstr ""
+msgstr "Zmień"
 
 msgid "xbian-config.dialog.exit"
-msgstr ""
+msgstr "Wyjdź"
 
 msgid "xbian-config.dialog.enable"
 msgstr ""
@@ -118,7 +121,7 @@ msgid "xbian-config.dialog.disable"
 msgstr ""
 
 msgid "xbian-config.dialog.password"
-msgstr ""
+msgstr "Hasło"
 
 msgid "xbian-config.dialog.confirm"
 msgstr ""
@@ -133,10 +136,10 @@ msgid "xbian-config.dialog.space_check_select"
 msgstr ""
 
 msgid "xbian-config.dialog.loading_module"
-msgstr ""
+msgstr "Ładowanie modułu. Proszę czekać ..."
 
 msgid "xbian-config.dialog.required_packages"
-msgstr ""
+msgstr "Ten program wymaga następujących paczek:"
 
 msgid "xbian-config.dialog.insufficient_arguments"
 msgstr ""
@@ -147,7 +150,7 @@ msgstr ""
 # xbian-config module bootflags
 # 
 msgid "xbian-config.bootflags.name"
-msgstr ""
+msgstr "Ustawienia rozruchu"
 
 msgid "xbian-config.bootflags.description"
 msgstr ""
@@ -173,10 +176,10 @@ msgstr ""
 # xbian-config module information
 # 
 msgid "xbian-config.information.name"
-msgstr ""
+msgstr "Informacja"
 
 msgid "xbian-config.information.description"
-msgstr ""
+msgstr "Informacja o dystrybucji"
 
 msgid "xbian-config.information.text"
 msgstr ""
@@ -198,13 +201,13 @@ msgstr ""
 # xbian-config module kernel
 # 
 msgid "xbian-config.kernel.name"
-msgstr ""
+msgstr "Jądro"
 
 msgid "xbian-config.kernel.description"
 msgstr ""
 
 msgid "xbian-config.kernel.label.version"
-msgstr ""
+msgstr "Wersja"
 
 msgid "xbian-config.kernel.switch_success"
 msgstr ""
@@ -257,13 +260,13 @@ msgid "xbian-config.locales.label.letter"
 msgstr ""
 
 msgid "xbian-config.locales.label.name"
-msgstr ""
+msgstr "Nazwa"
 
 msgid "xbian-config.locales.label.xbmc"
-msgstr ""
+msgstr "XBMC"
 
 msgid "xbian-config.locales.label.xbian"
-msgstr ""
+msgstr "XBian"
 
 msgid "xbian-config.locales.updated"
 msgstr ""
@@ -271,7 +274,7 @@ msgstr ""
 # xbian-config module network
 # 
 msgid "xbian-config.network.name"
-msgstr ""
+msgstr "Sieć"
 
 msgid "xbian-config.network.description"
 msgstr ""
@@ -289,28 +292,28 @@ msgid "xbian-config.network.interfaces.select"
 msgstr ""
 
 msgid "xbian-config.network.label.dhcp"
-msgstr ""
+msgstr "DHCP"
 
 msgid "xbian-config.network.label.name"
-msgstr ""
+msgstr "Sieć"
 
 msgid "xbian-config.network.dhcp_selected"
 msgstr ""
 
 msgid "xbian-config.network.label.static"
-msgstr ""
+msgstr "Stały IP"
 
 msgid "xbian-config.network.label.status"
-msgstr ""
+msgstr "Stan"
 
 msgid "xbian-config.network.label.ipaddress"
-msgstr ""
+msgstr "Adres IP"
 
 msgid "xbian-config.network.label.netmask"
 msgstr ""
 
 msgid "xbian-config.network.label.gateway"
-msgstr ""
+msgstr "Brama"
 
 msgid "xbian-config.network.label.nameserver"
 msgstr ""
@@ -373,16 +376,16 @@ msgid "xbian-config.network.credentials.lan.updated"
 msgstr ""
 
 msgid "xbian-config.network.label.wpa"
-msgstr ""
+msgstr "WPA"
 
 msgid "xbian-config.network.label.wep"
-msgstr ""
+msgstr "WEP"
 
 msgid "xbian-config.network.label.open"
-msgstr ""
+msgstr "Otwórz"
 
 msgid "xbian-config.network.label.signal"
-msgstr ""
+msgstr "Sygnał"
 
 # xbian-config module overclocking
 # 
@@ -485,7 +488,7 @@ msgid "xbian-config.packages.label.categories"
 msgstr ""
 
 msgid "xbian-config.packages.label.name"
-msgstr ""
+msgstr "Nazwa"
 
 msgid "xbian-config.packages.label.installed"
 msgstr ""
@@ -494,7 +497,7 @@ msgid "xbian-config.packages.label.not_installed"
 msgstr ""
 
 msgid "xbian-config.packages.label.information"
-msgstr ""
+msgstr "Informacja"
 
 msgid "xbian-config.packages.label.install_update"
 msgstr ""
@@ -503,7 +506,7 @@ msgid "xbian-config.packages.label.install"
 msgstr ""
 
 msgid "xbian-config.packages.label.remove"
-msgstr ""
+msgstr "Usuń"
 
 msgid "xbian-config.packages.label.get_more"
 msgstr ""
@@ -564,7 +567,7 @@ msgid "xbian-config.rootpass.changed"
 msgstr ""
 
 msgid "xbian-config.rootpass.label.password"
-msgstr ""
+msgstr "Hasło"
 
 msgid "xbian-config.rootpass.empty_fields"
 msgstr ""
@@ -575,7 +578,7 @@ msgstr ""
 # xbian-config module services
 # 
 msgid "xbian-config.services.name"
-msgstr ""
+msgstr "Usługi"
 
 msgid "xbian-config.services.description"
 msgstr ""
@@ -590,7 +593,7 @@ msgid "xbian-config.services.restart_failed"
 msgstr ""
 
 msgid "xbian-config.services.starting"
-msgstr ""
+msgstr "Uruchamianie usługi..."
 
 msgid "xbian-config.services.start_failed"
 msgstr ""
@@ -677,7 +680,7 @@ msgid "xbian-config.services.label.delete"
 msgstr ""
 
 msgid "xbian-config.services.label.name"
-msgstr ""
+msgstr "Nazwa"
 
 msgid "xbian-config.services.label.confirminsert"
 msgstr ""
@@ -833,13 +836,13 @@ msgid "xbian-config.updates.label.updates"
 msgstr ""
 
 msgid "xbian-config.updates.label.update"
-msgstr ""
+msgstr "Aktualizacja"
 
 msgid "xbian-config.updates.label.update_packages"
 msgstr ""
 
 msgid "xbian-config.updates.label.version"
-msgstr ""
+msgstr "Wersja"
 
 msgid "xbian-config.updates.label.update_all"
 msgstr ""
@@ -935,7 +938,7 @@ msgid "xbian-config.xbianpass.changed"
 msgstr ""
 
 msgid "xbian-config.xbianpass.label.password"
-msgstr ""
+msgstr "Hasło"
 
 msgid "xbian-config.xbianpass.empty_fields"
 msgstr ""
@@ -946,7 +949,7 @@ msgstr ""
 # xbian-config module xbmc
 # 
 msgid "xbian-config.xbmc.name"
-msgstr ""
+msgstr "XBMC"
 
 msgid "xbian-config.xbmc.description"
 msgstr ""
@@ -1066,7 +1069,19 @@ msgstr ""
 msgid "xbian-config.xbiancopy.dialog.exportwrong"
 msgstr ""
 
+msgid "xbian-config.xbiancopy.dialog.targetwrong"
+msgstr ""
+
 msgid "xbian-config.xbiancopy.dialog.preperror"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.config"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.copyerror"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.clonedone"
 msgstr ""
 
 msgid "xbian-config.backup.category.snasphot"
@@ -1227,7 +1242,7 @@ msgid "xbian-config.wizard.network.title"
 msgstr ""
 
 msgid "xbian-config.wizard.network.smalltitle"
-msgstr ""
+msgstr "Sieć"
 
 msgid "xbian-config.wizard.network.description"
 msgstr ""

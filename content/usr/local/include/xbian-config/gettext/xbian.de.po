@@ -3,17 +3,21 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
+# belese <mkreisl@xbian.org>, 2017
 # Ettore Atalan <atalanttore@googlemail.com>, 2014
 # Johannes Roesch <johannes.roesch@googlemail.com>, 2014
+# Nit <nit@nimux.org>, 2016
 # stesser <se@freebsd.org>, 2014
+# Tobias Schneider, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-10-25 13:04+0000\n"
-"Last-Translator: belese <besme2@gmail.com>\n"
-"Language-Team: German (http://www.transifex.com/projects/p/xbian-translation/language/de/)\n"
+"PO-Revision-Date: 2017-12-23 22:51+0000\n"
+"Last-Translator: belese <mkreisl@xbian.org>\n"
+"Language-Team: German (http://www.transifex.com/teamxbian/xbian-translation/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,7 +30,7 @@ msgstr "XBian"
 # xbian-config main (menu)
 # 
 msgid "xbian-config.main.title"
-msgstr "Konfiguration"
+msgstr "Config"
 
 msgid "xbian-config.main.reboot_question"
 msgstr "Ein Neustart ist erforderlich. Jetzt neustarten?"
@@ -1069,8 +1073,20 @@ msgstr "Falsches Ziel (existiert nicht oder keine eine Partition)"
 msgid "xbian-config.xbiancopy.dialog.exportwrong"
 msgstr "NFS-Export entspricht nicht den Anforderungen"
 
+msgid "xbian-config.xbiancopy.dialog.targetwrong"
+msgstr "iSCSI Target kann nicht verbunden und partitioniert werden (%s)"
+
 msgid "xbian-config.xbiancopy.dialog.preperror"
 msgstr "Zieldateisystem kann nicht vorbereitet werden"
+
+msgid "xbian-config.xbiancopy.dialog.config"
+msgstr "\\n Image (file: Präfix):\\n^^^Wenn Sie eine .img Datei mit System einschließlich /boot Partition\\n^^^erzeugen wollen, fügen Sie \"file:\" als Präfix zum Ziel hinzu\\n^^^(z.B. file:/media/exthdd/xbian.img)\\n\\n NFS root (nfs[{3,4}]: Präfix):\\n^^^Wenn Sie zu einer NFS ROOT Installation wechseln wollen, fügen Sie\\n^^^\"nfs[{3,4}]:\" als Präfix zum NFS export Verzeichnis hinzu. Verwenden Sie\\n^^^IP Adressen, keine Hostnamen. NFS export erfordert \"no_root_squash\" Option\\n^^^(z.B. nfs:192.168.3.12:/nfs/xbian)\\n\\n iSCSI Target (iSCSI: Präfix):\\n^^^Wenn Sie zu einer iSCSI Target Installation wechseln wollen, fügen Sie\\n^^^\"iSCSI:\" als Präfix gefolgt dem bereits existierenden Target-Namen,\\n^^^Target-IP (z.B. iSCSI:iqn.2017-12.com.example:xbian,192.168.3.12:3260)\\n\\n Andernfalls geben Sie ein bereits existierendes Block-Device an\\n^^^(z.B. /dev/sda2)\\n\\n !! ACHTUNG: Ziel Partition/NFS export/iSCSI Target WIRD KOMPETT GELÖSCHT !!"
+
+msgid "xbian-config.xbiancopy.dialog.copyerror"
+msgstr "Fehler während Kopieren der Daten aufgetreten (%s)"
+
+msgid "xbian-config.xbiancopy.dialog.clonedone"
+msgstr "\\nIhre aktuelle Installation wurde erfolgreich nach\\n%s geklont\\n\\nEin Neustart erfolgt direkt in das geklonte System"
 
 msgid "xbian-config.backup.category.snasphot"
 msgstr "Schnappschuss verwalten"
@@ -1144,7 +1160,7 @@ msgid "xbian-config.backuphome.desc2"
 msgstr "Datei wird unter /xbian-backup erstellt, das ebenfalls durch eine SMB-Freigabe erreichbar ist"
 
 msgid "xbian-config.backuphome.desc3"
-msgstr ""
+msgstr "Während der Bearbeitung wird es nur ein temporäres Verzeichnis geben. Nach Beendigung, wird eine .img Datei vorhanden sein."
 
 msgid "xbian-config.backuphome.desc4"
 msgstr "Sie können die Datei direkt auf Ihren Computer kopieren (die Datei wird bei Neustarts gelöscht!)"
@@ -1156,7 +1172,7 @@ msgid "xbian-config.backuphome.restore"
 msgstr "Backup wiederherstellen"
 
 msgid "xbian-config.backuphome.selectimage"
-msgstr ""
+msgstr "Wähle ein Hintergrundbild"
 
 msgid "xbian-config.backuphome.restore_home_confirm"
 msgstr "%s: Soll das Benutzerverzeichnis aus %s wiederhergestellt werden?"
@@ -1224,7 +1240,7 @@ msgid "xbian-config.wizard.welcome.smalltitle"
 msgstr "Willkommen"
 
 msgid "xbian-config.wizard.welcome.description"
-msgstr ""
+msgstr "Danke, dass du dich für XBian entschieden hast.[CR][CR]XBian ist eine kostenlose quelloffene Media-Center-Distribution für den Raspberry Pi.[CR]Unser Motto ist \"XBMC on Raspberry Pi, the Bleeding edge\" und unser Ziel ist es das schnellste Media-Center für den Raspberry Pi zu entwickeln.[CR][CR]Wir sind der Meinung, dass jeder etwas zu XBian beitragen kann.[CR]Bei Problemen stehen wir dir gerne unter www.xbian.org zur Verfügung. Wenn du Fragen, Anregungen oder etwas zu XBian beitragen möchtest, dann lass es uns wissen!"
 
 msgid "xbian-config.wizard.network.title"
 msgstr "Netzwerk konfigurieren"
@@ -1233,7 +1249,7 @@ msgid "xbian-config.wizard.network.smalltitle"
 msgstr "Netzwerk"
 
 msgid "xbian-config.wizard.network.description"
-msgstr ""
+msgstr "Die Konfiguration deiner Netzwerkverbindung ist XBian ist einfach. Es ist zwar grundsätzlich möglich XBian ohne eine Internetverbindung zu verwenden, jedoch wird dein Erlebnis mit mit einer Verbindung zum Internet deutlich besser sein."
 
 msgid "xbian-config.wizard.license.title"
 msgstr "Geben Sie ihren Lizenz-Schlüssel ein"
@@ -1242,7 +1258,7 @@ msgid "xbian-config.wizard.license.smalltitle"
 msgstr "Lizenz-Schlüssel"
 
 msgid "xbian-config.wizard.license.description"
-msgstr ""
+msgstr "Der Raspberry Pi kann die viele Video- und Audio-Formate dekodieren, jedoch um VC-1 (verwendet in einigen Blu-ray-Discs) und MPEG-2 zu entschlüsseln, muss einen Lizenzschlüssel für diese erworben werden. [CR] Sie sind erhältlich unter http://www.raspberrypi.com/license-keys/ [CR] [CR]Wenn du bereits einen Lizenzschlüssel besitzt, geben ihn jetzt ein."
 
 msgid "xbian-config.wizard.backup.title"
 msgstr "Benutzerverzeichnis wiederherstellen"
@@ -1251,7 +1267,7 @@ msgid "xbian-config.wizard.backup.smalltitle"
 msgstr "Wiederherstellen"
 
 msgid "xbian-config.wizard.backup.description"
-msgstr ""
+msgstr "XBian bietet dir eine einfache Möglichkeit deine Einstellungen zu speichern.[CR]Wenn du ein Backup deiner Daten hast[CR](es beinhaltet deine XBMC Konfiguration, Add-ons, Einstellungen mit Biblliotheken...),[CR]kannst du diese nun wiederherstellen.[CR][CR]Wenn du später ein Backup, ein Snapshot oder vieles mehr erstellen möchtest.[CR]Dann findest du dies unter System->XBian->Datensicherung"
 
 msgid "xbian-config.wizard.update.title"
 msgstr "XBian aktualisieren"
@@ -1260,7 +1276,7 @@ msgid "xbian-config.wizard.update.smalltitle"
 msgstr "Aktualisieren"
 
 msgid "xbian-config.wizard.update.description"
-msgstr ""
+msgstr "Du kannst nun wählen, wie XBian aktualisiert wird und wie oft nach Aktualisierungen gesucht werden soll. [CR] [CR] Standardmäßig wird XBian nicht automatisch aktualisiert, aber du wirst informiert, wenn ein Aktualisierung verfügbar ist. [CR] [CR] Zum aktualisieren, gehe nach System-> XBian-> Aktualisieren  und wähle die zu aktualisierenden Pakete. [CR] [CR] Wenn XBian automatisch aktualisiert werden soll, kannst du es jetzt festlegen."
 
 msgid "xbian-config.wizard.package.title"
 msgstr "Neue Programmpakete installieren"
@@ -1269,7 +1285,7 @@ msgid "xbian-config.wizard.package.smalltitle"
 msgstr "Programmpaket"
 
 msgid "xbian-config.wizard.package.description"
-msgstr ""
+msgstr "XBian kommt mit allem notwendigen für XBMC, aber du kannst leicht vorkonfigurierte Pakete wie Torrent, Newsbin, CouchPotatoe und vieles mehr hinzufügen. [CR] [CR] Benutzer können ihre eigenen Paket erstellen und mit anderen teilen. Wenn du etwas hast, das du mit anderen teilen möchtest, gehe zum XBian Forum und poste einen Thread, und jemand wird mit weiteren Informationen auf dich zurückkommen. [CR] [CR] Bitte habe etwas Geduld, während die Paketliste geladen wird."
 
 msgid "xbian-config.wizard.finish.title"
 msgstr "Zeit zu spielen"
@@ -1278,7 +1294,7 @@ msgid "xbian-config.wizard.finish.smalltitle"
 msgstr "Beenden"
 
 msgid "xbian-config.wizard.finish.description"
-msgstr ""
+msgstr "Dein XBian ist nun vollständig konfiguriert.[CR]Wir wünschen dir ein großartiges Erlebnis.[CR][CR]Wenn du zusätzliche Einstellungen vornehmen möchtest, dann findest du diese unter: System -> XBian.[CR]Zum zukünftigen Ausführen dieses Assistenten wähle den \"XBian Wizard\" Tab unter System."
 
 # extra
 # 

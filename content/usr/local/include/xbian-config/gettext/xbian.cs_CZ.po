@@ -4,8 +4,6 @@
 # Translators:
 # Translators:
 # Translators:
-# linorg <geirl@linnerud.org>, 2015
-# Philip Østli <philip.ostli@hotmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
@@ -13,240 +11,240 @@ msgstr ""
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
 "PO-Revision-Date: 2017-12-23 22:01+0000\n"
 "Last-Translator: belese <mkreisl@xbian.org>\n"
-"Language-Team: Norwegian (http://www.transifex.com/teamxbian/xbian-translation/language/no/)\n"
+"Language-Team: Czech (Czech Republic) (http://www.transifex.com/teamxbian/xbian-translation/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: no\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: cs_CZ\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 msgid "distribution"
-msgstr "XBian"
+msgstr ""
 
 # xbian-config main (menu)
 # 
 msgid "xbian-config.main.title"
-msgstr "Konfigurer"
+msgstr ""
 
 msgid "xbian-config.main.reboot_question"
-msgstr "En omstart er nødvendig. Vil du starte på nytt nå?"
+msgstr ""
 
 msgid "xbian-config.settings.name"
-msgstr "Instillinger"
+msgstr ""
 
 msgid "xbian-config.settings.description"
-msgstr "Endre system instillinger"
+msgstr ""
 
 msgid "xbian-config.system.name"
-msgstr "System"
+msgstr ""
 
 msgid "xbian-config.system.description"
-msgstr "f.eks Endre SD, Overklokking, Tjenernavn"
+msgstr ""
 
 msgid "xbian-config.accounts.name"
-msgstr "Kontoer"
+msgstr ""
 
 msgid "xbian-config.accounts.description"
-msgstr "f.eks Bytte passord, SSH innlogging"
+msgstr ""
 
 msgid "xbian-config.licenses.name"
-msgstr "Lisenser"
+msgstr ""
 
 msgid "xbian-config.licenses.description"
-msgstr "Legg til/Fjern maskinvare lisenser"
+msgstr ""
 
 msgid "xbian-config.connectivity.name"
-msgstr "Tilkobling"
+msgstr ""
 
 msgid "xbian-config.connectivity.description"
-msgstr "f.eks Video utgang"
+msgstr ""
 
 # xbian-config dialog
 # 
 msgid "xbian-config.dialog.error"
-msgstr "Feilmelding"
+msgstr ""
 
 msgid "xbian-config.dialog.apply"
-msgstr "Bruk"
+msgstr ""
 
 msgid "xbian-config.dialog.ok"
-msgstr "OK"
+msgstr ""
 
 msgid "xbian-config.dialog.yes"
-msgstr "Ja"
+msgstr ""
 
 msgid "xbian-config.dialog.no"
-msgstr "Nei"
+msgstr ""
 
 msgid "xbian-config.dialog.on"
-msgstr "På"
+msgstr ""
 
 msgid "xbian-config.dialog.off"
-msgstr "Av"
+msgstr ""
 
 msgid "xbian-config.dialog.insert"
-msgstr "Sett inn"
+msgstr ""
 
 msgid "xbian-config.dialog.remove"
-msgstr "Fjern"
+msgstr ""
 
 msgid "xbian-config.dialog.update"
-msgstr "Oppdater"
+msgstr ""
 
 msgid "xbian-config.dialog.cancel"
-msgstr "Avbryt"
+msgstr ""
 
 msgid "xbian-config.dialog.select"
-msgstr "Velg"
+msgstr ""
 
 msgid "xbian-config.dialog.return"
-msgstr "Tilbake"
+msgstr ""
 
 msgid "xbian-config.dialog.unexpected_error"
-msgstr "En uventet feil har oppstått"
+msgstr ""
 
 msgid "xbian-config.dialog.close"
-msgstr "Lukk"
+msgstr ""
 
 msgid "xbian-config.dialog.change"
-msgstr "Endre"
+msgstr ""
 
 msgid "xbian-config.dialog.exit"
-msgstr "Avslutt"
+msgstr ""
 
 msgid "xbian-config.dialog.enable"
-msgstr "Aktiver"
+msgstr ""
 
 msgid "xbian-config.dialog.disable"
-msgstr "Deaktiver"
+msgstr ""
 
 msgid "xbian-config.dialog.password"
-msgstr "Passord"
+msgstr ""
 
 msgid "xbian-config.dialog.confirm"
-msgstr "Bekreft:"
+msgstr ""
 
 msgid "xbian-config.dialog.retry"
-msgstr "Prøv igjen"
+msgstr ""
 
 msgid "xbian-config.dialog.space_option_select"
-msgstr "Trykk [mellomrom] for neste alternativ"
+msgstr ""
 
 msgid "xbian-config.dialog.space_check_select"
-msgstr "Trykk [mellomrom] for å aktivere eller deaktivere et alternativ"
+msgstr ""
 
 msgid "xbian-config.dialog.loading_module"
-msgstr "Laster modul. Vennligst vent..."
+msgstr ""
 
 msgid "xbian-config.dialog.required_packages"
-msgstr "Programet krever følgende pakker:"
+msgstr ""
 
 msgid "xbian-config.dialog.insufficient_arguments"
-msgstr "Manglende argument"
+msgstr ""
 
 msgid "xbian-config.dialog.incorrect_arguments"
-msgstr "Feil argument type"
+msgstr ""
 
 # xbian-config module bootflags
 # 
 msgid "xbian-config.bootflags.name"
-msgstr "Oppstarts instillinger"
+msgstr ""
 
 msgid "xbian-config.bootflags.description"
-msgstr "Endre oppstarts instillinger"
+msgstr ""
 
 msgid "xbian-config.bootflags.label.bootflags"
-msgstr "Oppstartsvalg"
+msgstr ""
 
 msgid "xbian-config.bootflags.update_success"
-msgstr "Oppstartsvalgene er lagret"
+msgstr ""
 
 msgid "xbian-config.bootflags.splash"
-msgstr "Vis XBian velkomstbilde ved oppstart"
+msgstr ""
 
 msgid "xbian-config.bootflags.logo"
-msgstr "Deaktiver kernel oppstarts logo"
+msgstr ""
 
 msgid "xbian-config.bootflags.quiet"
-msgstr "Ikke vis kernel utdata"
+msgstr ""
 
 msgid "xbian-config.bootflags.loglevel"
-msgstr "Kernel loggnivå"
+msgstr ""
 
 # xbian-config module information
 # 
 msgid "xbian-config.information.name"
-msgstr "Informasjon"
+msgstr ""
 
 msgid "xbian-config.information.description"
-msgstr "Informasjon om denne distribusjonen"
+msgstr ""
 
 msgid "xbian-config.information.text"
-msgstr "XBian er en gratis, Open Source media senter distribusjon for Raspberry Pi, som kan lastes ned på http://www.xbian.org. Vårt motto er \"XBMC på Raspberry Pi, bleeding edge\" for vårt hovedfokus er å levere den raskeste mediasenter løsningen for Raspberry Pi. Vi tror at alle kan hjelpe til å gjøre XBian bedre. Besøk vår webside for support og hvis du har spørsmål, ønsker eller bidrag, bare del dem med oss!"
+msgstr ""
 
 # xbian-config module hostname
 # 
 msgid "xbian-config.hostname.name"
-msgstr "Tjernernavn"
+msgstr ""
 
 msgid "xbian-config.hostname.label.hostname"
-msgstr "Tjernernavn:"
+msgstr ""
 
 msgid "xbian-config.hostname.description"
-msgstr "Endre standard tjenernavn"
+msgstr ""
 
 msgid "xbian-config.hostname.changed"
-msgstr "Tjenernavn endret"
+msgstr ""
 
 # xbian-config module kernel
 # 
 msgid "xbian-config.kernel.name"
-msgstr "Kernel"
+msgstr ""
 
 msgid "xbian-config.kernel.description"
-msgstr "Bytt mellom installerte operativsystemkjerner"
+msgstr ""
 
 msgid "xbian-config.kernel.label.version"
-msgstr "Versjon"
+msgstr ""
 
 msgid "xbian-config.kernel.switch_success"
-msgstr "Operativsystemets kjerne er byttet"
+msgstr ""
 
 msgid "xbian-config.kernel.same_version"
-msgstr "Du kjører allerede denne kjerneversjonen"
+msgstr ""
 
 msgid "xbian-config.kernel.single_installed"
-msgstr "Det er bare en operativsystemkjerne installert"
+msgstr ""
 
 # xbian-config general licenses
 # 
 msgid "xbian-config.license.inserted"
-msgstr "%s er installert"
+msgstr ""
 
 msgid "xbian-config.license.deleted"
-msgstr "%s er fjernet"
+msgstr ""
 
 msgid "xbian-config.license.updated"
-msgstr "%s er oppdatert"
+msgstr ""
 
 msgid "xbian-config.license.invalid"
-msgstr "En %s må være 9 eller 10 tegn lang og e ut som 0x00000000. Du kan spesifisere maximalt 8 lisenser, separert med komma."
+msgstr ""
 
 # xbian-config module licensempg2
 # 
 msgid "xbian-config.licensempg2.name"
-msgstr "MPG2 lisens"
+msgstr ""
 
 msgid "xbian-config.licensempg2.description"
-msgstr "Behandle din MPG2 lisens"
+msgstr ""
 
 # xbian-config module licensevc1
 # 
 msgid "xbian-config.licensevc1.name"
-msgstr "VC1 lisens"
+msgstr ""
 
 msgid "xbian-config.licensevc1.description"
-msgstr "Behandle din VC1 lisens"
+msgstr ""
 
 # xbian-config module locales
 # 
@@ -254,320 +252,320 @@ msgid "xbian-config.locales.name"
 msgstr ""
 
 msgid "xbian-config.locales.description"
-msgstr "Endre systemspråk"
+msgstr ""
 
 msgid "xbian-config.locales.label.letter"
-msgstr "Bokstav"
+msgstr ""
 
 msgid "xbian-config.locales.label.name"
-msgstr "Navn"
+msgstr ""
 
 msgid "xbian-config.locales.label.xbmc"
-msgstr "XBMC"
+msgstr ""
 
 msgid "xbian-config.locales.label.xbian"
-msgstr "XBian"
+msgstr ""
 
 msgid "xbian-config.locales.updated"
-msgstr "System, XBian, og XBMC språk oppdatert"
+msgstr ""
 
 # xbian-config module network
 # 
 msgid "xbian-config.network.name"
-msgstr "Nettverk"
+msgstr ""
 
 msgid "xbian-config.network.description"
-msgstr "Konfigurér nettverkskort"
+msgstr ""
 
 msgid "xbian-config.network.label.interfaces"
-msgstr "Nettverkskort"
+msgstr ""
 
 msgid "xbian-config.network.interfaces.loading"
-msgstr "Laster nettverkskort, vennligst vent"
+msgstr ""
 
 msgid "xbian-config.network.interfaces.unavailable"
-msgstr "Ingen nettverkskort er tilkoblet eller tilgjengelig"
+msgstr ""
 
 msgid "xbian-config.network.interfaces.select"
-msgstr "Velg nettverkskort å konfigurere"
+msgstr ""
 
 msgid "xbian-config.network.label.dhcp"
-msgstr "DHCP"
+msgstr ""
 
 msgid "xbian-config.network.label.name"
-msgstr "Nettverk"
+msgstr ""
 
 msgid "xbian-config.network.dhcp_selected"
-msgstr "Nettverkskortet er nå konfigurert for å bruke DHCP"
+msgstr ""
 
 msgid "xbian-config.network.label.static"
-msgstr "Statisk IP"
+msgstr ""
 
 msgid "xbian-config.network.label.status"
-msgstr "Status"
+msgstr ""
 
 msgid "xbian-config.network.label.ipaddress"
-msgstr "IP-adresse"
+msgstr ""
 
 msgid "xbian-config.network.label.netmask"
-msgstr "Nettmaske"
+msgstr ""
 
 msgid "xbian-config.network.label.gateway"
-msgstr "Gateway"
+msgstr ""
 
 msgid "xbian-config.network.label.nameserver"
-msgstr "Navnetjener"
+msgstr ""
 
 msgid "xbian-config.network.label.ssid"
-msgstr "SSID"
+msgstr ""
 
 msgid "xbian-config.network.label.key"
-msgstr "Nøkkel"
+msgstr ""
 
 msgid "xbian-config.network.label.type"
-msgstr "Type"
+msgstr ""
 
 msgid "xbian-config.network.label.protection"
-msgstr "Sikkerhet"
+msgstr ""
 
 msgid "xbian-config.network.label.scan"
-msgstr "Skann"
+msgstr ""
 
 msgid "xbian-config.network.label.custom"
-msgstr "Egendefinert"
+msgstr ""
 
 msgid "xbian-config.network.label.wlan"
-msgstr "WLAN"
+msgstr ""
 
 msgid "xbian-config.network.label.not_connected"
-msgstr "Ikke tilkoblet"
+msgstr ""
 
 msgid "xbian-config.network.label.reloading_values"
-msgstr "Omlaster verdier for %s"
+msgstr ""
 
 msgid "xbian-config.network.scanning"
-msgstr "Søker etter tilgjengelige nettverk..."
+msgstr ""
 
 msgid "xbian-config.network.connection.restart"
-msgstr "Omstarter %s"
+msgstr ""
 
 msgid "xbian-config.network.connection.updating"
-msgstr "Vennligst vent. Prøver å koble til %s"
+msgstr ""
 
 msgid "xbian-config.network.connection.failed"
-msgstr "Tilkobling til %s feilet"
+msgstr ""
 
 msgid "xbian-config.network.connection.success"
-msgstr "Vellykket tilkobling av %s"
+msgstr ""
 
 msgid "xbian-config.network.credentials.enter"
-msgstr "Skriv inn legitimasjon for valgt nettverk"
+msgstr ""
 
 msgid "xbian-config.network.credentials.wlan.invalid"
-msgstr "WLAN legitimasjon feilet, både SSID og NØKKEL må være korrekt utfylt"
+msgstr ""
 
 msgid "xbian-config.network.credentials.wlan.updated"
-msgstr "Vellykket oppdatering av WLAN legitimasjon"
+msgstr ""
 
 msgid "xbian-config.network.credentials.lan.invalid"
-msgstr "Statisk IP-adresse er ugyldig, vennligst prøv igjen"
+msgstr ""
 
 msgid "xbian-config.network.credentials.lan.updated"
-msgstr "Statisk IP-adresse er oppdatert"
+msgstr ""
 
 msgid "xbian-config.network.label.wpa"
-msgstr "WPA"
+msgstr ""
 
 msgid "xbian-config.network.label.wep"
-msgstr "WEP"
+msgstr ""
 
 msgid "xbian-config.network.label.open"
-msgstr "Åpen"
+msgstr ""
 
 msgid "xbian-config.network.label.signal"
-msgstr "Signal"
+msgstr ""
 
 # xbian-config module overclocking
 # 
 msgid "xbian-config.overclocking.name"
-msgstr "Overklokking"
+msgstr ""
 
 msgid "xbian-config.overclocking.description"
-msgstr "Konfigurér overklokking"
+msgstr ""
 
 msgid "xbian-config.overclocking.warning"
-msgstr "Ekstrem overklokking kan redusere levetiden på Raspberry Pi. XBian har testet ulike overklokkingsinnstillinger og skapt de mest foretrukne kombinasjonene av innstillinger. Turbo overklokking kan føre til korrupsjon av filsystemet. Overklokking gjøres på egen risiko!"
+msgstr ""
 
 msgid "xbian-config.overclocking.alreadyset"
-msgstr "Disse overklokkingsinnstillingene er allerede angitt"
+msgstr ""
 
 msgid "xbian-config.overclocking.changed"
-msgstr "Vellykket endring av overklokkingsinnstillinger"
+msgstr ""
 
 msgid "xbian-config.overclocking.label.preset"
-msgstr "Forhåndsinnstilling"
+msgstr ""
 
 msgid "xbian-config.overclocking.label.custom"
-msgstr "~"
+msgstr ""
 
 msgid "xbian-config.overclocking.empty_fields"
-msgstr "Du fylte ikke ut alle feltene"
+msgstr ""
 
 # xbian-config module packages
 # 
 msgid "xbian-config.packages.name"
-msgstr "Pakker"
+msgstr ""
 
 msgid "xbian-config.packages.description"
-msgstr "Installér eller avinstallér pakker"
+msgstr ""
 
 msgid "xbian-config.packages.apt.update"
-msgstr "Oppdaterer lokal pakkebrønn..."
+msgstr ""
 
 msgid "xbian-config.packages.apt.update_failed"
-msgstr "En feil oppsto ved oppdatering av pakkebrønnen"
+msgstr ""
 
 msgid "xbian-config.packages.list.download"
-msgstr "Laster ned ekstern pakkebrønn..."
+msgstr ""
 
 msgid "xbian-config.packages.mirrors.download_failed"
-msgstr "Fikk ikke tak i eksternt fillager, så en lokal (og muligens utdatert) liste blir benyttet"
+msgstr ""
 
 msgid "xbian-config.packages.loading"
-msgstr "Laster pakkebrønnens dialogboks..."
+msgstr ""
 
 msgid "xbian-config.packages.install.confirm"
-msgstr "Er du sikker på at du ønsker å installere eller oppdatere denne pakken?"
+msgstr ""
 
 msgid "xbian-config.packages.install.success"
-msgstr "Pakken ble installert"
+msgstr ""
 
 msgid "xbian-config.packages.install.retry"
-msgstr "Vennligst prøv igjen å installere pakken"
+msgstr ""
 
 msgid "xbian-config.packages.remove.confirm"
-msgstr "Er du sikker på at du ønsker å fjerne denne pakken?"
+msgstr ""
 
 msgid "xbian-config.packages.remove.success"
-msgstr "Denne pakken ble fjernet"
+msgstr ""
 
 msgid "xbian-config.packages.already_installed"
-msgstr "Den siste versjonen av denne pakken er allerede installert"
+msgstr ""
 
 msgid "xbian-config.packages.unavailable_version"
-msgstr "Fant ikke denne versjonen av pakken"
+msgstr ""
 
 msgid "xbian-config.packages.not_exists"
-msgstr "Fant ikke pakken du prøver å installere"
+msgstr ""
 
 msgid "xbian-config.packages.not_installed"
-msgstr "Pakken er ikke installert"
+msgstr ""
 
 msgid "xbian-config.packages.size_mismatch"
-msgstr "Størrelsene på de eksterne pakkene samsvarer ikke"
+msgstr ""
 
 msgid "xbian-config.packages.essential"
-msgstr "Dette er en essensiel pakke, og kan ikke fjernes"
+msgstr ""
 
 msgid "xbian-config.packages.show_log"
-msgstr "Ønsker du å se pakkens installasjonslogg?"
+msgstr ""
 
 msgid "xbian-config.packages.error"
-msgstr "En alvorlig feil oppstod under prosessering av av pakken"
+msgstr ""
 
 msgid "xbian-config.packages.downgrade"
-msgstr "Du kjører en nye versjon av pakken, enn den som er offesiellt tilgjengelig"
+msgstr ""
 
 msgid "xbian-config.packages.installing"
-msgstr "Installering/oppdatering av pakken kan ta flere minutter, så vennligst vent..."
+msgstr ""
 
 msgid "xbian-config.packages.removing"
-msgstr "Fjerning av pakken kan ta flere minutter, så vennligst vent..."
+msgstr ""
 
 msgid "xbian-config.packages.label.categories"
-msgstr "Kategorier"
+msgstr ""
 
 msgid "xbian-config.packages.label.name"
-msgstr "Navn"
+msgstr ""
 
 msgid "xbian-config.packages.label.installed"
-msgstr "Installert"
+msgstr ""
 
 msgid "xbian-config.packages.label.not_installed"
-msgstr "Ikke installert"
+msgstr ""
 
 msgid "xbian-config.packages.label.information"
-msgstr "Informasjon"
+msgstr ""
 
 msgid "xbian-config.packages.label.install_update"
-msgstr "Installér/oppdatér"
+msgstr ""
 
 msgid "xbian-config.packages.label.install"
-msgstr "Installér"
+msgstr ""
 
 msgid "xbian-config.packages.label.remove"
-msgstr "Fjern"
+msgstr ""
 
 msgid "xbian-config.packages.label.get_more"
-msgstr "Hent fler..."
+msgstr ""
 
 msgid "xbian-config.packages.info.fullname"
-msgstr "Fult navn:"
+msgstr ""
 
 msgid "xbian-config.packages.info.version.available"
-msgstr "Tilgjengelig versjon:"
+msgstr ""
 
 msgid "xbian-config.packages.info.version.installed"
-msgstr "Installert versjon"
+msgstr ""
 
 msgid "xbian-config.packages.info.size.installed"
-msgstr "Installert størrelse:"
+msgstr ""
 
 msgid "xbian-config.packages.info.size.download"
-msgstr "Størrelse for nedlasting:"
+msgstr ""
 
 msgid "xbian-config.packages.info.description"
-msgstr "Beskrivelse:"
+msgstr ""
 
 msgid "xbian-config.packages.info.dependencies"
-msgstr "Avhengigheter:"
+msgstr ""
 
 msgid "xbian-config.packages.label.actions"
-msgstr "Handlinger:"
+msgstr ""
 
 # xbian-config module resizesd
 # 
 msgid "xbian-config.resizesd.name"
-msgstr "Endre størrelse SD"
+msgstr ""
 
 msgid "xbian-config.resizesd.description"
-msgstr "Utvid rotpartisjonen til å fylle SD-kort"
+msgstr ""
 
 msgid "xbian-config.resizesd.confirm"
-msgstr "Er du sikker på at du ønsker å endre størrelse på SD-kort?"
+msgstr ""
 
 msgid "xbian-config.resizesd.not_needed"
-msgstr "Størrelsen på SD-kortet er allerede endret. Avbryter."
+msgstr ""
 
 msgid "xbian-config.resizesd.on_reboot"
-msgstr "Størrelsen på rotpartisjonen er endret. Filsystemet er utvidet ved neste omstart."
+msgstr ""
 
 msgid "xbian-config.resizesd.error"
-msgstr "En feil har oppstått. Det er en mulighet for at systemet ikke vil kunne starte opp igjen. Vennligst ta en sikkerhetskopi av dine filer før omstart."
+msgstr ""
 
 # xbian-config module rootpass
 # 
 msgid "xbian-config.rootpass.name"
-msgstr "Root passord"
+msgstr ""
 
 msgid "xbian-config.rootpass.description"
-msgstr "Endre passord for root brukeren"
+msgstr ""
 
 msgid "xbian-config.rootpass.changed"
-msgstr "Vellykket endring av root passord"
+msgstr ""
 
 msgid "xbian-config.rootpass.label.password"
-msgstr "Passord:"
+msgstr ""
 
 msgid "xbian-config.rootpass.empty_fields"
 msgstr ""
@@ -680,7 +678,7 @@ msgid "xbian-config.services.label.delete"
 msgstr ""
 
 msgid "xbian-config.services.label.name"
-msgstr "Navn"
+msgstr ""
 
 msgid "xbian-config.services.label.confirminsert"
 msgstr ""
@@ -779,16 +777,16 @@ msgid "xbian-config.updates.apt.update"
 msgstr ""
 
 msgid "xbian-config.updates.apt.update_failed"
-msgstr "En feil oppsto ved oppdatering av pakkebrønnen"
+msgstr ""
 
 msgid "xbian-config.updates.list.download"
 msgstr ""
 
 msgid "xbian-config.updates.mirror.download"
-msgstr "Laster ned ekstern pakkebrønn..."
+msgstr ""
 
 msgid "xbian-config.updates.mirror.download_failed"
-msgstr "Fikk ikke tak i eksternt fillager, så en lokal (og muligens utdatert) liste blir benyttet"
+msgstr ""
 
 msgid "xbian-config.updates.upgrade.available"
 msgstr ""
@@ -824,7 +822,7 @@ msgid "xbian-config.updates.update.error"
 msgstr ""
 
 msgid "xbian-config.updates.update.size_mismatch"
-msgstr "Størrelsene på de eksterne pakkene samsvarer ikke"
+msgstr ""
 
 msgid "xbian-config.updates.update.installing"
 msgstr ""
@@ -915,7 +913,7 @@ msgid "xbian-config.xbconfig.label.autostart"
 msgstr ""
 
 msgid "xbian-config.xbconfig.label.actions"
-msgstr "Handlinger:"
+msgstr ""
 
 msgid "xbian-config.xbconfig.autostart.enable_disable"
 msgstr ""
@@ -938,7 +936,7 @@ msgid "xbian-config.xbianpass.changed"
 msgstr ""
 
 msgid "xbian-config.xbianpass.label.password"
-msgstr "Passord:"
+msgstr ""
 
 msgid "xbian-config.xbianpass.empty_fields"
 msgstr ""
@@ -973,7 +971,7 @@ msgid "xbian-config.xbmc.label.webserver"
 msgstr ""
 
 msgid "xbian-config.xbmc.label.actions"
-msgstr "Handlinger:"
+msgstr ""
 
 msgid "xbian-config.xbmc.label.tvoff_screensaver"
 msgstr ""
@@ -1242,7 +1240,7 @@ msgid "xbian-config.wizard.network.title"
 msgstr ""
 
 msgid "xbian-config.wizard.network.smalltitle"
-msgstr "Nettverk"
+msgstr ""
 
 msgid "xbian-config.wizard.network.description"
 msgstr ""

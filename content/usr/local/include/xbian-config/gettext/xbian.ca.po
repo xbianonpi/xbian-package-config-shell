@@ -3,14 +3,15 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-10-22 19:51+0000\n"
-"Last-Translator: anaconda\n"
-"Language-Team: Catalan (http://www.transifex.com/projects/p/xbian-translation/language/ca/)\n"
+"PO-Revision-Date: 2017-12-23 22:01+0000\n"
+"Last-Translator: belese <mkreisl@xbian.org>\n"
+"Language-Team: Catalan (http://www.transifex.com/teamxbian/xbian-translation/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1066,7 +1067,19 @@ msgstr ""
 msgid "xbian-config.xbiancopy.dialog.exportwrong"
 msgstr ""
 
+msgid "xbian-config.xbiancopy.dialog.targetwrong"
+msgstr ""
+
 msgid "xbian-config.xbiancopy.dialog.preperror"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.config"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.copyerror"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.clonedone"
 msgstr ""
 
 msgid "xbian-config.backup.category.snasphot"

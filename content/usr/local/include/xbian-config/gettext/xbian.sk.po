@@ -3,14 +3,16 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
+# Richard Danis <rikardo1979@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-10-25 12:47+0000\n"
-"Last-Translator: belese <besme2@gmail.com>\n"
-"Language-Team: Slovak (http://www.transifex.com/projects/p/xbian-translation/language/sk/)\n"
+"PO-Revision-Date: 2017-12-23 22:01+0000\n"
+"Last-Translator: belese <mkreisl@xbian.org>\n"
+"Language-Team: Slovak (http://www.transifex.com/teamxbian/xbian-translation/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -602,7 +604,7 @@ msgid "xbian-config.services.stop_failed"
 msgstr "Failed to stop the service..."
 
 msgid "xbian-config.services.refresh"
-msgstr ""
+msgstr "Nieje možné aktualizovať..."
 
 msgid "xbian-config.services.autostart.enabling"
 msgstr "Enabling the autostart of the service..."
@@ -644,7 +646,7 @@ msgid "xbian-config.services.label.autostart"
 msgstr "Autostart"
 
 msgid "xbian-config.services.label.noautostart"
-msgstr ""
+msgstr "Deaktivovať autoštart"
 
 msgid "xbian-config.services.label.running"
 msgstr "Running"
@@ -653,10 +655,10 @@ msgid "xbian-config.services.label.start_restart"
 msgstr "(Re)Start"
 
 msgid "xbian-config.services.label.start"
-msgstr ""
+msgstr "Štart"
 
 msgid "xbian-config.services.label.restart"
-msgstr ""
+msgstr "Reštart"
 
 msgid "xbian-config.services.label.stop"
 msgstr "Stop"
@@ -744,7 +746,7 @@ msgid "xbian-config.timezone.no_location_selected"
 msgstr "You didn't select a location"
 
 msgid "xbian-config.timezone.notset"
-msgstr ""
+msgstr "Nenastavené"
 
 # xbian-config modules updates
 # 
@@ -851,10 +853,10 @@ msgid "xbian-config.updates.label.upgrade"
 msgstr "Upgrade"
 
 msgid "xbian-config.updates.label.autoupdates"
-msgstr ""
+msgstr "Automatické aktualizácie"
 
 msgid "xbian-config.updates.label.autoinstallupdates"
-msgstr ""
+msgstr "Autoinštalovanie aktualizácií"
 
 msgid "xbian-config.updates.label.aptsnapshot"
 msgstr ""
@@ -863,7 +865,7 @@ msgid "xbian-config.updates.label.autoupdaterepo"
 msgstr ""
 
 msgid "xbian-config.updates.label.autoupdaterepointerval"
-msgstr ""
+msgstr "interval (dni)"
 
 msgid "xbian-config.updates.uptodate"
 msgstr "Your install already contains the latest versions of XBian packages"
@@ -973,22 +975,22 @@ msgid "xbian-config.xbmc.label.actions"
 msgstr "Actions"
 
 msgid "xbian-config.xbmc.label.tvoff_screensaver"
-msgstr ""
+msgstr "Vypnúť TV (CEC) pri aktivovaní šetriča obrazovky"
 
 msgid "xbian-config.xbmc.label.tvoff_screensaver_delay"
-msgstr ""
+msgstr "oneskorenie (min)"
 
 msgid "xbian-config.xbmc.label.tvon_exit"
-msgstr ""
+msgstr "Zapnúť TV (CEC) pri vypnutí XBMC"
 
 msgid "xbian-config.xbmc.label.tvoff_shutdown"
-msgstr ""
+msgstr "Vypnúť TV (CEC) pri vypnutí RPi"
 
 msgid "xbian-config.xbmc.label.usbhotplug"
-msgstr ""
+msgstr "USB HotPlug"
 
 msgid "xbian-config.xbmc.label.automount"
-msgstr ""
+msgstr "Povoliť automatické pripojenie USB disku"
 
 msgid "xbian-config.xbmc.label.share"
 msgstr ""
@@ -1009,7 +1011,7 @@ msgid "xbian-config.xbmc.label.highnice"
 msgstr ""
 
 msgid "xbian-config.xbmc.label.spindown"
-msgstr ""
+msgstr "Spin Down HDD"
 
 msgid "xbian-config.xbmc.label.sync"
 msgstr ""
@@ -1023,7 +1025,7 @@ msgid "xbian-config.preferences.label.advanced_mode"
 msgstr "Advanced Mode"
 
 msgid "xbian-config.preferences.label.advanced"
-msgstr ""
+msgstr "Pokročilé"
 
 msgid "xbian-config.preferences.update.error"
 msgstr "Error while updating setting"
@@ -1032,7 +1034,7 @@ msgid "xbian-config.preferences.update.success"
 msgstr "Successfully updated setting"
 
 msgid "xbian-config.preferences.label.notify"
-msgstr ""
+msgstr "Pripomienky"
 
 msgid "xbian-config.preferences.notify.on_error"
 msgstr "Notify on error"
@@ -1066,17 +1068,29 @@ msgstr "Wrong destination block device (doesn't exist or is not a partition"
 msgid "xbian-config.xbiancopy.dialog.exportwrong"
 msgstr ""
 
+msgid "xbian-config.xbiancopy.dialog.targetwrong"
+msgstr ""
+
 msgid "xbian-config.xbiancopy.dialog.preperror"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.config"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.copyerror"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.clonedone"
 msgstr ""
 
 msgid "xbian-config.backup.category.snasphot"
 msgstr ""
 
 msgid "xbian-config.backup.category.home"
-msgstr ""
+msgstr "Záloha Home"
 
 msgid "xbian-config.backup.category.system"
-msgstr ""
+msgstr "Systémová záloha"
 
 msgid "xbian-config.backup.category.snapshot"
 msgstr ""
@@ -1106,16 +1120,16 @@ msgid "xbian-config.backup.filedest"
 msgstr ""
 
 msgid "xbian-config.backup.start"
-msgstr ""
+msgstr "Spustiť zálohovanie"
 
 msgid "xbian-config.backup.confirm_write"
-msgstr ""
+msgstr "Zapísať zálohu do %s?"
 
 msgid "xbian-config.backup.warning_write"
-msgstr ""
+msgstr "Toto odstráni všetky údaje z %s, pokračovať?"
 
 msgid "xbian-config.backup.selectdevice"
-msgstr ""
+msgstr "Vyberte zariadenie"
 
 #       backuphome
 # 
@@ -1135,7 +1149,7 @@ msgid "xbian-config.backuphome.failed"
 msgstr "Backup /home process failed!"
 
 msgid "xbian-config.backuphome.desc1"
-msgstr ""
+msgstr "Operácia môže trvať niekoľko minút, v závislosti na veľkosti priečinka /home/xbian"
 
 msgid "xbian-config.backuphome.desc2"
 msgstr ""
@@ -1202,7 +1216,7 @@ msgid "xbian-config.snapshot.name_snapshot"
 msgstr ""
 
 msgid "xbian-config.snapshot.backup"
-msgstr ""
+msgstr "Záloha"
 
 # util
 # 
@@ -1224,55 +1238,55 @@ msgid "xbian-config.wizard.welcome.description"
 msgstr ""
 
 msgid "xbian-config.wizard.network.title"
-msgstr ""
+msgstr "Nastavenie siete"
 
 msgid "xbian-config.wizard.network.smalltitle"
-msgstr ""
+msgstr "Sieť"
 
 msgid "xbian-config.wizard.network.description"
 msgstr ""
 
 msgid "xbian-config.wizard.license.title"
-msgstr ""
+msgstr "Vložiť licenčný kľúč"
 
 msgid "xbian-config.wizard.license.smalltitle"
-msgstr ""
+msgstr "Licenčný kľúč"
 
 msgid "xbian-config.wizard.license.description"
 msgstr ""
 
 msgid "xbian-config.wizard.backup.title"
-msgstr ""
+msgstr "Obnoviť Home"
 
 msgid "xbian-config.wizard.backup.smalltitle"
-msgstr ""
+msgstr "Obnova"
 
 msgid "xbian-config.wizard.backup.description"
 msgstr ""
 
 msgid "xbian-config.wizard.update.title"
-msgstr ""
+msgstr "Aktualizuj XBian"
 
 msgid "xbian-config.wizard.update.smalltitle"
-msgstr ""
+msgstr "aktualizácia"
 
 msgid "xbian-config.wizard.update.description"
 msgstr ""
 
 msgid "xbian-config.wizard.package.title"
-msgstr ""
+msgstr "Inštalovať nové balíky"
 
 msgid "xbian-config.wizard.package.smalltitle"
-msgstr ""
+msgstr "balík"
 
 msgid "xbian-config.wizard.package.description"
 msgstr ""
 
 msgid "xbian-config.wizard.finish.title"
-msgstr ""
+msgstr "Nastal čas pre zábavu"
 
 msgid "xbian-config.wizard.finish.smalltitle"
-msgstr ""
+msgstr "Ukončiť"
 
 msgid "xbian-config.wizard.finish.description"
 msgstr ""
@@ -1280,30 +1294,30 @@ msgstr ""
 # extra
 # 
 msgid "xbian-config.extra.name"
-msgstr ""
+msgstr "extra"
 
 #   commom
 # 
 msgid "xbian-config.common.pleasewait"
-msgstr ""
+msgstr "Prosím čakať..."
 
 msgid "xbian-config.common.initialisation"
 msgstr ""
 
 msgid "xbian-config.common.loading"
-msgstr ""
+msgstr "Nahrávanie"
 
 msgid "xbian-config.common.doyouwanto"
 msgstr ""
 
 msgid "xbian-config.common.error"
-msgstr ""
+msgstr "ERROR : nieje možné uložiť nastavenia"
 
 msgid "xbian-config.common.ok"
-msgstr ""
+msgstr "Nastavenia boli uložené"
 
 msgid "xbian-config.common.confirmation"
 msgstr ""
 
 msgid "xbian-config.common.badentry"
-msgstr ""
+msgstr "Údaje ktoré boli zadané, niesú správne"

@@ -3,15 +3,17 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
+# Emil Johansson <emil.a.johansson@gmail.com>, 2015
 # Hushpad <johan.winkler@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2014-10-25 13:07+0000\n"
-"Last-Translator: belese <besme2@gmail.com>\n"
-"Language-Team: Swedish (http://www.transifex.com/projects/p/xbian-translation/language/sv/)\n"
+"PO-Revision-Date: 2017-12-23 22:01+0000\n"
+"Last-Translator: belese <mkreisl@xbian.org>\n"
+"Language-Team: Swedish (http://www.transifex.com/teamxbian/xbian-translation/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +26,7 @@ msgstr "XBian"
 # xbian-config main (menu)
 # 
 msgid "xbian-config.main.title"
-msgstr ""
+msgstr "Konfiguration"
 
 msgid "xbian-config.main.reboot_question"
 msgstr "En omstart krävs. Vill du starta om nu?"
@@ -1067,7 +1069,19 @@ msgstr ""
 msgid "xbian-config.xbiancopy.dialog.exportwrong"
 msgstr ""
 
+msgid "xbian-config.xbiancopy.dialog.targetwrong"
+msgstr ""
+
 msgid "xbian-config.xbiancopy.dialog.preperror"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.config"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.copyerror"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.clonedone"
 msgstr ""
 
 msgid "xbian-config.backup.category.snasphot"
