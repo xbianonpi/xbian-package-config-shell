@@ -92,13 +92,13 @@ setInterfaceWlanCredentials() {
 		k=$(echo "$4" | sed 's%\\%\\\\%g' )
 		case $2 in
 			"WEP")
-				WLANBUFFER+="\n    wireless-essid $n\nnwireless-key $k"
+				WLANBUFFER+="    wireless-essid $n\n    nwireless-key $k"
 			;;
 			"WPA")
-				WLANBUFFER+="\n    wpa-ssid $n\nwpa-psk $k"
+				WLANBUFFER+="    wpa-ssid $n\n    wpa-psk $k"
 			;;
 			"Open")
-				WLANBUFFER+="\n    wireless-mode managed\nwireless-essid $n"
+				WLANBUFFER+="    wireless-mode managed\n    wireless-essid $n"
 			;;
 			*)
 				return 2
