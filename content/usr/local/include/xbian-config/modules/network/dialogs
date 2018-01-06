@@ -215,18 +215,19 @@ function showAvailableWLANDlg() {
 		VALUES=($WNETWORK);
 
 		NAME=$(echo "${VALUES[0]}" | awk '{print substr($0,2,length-2)}');
-		if [ ${#NAME} -gt 13 ]; then
-			NAME=${NAME:0:10}"...";
+		SELECTED="off";
+		if [ "$NAME" == "$SSID" ]; then
+			SELECTED="on";
+		fi
+		NAME=$(echo $NAME | tr '!' '|')
+		if [ ${#NAME} -gt 20 ]; then
+			NAME=${NAME:0:17}"...";
 		fi
 		SECURITY=${VALUES[2]};
 		if [ "$SECURITY" == "on" ]; then
 			SECURITY="$(_ dialog.yes)";
 		else
 			SECURITY="$(_ dialog.no)";
-		fi
-		SELECTED="off";
-		if [ "$NAME" == "$SSID" ]; then
-			SELECTED="on";
 		fi
 		if [ ${VALUES[3]} -eq 100 ]; then
 			SIGNAL="*****";
@@ -248,7 +249,7 @@ function showAvailableWLANDlg() {
 	"${MENU[@]}"
 	TBLCOLUMNCENTER=1;
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
-	showRadioDlg "$CENTEREDTXT" "$ROWS" 6 15
+	showRadioDlg "$CENTEREDTXT" "$ROWS" 6 15 $((DEFAULTWIDTH+22))
 }
 
 function showScanForWLANDlg() {
