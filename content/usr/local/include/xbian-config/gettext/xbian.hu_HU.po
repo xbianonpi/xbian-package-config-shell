@@ -4,14 +4,14 @@
 # Translators:
 # Translators:
 # Translators:
-# Gábor Szurgent <szurgent@gmail.com>, 2016
+# Gábor Szurgent <szurgent@gmail.com>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2017-12-23 22:01+0000\n"
-"Last-Translator: belese <mkreisl@xbian.org>\n"
+"PO-Revision-Date: 2017-12-25 10:29+0000\n"
+"Last-Translator: Gábor Szurgent <szurgent@gmail.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/teamxbian/xbian-translation/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1069,7 +1069,7 @@ msgid "xbian-config.xbiancopy.dialog.exportwrong"
 msgstr "NFS export nem felel meg a követelményeknek"
 
 msgid "xbian-config.xbiancopy.dialog.targetwrong"
-msgstr ""
+msgstr "Az iSCSI cél eszköz nem csatlakoztatható vagy particionálható (%s)"
 
 msgid "xbian-config.xbiancopy.dialog.preperror"
 msgstr "Nem sikerült a cél fájlrendszer előkészítése"
@@ -1078,10 +1078,10 @@ msgid "xbian-config.xbiancopy.dialog.config"
 msgstr ""
 
 msgid "xbian-config.xbiancopy.dialog.copyerror"
-msgstr ""
+msgstr "Hiba történt az adatok másolása közben (%s)"
 
 msgid "xbian-config.xbiancopy.dialog.clonedone"
-msgstr ""
+msgstr "\\nAz aktuális telepítés klónozása sikerült ide: \\n%s\\n\\nAz úraindulás után közvetlenül a klónozott rendszer indul el"
 
 msgid "xbian-config.backup.category.snasphot"
 msgstr "Rendszer-visszaállítási pontok kezelése"
