@@ -4,12 +4,13 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2017-12-23 22:01+0000\n"
+"PO-Revision-Date: 2018-01-15 14:35+0000\n"
 "Last-Translator: belese <mkreisl@xbian.org>\n"
 "Language-Team: Danish (http://www.transifex.com/teamxbian/xbian-translation/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -296,6 +297,9 @@ msgid "xbian-config.network.label.name"
 msgstr ""
 
 msgid "xbian-config.network.dhcp_selected"
+msgstr ""
+
+msgid "xbian-config.network.disabled"
 msgstr ""
 
 msgid "xbian-config.network.label.static"

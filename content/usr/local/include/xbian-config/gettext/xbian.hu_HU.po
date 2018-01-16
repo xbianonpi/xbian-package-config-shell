@@ -4,13 +4,14 @@
 # Translators:
 # Translators:
 # Translators:
-# Gábor Szurgent <szurgent@gmail.com>, 2016-2017
+# Translators:
+# Gábor Szurgent <szurgent@gmail.com>, 2016-2018
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2017-12-25 10:29+0000\n"
+"PO-Revision-Date: 2018-01-15 23:51+0000\n"
 "Last-Translator: Gábor Szurgent <szurgent@gmail.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/teamxbian/xbian-translation/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
@@ -298,6 +299,9 @@ msgstr "Hálózat"
 
 msgid "xbian-config.network.dhcp_selected"
 msgstr "Az interfész DHCP használatával be lett állítva"
+
+msgid "xbian-config.network.disabled"
+msgstr "Az interfész le van tiltva"
 
 msgid "xbian-config.network.label.static"
 msgstr "Statikus IP"
