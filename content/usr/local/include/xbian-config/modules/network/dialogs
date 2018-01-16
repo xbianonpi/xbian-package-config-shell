@@ -198,6 +198,13 @@ function showInterfaceDhcpSuccessDlg() {
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
+function showInterfaceDisableSuccessDlg() {
+	wrapTxtFn "$(_ network.disabled)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
 # Shows available wlan networks
 # Arguments
 #  $1 Current SSID
@@ -281,21 +288,21 @@ function showRestartAdapterDlg() {
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
 }
 
-function showWLANConnectingDlg() {
+function showConnectingDlg() {
 	wrapTxtFn "$(printf "$(_  network.connection.updating)" "$1")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showInfoDlg "$ALIGNEDTXT" $HEIGHT
 }
 
-function showWLANConnectionFailedDlg() {
+function showConnectionFailedDlg() {
 	wrapTxtFn "$(printf "$(_  network.connection.failed)" "$1")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
-function showWLANConnectionSuccessDlg() {
+function showConnectionSuccessDlg() {
 	wrapTxtFn "$(printf "$(_  network.connection.success)" "$1")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
