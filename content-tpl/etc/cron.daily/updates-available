@@ -14,9 +14,11 @@ RemoveJobs()
 }
 
 pgrep $BASENAME >/dev/null && exit 0 || :
-RemoveJobs
 
-if [ "$1" != run ] || [ "$(xbian-config updates progress)" != 0 ]; then
+grep -q 'Package: openvpn$' /var/lib/dpkg/status && ! grep -q ^tun /etc/modules && modprobe tun && echo tun >> /etc/modules
+
+if [ "$1" != run -o "$(xbian-config updates progress)" != 0 ]; then
+    RemoveJobs
     echo "$PROGNAME run" | at -M now + 5min &>/dev/null
     exit 0
 fi
