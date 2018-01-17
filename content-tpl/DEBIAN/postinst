@@ -10,13 +10,14 @@ if [ $1 = "configure" ]; then
 
 	[ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
 
-        echo "Installing language files..."
+        echo -n "Installing language files ( "
 	for l in $(find /usr/local/include/xbian-config/gettext -type f -name "*.po"); do
 	    a=$(basename $l)
 	    a=${a#*\.};a=${a%\.*}
-	    echo $a
+	    echo -n "$a "
 	    [ -d /usr/share/locale/$a/LC_MESSAGES ] && msgfmt -o /usr/share/locale/$a/LC_MESSAGES/xbian.mo $l
 	done
+	echo ")"
 
 	. /etc/bash_completion.d/xbian-config.sh >/dev/null
 
