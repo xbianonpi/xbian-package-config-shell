@@ -423,11 +423,15 @@ function showInputFormDlg() {
 		CONTENT+=("${ELEMENT[2]}" "${ELEMENT[0]}" "${ELEMENT[1]}" "${ELEMENT[3]}" "${ELEMENT[0]}" "${ELEMENT[4]}" "${ELEMENT[5]}" "${ELEMENT[6]}" "${ELEMENT[7]}");
 	done;
 
+	# Limit text (lines and length) so it can be displayed properly
+	local R=$(stty size | awk '{print $1}'); local C=$(stty size | awk '{print $2}')
+	local T=$(echo -ne "$1" | sed "$((R-I-7))q;s/^\(.\{$((C-6))\}\).*/\1/g")
+
 	RETURN=$(dialog \
 			--backtitle "$BACKTITLE" \
 			--title "$TITLE" \
 			--ok-label "$CHANGELABEL" \
 			--cancel-label "$CANCELLABEL" \
-			--mixedform "$1" $HEIGHT $WIDTH $I "${CONTENT[@]}" \
+			--mixedform "$T" $HEIGHT $WIDTH $I "${CONTENT[@]}" \
 			3>&1 1>&2 2>&3);
 }
