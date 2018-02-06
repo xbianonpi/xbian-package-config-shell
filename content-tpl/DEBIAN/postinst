@@ -1,7 +1,8 @@
 #!/bin/bash
 
-if [ $1 = "configure" ]; then
+CONFD="/usr/local/include/xbian-config/config"
 
+if [ $1 = "configure" ]; then
 
     find /usr/local/bin -lname /usr/local/bin/busybox -exec rm {} +
     /usr/local/bin/busybox --list | grep -v 'udhcp\|rpm\|rpm2cpio' | xargs -L1 -I%% sh -c 'which %% >/dev/null|| ln -s /usr/local/bin/busybox /usr/local/bin/%%'
@@ -42,9 +43,7 @@ if [ $1 = "configure" ]; then
     rm -f /etc/apt/apt.conf.d/20apt-show-versions
 
     # update config
-    if [ ! -e /etc/default/xbian-snap ]; then
-        mv /var/tmp/xbian-snap /etc/default/xbian-snap
-    else
+    if [ -e /etc/default/xbian-snap ]; then
         if grep -q "ENABLEDSCHEDULE=" /etc/default/xbian-snap; then
             us="$(grep ENABLEDSCHEDULE= /etc/default/xbian-snap)"
             eval $(echo "sed -i 's%ENABLEDSCHEDULE=yes%$us%' /var/tmp/xbian-snap")
@@ -103,15 +102,26 @@ if [ $1 = "configure" ]; then
             us=$(grep HOMEKEEP= /etc/default/xbian-snap)
             eval $(echo "sed -i 's%HOMEKEEP=0%$us%' /var/tmp/xbian-snap")
         fi
-
-        mv /var/tmp/xbian-snap /etc/default/xbian-snap
     fi
-    :
+    mv /var/tmp/xbian-snap /etc/default/xbian-snap
 
-    if [ -e /etc/inetd.conf ]; then
-        grep -v "netbios-ns dgram udp wait root /usr/sbin/nmbd nmbd" /etc/inetd.conf > /etc/inetd.conf.new
-        mv /etc/inetd.conf.new /etc/inetd.conf
+    [ -e /etc/default/samba.preinst ] && mv /etc/default/samba.preinst /etc/default/samba
+    PARMS=$(sed 's/^[ \t]*//;/^#/d;/^$/d;s/=.*//' /var/tmp/samba)
+    if [ -e /etc/default/samba ]; then
+        for PARM in $PARMS; do
+            if grep -q ^$PARM= /etc/default/samba; then
+                p=$(grep ^"$PARM=" /etc/default/samba)
+                sed -i "s%^$PARM=.*%$p%g" /var/tmp/samba
+            fi
+        done
     fi
+    mv /var/tmp/samba /etc/default/
+    chown xbian:xbian /etc/default/samba
+
+    [ -e /tmp/services ] && mv /tmp/services $CONFD/
+
+    [ -e /etc/inetd.conf ] && sed -i '/netbios-ns dgram udp wait root \/usr\/sbin\/nmbd nmbd/d' /etc/inetd.conf
+
     insserv -f samba >/dev/null 2>&1
 
     if ! [ -f /home/xbian/.profile ]; then
@@ -123,6 +133,41 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 EOF
+    fi
+
+    dpkg-trigger --no-await trigger-xbian-package-config-shell
+
+elif [ $1 = "triggered" ]; then
+    . /etc/default/samba
+    if [ "$RUN_MODE" = inetd ]; then
+        if [ -e $CONFD/.samba.inetd ]; then # We have to switch from upstart job to inetd
+            [ -e $CONFD/samba.inetd ] && mv $CONFD/samba.inetd $CONFD/.samba.inetd
+            rs=$(xbian-config services status samba | awk '{ print $2 }')
+            case $rs in
+                4|5) xbian-config services stop samba >/dev/null ;;
+            esac
+            mv $CONFD/.samba.inetd $CONFD/samba.inetd
+            sed -i 's/samba:.*/samba:%%inetd/g' $CONFD/services
+            case $rs in
+                3|4|5) xbian-config services autostart samba enable  >/dev/null ;;
+                *)     xbian-config services autostart samba disable >/dev/null ;;
+            esac
+        fi
+    else
+        if [ ! -e $CONFD/.samba.inetd ]; then # We have to switch from inetd to upstart job
+            rs=$(xbian-config services status samba | awk '{ print $2 }')
+            case $rs in
+                4|5) xbian-config services autostart samba disable >/dev/null ;;
+            esac
+            [ -e $CONFD/samba.inetd ] && mv $CONFD/samba.inetd $CONFD/.samba.inetd
+            sed -i 's/samba:.*/samba::smbd/g' $CONFD/services
+            SC=/etc/init/smbd.conf; [ "$(stat -c %s $SC)" -eq 0 -a -e $SC.dpkg-dist ] && mv $SC.dpkg-dist $SC
+            case $rs in
+                3|5) xbian-config services autostart samba enable  >/dev/null ;;
+                *)   xbian-config services autostart samba disable >/dev/null ;;
+            esac
+            [ "$rs" -gt 3 ] && xbian-config services start samba >/dev/null
+        fi
     fi
 fi
 

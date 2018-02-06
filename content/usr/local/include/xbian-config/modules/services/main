@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
+#Copyright 2012 - 2018 CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -32,10 +32,11 @@ fi
 
 readServicesFn()
 {
-        SERVICES=(); IDX=()
-        for s in $(cat $BASEPATH/config/services); do 
-#                SERVICES[${s%:*}]="$(echo ${s#*:})" 
-                SERVICES[${s%:*}]=${s#*:}
+        SERVICES=(); ISALIAS=(); IDX=()
+        for s in $(grep -vE "(^\s*$|^#)" $BASEPATH/config/services); do
+		s=$s:; i=${s%%:*}; a=${s#*:}; d=${a%%:*}; a=${a#*:*}; a=${a%:*}
+		SERVICES[$i]=$d; [ -n "$a" ] && ISALIAS[$i]=$a
+		#echo "index=$i daemon=$d truename=$a"
         done
 
         getInstalledServicesFn
@@ -44,8 +45,8 @@ readServicesFn()
 # The arguments this module accepts
 ARGUMENTS=(list select status start restart stop autostart insert update delete);
 if [ -f "$BASEPATH/config/services" ]; then
-        unset SERVICES; unset I
-        typeset -A  SERVICES; typeset -a I
+        unset SERVICES; unset ISALIAS
+        typeset -A SERVICES; typeset -A ISALIAS
         readServicesFn
 fi
 
@@ -68,8 +69,8 @@ function showGUIFn() {
 				DATA=($(echo -e "$RETURN"));
 				DATA[1]=${DATA[1]// /,};
 				IFS=$ORIGINALIFS;
-
-				if checkServiceExistsFn "${DATA[0]}" ; then
+				a=${DATA[1]}; d=${a%%:*}; a=${a#*:*}; a=${a%:*}; [ -n "$a" ] && ISALIAS[${DATA[0]}]=$a
+				if checkServiceExistsFn "${DATA[0]}"; then
 					updateServiceConfFn ${DATA[0]} ${DATA[1]} 
 					if [ $? -eq 0 ]; then
 						showServiceInsertedDlg;
@@ -143,7 +144,8 @@ function showGUIFn() {
 						DATA[1]=${DATA[1]// /,};
                                                 echo ${DATA[0]} ${DATA[1]} >> /run/xbian-config
 
-						if checkServiceExistsFn ${DATA[0]} ; then
+						a=${DATA[1]}; d=${a%%:*}; a=${a#*:*}; a=${a%:*}; [ -n "$a" ] && ISALIAS[${DATA[0]}]=$a
+						if checkServiceExistsFn "${DATA[0]}"; then
 							updateServiceConfFn ${DATA[0]} ${DATA[1]}
 							if [ $? -eq 0 ]; then
 								readServicesFn
@@ -190,6 +192,7 @@ function showGUIFn() {
 # insert | update
 #  $3 Daemons
 # Returns
+# -  5: Running and autostart enabled
 # -  4: Running but autostart disabled
 # -  3: Not running but autostart enabled
 # -  2: Not running and autostart disabled
@@ -228,14 +231,14 @@ function showCMDFn() {
 					echo -7;
 				fi
 			else
-				echo -1;
+				/var/lib/dpkg/info/xbian-package-config-shell.postinst triggered
+				echo 1;
 			fi
 		;;
 		status)
-                        refreshProcessesFn
-                        filter=''
 			if [ $# -eq 1 -o $# -eq 2 ]; then
-                                [ -n "$2" ] && filter="$2"
+				refreshProcessesFn
+                                [ -n "$2" ] && filter="$2" || filter=''
 				if [ -n "$filter" ] && [[ ${!SERVICES[@]} =~ "$2" ]] || [ -z "$filter" ]; then
                                     if [ -f "$BASEPATH/config/services" ]; then
 					for NAME in $(printf "%s\n" ${!SERVICES[@]} | sort); do
@@ -260,7 +263,7 @@ function showCMDFn() {
                                     echo -2
                                 fi
 			else
-				echo -1;
+				echo -1
 			fi
 		;;
 		start)
@@ -369,11 +372,12 @@ function showCMDFn() {
 				echo -1;
 			fi
 		;;
-		insert | update)
+		insert|update)
 			if [ $# -ge 2 ]; then
 				DATA=($2)
 				shift;
 				shift;
+				a=$1; d=${a%%:*}; a=${a#*:*}; a=${a%:*}; [ -n "$a" ] && ISALIAS[${DATA[0]}]=$a
 				if [ ! -z "${DATA[0]}" ] && checkServiceExistsFn "${DATA[0]}"; then
 					DAEMONS=($@);
 					DAEMON=""
@@ -396,20 +400,20 @@ function showCMDFn() {
 			fi
 		;;
 		delete)
-		if [ $# -eq 2 ]; then
-			shift;
-			if [[ ${!SERVICES[@]} =~ "$1" ]]; then
-				if deleteServiceFn "$1"; then
-					echo 1
+			if [ $# -eq 2 ]; then
+				shift;
+				if [[ ${!SERVICES[@]} =~ "$1" ]]; then
+					if deleteServiceFn "$1"; then
+						echo 1
+					else
+						echo 0
+					fi
 				else
-					echo 0
+					echo -2
 				fi
 			else
-				echo -2
+				echo -1;
 			fi
-		else
-			echo -1;
-		fi
 		;;		
 	esac
 }

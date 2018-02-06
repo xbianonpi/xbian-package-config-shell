@@ -1,5 +1,6 @@
 #!/bin/bash
 
 if [ $1 == "install" -o $1 == "upgrade" ]; then
-:
+    [ -e /usr/local/include/xbian-config/config/services ] && mv /usr/local/include/xbian-config/config/services /tmp
+    [ -e /etc/default/samba ] && mv /etc/default/samba /etc/default/samba.preinst || :
 fi

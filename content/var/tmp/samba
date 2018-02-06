@@ -1,0 +1,8 @@
+#
+# Run mode of Samba (smbd) process. If set to 'inetd', smbd is
+# being spawned by inetd daemon on request, otherwise smbd is
+# started as daemon via smbd upstart job. After changing this
+# variable, you have to run 'sudo xbian-config services select'
+# or reboot system
+#
+RUN_MODE=inetd
