@@ -387,15 +387,19 @@ function listNetworkInterfacesFn() {
 		done
 		echo $h
 	}
-	hideDEV=''
-	if ! findmnt -nt btrfs,zfs / >/dev/null; then
+	if [ -e /run/xc.nethide ]; then
+		. /run/xc.nethide
+	else
 		if findmnt -nt nfs,nfs4 / >/dev/null; then
 			hideDEV=$(gethide $(netstat -nt | grep -m1 $(findmnt -n / | awk '{ sub(".*,addr=",""); sub(",.*",""); print $0; }'):2049 | \
 				awk '{ split($4, a, ":"); print a[1]; }'))
 		elif iscsiadm -m session &>/dev/null; then
 			hideDEV=$(gethide $(netstat -nt | grep :$(iscsiadm -m session | awk '{ split($3, a, ":"); split(a[2], b, ","); print b[1]; }') | \
 				awk '{ split($4, a, ":"); print a[1]; }'))
+		else
+			hideDEV=''
 		fi
+		echo "hideDEV='$hideDEV'" > /run/xc.nethide
 	fi
 	IFACES=$(ip a | grep -vwE "lo|dummy[0-9]|tun[0-9]$hideDEV" | awk '/state/{ sub(":","",$2); print $2; }' | sort);
 	if [ ! -z "$IFACES" ]; then
