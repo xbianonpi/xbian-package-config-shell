@@ -115,8 +115,7 @@ if [ $1 = "configure" ]; then
             fi
         done
     fi
-    mv /var/tmp/samba /etc/default/
-    chown xbian:xbian /etc/default/samba
+    chown xbian:xbian /var/tmp/samba
 
     [ -e /tmp/services ] && mv /tmp/services $CONFD/
 
@@ -138,6 +137,7 @@ EOF
     dpkg-trigger --no-await trigger-xbian-package-config-shell
 
 elif [ $1 = "triggered" ]; then
+    [ -e /var/tmp/samba ] && mv /var/tmp/samba /etc/default/
     . /etc/default/samba
     if [ "$RUN_MODE" = inetd ]; then
         if [ -e $CONFD/.samba.inetd ]; then # We have to switch from upstart job to inetd
