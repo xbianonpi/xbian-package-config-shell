@@ -33,7 +33,7 @@ def upgradable(distupgrade=False, get_names_only=True):
 
 def show_package_versions():
     cache = apt.Cache()
-    cache.upgrade(False) # True if we want dist-upgrade
+    cache.upgrade(True) # True if we want dist-upgrade
 
     #pkg = cache['xbian-package-xbmc'] # Access the Package object for python-apt
     #print(pkg.candidate.origins)
