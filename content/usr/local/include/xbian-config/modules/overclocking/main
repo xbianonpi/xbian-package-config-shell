@@ -68,15 +68,25 @@ case "$arch" in
 	OCDANGEROUS=()
 	;;
     rpi3)
-	# Names of the overclock settings
-	OCNAMES=(Pi3:None Pi3:Turbo);
+	if command -v rpi_revision >/dev/null && rpi_revision | grep -q "Model B Pi 3+"; then
+	    # Names of the overclock settings
+	    OCNAMES=(Pi3B+:None Pi3B+:Turbo);
 
-	# Values of the overclock settings
-	OCSETTINGS[0]="1200 400 450 0";
-	OCSETTINGS[1]="1300 500 500 2";
+	    # Values of the overclock settings
+	    OCSETTINGS[0]="1400 400 500 0";
+	    OCSETTINGS[1]="1500 500 500 2";
 
-	# Define the (possible) dangerous overclock settings
-	OCDANGEROUS=(Pi3:Turbo)
+	    # Define the (possible) dangerous overclock settings
+	    OCDANGEROUS=(Pi3B+:Turbo)
+	else
+	    # Values of the overclock settings
+	    OCSETTINGS[0]="1200 400 450 0";
+	    OCSETTINGS[1]="1300 500 500 2";
+
+	    # Define the (possible) dangerous overclock settings
+	    OCDANGEROUS=(Pi3:Turbo)
+	fi
+
 	;;
     rpi0)
 	# Names of the overclock settings
