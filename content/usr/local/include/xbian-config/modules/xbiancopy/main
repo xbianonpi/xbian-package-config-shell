@@ -168,7 +168,7 @@ function showGUIFn() {
                         gw=$(echo "$nc" | grep -m1 gateway | awk '{ print $2 }')
                         nc="cnet=$ip::$gw:$nm::$nd:off"
                     else
-                        { lsmod | grep -q ^smsc95xx && echo $nd | grep -q 'eth[0-9]' || echo $nd | grep -qE 'wlan[0-9]|ra[0-9]'; } && nc="cnet=$nd" || nc="ip=$nd"
+                        { lsmod | grep -qE "^smsc95xx|^lan78xx" && echo $nd | grep -q 'eth[0-9]' || echo $nd | grep -qE 'wlan[0-9]|ra[0-9]'; } && nc="cnet=$nd" || nc="ip=$nd"
                     fi
                     if [ -e /boot/cmdline.txt ]; then
                         if [ "$tt" = nfs ]; then
