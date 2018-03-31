@@ -109,6 +109,7 @@ function restartServiceFn() {
 	fi
 
 	r=$?
+	[ "$c" = stop ] && sleep 1
 	refreshProcessesFn
 	return $r
 }
