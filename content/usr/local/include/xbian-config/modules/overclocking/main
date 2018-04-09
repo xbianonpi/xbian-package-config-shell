@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
+#Copyright 2012 - 2018 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -27,6 +27,7 @@ ARGUMENTS=(select update values list);
 declare -A OCSETTINGS
 
 arch=$(xbian-arch revision)
+OCSCHMOO=1200
 
 case "$arch" in
     imx6)
@@ -62,7 +63,7 @@ case "$arch" in
 
 	# Values of the overclock settings
 	OCSETTINGS[0]="900 250 450 0";
-	OCSETTINGS[1]="1000 500 500 2";
+	OCSETTINGS[1]="1000 500 450 2";
 
 	# Define the (possible) dangerous overclock settings
 	OCDANGEROUS=()
@@ -70,18 +71,23 @@ case "$arch" in
     rpi3)
 	if command -v rpi_revision >/dev/null && rpi_revision | grep -q "Model B Pi 3+"; then
 	    # Names of the overclock settings
-	    OCNAMES=(Pi3B+:None Pi3B+:Turbo);
+	    OCNAMES=(Pi3B+:None Pi3B+:XBian Pi3B+:Turbo);
 
 	    # Values of the overclock settings
 	    OCSETTINGS[0]="1400 400 500 0";
-	    OCSETTINGS[1]="1500 500 500 2";
+	    OCSETTINGS[1]="1400 400 450 0";
+	    OCSETTINGS[2]="1500 500 450 2";
 
 	    # Define the (possible) dangerous overclock settings
 	    OCDANGEROUS=(Pi3B+:Turbo)
+	    OCSCHMOO=1400
 	else
+	    # Names of the overclock settings
+	    OCNAMES=(Pi3:None Pi3:Turbo);
+
 	    # Values of the overclock settings
 	    OCSETTINGS[0]="1200 400 450 0";
-	    OCSETTINGS[1]="1300 500 500 2";
+	    OCSETTINGS[1]="1300 500 450 2";
 
 	    # Define the (possible) dangerous overclock settings
 	    OCDANGEROUS=(Pi3:Turbo)
@@ -120,7 +126,7 @@ case "$arch" in
 esac
 
 # Define the safe overclock settings
-OCSAFE=(Pi:None Pi:Modest Pi:XBian Pi2:None Pi3:None PiZero:None PiZeroW:None iMX6:None)
+OCSAFE=(Pi:None Pi:Modest Pi:XBian Pi2:None Pi3:None Pi3B+:XBian PiZero:None PiZeroW:None iMX6:None)
 
 # Did we already show the warning
 OCWARNING=0;
