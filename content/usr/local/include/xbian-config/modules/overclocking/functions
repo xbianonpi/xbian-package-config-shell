@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
+#Copyright 2012 - 2018 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -22,28 +22,41 @@
 #  $2 [Integer] core_freq
 #  $3 [Integer] sdram_freq
 #  $4 [Integer] over_voltage
+#  $OCSCHMOO [Integer]
 # Returns
 #  none
 
 function updateOCValuesFn() {
-	if ! grep -q "Raspberry Pi Overclocking" /boot/config.txt; then
-		echo -e "\n\n# ******************************************************************************"   >> /boot/config.txt
-		echo        "# * Raspberry Pi Overclocking                                                  *"   >> /boot/config.txt
-		echo -e     "# ******************************************************************************\n" >> /boot/config.txt
-	fi
 	deleteConfigVarFn "sdram_schmoo"
-	if (( $1 > 1200 )); then
+	if (( $1 > $OCSCHMOO )); then
 		OCEXTRA="\nsdram_schmoo=0x02000020"
 	else
 		OCEXTRA=""
 	fi
-	updateConfigVarFn "arm_freq" $1;
-	updateConfigVarFn "core_freq" $2;
-	updateConfigVarFn "sdram_freq" $3;
-	updateConfigVarFn "over_voltage" $4$OCEXTRA;
+	getCurrentOCSettingsFn $1 $2 $3 $4
+	if (( $CURRENTOC == 0 )); then
+		sed -i ':a;N;$!ba;s/\n/|/g;s/||# \*\{78\}|# \* Raspberry Pi Overclocking                                                  \*|# \*\{78\}||//g;s/|/\n/g' /boot/config.txt
+		deleteConfigVarFn "arm_freq"
+		deleteConfigVarFn "core_freq"
+		deleteConfigVarFn "sdram_freq"
+		deleteConfigVarFn "over_voltage"
+	else
+		if ! grep -q "Raspberry Pi Overclocking" /boot/config.txt; then
+			echo -e "\n\n# ******************************************************************************"   >> /boot/config.txt
+			echo        "# * Raspberry Pi Overclocking                                                  *"   >> /boot/config.txt
+			echo -e     "# ******************************************************************************\n" >> /boot/config.txt
+		fi
+		updateConfigVarFn "arm_freq" $1;
+		updateConfigVarFn "core_freq" $2;
+		updateConfigVarFn "sdram_freq" $3;
+		updateConfigVarFn "over_voltage" $4$OCEXTRA;
+	fi
 }
 
 # Retrieve the current overclocking settings
+#  $1 $2 $3 $4 [Integer] optional
+#              If given args  (arm_freq, core_freq, sdram_freq, over_voltage)
+#              are used instead of reading from file /boot/config.txt
 # Returns
 #  $CURRENTOC [Integer]
 #  - -1 Custom overclock
@@ -64,6 +77,11 @@ function getCurrentOCSettingsFn() {
 			OC=996
 		fi
 		OCOLDSETTINGS[0]=${OC}
+	elif (( $# == 4 )); then
+		OCOLDSETTINGS[0]=$1
+		OCOLDSETTINGS[1]=$2
+		OCOLDSETTINGS[2]=$3
+		OCOLDSETTINGS[3]=$4
 	else
 		selectConfigVarFn "arm_freq="
 		OCOLDSETTINGS[0]=${RETURN#*=}
