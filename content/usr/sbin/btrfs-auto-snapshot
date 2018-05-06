@@ -59,6 +59,9 @@ SNAPSHOT_COUNT='0'
 DESTROY_COUNT='0'
 WARNING_COUNT='0'
 
+MY_FILE_MAX=80000
+MY_MIN_FREE_KBYTES=75000
+
 . /usr/local/include/xbian-config/modules/xbiancopy/functions
 
 print_usage ()
@@ -238,7 +241,8 @@ do_remove_kpartx ()
 {
 	[ -e /run/vars.xbiancopy.$$ ] && { . /run/vars.xbiancopy.$$; rm -f /run/vars.xbiancopy.$$; }
 	[ -n "$loopd" ] && { while ! kpartx -d $loopd &>/dev/null; do sleep 5; done; losetup -d $loopd &>/dev/null; }
-	sysctl -p /etc/sysctl.d/xbian.conf &>/dev/null
+	[ -n "$file_max" -a "$(sysctl -n fs.file-max)" -eq "$MY_FILE_MAX" ] && sysctl -w fs.file-max=$file_max &>/dev/null
+	[ -n "$min_free_kbytes" -a "$(sysctl -n vm.min_free_kbytes)" -eq "$MY_MIN_FREE_KBYTES" ] && sysctl -w vm.min_free_kbytes=$min_free_kbytes &>/dev/null
 }
 
 do_rename () 
@@ -580,10 +584,15 @@ case $opt_command in
 	            PIPECMD1="dialog --progressbox \"Preparing devices and copying /boot\" 10 70"
 	            PIPECMD2="dialog --gauge \"Cloning all subvolumes. Please wait...\" 10 70"
 	        fi
+	        file_max=$(sysctl -n fs.file-max)
+	        sysctl -w fs.file-max=$MY_FILE_MAX &>/dev/null
+	        if [ "$(awk '/^MemTotal/{ print $2 }' /proc/meminfo)" -gt 600000 ]; then
+	            min_free_kbytes=$(sysctl -n vm.min_free_kbytes)
+		    sysctl -w vm.min_free_kbytes=$MY_MIN_FREE_KBYTES &>/dev/null
+		fi
 		echo "fn=" >/run/vars.xbiancopy.$$
 	        set -o pipefail
 		(
-		    sysctl -w fs.file-max=80000 &>/dev/null
 		    [ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
 		    [ "$(readlink -e $1)" = "$(readlink -e $2)" ] && { echo "source and destination can not be the same block device"; exit 5; }
 
@@ -694,7 +703,6 @@ case $opt_command in
 
 		    set -o pipefail
 		    (
-		        sysctl -w fs.file-max=80000 &>/dev/null
 		        BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
 		        snapextra=$(printf "%s\n%s\n" "@$snapextra" "@"| sort | uniq)
 		        echo "Cloning subvolumes $BTRFS_LIST ($snapextra)" | sed ':a;N;$!ba;s/\n/, /g;s/, $//g' >> $XBIANCOPYLOG
