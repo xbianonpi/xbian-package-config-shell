@@ -391,6 +391,8 @@ do
         esac
 done
 
+[ "$opt_command" = xbiancopy ] && [ ! -e "$opt_dev" -o -z "$opt_dev" ] && opt_dev=$1
+
 [ ! -e "$opt_dev" -o -z "$opt_dev" ] && opt_dev="$(findmnt -n -o SOURCE -v /)"
 if [ "$(blkid -o value -s TYPE  $opt_dev)" != btrfs ]; then
     print_log notice "Filesystem is not of type btrfs. Not taking any actions."
