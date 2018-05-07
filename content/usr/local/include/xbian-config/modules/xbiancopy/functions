@@ -68,7 +68,7 @@ mapAndMountFn() {
 }
 
 backupImgPlanFn() {
-    [ -z "$1" ] && { grep IMGPLAN= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
+    [ -z "$1" ] && { awk -F'=' "/^IMGPLAN=/"'{print $2}' /etc/default/xbian-snap; exit 0; }
     case $1 in
         none|daily|weekly|monthly)
             eval sed -i 's/IMGPLAN=.*/IMGPLAN=$1/' /etc/default/xbian-snap
@@ -80,7 +80,7 @@ backupImgPlanFn() {
     esac
 }
 backupImgTypeFn() {
-    [ -z "$1" ] && { grep IMGTYPE= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
+    [ -z "$1" ] && { awk -F'=' "/^IMGTYPE=/"'{print $2}' /etc/default/xbian-snap; exit 0; }
     case $1 in
         "block"|"file")
             eval sed -i 's/IMGTYPE=.*/IMGTYPE=$1/' /etc/default/xbian-snap
@@ -92,7 +92,7 @@ backupImgTypeFn() {
     esac
 }
 backupImgDestFn() {
-    [ -z "$1" ] && { grep IMGDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \"; exit 0; }
+    [ -z "$1" ] && { awk -F'=' "/^IMGDEST=/"'{print $2}' /etc/default/xbian-snap | tr -d \"; exit 0; }
     [ "$1" = "?" -o "$1" = "exp" ] && { . /etc/default/xbian-snap; echo $IMGDEST; exit 0; }
     tt=$(backupImgTypeFn)
     case $tt in
@@ -129,7 +129,7 @@ backupImgKeepFn() {
 }
 
 backupHomePlanFn() {
-    [ -z "$1" ] && { grep HOMEPLAN= /etc/default/xbian-snap | awk -F'=' '{print $2}'; exit 0; }
+    [ -z "$1" ] && { awk -F'=' "/^HOMEPLAN=/"'{print $2}' /etc/default/xbian-snap; exit 0; }
     case $1 in
         none|daily|weekly|monthly)
             eval sed -i 's/HOMEPLAN=.*/HOMEPLAN=$1/' /etc/default/xbian-snap
@@ -141,7 +141,7 @@ backupHomePlanFn() {
     esac
 }
 backupHomeDestFn() {
-    [ -z "$1" ] && { grep HOMEDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \"; exit 0; }
+    [ -z "$1" ] && { awk -F'=' "/^HOMEDEST=/"'{print $2}' /etc/default/xbian-snap | tr -d \"; exit 0; }
     [ "$1" = "?" -o "$1" = "exp" ] && { . /etc/default/xbian-snap; echo $HOMEDEST; exit 0; }
     echo f=\"$(mapAndMountFn mount $1)\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
     [ ! -e "$f" ] && fdel=1
