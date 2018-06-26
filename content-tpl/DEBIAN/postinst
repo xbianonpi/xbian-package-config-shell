@@ -44,64 +44,17 @@ if [ $1 = "configure" ]; then
 
     # update config
     if [ -e /etc/default/xbian-snap ]; then
-        if grep -q "ENABLEDSCHEDULE=" /etc/default/xbian-snap; then
-            us="$(grep ENABLEDSCHEDULE= /etc/default/xbian-snap)"
-            eval $(echo "sed -i 's%ENABLEDSCHEDULE=yes%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "KEEPDAYS=" /etc/default/xbian-snap; then
-            us=$(grep KEEPDAYS= /etc/default/xbian-snap)
-            eval $(echo "sed -i 's%KEEPDAYS=3%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "KEEPWEEKS=" /etc/default/xbian-snap; then
-            us=$(grep KEEPWEEKS= /etc/default/xbian-snap )
-            eval $(echo "sed -i 's%KEEPWEEKS=2%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "KEEPMONTHS=" /etc/default/xbian-snap; then
-            us=$(grep KEEPMONTHS= /etc/default/xbian-snap )
-            eval $(echo "sed -i 's%KEEPMONTHS=0%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "ENABLEDAPT=" /etc/default/xbian-snap; then
-            us=$(grep ENABLEDAPT= /etc/default/xbian-snap)
-            eval $(echo "sed -i 's%ENABLEDAPT=yes%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "KEEPAPT=" /etc/default/xbian-snap; then
-            us=$(grep KEEPAPT= /etc/default/xbian-snap)
-            eval $(echo "sed -i 's%KEEPAPT=10%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "IMGPLAN=" /etc/default/xbian-snap; then
-            us=$(grep IMGPLAN= /etc/default/xbian-snap)
-            eval $(echo "sed -i 's%IMGPLAN=none%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "IMGTYPE=" /etc/default/xbian-snap; then
-            us=$(grep IMGTYPE= /etc/default/xbian-snap)
-            eval $(echo "sed -i 's%IMGTYPE=notset%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "IMGDEST=" /etc/default/xbian-snap; then
-            SAVEIFS=$IFS
-            IFS=$'\n'
-            us=$(grep IMGDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \")
-            eval sed -i 's\@IMGDEST=.*@IMGDEST=\"$us\"@' /var/tmp/xbian-snap
-            IFS=$SAVEIFS
-        fi
-        if grep -q "IMGKEEP=" /etc/default/xbian-snap; then
-            us=$(grep IMGKEEP= /etc/default/xbian-snap)
-            eval $(echo "sed -i 's%IMGKEEP=0%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "HOMEPLAN=" /etc/default/xbian-snap; then
-            us=$(grep HOMEPLAN= /etc/default/xbian-snap)
-            eval $(echo "sed -i 's%HOMEPLAN=none%$us%' /var/tmp/xbian-snap")
-        fi
-        if grep -q "HOMEDEST=" /etc/default/xbian-snap; then
-            SAVEIFS=$IFS
-            IFS=$'\n'
-            us=$(grep HOMEDEST= /etc/default/xbian-snap | awk -F'=' '{print $2}' | tr -d \")
-            eval sed -i 's\@HOMEDEST=.*@HOMEDEST=\"$us\"@' /var/tmp/xbian-snap
-            IFS=$SAVEIFS
-        fi
-        if grep -q "HOMEKEEP=" /etc/default/xbian-snap; then
-            us=$(grep HOMEKEEP= /etc/default/xbian-snap)
-            eval $(echo "sed -i 's%HOMEKEEP=0%$us%' /var/tmp/xbian-snap")
-        fi
+        PARMS=$(sed 's/^[ \t]*//;/^#/d;/^$/d;s/=.*//' /var/tmp/xbian-snap)
+        for PARM in $PARMS; do
+            if grep -q ^$PARM= /etc/default/xbian-snap; then
+                [ "$PARM" = IMGDEST -o "$PARM" = HOMEDEST ] && ENC='\"' || ENC=''
+                (
+                    IFS=$'\n'
+                    VAL=$(awk -F"$PARM=" "/^$PARM=/"'{print $2}' /etc/default/xbian-snap | sed -e "s/[\'\"]//g;s/%/\\\%/g")
+                    eval sed -i 's%$PARM=.*%$PARM=$ENC$VAL$ENC%' /var/tmp/xbian-snap
+                )
+            fi
+        done
     fi
     mv /var/tmp/xbian-snap /etc/default/xbian-snap
 
