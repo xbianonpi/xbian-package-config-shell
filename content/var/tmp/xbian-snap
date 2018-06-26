@@ -19,6 +19,11 @@ KEEPAPT=10
 # exclude those subvolumes by default for btrfs-auto-snapshot operations (comma separated list)
 EXCLUDESUB=
 
+# Comma separated mount options for mounting IMGDEST and HOMEDEST shares
+NFSOPTS=
+CIFSOPTS=
+SSHFSOPTS=
+
 # auto clone / image creation should be run: none/daily/weekly/monthly
 IMGPLAN=none
 
