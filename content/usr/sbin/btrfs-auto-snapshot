@@ -44,6 +44,7 @@ opt_mountpoint=${tmp_dir}
 opt_snapdir=''
 opt_img=''
 opt_helper=''
+opt_cpmode='btrfs'
 #opt_remotecmd='rsh -l root media.private '
 opt_remotecmd=''
 
@@ -75,7 +76,7 @@ print_usage ()
              listvol, rollback
              createvol
 
-             xbiancopy [--no-create] [[--img]] [[[--size]]] [[[[--fs-name]]]] source dest
+             xbiancopy [--no-create] [--tar] [[--img]] [[[--size]]] [[[[--fs-name]]]] source dest
              backuphome [dest]
 
                        If not given, snapshot is assumed.
@@ -100,6 +101,7 @@ print_usage ()
     -m, --mountpoint   Dir used to mount rootvolid. By default ${tmp_dir}
     -t,--dirs          Create snapshot directories if needed.
     --no-create        Doesn't auto create fs on 'xbiancopy'.
+    --tar              Use tar instead of btrfs send/receive on 'xbiancopy'.
     --img              Create img file instead if physical partition.
     --size             Target size of destination img file accepting 'human-
                        readable' sizes (1100M, 2G, ...).
@@ -285,6 +287,9 @@ if [ "$#" -eq '0' ]; then
     exit 104
 fi
 
+[ -e /etc/default/xbian-internals ] && . /etc/default/xbian-internals
+[ -z "$OPT_COPY_MODE" ] || opt_cpmode=$OPT_COPY_MODE
+
 stopt=${1%%-*}
 if [ "$1" != '//' -a "$stopt" != '' ]; then
     opt_command="$1"
@@ -295,7 +300,7 @@ fi
 
 
 GETOPT=$(getopt \
-        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,helper,size:,fs-name:,exclude: \
+        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,helper,tar,size:,fs-name:,exclude: \
         --options=p:dvl:i:m:nhtsk:e:x: \
         -- "$@" ) \
         || exit 128
@@ -319,6 +324,10 @@ do
                         ;;
                 (--no-create)
                         opt_nocreate='1'
+                        shift 1
+                        ;;
+                (--tar)
+                        opt_cpmode='tar'
                         shift 1
                         ;;
                 (--fs-name)
@@ -719,10 +728,21 @@ case $opt_command in
 		                [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" &>/dev/null
 		                [ -e "/tmp/btrfs-source/$v/$s" ] || continue
 		                btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && sync && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro"
+		                if [ "$opt_cpmode" = tar ]; then
+		                    eval $opt_remotecmd btrfs sub create /tmp/btrfs-dest/$v/$s && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" || exit 12
+			        fi
 			        export siz=$(du -sxb "/tmp/btrfs-source/$v/$s.ro" | awk '{print $1}'); export sn=$s; export vln=$v;
 			        [ "$siz" -gt 100000000 ] && export ival=20 || export ival=2
 			        ar=0
-		                ( nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | pv -i $ival -n -s $siz | eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v" ) 2>&1 | \
+			        copy_volume () {
+			            if [ "$1" = tar ]; then
+			                to='--warning=none --acls --xattrs'
+			                nice -n 10 tar c $to -C /tmp/btrfs-source/$v/$s.ro . | pv -i $ival -n -s $siz | eval $opt_remotecmd nice -n 10 tar x $to -C "/tmp/btrfs-dest/$v/$s"
+			            else
+			                nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | pv -i $ival -n -s $siz | eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v"
+			            fi
+			        }
+			        ( copy_volume $opt_cpmode ) 2>&1 | \
 			            while read a; do
 			                if [ "$BACKGROUND" == 1 ]; then
 			                    if ! echo "$a" | grep -q '@'; then
@@ -736,10 +756,15 @@ case $opt_command in
 			                fi
 			            done
 			        [ "$?" -eq 0 ] || { [ "$BACKGROUND" == 1 ] && printf "%s\n" "Copying subvolume $v snapshot $s failed"; exit 10; }
-		                eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && sync && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" || exit 11
-		                eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s" && sync || exit 12
-		                eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" || exit 13
-		                eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v" || exit 14
+			        if [ "$opt_cpmode" = tar ]; then
+		                    eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" && sync && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" || exit 11
+		                else
+		                    eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && sync && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" || exit 11
+		                    eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s" && sync || exit 12
+		                    eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" || exit 13
+		                    eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v" || exit 14
+		                    eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v" || exit 14
+		                fi
 		                [ "$BACKGROUND" == 1 ] && printf "%s\n" "Done copying subvolume $v snapshot $s"
 		            done
 		           [ "$BACKGROUND" == 1 ] && printf "%s\n" "Done copying subvolume $v"
