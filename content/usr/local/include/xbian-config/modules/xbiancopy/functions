@@ -25,44 +25,86 @@ mapAndMountFn() {
 
     case $1 in
         mount)
-            if echo $2 | grep -qE ^"(nfs://|smb://|cifs://)"; then
+            if echo $2 | grep -qE ^"(nfs://|smb://|cifs://|ssh://|sftp://)"; then
+                getcredentials() {
+                    # $1 = server [[user[:password]@]server[:port]
+                    # $2 = type   smb, sftp of ssh
+                    user=$(echo $1 | cut -f 1 -d '@')
+                    pass=$(echo $user | awk -F ':' '{ print $2 }')
+                    user=${user%:*}
+                    serv=$(echo $1 | cut -f 2 -d '@')
+                    port=$(echo $serv | awk -F ':' '{ print $2 }')
+                    serv=${serv%:*}
+
+                    [ "$serv" = "$pass" ] && pass=''
+                    [ "$serv" = "$user" -o -z "$user" ] && user='' && pass=''
+                    [ "$serv" = "$port" ] && port=''
+
+                    if [ -z "$user" ]; then
+                        pwread=0
+                        if [ -e /home/xbian/.kodi/userdata/passwords.xml ]; then
+                            while read line; do
+                                if echo $line | grep -q "from pathversion=.*$2://"; then
+                                    echo $line | grep -q "${1%:*}" && pwread=1 || pwread=0
+                                elif [ "$pwread" -eq 1 ] && echo $line | grep -q "to pathversion"; then
+                                    user=$(echo $line | cut -f 1 -d '@' | cut -f 3 -d '/' | cut -f 1 -d ':')
+                                    pass=$(echo $line | cut -f 1 -d '@' | cut -f 3 -d '/' | cut -f 2 -d ':')
+                                    pwread=0
+                                fi
+                            done < /home/xbian/.kodi/userdata/passwords.xml
+                        fi
+                    fi
+                    [ -z "$LOG_CREDENTIALS" -a -e /etc/default/xbian-internals ] && . /etc/default/xbian-internals
+                    [ "$LOG_CREDENTIALS" = yes ] && { log_user=$user; log_pass=$pass; } || { log_user=XXXXXXXX; log_pass=XXXXXXXX; }
+                }
                 type=$(echo $2 | cut -f 1 -d ':')
-                [ "$type" = smb ] && type="cifs"
+                [ "$type" = cifs ] && type="smb"
                 server=$(echo $2 | cut -f 3 -d '/')
                 pf="/$(echo $2 | cut -f 4- -d '/')"
                 eval path=${pf%/*}
                 name=${pf##*/}
                 logger -t $(basename $0) "xbiancopy type=$type, server=$server, path=$path, name=$name"
                 mkdir -p $mountpath
-                if [ "$type" = cifs ]; then
-                    pwread=0
-                    if [ -e /home/xbian/.kodi/userdata/passwords.xml ]; then
-                        while read line; do
-                            if echo $line | grep -q "from pathversion"; then
-                                echo $line | grep -q "$server" && pwread=1 || pwread=0
-                            elif [ "$pwread" -eq 1 ] && echo $line | grep -q "to pathversion"; then
-                                user=$(echo $line | cut -f 1 -d '@' | cut -f 3 -d '/' | cut -f 1 -d ':')
-                                passwd=$(echo $line | cut -f 1 -d '@' | cut -f 3 -d '/' | cut -f 2 -d ':')
-                            fi
-                        done < /home/xbian/.kodi/userdata/passwords.xml
-                    else
-                        user="unknown"; passwd="unknown"
-                    fi
-                    logger -t $(basename $0) "xbiancopy user=$user, passwd=$passwd"
-                    mount -t $type "//"$server$path -o username=$user,password=$passwd,actimeo=120 $mountpath >/dev/null 2>&1
-                else
-                    mount -t $type $server:$path $mountpath >/dev/null 2>&1
-                fi
+                case $type in
+                    smb)
+                        eval mopt=$(awk -F'OPTS=' "/^CIFSOPTS=/"'{print $2}' /etc/default/xbian-snap)
+                        getcredentials $server $type
+                        logger -t $(basename $0) "xbiancopy user=$log_user, pass=$log_pass"
+                        [ -z "$mopt" ] || mopt=",$mopt"
+                        mount -t cifs "//"$server$path -o username=$user,password=$pass,actimeo=120$mopt $mountpath &>/dev/null
+                    ;;
+                    nfs)
+                        eval mopt=$(awk -F'OPTS=' "/^NFSOPTS=/"'{print $2}' /etc/default/xbian-snap)
+                        [ -z "$mopt" ] || mopt="-o $mopt"
+                        mount -t $type $mopt $server:$path $mountpath &>/dev/null
+                    ;;
+                    ssh|sftp)
+                        eval mopt=$(awk -F'OPTS=' "/^SSHFSOPTS=/"'{print $2}' /etc/default/xbian-snap)
+                        getcredentials $server $type
+
+                        [ -z "$user" ] && usep='' || usep='@'
+                        [ -z "$pass" ] && sopt='' || sopt=",password_stdin"
+                        [ -z "$port" ] && popt='' || popt=",port=$port"
+                        logger -t $(basename $0) "xbiancopy serv=$serv, port=$port, user=$log_user, pass=$log_pass"
+
+                        modprobe -q fuse
+                        [ -z "$mopt" ] || mopt=",$mopt"
+                        echo $pass | sshfs $user$usep$serv:$path -o nonempty$sopt$popt$mopt $mountpath &>/dev/null
+                    ;;
+                    *)
+                        false
+                    ;;
+                esac
                 ret=$?
                 echo $mountpath/$name
             else
                 echo $2
             fi
-            ;;
+        ;;
         umount)
-            mountpoint -q $mountpath && umount $mountpath >/dev/null 2>&1
+            mountpoint -q $mountpath && umount $mountpath &>/dev/null
             ret=$?
-            ;;
+        ;;
     esac
     return $ret
 }
