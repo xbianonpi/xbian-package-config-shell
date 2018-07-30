@@ -46,10 +46,10 @@ function updateOCValuesFn() {
 			echo        "# * Raspberry Pi Overclocking                                                  *"   >> /boot/config.txt
 			echo -e     "# ******************************************************************************\n" >> /boot/config.txt
 		fi
-		updateConfigVarFn "arm_freq" $1;
-		updateConfigVarFn "core_freq" $2;
-		updateConfigVarFn "sdram_freq" $3;
-		updateConfigVarFn "over_voltage" $4$OCEXTRA;
+		if [ "$1" != '...' ]; then updateConfigVarFn "arm_freq" $1;   else deleteConfigVarFn "arm_freq"; fi
+		if [ "$2" != '...' ]; then updateConfigVarFn "core_freq" $2;  else deleteConfigVarFn "core_freq"; fi
+		if [ "$3" != '...' ]; then updateConfigVarFn "sdram_freq" $3; else deleteConfigVarFn "sdram_freq"; fi
+		if [ "$4" != '...' ]; then updateConfigVarFn "over_voltage" $4$OCEXTRA; else deleteConfigVarFn "over_voltage"; fi
 	fi
 }
 
@@ -101,7 +101,7 @@ function getCurrentOCSettingsFn() {
 		for KEY1 in ${!SETTINGS[@]}; do
 			if [ ! -z "${OCOLDSETTINGS[$KEY1]}" -a "${SETTINGS[$KEY1]}" = "${OCOLDSETTINGS[$KEY1]}" ]; then
 				I=$(($I+1));
-			elif [ -z "${OCOLDSETTINGS[$KEY1]}" -a "${SETTINGS[$KEY1]}" = 'n/a' ]; then
+			elif [ -z "${OCOLDSETTINGS[$KEY1]}" ] && [ "${SETTINGS[$KEY1]}" = "n/a" -o "${SETTINGS[$KEY1]}" = "..." ]; then
 				I=$(($I+1));
 			fi
 			if [ $I -eq ${#SETTINGS[@]} ]; then
@@ -192,7 +192,7 @@ function updateOCSettingsFn() {
 	NEWOCVALUES=(${OCSETTINGS[$NEWOCSETTING]});
 	NUMERIC=1
 	for VALUES in ${NEWOCVALUES[@]}; do
-		[ "${VALUES}" != 'n/a' ] || continue
+		[ "${VALUES}" != 'n/a' -a "${VALUES}" != '...' ] || continue
 		if ! [[ "$VALUES" =~ ^[0-9]+$ ]]; then
 			NUMERIC=0
 		fi

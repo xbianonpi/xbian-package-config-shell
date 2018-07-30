@@ -75,7 +75,7 @@ case "$arch" in
 
 	    # Values of the overclock settings
 	    OCSETTINGS[0]="1400 400 500 0";
-	    OCSETTINGS[1]="1400 400 450 0";
+	    OCSETTINGS[1]="... ... 450 ...";
 	    OCSETTINGS[2]="1500 500 450 2";
 
 	    # Define the (possible) dangerous overclock settings
