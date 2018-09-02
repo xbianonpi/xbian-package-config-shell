@@ -15,7 +15,11 @@ RemoveJobs()
 
 pgrep $BASENAME >/dev/null && exit 0 || :
 
-grep -q 'Package: openvpn$' /var/lib/dpkg/status && ! grep -q ^tun /etc/modules && modprobe tun && echo tun >> /etc/modules
+if grep -q 'Package: openvpn$' /var/lib/dpkg/status; then
+    ! grep -q ^tun /etc/modules && modprobe tun && echo tun >> /etc/modules
+    ! grep -q "xbian.*/usr/sbin/openvpn.*/usr/bin/killall" /etc/sudoers.d/openvpn 2>/dev/null && \
+        echo "xbian ALL=(ALL) NOPASSWD: /usr/sbin/openvpn, /usr/bin/killall" >> /etc/sudoers.d/openvpn
+fi
 
 if [ "$1" != run -o "$(xbian-config updates progress)" != 0 ]; then
     RemoveJobs
