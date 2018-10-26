@@ -45,6 +45,7 @@ opt_snapdir=''
 opt_img=''
 opt_helper=''
 opt_cpmode='btrfs'
+opt_compress=''
 #opt_remotecmd='rsh -l root media.private '
 opt_remotecmd=''
 
@@ -289,6 +290,7 @@ fi
 
 [ -e /etc/default/xbian-internals ] && . /etc/default/xbian-internals
 [ -z "$OPT_COPY_MODE" ] || opt_cpmode=$OPT_COPY_MODE
+[ -z "$OPT_COMPRESS" ] || opt_compress=$OPT_COMPRESS
 
 stopt=${1%%-*}
 if [ "$1" != '//' -a "$stopt" != '' ]; then
@@ -693,9 +695,16 @@ case $opt_command in
 		    fi
 		    eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
 
-		    if ! eval findmnt -n / | grep -q "compress=lz4" || ! eval $opt_remotecmd mount -o compress=lz4,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
+		    if [ -z "$opt_compress" ]; then
+		        for PARM in "compress=" "compress-force="; do
+		            p=$(findmnt -n / | tr ',' ' ' | awk -v a=".*$PARM" -v b="$PARM" "/$PARM/"'{ sub(a,b); print $1 }' 2>/dev/null)
+		            [ -z "$p" ] || opt_compress="$opt_compress$p,"
+		        done
+		    fi
+
+		    if ! eval $opt_remotecmd mount -o ${opt_compress}noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
 		        if ! eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
-			    echo "can not mount destination partition"; exit 6
+		            echo "can not mount destination partition"; exit 6
 		        fi
 		    fi
 
