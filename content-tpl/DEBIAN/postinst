@@ -70,6 +70,17 @@ if [ $1 = "configure" ]; then
     fi
     chown xbian:xbian /var/tmp/samba
 
+    PARMS=$(sed 's/^[ \t]*//;/^#/d;/^$/d;s/=.*//' /var/tmp/xbian-internals)
+    if [ -e /etc/default/xbian-internals ]; then
+        for PARM in $PARMS; do
+            if grep -q ^$PARM= /etc/default/xbian-internals; then
+                p=$(grep ^"$PARM=" /etc/default/xbian-internals)
+                sed -i "s%^$PARM=.*%$p%g" /var/tmp/xbian-internals
+            fi
+        done
+    fi
+    mv /var/tmp/xbian-internals /etc/default/xbian-internals
+
     [ -e /tmp/services ] && mv /tmp/services $CONFD/
 
     [ -e /etc/inetd.conf ] && sed -i '/netbios-ns dgram udp wait root \/usr\/sbin\/nmbd nmbd/d' /etc/inetd.conf
