@@ -1,0 +1,26 @@
+#
+# This is controlfile for xbian-config console application and Kodi's
+# XBian config GUI. Please do not modify this file manually unless you
+# know what you are doing.
+#
+
+# Log credentials when mounting NFS, CIFS or SSHFS share when
+# running xbian-config xbiancopy or backuphome command
+# Possible values: [no] yes 
+#
+LOG_CREDENTIALS=
+
+# Specify which copy procedure is used when running 
+# xbian-config xbiancopy command
+# Possible values: [btrfs] tar
+#
+OPT_COPY_MODE=
+
+# Specify which compress mode is used when running 
+# xbian-config xbiancopy command. If omitted, the actual compress
+# mode is used instead. If specified compress mode is not supported by
+# running kernel, fallback to lzo will be tried.
+# Possible values: compress compress=type compress-force compress-force=type
+#                  type may be specified as zlib, lzo, lz4, zstd
+#
+OPT_COMPRESS=
