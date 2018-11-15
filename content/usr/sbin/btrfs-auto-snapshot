@@ -588,6 +588,7 @@ case $opt_command in
 		do_rename $(dirname $1)/@ $(dirname $1)/@$tmpd
 		do_rename $1 $(dirname $1)/@
 		do_rename $(dirname $1)/@$tmpd $1_rollback
+		echo "$MYNAME rollback" >> /var/run/reboot-required
                 ;;
 	(xbiancopy)
 	        XBIANCOPYLOG='/tmp/xbiancopy.log'
