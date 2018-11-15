@@ -24,6 +24,8 @@
 # this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 # Place, Suite 330, Boston, MA  02111-1307  USA
 
+MYNAME=${0##*/}
+
 tmp_dir='/run/btrfs-snap'
 opt_clonename='xbian-copy'
 opt_syslog=''
@@ -68,19 +70,21 @@ MY_MIN_FREE_KBYTES=75000
 
 print_usage ()
 {
-    echo "Usage: $0 command [options] <'//' | name [name...]>
+    echo "Usage: $MYNAME [command] [options] <'//' | name [name...]>
 
-    command            Is one of 
+    command, is one of
 
-             list, snapshot 
-             rename, destroy
-             listvol, rollback
-             createvol
+             list, snapshot, rename, destroy, listvol, rollback, createvol
 
              xbiancopy [--no-create] [--tar] [[--img]] [[[--size]]] [[[[--fs-name]]]] source dest
              backuphome [dest]
 
-                       If not given, snapshot is assumed.
+        If not given, snapshot is assumed.
+
+    name               Filesystem and volume names, or '//' for all subvolumes.
+
+    Options
+
     --dev              Device which is part of the btrfs filesystem (by default
                        is the one mounted as rootfs).
     -d, --debug        Print debugging messages.
@@ -103,12 +107,10 @@ print_usage ()
     -t,--dirs          Create snapshot directories if needed.
     --no-create        Doesn't auto create fs on 'xbiancopy'.
     --tar              Use tar instead of btrfs send/receive on 'xbiancopy'.
-    --img              Create img file instead if physical partition.
+    --img              Create img file instead of physical partition.
     --size             Target size of destination img file accepting 'human-
                        readable' sizes (1100M, 2G, ...).
-    --fs-name          Clone filesystem name (xbian-copy by default).
-
-      name           Filesystem and volume names, or '//' for all subvolumes.
+    --fs-name=NAME     Cloned filesystem name (xbian-copy by default).
 " 
 }
 
