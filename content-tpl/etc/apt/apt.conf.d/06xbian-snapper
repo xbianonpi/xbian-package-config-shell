@@ -1,0 +1,1 @@
+dpkg::Pre-Invoke {"[ -e /etc/default/xbian-snap ] && . /etc/default/xbian-snap; [ "$ENABLEDAPT" = yes ] || exit 0; z=$(findmnt -n / | awk '{print $2}'); z=${z#*\[\/}; echo $z | grep -q '\]' && z=${z%%\/*}; which xbian-snapper >/dev/null && xbian-snapper -k $KEEPAPT -l apt-run $z;" };
