@@ -5,40 +5,41 @@ CONFD="/usr/local/include/xbian-config/config"
 if [ $1 = "configure" ]; then
 
     find /usr/local/bin -lname /usr/local/bin/busybox -exec rm {} +
-    /usr/local/bin/busybox --list | grep -v 'udhcp\|rpm\|rpm2cpio' | xargs -L1 -I%% sh -c 'which %% >/dev/null|| ln -s /usr/local/bin/busybox /usr/local/bin/%%'
+    /usr/local/bin/busybox --list | grep -v 'udhcp\|rpm\|rpm2cpio' | xargs -L1 -I%% sh -c 'which %% >/dev/null || ln -s /usr/local/bin/busybox /usr/local/bin/%%'
 
-	date > /home/xbian/xbian-config-update.log
+    date > /home/xbian/xbian-config-update.log
 
-	[ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
+    [ -e /usr/share/locale/en/LC_MESSAGES/ ] || mkdir -p /usr/share/locale/en/LC_MESSAGES/
 
-        echo -n "Installing language files ( "
-	for l in $(find /usr/local/include/xbian-config/gettext -type f -name "*.po"); do
-	    a=$(basename $l)
-	    a=${a#*\.};a=${a%\.*}
-	    echo -n "$a "
-	    [ -d /usr/share/locale/$a/LC_MESSAGES ] && msgfmt -o /usr/share/locale/$a/LC_MESSAGES/xbian.mo $l
-	done
-	echo ")"
+    echo -n "Installing language files ( "
+    for l in $(find /usr/local/include/xbian-config/gettext -type f -name "*.po"); do
+        a=$(basename $l)
+        a=${a#*\.};a=${a%\.*}
+        echo -n "$a "
+        [ -d /usr/share/locale/$a/LC_MESSAGES ] && msgfmt -o /usr/share/locale/$a/LC_MESSAGES/xbian.mo $l
+    done
+    echo ")"
 
-	. /etc/bash_completion.d/xbian-config.sh >/dev/null
+    . /etc/bash_completion.d/xbian-config.sh >/dev/null
 
-        /usr/sbin/btrfs-auto-snapshot listvol | grep -qx data || { /usr/sbin/btrfs-auto-snapshot createvol data; /usr/sbin/btrfs-auto-snapshot createvol data/@; }
+    if ! xbian-storager listvol | grep -wq 'data'; then
+        xbian-storager createvol --mount data /xbmc-backup
+    fi
 
-        [ -e /home/xbian/.bashrc ] || touch /home/xbian/.bashrc
+    [ -e /home/xbian/.bashrc ] || touch /home/xbian/.bashrc
 
-        if [ ! -e /home/xbian/.xbian-config-start ]; then
-            if grep -q "#sudo xbian-config" /home/xbian/.bashrc; then
-                echo '0' > /home/xbian/.xbian-config-start
-            else
-                echo '1' > /home/xbian/.xbian-config-start
-            fi
-
-            chown xbian:xbian /home/xbian/.xbian-config-start > /dev/null
+    if [ ! -e /home/xbian/.xbian-config-start ]; then
+        if grep -q "#sudo xbian-config" /home/xbian/.bashrc; then
+            echo '0' > /home/xbian/.xbian-config-start
+        else
+            echo '1' > /home/xbian/.xbian-config-start
         fi
+        chown xbian:xbian /home/xbian/.xbian-config-start > /dev/null
+    fi
 
-        sed -i '/sudo xbian-config/d' /home/xbian/.bashrc
-        grep -q "/home/xbian/.xbian-config-start.sh" /home/xbian/.bashrc || echo ". /home/xbian/.xbian-config-start.sh" >> /home/xbian/.bashrc
-        chown xbian:xbian /home/xbian/.bashrc
+    sed -i '/sudo xbian-config/d' /home/xbian/.bashrc
+    grep -q "/home/xbian/.xbian-config-start.sh" /home/xbian/.bashrc || echo ". /home/xbian/.xbian-config-start.sh" >> /home/xbian/.bashrc
+    chown xbian:xbian /home/xbian/.bashrc
 
     rm -f /etc/apt/apt.conf.d/20apt-show-versions
 
