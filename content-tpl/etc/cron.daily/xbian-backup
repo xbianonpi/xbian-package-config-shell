@@ -1,0 +1,38 @@
+#!/bin/sh
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+. /etc/default/xbian-snap
+
+[ "$ENABLEDSCHEDULE" = yes ] || exit 0
+
+DWM="${0##*.}"; DWM="${DWM%%/*}"
+
+if [ -n "$EXCLUDESUB" ]; then
+	EXCLUDESUB="--exclude=$EXCLUDESUB"
+fi
+
+case "$DWM" in
+	daily)   KEEP=$KEEPDAYS ;;
+	weekly)  KEEP=$KEEPWEEKS ;;
+	monthly) KEEP=$KEEPMONTHS ;;
+	*)       KEEP=0 ;;
+esac
+
+if [ "$KEEP" -gt 0 ]; then
+	xbian-snapper --label=$DWM --keep=$KEEP --verbose $EXCLUDESUB //
+fi
+
+while status xbian-xbmc-player | grep -q "start/running" && status xbmc-screensaver | grep -q "stop/waiting"; do
+	sleep 300 # 5 minutes
+done
+
+if [ "$IMGPLAN" = "$DWM" -a "$IMGTYPE" = file ]; then
+	nice -n +1 btrfs-auto-snapshot xbiancopy --img '-' "$IMGDEST" >/dev/null 2>&1
+	xbian-config xbiancopy doclean "$(xbian-config xbiancopy imgdest)" $IMGKEEP
+fi
+
+if [ "$HOMEPLAN" = "$DWM" ]; then
+	nice -n +1 btrfs-auto-snapshot backuphome "$HOMEDEST" >/dev/null 2>&1
+	xbian-config xbiancopy doclean "$(xbian-config xbiancopy homedest)" $HOMEKEEP
+fi
