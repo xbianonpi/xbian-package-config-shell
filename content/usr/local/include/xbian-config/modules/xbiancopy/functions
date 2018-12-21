@@ -230,8 +230,13 @@ backupDoCleanFn() {
 }
 
 getImgPartitionsFn() {
-    [ o"$1" = oall ] && hide='' || hide='\|sd[a-z] \|mmcblk[0-9] '
-    printf "%s;" $(lsblk -alnp | grep -v "$(readlink -e /dev/root)\|$(findmnt -n /boot -o SOURCE)\|zram\|loop\|$(blkid -t TYPE=swap -o device)$hide" | awk -F ' ' '{print $1}')
+    local h
+    [ "$1" = all ] && hide='' || hide='|sd[a-z] |mmcblk[0-9] '
+    h=$(readlink -e /dev/disk/by-uuid/$(zpool get -H guid -o value 2>/dev/null))
+    [ "$h" = /dev/disk/by-uuid ] || { [ "$1" = all ] && hide="$hide|${h%[0-9]}" || hide="$hide|$h"; }
+    h="$(readlink -e /dev/root)"; [ -z "$h" ] || { [ "$1" = all ] && hide="$hide|${h%[0-9]}" || hide="$hide|$h"; }
+    h="$(findmnt -n /boot -o SOURCE)"; [ -z "$h" ] || hide="$hide|$h"
+    printf "%s;" $(lsblk -alnp | grep -vE "zram|loop|$(blkid -t TYPE=swap -o device)$hide" | awk -F ' ' '{print $1}')
 }
 
 dailySnapFn() {
