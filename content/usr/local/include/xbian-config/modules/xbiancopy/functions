@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2017 CurlyMo & mkreisl <development@xbian.org>
+#Copyright 2012 - 2019 CurlyMo & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -25,7 +25,7 @@ mapAndMountFn() {
 
     case $1 in
         mount)
-            if echo $2 | grep -qE ^"(nfs://|smb://|cifs://|ssh://|sftp://)"; then
+            if echo "$2" | grep -qE ^"(nfs://|smb://|cifs://|ssh://|sftp://)"; then
                 getcredentials() {
                     # $1 = server [[user[:password]@]server[:port]
                     # $2 = type   smb, sftp of ssh
@@ -57,10 +57,10 @@ mapAndMountFn() {
                     [ -z "$LOG_CREDENTIALS" -a -e /etc/default/xbian-internals ] && . /etc/default/xbian-internals
                     [ "$LOG_CREDENTIALS" = yes ] && { log_user=$user; log_pass=$pass; } || { log_user=XXXXXXXX; log_pass=XXXXXXXX; }
                 }
-                type=$(echo $2 | cut -f 1 -d ':')
+                type=$(echo "$2" | cut -f 1 -d ':')
                 [ "$type" = cifs ] && type="smb"
-                server=$(echo $2 | cut -f 3 -d '/')
-                pf="/$(echo $2 | cut -f 4- -d '/')"
+                server=$(echo "$2" | cut -f 3 -d '/')
+                pf="/$(echo "$2" | cut -f 4- -d '/')"
                 eval path=${pf%/*}
                 name=${pf##*/}
                 logger -t $(basename $0) "xbiancopy type=$type, server=$server, path=$path, name=$name"
@@ -98,7 +98,7 @@ mapAndMountFn() {
                 ret=$?
                 echo $mountpath/$name
             else
-                echo $2
+                echo "$2"
             fi
         ;;
         umount)
@@ -213,14 +213,14 @@ backupDoCleanFn() {
     logger -t $(basename $0) "doclean $1 $2"
     ret=0
     if [ "$2" -gt 0 ]; then
-        p=$(echo $(mapAndMountFn mount $(echo $1 | sed 's/file://')) | sed 's/$(hostname)/'$(hostname)/ | sed 's/$(.*)/'*/)
+        p=$(echo $(mapAndMountFn mount $(echo $1 | sed 's/file://')) | sed "s/\$(hostname)/$(hostname)/;s/\$(.*)/\*/;s/ /\\ /")
         logger -t $(basename $0) "doclean ls -t1 $p"
         n=0
         for f in $(ls -t1 $p); do
-            let n+=1
+            ((n++))
             if (( $n > $2 )); then
-                logger -t $(basename $0) "doclean rm -rf $f"
-                rm -rf $f
+                logger -t $(basename $0) "doclean rm -f $f"
+                rm -f "$f"
                 [ $? -eq 0 ] || ret=$?
             fi
         done

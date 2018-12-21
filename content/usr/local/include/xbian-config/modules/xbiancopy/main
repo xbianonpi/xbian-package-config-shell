@@ -232,12 +232,10 @@ function showCMDFn() {
         start)
             [ "$(xbian-config xbiancopy status)" -eq 0 ] && { echo "-3"; exit 0; }
             [ $# -lt 3 ] && { echo "-1"; exit 5; }
-            # [ -n "$4" ] && lab="--label  
-            [ -n "$5" ] && size="--size"
-            echo "$3" | grep -q ^'file:' && opt_img='--img'
-            dest="$3" && dest=${dest##'file:'}
-            echo dest=\"$dest\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
-            nice -n +1 /usr/sbin/btrfs-auto-snapshot xbiancopy $size $5 $opt_img $2 $dest  > /dev/null 2>&1 & pid=$!
+            echo "$3" | grep -q ^'file:' && { img='--img'; echo p3=\"$3\" >/run/xc.tmp; . /run/xc.tmp; rm /run/xc.tmp; set -- $1 $2 ${p3##'file:'} $4 $5; }
+            [ -n "$4" ] && label="--label=$4"
+            [ -n "$5" ] && size="--size=$5"
+            nice -n +1 btrfs-auto-snapshot xbiancopy $size $label $img $2 "$3" >/dev/null 2>&1 & pid=$!
             echo $pid > /tmp/xbiancopy.running
             echo $pid
             ;;
@@ -248,13 +246,13 @@ function showCMDFn() {
                 rm -f /tmp/xbiancopy.running
                 echo "1"
             else
-                kill -0 $(cat /tmp/xbiancopy.running) > /dev/null 2>&1 || { echo "-1"; rm -f /tmp/xbiancopy.running; exit 0; }
+                kill -0 $(cat /tmp/xbiancopy.running) >/dev/null 2>&1 || { echo "-1"; rm -f /tmp/xbiancopy.running; exit 0; }
                 echo "0"
             fi
             ;;
         homestart)
             [ "$(xbian-config backuphome status)" -eq 0 ] && { echo "-3"; exit 0; }
-            nice -n +1 /usr/sbin/btrfs-auto-snapshot backuphome $2 > /dev/null 2>&1 & pid=$!
+            nice -n +1 btrfs-auto-snapshot backuphome "$2" >/dev/null 2>&1 & pid=$!
             echo $pid > /tmp/backuphome.running
             echo $pid
             ;;
@@ -265,7 +263,7 @@ function showCMDFn() {
                 rm -f /tmp/backuphome.running
                 echo "1"
             else
-                kill -0 $(cat /tmp/backuphome.running) > /dev/null 2>&1 || { echo "-1"; rm -f /tmp/backuphome.running; exit 0; }
+                kill -0 $(cat /tmp/backuphome.running) >/dev/null 2>&1 || { echo "-1"; rm -f /tmp/backuphome.running; exit 0; }
                 echo "0"
             fi
             ;;
