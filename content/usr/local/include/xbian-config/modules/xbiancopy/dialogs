@@ -41,6 +41,22 @@ function showiSCSIerror() {
         return $1;
 }
 
+function showZFSerror() {
+        wrapTxtFn "$(printf "$(_ xbiancopy.dialog.zfswrong)" "$1")" $(($DEFAULTWIDTH-4))
+        centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
+        valignTxtFn "$CENTEREDTXT"
+        showInfoDlg "$ALIGNEDTXT" $HEIGHT
+        return $1
+}
+
+function showMountBooterror() {
+        wrapTxtFn "$(printf "$(_ xbiancopy.dialog.mountbooterror)" "$1")" $(($DEFAULTWIDTH-4))
+        centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
+        valignTxtFn "$CENTEREDTXT"
+        showInfoDlg "$ALIGNEDTXT" $HEIGHT
+        return $1
+}
+
 function showWrongBlockDev() {
         wrapTxtFn "$(_ xbiancopy.dialog.wrongblkdev)" $(($DEFAULTWIDTH-4))
         centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4))
