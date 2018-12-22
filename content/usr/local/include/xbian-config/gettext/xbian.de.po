@@ -5,6 +5,7 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
 # belese <mkreisl@xbian.org>, 2017-2018
 # Ettore Atalan <atalanttore@googlemail.com>, 2014
 # Johannes Roesch <johannes.roesch@googlemail.com>, 2014
@@ -16,7 +17,7 @@ msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2018-01-15 14:36+0000\n"
+"PO-Revision-Date: 2018-12-22 15:51+0000\n"
 "Last-Translator: belese <mkreisl@xbian.org>\n"
 "Language-Team: German (http://www.transifex.com/teamxbian/xbian-translation/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1079,6 +1080,12 @@ msgstr "NFS-Export entspricht nicht den Anforderungen"
 
 msgid "xbian-config.xbiancopy.dialog.targetwrong"
 msgstr "iSCSI Target kann nicht verbunden und partitioniert werden (%s)"
+
+msgid "xbian-config.xbiancopy.dialog.zfswrong"
+msgstr "ZFS Pool kann nicht angelegt werden (%s)"
+
+msgid "xbian-config.xbiancopy.dialog.mountbooterror"
+msgstr "/boot kann nicht eingehängt werden"
 
 msgid "xbian-config.xbiancopy.dialog.preperror"
 msgstr "Zieldateisystem kann nicht vorbereitet werden"

@@ -5,12 +5,14 @@
 # Translators:
 # Translators:
 # Translators:
+# Translators:
+# Igor Sharov <IgorSharov@mail.ru>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: XBian Translation\n"
 "Report-Msgid-Bugs-To: development@xbian.org\n"
 "POT-Creation-Date: 09-03-2013 12:00+0100\n"
-"PO-Revision-Date: 2018-01-15 14:35+0000\n"
+"PO-Revision-Date: 2018-12-22 15:46+0000\n"
 "Last-Translator: belese <mkreisl@xbian.org>\n"
 "Language-Team: Russian (http://www.transifex.com/teamxbian/xbian-translation/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -20,1279 +22,1285 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 msgid "distribution"
-msgstr ""
+msgstr "XBian"
 
 # xbian-config main (menu)
 # 
 msgid "xbian-config.main.title"
-msgstr ""
+msgstr "Конфигурация"
 
 msgid "xbian-config.main.reboot_question"
-msgstr ""
+msgstr "Требуется перезагрузка. Хотите перезагрузить сейчас?"
 
 msgid "xbian-config.settings.name"
-msgstr ""
+msgstr "Настройки"
 
 msgid "xbian-config.settings.description"
-msgstr ""
+msgstr "Изменение различных системных настроек"
 
 msgid "xbian-config.system.name"
-msgstr ""
+msgstr "Система"
 
 msgid "xbian-config.system.description"
-msgstr ""
+msgstr "например, изменить размер SD, разгон, имя хоста"
 
 msgid "xbian-config.accounts.name"
-msgstr ""
+msgstr "Учётные записи"
 
 msgid "xbian-config.accounts.description"
-msgstr ""
+msgstr "например, изменение пароля, логин SSH root"
 
 msgid "xbian-config.licenses.name"
-msgstr ""
+msgstr "Лицензии"
 
 msgid "xbian-config.licenses.description"
-msgstr ""
+msgstr "Добавление и удаление лицензий на оборудование"
 
 msgid "xbian-config.connectivity.name"
-msgstr ""
+msgstr "Возможность подключения"
 
 msgid "xbian-config.connectivity.description"
-msgstr ""
+msgstr "например, выход Video"
 
 # xbian-config dialog
 # 
 msgid "xbian-config.dialog.error"
-msgstr ""
+msgstr "Ошибка"
 
 msgid "xbian-config.dialog.apply"
-msgstr ""
+msgstr "Применить"
 
 msgid "xbian-config.dialog.ok"
-msgstr ""
+msgstr "OK"
 
 msgid "xbian-config.dialog.yes"
-msgstr ""
+msgstr "Да"
 
 msgid "xbian-config.dialog.no"
-msgstr ""
+msgstr "Нет"
 
 msgid "xbian-config.dialog.on"
-msgstr ""
+msgstr "Вкл"
 
 msgid "xbian-config.dialog.off"
-msgstr ""
+msgstr "Выкл"
 
 msgid "xbian-config.dialog.insert"
-msgstr ""
+msgstr "Вставить"
 
 msgid "xbian-config.dialog.remove"
-msgstr ""
+msgstr "Удалить"
 
 msgid "xbian-config.dialog.update"
-msgstr ""
+msgstr "Обновить"
 
 msgid "xbian-config.dialog.cancel"
-msgstr ""
+msgstr "Отмена"
 
 msgid "xbian-config.dialog.select"
-msgstr ""
+msgstr "Выбор"
 
 msgid "xbian-config.dialog.return"
-msgstr ""
+msgstr "Возврат"
 
 msgid "xbian-config.dialog.unexpected_error"
-msgstr ""
+msgstr "Произошла непредвиденная ошибка"
 
 msgid "xbian-config.dialog.close"
-msgstr ""
+msgstr "Закрыть"
 
 msgid "xbian-config.dialog.change"
-msgstr ""
+msgstr "Изменить"
 
 msgid "xbian-config.dialog.exit"
-msgstr ""
+msgstr "Выход"
 
 msgid "xbian-config.dialog.enable"
-msgstr ""
+msgstr "Разрешить"
 
 msgid "xbian-config.dialog.disable"
-msgstr ""
+msgstr "Запретить"
 
 msgid "xbian-config.dialog.password"
-msgstr ""
+msgstr "Пароль:"
 
 msgid "xbian-config.dialog.confirm"
-msgstr ""
+msgstr "Подтверждение:"
 
 msgid "xbian-config.dialog.retry"
-msgstr ""
+msgstr "Повторить"
 
 msgid "xbian-config.dialog.space_option_select"
-msgstr ""
+msgstr "Нажмите клавишу [пробел], чтобы выбрать другой вариант"
 
 msgid "xbian-config.dialog.space_check_select"
-msgstr ""
+msgstr "Нажмите [пробел], чтобы включить или отключить параметр"
 
 msgid "xbian-config.dialog.loading_module"
-msgstr ""
+msgstr "Загрузка модуля. Ожидайте..."
 
 msgid "xbian-config.dialog.required_packages"
-msgstr ""
+msgstr "Эта программа требует следующие пакеты:"
 
 msgid "xbian-config.dialog.insufficient_arguments"
-msgstr ""
+msgstr "Недостаточное количество аргументов"
 
 msgid "xbian-config.dialog.incorrect_arguments"
-msgstr ""
+msgstr "Неверный тип аргумента"
 
 # xbian-config module bootflags
 # 
 msgid "xbian-config.bootflags.name"
-msgstr ""
+msgstr "Параметры загрузки"
 
 msgid "xbian-config.bootflags.description"
-msgstr ""
+msgstr "Изменение различных параметров загрузки"
 
 msgid "xbian-config.bootflags.label.bootflags"
-msgstr ""
+msgstr "Флаги загрузки"
 
 msgid "xbian-config.bootflags.update_success"
-msgstr ""
+msgstr "Флаги загрузки успешно обновлены"
 
 msgid "xbian-config.bootflags.splash"
-msgstr ""
+msgstr "Показать заставку XBian при загрузке"
 
 msgid "xbian-config.bootflags.logo"
-msgstr ""
+msgstr "Отключить логотип загрузки ядра"
 
 msgid "xbian-config.bootflags.quiet"
-msgstr ""
+msgstr "Подавить вывод ядра"
 
 msgid "xbian-config.bootflags.loglevel"
-msgstr ""
+msgstr "Уровень журнала ядра"
 
 # xbian-config module information
 # 
 msgid "xbian-config.information.name"
-msgstr ""
+msgstr "Информация"
 
 msgid "xbian-config.information.description"
-msgstr ""
+msgstr "Сведения об этом дистрибутиве"
 
 msgid "xbian-config.information.text"
-msgstr ""
+msgstr "XBian является свободно распространяемым дистрибутивом медиацентра с открытым исходным кодом для Raspberry Pi. Дистрибутив может быть загружен на сайте http://www.xbian.org. Наш девиз \"Передовой XBMC на Raspberry Pi\" основной упор делается на предоставлении более быстрого медиацентра на Raspberry Pi. Мы считаем, что каждый может сделать XBian лучше. Пожалуйста посетите наш сайт для оказания поддержки и если у вас есть какие-либо вопросы, предложения или пожертвования, пожалуйста, поделитесь ими с нами!"
 
 # xbian-config module hostname
 # 
 msgid "xbian-config.hostname.name"
-msgstr ""
+msgstr "Имя хоста"
 
 msgid "xbian-config.hostname.label.hostname"
-msgstr ""
+msgstr "Имя хоста:"
 
 msgid "xbian-config.hostname.description"
-msgstr ""
+msgstr "Изменить имя хоста по умолчанию"
 
 msgid "xbian-config.hostname.changed"
-msgstr ""
+msgstr "Имя хоста успешно изменено"
 
 # xbian-config module kernel
 # 
 msgid "xbian-config.kernel.name"
-msgstr ""
+msgstr "Ядро"
 
 msgid "xbian-config.kernel.description"
-msgstr ""
+msgstr "Переключение между установленными ядрами"
 
 msgid "xbian-config.kernel.label.version"
-msgstr ""
+msgstr "Версия"
 
 msgid "xbian-config.kernel.switch_success"
-msgstr ""
+msgstr "Успешно переключенные версии ядра"
 
 msgid "xbian-config.kernel.same_version"
-msgstr ""
+msgstr "Вы уже используете эту версию ядра"
 
 msgid "xbian-config.kernel.single_installed"
-msgstr ""
+msgstr "Установлено только одно ядро"
 
 # xbian-config general licenses
 # 
 msgid "xbian-config.license.inserted"
-msgstr ""
+msgstr "%sуспешно вставлен"
 
 msgid "xbian-config.license.deleted"
-msgstr ""
+msgstr "%sуспешно удалён"
 
 msgid "xbian-config.license.updated"
-msgstr ""
+msgstr "%sуспешно обновлён"
 
 msgid "xbian-config.license.invalid"
-msgstr ""
+msgstr "%sдолжен быть длиной 9 или 10 символов и выглядеть как 0x00000000. Можно указать не более 8 лицензий, разделенных запятыми."
 
 # xbian-config module licensempg2
 # 
 msgid "xbian-config.licensempg2.name"
-msgstr ""
+msgstr "Лицензия MPG2"
 
 msgid "xbian-config.licensempg2.description"
-msgstr ""
+msgstr "Управлять вашей лицензией MPEG2"
 
 # xbian-config module licensevc1
 # 
 msgid "xbian-config.licensevc1.name"
-msgstr ""
+msgstr "Лицензия VC1 "
 
 msgid "xbian-config.licensevc1.description"
-msgstr ""
+msgstr "Управление вашей лицензией VC1 "
 
 # xbian-config module locales
 # 
 msgid "xbian-config.locales.name"
-msgstr ""
+msgstr "Язык системы"
 
 msgid "xbian-config.locales.description"
-msgstr ""
+msgstr "Изменение языка системы"
 
 msgid "xbian-config.locales.label.letter"
-msgstr ""
+msgstr "Символ"
 
 msgid "xbian-config.locales.label.name"
-msgstr ""
+msgstr "Имя"
 
 msgid "xbian-config.locales.label.xbmc"
-msgstr ""
+msgstr "XBMC"
 
 msgid "xbian-config.locales.label.xbian"
-msgstr ""
+msgstr "XBian"
 
 msgid "xbian-config.locales.updated"
-msgstr ""
+msgstr "Система, XBian и язык XBMC успешно обновлены"
 
 # xbian-config module network
 # 
 msgid "xbian-config.network.name"
-msgstr ""
+msgstr "Сеть"
 
 msgid "xbian-config.network.description"
-msgstr ""
+msgstr "Настройка сетевых интерфейсов"
 
 msgid "xbian-config.network.label.interfaces"
-msgstr ""
+msgstr "Интерфейсы"
 
 msgid "xbian-config.network.interfaces.loading"
-msgstr ""
+msgstr "Загрузка интерфейсов, пожалуйста ожидайте..."
 
 msgid "xbian-config.network.interfaces.unavailable"
-msgstr ""
+msgstr "Нет доступных или подключенных сетевых интерфейсов"
 
 msgid "xbian-config.network.interfaces.select"
-msgstr ""
+msgstr "Выберите интерфейс для настройки"
 
 msgid "xbian-config.network.label.dhcp"
-msgstr ""
+msgstr "DHCP"
 
 msgid "xbian-config.network.label.name"
-msgstr ""
+msgstr "Сеть"
 
 msgid "xbian-config.network.dhcp_selected"
-msgstr ""
+msgstr "Интерфейс настроен с помощью DHCP"
 
 msgid "xbian-config.network.disabled"
-msgstr ""
+msgstr "Интерфейс теперь отключен"
 
 msgid "xbian-config.network.label.static"
-msgstr ""
+msgstr "Статический IP"
 
 msgid "xbian-config.network.label.status"
-msgstr ""
+msgstr "Состояние"
 
 msgid "xbian-config.network.label.ipaddress"
-msgstr ""
+msgstr "IP адрес"
 
 msgid "xbian-config.network.label.netmask"
-msgstr ""
+msgstr "Маска сети"
 
 msgid "xbian-config.network.label.gateway"
-msgstr ""
+msgstr "Шлюз"
 
 msgid "xbian-config.network.label.nameserver"
-msgstr ""
+msgstr "Сервер имен"
 
 msgid "xbian-config.network.label.ssid"
-msgstr ""
+msgstr "SSID (имя беспроводной сети)"
 
 msgid "xbian-config.network.label.key"
-msgstr ""
+msgstr "Ключ"
 
 msgid "xbian-config.network.label.type"
-msgstr ""
+msgstr "Тип"
 
 msgid "xbian-config.network.label.protection"
-msgstr ""
+msgstr "Защита"
 
 msgid "xbian-config.network.label.scan"
-msgstr ""
+msgstr "Сканирование"
 
 msgid "xbian-config.network.label.custom"
-msgstr ""
+msgstr "Настраиваемый"
 
 msgid "xbian-config.network.label.wlan"
-msgstr ""
+msgstr "WLAN"
 
 msgid "xbian-config.network.label.not_connected"
-msgstr ""
+msgstr "Не подсоединено"
 
 msgid "xbian-config.network.label.reloading_values"
-msgstr ""
+msgstr "Перезагрузка значений для %s"
 
 msgid "xbian-config.network.scanning"
-msgstr ""
+msgstr "Сканирование доступных сетей..."
 
 msgid "xbian-config.network.connection.restart"
-msgstr ""
+msgstr "Перезапуск %s"
 
 msgid "xbian-config.network.connection.updating"
-msgstr ""
+msgstr "Пожалуйста ожидайте. Пытаюсь подключиться к %s"
 
 msgid "xbian-config.network.connection.failed"
-msgstr ""
+msgstr "Не удалось подсоединиться к %s"
 
 msgid "xbian-config.network.connection.success"
-msgstr ""
+msgstr "Успешно подключено к %s"
 
 msgid "xbian-config.network.credentials.enter"
-msgstr ""
+msgstr "Введите учетные данные для выбранного интерфейса"
 
 msgid "xbian-config.network.credentials.wlan.invalid"
-msgstr ""
+msgstr "Введены недопустимые учётные данные WLAN, должны быть введены и SSID (имя сети) и ключ."
 
 msgid "xbian-config.network.credentials.wlan.updated"
-msgstr ""
+msgstr "Учетные данные WLAN успешно обновлены"
 
 msgid "xbian-config.network.credentials.lan.invalid"
-msgstr ""
+msgstr "Неверные учетные данные статического IP-адреса, пожалуйста, повторите попытку"
 
 msgid "xbian-config.network.credentials.lan.updated"
-msgstr ""
+msgstr "Обновлена конфигурация статического IP"
 
 msgid "xbian-config.network.label.wpa"
-msgstr ""
+msgstr "WPA"
 
 msgid "xbian-config.network.label.wep"
-msgstr ""
+msgstr "WEP"
 
 msgid "xbian-config.network.label.open"
-msgstr ""
+msgstr "Открыть"
 
 msgid "xbian-config.network.label.signal"
-msgstr ""
+msgstr "Сигнал"
 
 # xbian-config module overclocking
 # 
 msgid "xbian-config.overclocking.name"
-msgstr ""
+msgstr "Разгон"
 
 msgid "xbian-config.overclocking.description"
-msgstr ""
+msgstr "Настройка разгона"
 
 msgid "xbian-config.overclocking.warning"
-msgstr ""
+msgstr "Экстремальный разгон может сократить срок службы Raspberry Pi. XBian протестировал различные настройки разгона и создал наиболее предпочтительную комбинацию настроек. Турбо разгон может привести к повреждению файловой системы. Разгоняйте на свой страх и риск!"
 
 msgid "xbian-config.overclocking.alreadyset"
-msgstr ""
+msgstr "Эти параметры разгона уже установлены"
 
 msgid "xbian-config.overclocking.changed"
-msgstr ""
+msgstr "Параметры разгона успешно изменены"
 
 msgid "xbian-config.overclocking.label.preset"
-msgstr ""
+msgstr "Предварительная настройка"
 
 msgid "xbian-config.overclocking.label.custom"
-msgstr ""
+msgstr "~"
 
 msgid "xbian-config.overclocking.empty_fields"
-msgstr ""
+msgstr "Вы не заполнили все поля"
 
 # xbian-config module packages
 # 
 msgid "xbian-config.packages.name"
-msgstr ""
+msgstr "Пакеты"
 
 msgid "xbian-config.packages.description"
-msgstr ""
+msgstr "Установка или удаление пакетов"
 
 msgid "xbian-config.packages.apt.update"
-msgstr ""
+msgstr "Обновление локальной базы данных пакетов..."
 
 msgid "xbian-config.packages.apt.update_failed"
-msgstr ""
+msgstr "Произошла ошибка при обновлении базы данных пакетов "
 
 msgid "xbian-config.packages.list.download"
-msgstr ""
+msgstr "Загрузка базы данных удаленного пакета..."
 
 msgid "xbian-config.packages.mirrors.download_failed"
-msgstr ""
+msgstr "Не удалось получить зеркала загрузки, поэтому будет использоваться локальный (возможно, устаревший) список"
 
 msgid "xbian-config.packages.loading"
-msgstr ""
+msgstr "Загружается диалог базы данных пакетов..."
 
 msgid "xbian-config.packages.install.confirm"
-msgstr ""
+msgstr "Вы уверены, что хотите установить или обновить этот пакет?"
 
 msgid "xbian-config.packages.install.success"
-msgstr ""
+msgstr "Пакет был успешно установлен"
 
 msgid "xbian-config.packages.install.retry"
-msgstr ""
+msgstr "Повторите попытку установки этих пакетов"
 
 msgid "xbian-config.packages.remove.confirm"
-msgstr ""
+msgstr "Вы уверены, что хотите удалить этот пакет?"
 
 msgid "xbian-config.packages.remove.success"
-msgstr ""
+msgstr "Этот пакет успешно удален"
 
 msgid "xbian-config.packages.already_installed"
-msgstr ""
+msgstr "Последняя версия этого пакета уже установлена"
 
 msgid "xbian-config.packages.unavailable_version"
-msgstr ""
+msgstr "Не удалось найти версию пакета, которую вы пытаетесь установить"
 
 msgid "xbian-config.packages.not_exists"
-msgstr ""
+msgstr "Не удалось найти пакет, который вы пытаетесь установить"
 
 msgid "xbian-config.packages.not_installed"
-msgstr ""
+msgstr "Этот пакет не установлен"
 
 msgid "xbian-config.packages.size_mismatch"
-msgstr ""
+msgstr "Существует несоответствие размера для удаленных пакетов"
 
 msgid "xbian-config.packages.essential"
-msgstr ""
+msgstr "Это необходимый пакет, и не может быть удален"
 
 msgid "xbian-config.packages.show_log"
-msgstr ""
+msgstr "Желаете посмотреть журнал установки пакета?"
 
 msgid "xbian-config.packages.error"
-msgstr ""
+msgstr "При обработке этого пакета произошла серьезная ошибка"
 
 msgid "xbian-config.packages.downgrade"
-msgstr ""
+msgstr "Вы уже используете более новую версию этого пакета, чем официально доступна"
 
 msgid "xbian-config.packages.installing"
-msgstr ""
+msgstr "Этот пакет устанавливается/обновляется, это может занять несколько минут, поэтому, пожалуйста, подождите..."
 
 msgid "xbian-config.packages.removing"
-msgstr ""
+msgstr "Этот пакет удаляется, это может занять несколько минут, поэтому, пожалуйста, подождите..."
 
 msgid "xbian-config.packages.label.categories"
-msgstr ""
+msgstr "Категории"
 
 msgid "xbian-config.packages.label.name"
-msgstr ""
+msgstr "Имя"
 
 msgid "xbian-config.packages.label.installed"
-msgstr ""
+msgstr "Установлено"
 
 msgid "xbian-config.packages.label.not_installed"
-msgstr ""
+msgstr "Не установлено"
 
 msgid "xbian-config.packages.label.information"
-msgstr ""
+msgstr "Информация"
 
 msgid "xbian-config.packages.label.install_update"
-msgstr ""
+msgstr "Установить/обновить"
 
 msgid "xbian-config.packages.label.install"
-msgstr ""
+msgstr "Установить"
 
 msgid "xbian-config.packages.label.remove"
-msgstr ""
+msgstr "Удалить"
 
 msgid "xbian-config.packages.label.get_more"
-msgstr ""
+msgstr "Получить больше..."
 
 msgid "xbian-config.packages.info.fullname"
-msgstr ""
+msgstr "Полное имя:"
 
 msgid "xbian-config.packages.info.version.available"
-msgstr ""
+msgstr "Имеющиеся версии:"
 
 msgid "xbian-config.packages.info.version.installed"
-msgstr ""
+msgstr "Установленная версия:"
 
 msgid "xbian-config.packages.info.size.installed"
-msgstr ""
+msgstr "Установленный размер:"
 
 msgid "xbian-config.packages.info.size.download"
-msgstr ""
+msgstr "Размер загрузки:"
 
 msgid "xbian-config.packages.info.description"
-msgstr ""
+msgstr "Описание:"
 
 msgid "xbian-config.packages.info.dependencies"
-msgstr ""
+msgstr "Зависимости:"
 
 msgid "xbian-config.packages.label.actions"
-msgstr ""
+msgstr "Действия"
 
 # xbian-config module resizesd
 # 
 msgid "xbian-config.resizesd.name"
-msgstr ""
+msgstr "Изменение размера SD"
 
 msgid "xbian-config.resizesd.description"
-msgstr ""
+msgstr "Расширить корневой раздел на всю SD карту"
 
 msgid "xbian-config.resizesd.confirm"
-msgstr ""
+msgstr "Вы уверены, что хотите изменить размер SD-карты?"
 
 msgid "xbian-config.resizesd.not_needed"
-msgstr ""
+msgstr "Размер этой SD карты уже изменён. Прерывание."
 
 msgid "xbian-config.resizesd.on_reboot"
-msgstr ""
+msgstr "Размер корневого раздела изменен. Файловая система будет увеличена при следующей перезагрузке."
 
 msgid "xbian-config.resizesd.error"
-msgstr ""
+msgstr "Произошла ошибка. Не исключено, что система станет не загружаемой. Пожалуйста, сделайте резервную копию ваших файлов перед перезагрузкой."
 
 # xbian-config module rootpass
 # 
 msgid "xbian-config.rootpass.name"
-msgstr ""
+msgstr "Пароль root"
 
 msgid "xbian-config.rootpass.description"
-msgstr ""
+msgstr "Изменить пароль для пользователя root"
 
 msgid "xbian-config.rootpass.changed"
-msgstr ""
+msgstr "пароль root успешно изменен"
 
 msgid "xbian-config.rootpass.label.password"
-msgstr ""
+msgstr "Пароль:"
 
 msgid "xbian-config.rootpass.empty_fields"
-msgstr ""
+msgstr "Вы должны ввести новый пароль и подтверждение"
 
 msgid "xbian-config.rootpass.no_match"
-msgstr ""
+msgstr "Пароли не совпадают"
 
 # xbian-config module services
 # 
 msgid "xbian-config.services.name"
-msgstr ""
+msgstr "Службы"
 
 msgid "xbian-config.services.description"
-msgstr ""
+msgstr "Запуск/остановка и управление службами"
 
 msgid "xbian-config.services.loading"
-msgstr ""
+msgstr "Статус загрузки служб..."
 
 msgid "xbian-config.services.restarting"
-msgstr ""
+msgstr "Перезапуск службы..."
 
 msgid "xbian-config.services.restart_failed"
-msgstr ""
+msgstr "Не удалось перезапустить службу..."
 
 msgid "xbian-config.services.starting"
-msgstr ""
+msgstr "Запуск службы"
 
 msgid "xbian-config.services.start_failed"
-msgstr ""
+msgstr "Не удалось запустить службу..."
 
 msgid "xbian-config.services.stopping"
-msgstr ""
+msgstr "Остановка службы..."
 
 msgid "xbian-config.services.stop_failed"
-msgstr ""
+msgstr "Не удалось остановить службу..."
 
 msgid "xbian-config.services.refresh"
-msgstr ""
+msgstr "Не удалось обновить службу..."
 
 msgid "xbian-config.services.autostart.enabling"
-msgstr ""
+msgstr "Включение автозапуска службы..."
 
 msgid "xbian-config.services.autostart.disabling"
-msgstr ""
+msgstr "Отключение автозапуска службы..."
 
 msgid "xbian-config.services.autostart.enable_failed"
-msgstr ""
+msgstr "Не удалось включить автозапуск службы..."
 
 msgid "xbian-config.services.autostart.disable_failed"
-msgstr ""
+msgstr "Не удалось отключить автозапуск службы..."
 
 msgid "xbian-config.services.not_exists"
-msgstr ""
+msgstr "Эта служба не существует..."
 
 msgid "xbian-config.services.error"
-msgstr ""
+msgstr "Неизвестная ошибка"
 
 msgid "xbian-config.services.delete.confirm"
-msgstr ""
+msgstr "Вы уверены, что хотите удалить эту службу из списка?"
 
 msgid "xbian-config.services.delete.success"
-msgstr ""
+msgstr "Служба успешно удалена"
 
 msgid "xbian-config.services.inserted"
-msgstr ""
+msgstr "Служба успешно вставлена"
 
 msgid "xbian-config.services.updated"
-msgstr ""
+msgstr "Служба успешно обновлена"
 
 msgid "xbian-config.services.label.service"
-msgstr ""
+msgstr "Служба"
 
 msgid "xbian-config.services.label.action"
-msgstr ""
+msgstr "Действие"
 
 msgid "xbian-config.services.label.autostart"
-msgstr ""
+msgstr "Автозапуск"
 
 msgid "xbian-config.services.label.noautostart"
-msgstr ""
+msgstr "Отключить автозапуск"
 
 msgid "xbian-config.services.label.running"
-msgstr ""
+msgstr "Выполняется"
 
 msgid "xbian-config.services.label.start_restart"
-msgstr ""
+msgstr "(Пере)Запуск"
 
 msgid "xbian-config.services.label.start"
-msgstr ""
+msgstr "Запуск"
 
 msgid "xbian-config.services.label.restart"
-msgstr ""
+msgstr "Перезапуск"
 
 msgid "xbian-config.services.label.stop"
-msgstr ""
+msgstr "Останов"
 
 msgid "xbian-config.services.refresh_gui"
-msgstr ""
+msgstr "Обновить"
 
 msgid "xbian-config.services.label.stopped"
-msgstr ""
+msgstr "Остановлено"
 
 msgid "xbian-config.services.label.add_custom"
-msgstr ""
+msgstr "Добавить пользовательскую службу"
 
 msgid "xbian-config.services.label.edit"
-msgstr ""
+msgstr "Редактировать"
 
 msgid "xbian-config.services.label.delete"
-msgstr ""
+msgstr "Удалить"
 
 msgid "xbian-config.services.label.name"
-msgstr ""
+msgstr "Имя"
 
 msgid "xbian-config.services.label.confirminsert"
-msgstr ""
+msgstr "Желаете вставить %s"
 
 msgid "xbian-config.services.label.daemons"
-msgstr ""
+msgstr "Демон(ы)"
 
 msgid "xbian-config.services.label.leave_empty"
-msgstr ""
+msgstr "Оставьте пустым, если нет"
 
 msgid "xbian-config.services.label.separate_space"
-msgstr ""
+msgstr "Разделять пробелами"
 
 # xbian-config module sshroot
 # 
 msgid "xbian-config.sshroot.name"
-msgstr ""
+msgstr "Логин SSH root"
 
 msgid "xbian-config.sshroot.description"
-msgstr ""
+msgstr "Включить/отключить SSH логин root"
 
 msgid "xbian-config.sshroot.enable_confirm"
-msgstr ""
+msgstr "Вы хотите включить или отключить root ssh вход?"
 
 msgid "xbian-config.sshroot.empty_password"
-msgstr ""
+msgstr "Пользователь root имеет пустой пароль, без пароля пользователь root не может войти через SSH, поэтому, пожалуйста, в первую очередь установите  пароль."
 
 msgid "xbian-config.sshroot.enabled"
-msgstr ""
+msgstr "SSH вход для root  успешно включён"
 
 msgid "xbian-config.sshroot.disabled"
-msgstr ""
+msgstr "Вход SSH для root успешно включён"
 
 # xbian-config module timezone
 # 
 msgid "xbian-config.timezone.name"
-msgstr ""
+msgstr "Часовой пояс"
 
 msgid "xbian-config.timezone.description"
-msgstr ""
+msgstr "Изменение часового пояса для вашего RPi"
 
 msgid "xbian-config.timezone.loading.timezone"
-msgstr ""
+msgstr "Получаем текущий часовой пояс"
 
 msgid "xbian-config.timezone.loading.location"
-msgstr ""
+msgstr "Загрузка расположения..."
 
 msgid "xbian-config.timezone.label.timezone"
-msgstr ""
+msgstr "Часовой пояс"
 
 msgid "xbian-config.timezone.label.location"
-msgstr ""
+msgstr "Расположение"
 
 msgid "xbian-config.timezone.old"
-msgstr ""
+msgstr "Старый часовой пояс: %s"
 
 msgid "xbian-config.timezone.new"
-msgstr ""
+msgstr "Новый часовой пояс: %s"
 
 msgid "xbian-config.timezone.no_timezone_selected"
-msgstr ""
+msgstr "Вы не выбрали часовой пояс"
 
 msgid "xbian-config.timezone.no_location_selected"
-msgstr ""
+msgstr "Вы не выбрали расположение"
 
 msgid "xbian-config.timezone.notset"
-msgstr ""
+msgstr "Не задано"
 
 # xbian-config modules updates
 # 
 msgid "xbian-config.aptupdate.name"
-msgstr ""
+msgstr "обновление apt-get"
 
 msgid "xbian-config.aptupdate.description"
-msgstr ""
+msgstr "Запуск обновления apt-get"
 
 msgid "xbian-config.updates.name"
-msgstr ""
+msgstr "Проверка обновлений deb"
 
 msgid "xbian-config.updates.description"
-msgstr ""
+msgstr "Выполнить обновление apt-get"
 
 msgid "xbian-config.updatemirrors.name"
-msgstr ""
+msgstr "Зеркала обновлений"
 
 msgid "xbian-config.updatemirrors.description"
-msgstr ""
+msgstr "Update informations about mirror sites available"
 
 msgid "xbian-config.updatemenu.name"
-msgstr ""
+msgstr "Обновления"
 
 msgid "xbian-config.updatemenu.description"
-msgstr ""
+msgstr "Проверка обновлений системы"
 
 msgid "xbian-config.updates.apt.update"
-msgstr ""
+msgstr "Обновление локальной базы данных пакетов..."
 
 msgid "xbian-config.updates.apt.update_failed"
-msgstr ""
+msgstr "При обновлении базы данных пакетов произошла ошибка"
 
 msgid "xbian-config.updates.list.download"
-msgstr ""
+msgstr "Получение списка обновляемых пакетов..."
 
 msgid "xbian-config.updates.mirror.download"
-msgstr ""
+msgstr "Загрузка базы данных удаленного пакета..."
 
 msgid "xbian-config.updates.mirror.download_failed"
-msgstr ""
+msgstr "Не удалось получить зеркала загрузки, поэтому будет использоваться локальный (возможно, устаревший) список"
 
 msgid "xbian-config.updates.upgrade.available"
-msgstr ""
+msgstr "Доступна новая версия XBian, вы хотите установить ее сейчас? По завершении обновления система автоматически перезагрузится"
 
 msgid "xbian-config.updates.upgrade.installing"
-msgstr ""
+msgstr "XBian обновляется до новой версии, пожалуйста, не перезагружайте и не вынимайте шнур питания, потому что это может привести к поломке системы. В зависимости от вашего интернет-соединения, эта процедура может занять некоторое время..."
 
 msgid "xbian-config.updates.upgrade.reboot"
-msgstr ""
+msgstr "XBian автоматически перезагрузится при закрытии этого окна"
 
 msgid "xbian-config.updates.update.confirm"
-msgstr ""
+msgstr "Вы уверены, что хотите обновить эти пакеты?"
 
 msgid "xbian-config.updates.update.running"
-msgstr ""
+msgstr "Пожалуйста, подождите пока обновимся..."
 
 msgid "xbian-config.updates.update.success"
-msgstr ""
+msgstr "Пакеты успешно обновлены"
 
 msgid "xbian-config.updates.update.already_installed"
-msgstr ""
+msgstr "Последние версии этих пакетов уже установлены"
 
 msgid "xbian-config.updates.update.not_exists"
-msgstr ""
+msgstr "Не удалось найти пакеты, которые вы пытаетесь установить"
 
 msgid "xbian-config.updates.update.version_unavailable"
-msgstr ""
+msgstr "Не удалось найти версии пакетов, которые вы пытаетесь установить"
 
 msgid "xbian-config.updates.update.show_log"
-msgstr ""
+msgstr "Хотите посмотреть журнал установки?"
 
 msgid "xbian-config.updates.update.error"
-msgstr ""
+msgstr "При обработке этих пакетов произошла серьезная ошибка"
 
 msgid "xbian-config.updates.update.size_mismatch"
-msgstr ""
+msgstr "Существует несоответствие размера для удаленных пакетов"
 
 msgid "xbian-config.updates.update.installing"
-msgstr ""
+msgstr "Обновление пакетов может занять несколько минут, поэтому подождите.."
 
 msgid "xbian-config.updates.update.downgrade"
-msgstr ""
+msgstr "У вас уже установлены новые версии этого пакета"
 
 msgid "xbian-config.updates.label.updates"
-msgstr ""
+msgstr "Обновления"
 
 msgid "xbian-config.updates.label.update"
-msgstr ""
+msgstr "Обновление"
 
 msgid "xbian-config.updates.label.update_packages"
-msgstr ""
+msgstr "Обновление Пакетов"
 
 msgid "xbian-config.updates.label.version"
-msgstr ""
+msgstr "Версия"
 
 msgid "xbian-config.updates.label.update_all"
-msgstr ""
+msgstr "Обновить всё"
 
 msgid "xbian-config.updates.label.update_to_date"
-msgstr ""
+msgstr "Актуальный"
 
 msgid "xbian-config.updates.label.upgrade"
-msgstr ""
+msgstr "Модернизировать"
 
 msgid "xbian-config.updates.label.autoupdates"
-msgstr ""
+msgstr "Автоматические обновления"
 
 msgid "xbian-config.updates.label.autoinstallupdates"
-msgstr ""
+msgstr "Автоматическая установка доступных обновлений"
 
 msgid "xbian-config.updates.label.aptsnapshot"
-msgstr ""
+msgstr "Сделать снимок с помощью транзакции APT-GET"
 
 msgid "xbian-config.updates.label.autoupdaterepo"
-msgstr ""
+msgstr "Инвентаризация пакета автоматического обновления"
 
 msgid "xbian-config.updates.label.autoupdaterepointerval"
-msgstr ""
+msgstr "интервал (дней)"
 
 msgid "xbian-config.updates.uptodate"
-msgstr ""
+msgstr "Ваша установка уже содержит последние версии пакетов XBian"
 
 # xbian-config module videoflags
 # 
 msgid "xbian-config.videoflags.name"
-msgstr ""
+msgstr "Выход видео"
 
 msgid "xbian-config.videoflags.description"
-msgstr ""
+msgstr "Изменение HDMI, CEC и повторное сканирование настроек"
 
 msgid "xbian-config.videoflags.label.videoflags"
-msgstr ""
+msgstr "Флаги видео"
 
 msgid "xbian-config.videoflags.update_success"
-msgstr ""
+msgstr "Флаги видео успешно обновлены"
 
 msgid "xbian-config.videoflags.hdmi_force_hotplug"
-msgstr ""
+msgstr "Принудительный выход HDMI когда телевизор не определён"
 
 msgid "xbian-config.videoflags.hdmi_ignore_hotplug"
-msgstr ""
+msgstr "Игнорировать выход HDMI, даже если телевизор подключен"
 
 msgid "xbian-config.videoflags.hdmi_ignore_cec_init"
-msgstr ""
+msgstr "Игнорировать CEC init для предотвращения пробуждения телевизора при перезагрузке"
 
 msgid "xbian-config.videoflags.hdmi_ignore_cec"
-msgstr ""
+msgstr "Отключение CEC"
 
 msgid "xbian-config.videoflags.disable_overscan"
-msgstr ""
+msgstr "Отключение повторного сканирования"
 
 msgid "xbian-config.videoflags.disable_splash"
-msgstr ""
+msgstr "Отключить \"радужный\" экран в самом начале RPI"
 
 # xbian-config module xbconfig
 # 
 msgid "xbian-config.xbconfig.name"
-msgstr ""
+msgstr "Конфигурирование XBian "
 
 msgid "xbian-config.xbconfig.description"
-msgstr ""
+msgstr "Параметры конфигурации XBian"
 
 msgid "xbian-config.xbconfig.label.autostart"
-msgstr ""
+msgstr "Автоматический запуск"
 
 msgid "xbian-config.xbconfig.label.actions"
-msgstr ""
+msgstr "Действия"
 
 msgid "xbian-config.xbconfig.autostart.enable_disable"
-msgstr ""
+msgstr "Желаете автоматически запускать конфигурирование xbian когда вы входите как пользователь xbian?"
 
 msgid "xbian-config.xbconfig.autostart.enabled"
-msgstr ""
+msgstr "Успешно включён автоматический запуск конфигурирования xbian"
 
 msgid "xbian-config.xbconfig.autostart.disabled"
-msgstr ""
+msgstr "Успешно отключён автоматический запуск конфигурирования xbian"
 
 # xbian-config module xbianpass
 # 
 msgid "xbian-config.xbianpass.name"
-msgstr ""
+msgstr "Пароль XBian"
 
 msgid "xbian-config.xbianpass.description"
-msgstr ""
+msgstr "Изменение пароля для пользователя xbian"
 
 msgid "xbian-config.xbianpass.changed"
-msgstr ""
+msgstr "пароль xbian успешно изменён"
 
 msgid "xbian-config.xbianpass.label.password"
-msgstr ""
+msgstr "Пароль:"
 
 msgid "xbian-config.xbianpass.empty_fields"
-msgstr ""
+msgstr "Вы должны ввести и новый пароль и подтверждение"
 
 msgid "xbian-config.xbianpass.no_match"
-msgstr ""
+msgstr "Пароли не совпадают"
 
 # xbian-config module xbmc
 # 
 msgid "xbian-config.xbmc.name"
-msgstr ""
+msgstr "XBMC"
 
 msgid "xbian-config.xbmc.description"
-msgstr ""
+msgstr "Изменение настроек XBMC"
 
 msgid "xbian-config.xbmc.webserver.enable_disable"
-msgstr ""
+msgstr "Желаете включить или отключить веб-сервер XBMC?"
 
 msgid "xbian-config.xbmc.webserver.enable.success"
-msgstr ""
+msgstr "Веб-сервер XBMC успешно включён"
 
 msgid "xbian-config.xbmc.webserver.disable.success"
-msgstr ""
+msgstr "Веб-сервер XBMC успешно отключён"
 
 msgid "xbian-config.xbmc.webserver.enable.failed"
-msgstr ""
+msgstr "Не удалось включить веб-сервер XBMC"
 
 msgid "xbian-config.xbmc.webserver.disable.failed"
-msgstr ""
+msgstr "Не удалось отключить веб-сервер XBMC"
 
 msgid "xbian-config.xbmc.label.webserver"
-msgstr ""
+msgstr "Веб-сервер"
 
 msgid "xbian-config.xbmc.label.actions"
-msgstr ""
+msgstr "Действия"
 
 msgid "xbian-config.xbmc.label.tvoff_screensaver"
-msgstr ""
+msgstr "Выключить телевизор с поддержкой СЕС с заставкой"
 
 msgid "xbian-config.xbmc.label.tvoff_screensaver_delay"
-msgstr ""
+msgstr "задержка (мин)"
 
 msgid "xbian-config.xbmc.label.tvon_exit"
-msgstr ""
+msgstr "Выключить телевизор с поддержкой СЕС при выходе из XBMC"
 
 msgid "xbian-config.xbmc.label.tvoff_shutdown"
-msgstr ""
+msgstr "Выключить телевизор с поддержкой CEC при выключении RPI"
 
 msgid "xbian-config.xbmc.label.usbhotplug"
-msgstr ""
+msgstr "Горячее подключение USB"
 
 msgid "xbian-config.xbmc.label.automount"
-msgstr ""
+msgstr "Включить автоматическое монтирование USB диска"
 
 msgid "xbian-config.xbmc.label.share"
-msgstr ""
+msgstr "Сделать автоматически смонтированные диски доступными через SMB"
 
 msgid "xbian-config.xbmc.label.sharerw"
-msgstr ""
+msgstr "Общие ресурсы должны быть доступны для записи (включая анонимный доступ)"
 
 msgid "xbian-config.xbmc.label.uuid"
-msgstr ""
+msgstr "Включить UUID раздела в имя папки mnt"
 
 msgid "xbian-config.xbmc.label.dyn_priority"
-msgstr ""
+msgstr "Динамический приоритет XBMC"
 
 msgid "xbian-config.xbmc.label.lownice"
-msgstr ""
+msgstr "Низкий приоритет Nice"
 
 msgid "xbian-config.xbmc.label.highnice"
-msgstr ""
+msgstr "Высокий приоритет Nice"
 
 msgid "xbian-config.xbmc.label.spindown"
-msgstr ""
+msgstr "Снизить скорость вращения жесткого диска"
 
 msgid "xbian-config.xbmc.label.sync"
-msgstr ""
+msgstr "Монтировать с опцией sync"
 
 # xbian-config module preferences
 # 
 msgid "xbian-config.preferences.name"
-msgstr ""
+msgstr "Персональные настройки"
 
 msgid "xbian-config.preferences.label.advanced_mode"
-msgstr ""
+msgstr "Расширенный режим"
 
 msgid "xbian-config.preferences.label.advanced"
-msgstr ""
+msgstr "Продвинутый"
 
 msgid "xbian-config.preferences.update.error"
-msgstr ""
+msgstr "Ошибка при обновлении настройки"
 
 msgid "xbian-config.preferences.update.success"
-msgstr ""
+msgstr "Настройки успешно обновлены"
 
 msgid "xbian-config.preferences.label.notify"
-msgstr ""
+msgstr "Уведомления"
 
 msgid "xbian-config.preferences.notify.on_error"
-msgstr ""
+msgstr "Уведомлять при ошибке"
 
 msgid "xbian-config.preferences.notify.on_success"
-msgstr ""
+msgstr "Уведомлять в случае успеха"
 
 msgid "xbian-config.preferences.ask_confirmation"
-msgstr ""
+msgstr "Запрашивать подтверждение при сохранении новых настроек"
 
 msgid "xbian-config.preferences.label.notification"
-msgstr ""
+msgstr "Уведомление"
 
 # 	xbiancopy
 # 
 msgid "xbian-config.xbiancopy.label.source"
-msgstr ""
+msgstr "Исходный диск/раздел"
 
 msgid "xbian-config.xbiancopy.label.dest"
-msgstr ""
+msgstr "Назначение:"
 
 msgid "xbian-config.xbiancopy.name"
-msgstr ""
+msgstr "Копир Xbian"
 
 msgid "xbian-config.xbiancopy.description"
-msgstr ""
+msgstr "Инструмент копирования XBIAN (на usb, в файл образа ...)"
 
 msgid "xbian-config.xbiancopy.dialog.wrongblkdev"
-msgstr ""
+msgstr "Неправильное блочное устройство назначения (не существует или не является разделом)"
 
 msgid "xbian-config.xbiancopy.dialog.exportwrong"
-msgstr ""
+msgstr "Экспорт NFS не соответствует требованиям"
 
 msgid "xbian-config.xbiancopy.dialog.targetwrong"
+msgstr "цель iSCSI не может быть подключена и размечена ( %s)"
+
+msgid "xbian-config.xbiancopy.dialog.zfswrong"
+msgstr ""
+
+msgid "xbian-config.xbiancopy.dialog.mountbooterror"
 msgstr ""
 
 msgid "xbian-config.xbiancopy.dialog.preperror"
-msgstr ""
+msgstr "Не удается подготовить целевую файловую систему"
 
 msgid "xbian-config.xbiancopy.dialog.config"
 msgstr ""
 
 msgid "xbian-config.xbiancopy.dialog.copyerror"
-msgstr ""
+msgstr "При копировании данных произошла ошибка (%s)"
 
 msgid "xbian-config.xbiancopy.dialog.clonedone"
-msgstr ""
+msgstr "\\nВаша текущая установка была успешно клонирована на\\n %s\\n\\nПосле перезагрузки будет загружена клонированная система"
 
 msgid "xbian-config.backup.category.snasphot"
-msgstr ""
+msgstr "Управление снимком"
 
 msgid "xbian-config.backup.category.home"
-msgstr ""
+msgstr "Резервное копирование Home"
 
 msgid "xbian-config.backup.category.system"
-msgstr ""
+msgstr "Резервное копирование системы"
 
 msgid "xbian-config.backup.category.snapshot"
-msgstr ""
+msgstr "Снимок"
 
 msgid "xbian-config.backup.category.autosnapshot"
-msgstr ""
+msgstr "Автоматический снимок"
 
 msgid "xbian-config.backup.daily_snapshot"
-msgstr ""
+msgstr "Включить ежедневный снимок"
 
 msgid "xbian-config.backup.nbautosnap"
-msgstr ""
+msgstr "Количество сохраняемых снимков"
 
 msgid "xbian-config.backup.weekly_snapshot"
-msgstr ""
+msgstr "Включить еженедельный снимок"
 
 msgid "xbian-config.backup.auto_system_image"
 msgstr ""
 
 msgid "xbian-config.backup.destype"
-msgstr ""
+msgstr "Тип назначения"
 
 msgid "xbian-config.backup.blockdev"
-msgstr ""
+msgstr "Блочное устройство"
 
 msgid "xbian-config.backup.filedest"
-msgstr ""
+msgstr "Назначение"
 
 msgid "xbian-config.backup.start"
-msgstr ""
+msgstr "Начать резервное копирование"
 
 msgid "xbian-config.backup.confirm_write"
-msgstr ""
+msgstr "Записать резервную копию на %s?"
 
 msgid "xbian-config.backup.warning_write"
-msgstr ""
+msgstr "Это уничтожит ВСЕ данные на %s, продолжить?"
 
 msgid "xbian-config.backup.selectdevice"
-msgstr ""
+msgstr "Выбор устройства"
 
 #       backuphome
 # 
 msgid "xbian-config.backuphome.name"
-msgstr ""
+msgstr "Резервное копирование  /home в файл"
 
 msgid "xbian-config.backuphome.description"
-msgstr ""
+msgstr "Резервное копирование настроек XBMC, Библиотек и связанных файлов"
 
 msgid "xbian-config.backuphome.running"
-msgstr ""
+msgstr "Пожалуйста подождите, пока создаётся файл резервной копии"
 
 msgid "xbian-config.backuphome.done"
-msgstr ""
+msgstr "Файл резервной копии подготовлен в /xbmc-backup. Пожалуйста, скопируйте файл по сети или сохраните локально."
 
 msgid "xbian-config.backuphome.failed"
-msgstr ""
+msgstr "Не удалось выполнить резервное копирование /home!"
 
 msgid "xbian-config.backuphome.desc1"
-msgstr ""
+msgstr "Это может занять несколько минут в зависимости от размера вашего каталога /home/xbian"
 
 msgid "xbian-config.backuphome.desc2"
-msgstr ""
+msgstr "файл будет создан в папке  /xbian-backup, которая также доступна через общий ресурс smb"
 
 msgid "xbian-config.backuphome.desc3"
-msgstr ""
+msgstr "Пока не закончится, будет только временная папка. Как только всё будет готово, появится файл .img"
 
 msgid "xbian-config.backuphome.desc4"
-msgstr ""
+msgstr "Вы можете скопировать файл непосредственно на свой компьютер (файл будет удален при перезагрузке!)"
 
 msgid "xbian-config.backuphome.desc5"
-msgstr ""
+msgstr "Чтобы восстановить ваш XBMC, просто скопируйте файл .img в папку /xbian-backup/put_to_restore"
 
 msgid "xbian-config.backuphome.restore"
-msgstr ""
+msgstr "Восстановление резервной копии"
 
 msgid "xbian-config.backuphome.selectimage"
-msgstr ""
+msgstr "Выбор образа Home"
 
 msgid "xbian-config.backuphome.restore_home_confirm"
-msgstr ""
+msgstr "%s:Желаете восстановить home из %s?"
 
 msgid "xbian-config.backuphome.restore_home_info"
-msgstr ""
+msgstr "Это может занять несколько минут в зависимости от размера образа резервной копии."
 
 # 	enable auto updates
 # 
 msgid "xbian-config.enableauto.name"
-msgstr ""
+msgstr "Автоматические обновления"
 
 msgid "xbian-config.enableauto.description"
-msgstr ""
+msgstr "Установить механизм автоматического обновления"
 
 msgid "xbian-config.updates.enableauto.enable_disable"
-msgstr ""
+msgstr "Хотите активировать автоматические обновления?"
 
 msgid "xbian-config.updates.enableauto.disabled"
-msgstr ""
+msgstr "Автоматические обновления отключены"
 
 msgid "xbian-config.updates.enableauto.enabled"
-msgstr ""
+msgstr "Автоматические обновления включены"
 
 # manage snapshot
 # 
 msgid "xbian-config.snapshot.mountsnap"
-msgstr ""
+msgstr "Монтирование моментального снимка"
 
 msgid "xbian-config.snapshot.loadingvolume"
-msgstr ""
+msgstr "Загрузка томов"
 
 msgid "xbian-config.snapshot.volume"
-msgstr ""
+msgstr "Том Btrfs"
 
 msgid "xbian-config.snapshot.rollback"
-msgstr ""
+msgstr "Откат к моментальному снимку"
 
 msgid "xbian-config.snapshot.delete_snasphot"
-msgstr ""
+msgstr "Удаление моментального снимка"
 
 msgid "xbian-config.snapshot.create_snapshot"
-msgstr ""
+msgstr "Создать моментальный снимок"
 
 msgid "xbian-config.snapshot.name_snapshot"
-msgstr ""
+msgstr "Имя моментального снимка"
 
 msgid "xbian-config.snapshot.backup"
-msgstr ""
+msgstr "Резервное копирование"
 
 # util
 # 
 msgid "xbian-config.util.valuegreater"
-msgstr ""
+msgstr "Значениедолжно быть больше чем %d"
 
 msgid "xbian-config.util.valuelower"
-msgstr ""
+msgstr "Значение должно быть меньше чем %d"
 
 #  wizard
 # 
 msgid "xbian-config.wizard.welcome.title"
-msgstr ""
+msgstr "Добро пожаловать в XBian"
 
 msgid "xbian-config.wizard.welcome.smalltitle"
-msgstr ""
+msgstr "Добро пожаловать"
 
 msgid "xbian-config.wizard.welcome.description"
-msgstr ""
+msgstr "Спасибо, что выбрали XBian.[CR] [CR]XBian - это бесплатный медиа-центр с открытым исходным кодом для Raspberry Pi.[CR]Наши лозунги - \"Передовой XBMC на Raspberry Pi\", поскольку наш основной упор делается на доставку  быстрого медиа-центра для Raspberry Pi.[CR] [CR]Мы считаем, что каждый может сделать XBian лучше.[CR]Пожалуйста посетите наш сайт www.xbian.org для поддержки. Если у вас есть какие-либо вопросы, предложения или пожертвования, пожалуйста, поделитесь ими с нами!"
 
 msgid "xbian-config.wizard.network.title"
-msgstr ""
+msgstr "Конфигурирование вашей сети"
 
 msgid "xbian-config.wizard.network.smalltitle"
-msgstr ""
+msgstr "Сеть"
 
 msgid "xbian-config.wizard.network.description"
-msgstr ""
+msgstr "Настройка проводного или беспроводного соединения в XBian очень проста. XBian может работать без доступа в интернет, но с ним впечатления будут лучше."
 
 msgid "xbian-config.wizard.license.title"
-msgstr ""
+msgstr "Введите ваш лицензионный ключ"
 
 msgid "xbian-config.wizard.license.smalltitle"
-msgstr ""
+msgstr "Лицензионный ключ"
 
 msgid "xbian-config.wizard.license.description"
-msgstr ""
+msgstr "Raspberry Pi может декодировать большинство видео и аудио форматов, однако, для того, чтобы декодировать VC-1 (используется в некоторых BluRay дисках) и MPEG-2, вам нужно будет приобрести лицензионный ключ для них.[CR]Они доступны по адресу http://www.raspberrypi.com/license-keys/ [CR][CR]Если у вас уже есть лицензионный ключ, вы можете ввести его сейчас."
 
 msgid "xbian-config.wizard.backup.title"
-msgstr ""
+msgstr "Восстановить Home"
 
 msgid "xbian-config.wizard.backup.smalltitle"
-msgstr ""
+msgstr "Восстановить"
 
 msgid "xbian-config.wizard.backup.description"
-msgstr ""
+msgstr "XBian предложит вам простой способ резервного копирования вашей установки.[CR]Если у вас есть предыдущая резервная копия вашей папки home[CR](она содержит конфигурацию XBMC, аддоны, настройки, включая библиотеки...), [CR]вы можете восстановить её сечас.[CR][CR]Позже, если вы захотите сделать резервную копию, создать снимок и многое другое,[CR],перейдите в System->xbian->backup"
 
 msgid "xbian-config.wizard.update.title"
-msgstr ""
+msgstr "Обновить XBian"
 
 msgid "xbian-config.wizard.update.smalltitle"
-msgstr ""
+msgstr "обновить"
 
 msgid "xbian-config.wizard.update.description"
-msgstr ""
+msgstr "Теперь вы можете выбрать, как XBian будет обновляться и как часто проверять наличие обновлений.[CR][CR]По умолчанию XBian не будет обновляться автоматически, но вы будете уведомлены, когда новое обновление станет доступно.[CR] [CR]Для обновления перейдите в System - > XBian - > Update и выберите пакеты для обновления.[CR][CR]Если Вы хотите, чтобы XBian обновлялся автоматически, вы можете указать это сейчас."
 
 msgid "xbian-config.wizard.package.title"
-msgstr ""
+msgstr "Установка новых пакетов"
 
 msgid "xbian-config.wizard.package.smalltitle"
-msgstr ""
+msgstr "пакет"
 
 msgid "xbian-config.wizard.package.description"
-msgstr ""
+msgstr "XBian поставляется со всем необходимым для XBMC, но вы можете легко добавить предварительно настроенные пакеты, такие как Torrent, Newsbin, CouchPotatoe и многое другое.[CR] [CR]Пользователи могут создавать свои собственные пакеты и делиться ими с другими. Если вы чувствуете, что у вас есть что-то, что может понравиться другим, перейдите на форум XBian и опубликуйте поток, и кто-нибудь свяжется с вами с информацией.[CR] [CR]Пожалуйста, будьте терпеливы, пока загружается список пакетов."
 
 msgid "xbian-config.wizard.finish.title"
-msgstr ""
+msgstr "Пришло время играть"
 
 msgid "xbian-config.wizard.finish.smalltitle"
-msgstr ""
+msgstr "Финиш"
 
 msgid "xbian-config.wizard.finish.description"
-msgstr ""
+msgstr "Теперь у вас есть полностью настроенный XBian.[CR]мы надеемся, что это даст Вам замечательные впечатления.[CR][CR]если вы хотите управлять дополнительными параметрами XBian перейдите: System -> XBian.[CR]Если Вы хотите перезапустить этот Мастер позже: выберите вкладку Xbian Wizard в разделе System"
 
 # extra
 # 
@@ -1302,25 +1310,25 @@ msgstr ""
 #   commom
 # 
 msgid "xbian-config.common.pleasewait"
-msgstr ""
+msgstr "Пожалуйста ожидайте"
 
 msgid "xbian-config.common.initialisation"
-msgstr ""
+msgstr "Установка..."
 
 msgid "xbian-config.common.loading"
-msgstr ""
+msgstr "Загрузка"
 
 msgid "xbian-config.common.doyouwanto"
-msgstr ""
+msgstr "Вы хотите %s"
 
 msgid "xbian-config.common.error"
-msgstr ""
+msgstr "Ошибка: не удается сохранить настройку"
 
 msgid "xbian-config.common.ok"
-msgstr ""
+msgstr "Настройка сохранена"
 
 msgid "xbian-config.common.confirmation"
-msgstr ""
+msgstr "Уверены, что хотите применить изменения?"
 
 msgid "xbian-config.common.badentry"
-msgstr ""
+msgstr "Data you have enter is not correct"
