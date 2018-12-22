@@ -102,7 +102,7 @@ function showGUIFn() {
                 DEST=${DEST##'ext4:'}
                 tt=ext4
             else 
-                echo "$DEST" | grep -q ^'file:' && opt_img='--img'
+                echo "$DEST" | grep -q ^'file:' || [ -b $DEST ] && ! echo $DEST | grep -q ".*[0-9]$" && opt_img='--img'
                 DEST=${DEST##'file:'}
                 tt=btrfs
             fi
