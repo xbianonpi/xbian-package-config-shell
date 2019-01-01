@@ -27,7 +27,10 @@ rm -rf content/etc
 rsync -a -f"+ */" -f"- *" content-tpl/. content/
 (
     cd ./content-tpl
-    for f in $(find ./ -type l,f -printf "%P\n"); do
+    for f in $(find ./ -type f -printf "%P\n"); do
+        cp -d --parents $f ../content/
+    done
+    for f in $(find ./ -type l -printf "%P\n"); do
         cp -d --parents $f ../content/
     done
 )
