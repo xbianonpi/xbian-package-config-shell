@@ -23,11 +23,15 @@ version2=$(cat ./content/DEBIAN/control | grep Version | awk '{print $2}' | awk 
 version1=$(date +%Y%m%d)
 
 version=$version1-$version2
+rm -rf content/etc
 rsync -a -f"+ */" -f"- *" content-tpl/. content/
-for f in $(find ./content-tpl -type f -printf "%P\n"); do
-    cp ./content-tpl/$f content/$f
-    sed -i "s%__DATE__%$version%g" ./content/$f
-done
+(
+    cd ./content-tpl
+    for f in $(find ./ -type l,f -printf "%P\n"); do
+        cp -d --parents $f ../content/
+    done
+)
+sed -i "s%__DATE__%$version%g" content/DEBIAN/control
 
 # calculate size dynamically. remove first any entry, then add the actual 
 rm_size
