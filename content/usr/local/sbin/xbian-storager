@@ -7,7 +7,7 @@
 # Copyright 2013 Matus Kral <matuskral@icloud.com>
 #
 # I'm trying to keep structure and reuse of zfs-auto-snapshot (zevo) version
-# at https://github.com/mk01/zfs-auto-snapshot.git which is based on 
+# at https://github.com/mk01/zfs-auto-snapshot.git which is based on
 # original version developed by Darik Horn <dajhorn@vanadac.com>
 #
 # This program is free software; you can redistribute it and/or modify it under
@@ -26,47 +26,102 @@
 
 MYNAME=${0##*/}
 
-tmp_dir='/run/btrfs-snap'
-opt_clonename='xbian-copy'
-opt_syslog=''
-opt_dev='/dev/root'
+# Default common program options
+
 opt_dry_run=''
-opt_quiet=''
-opt_verbose=''
 opt_keep=''
 opt_label='regular'
-opt_prefix='btrfs-auto-snap'
 opt_recursive=''
 opt_sep='_'
-opt_rootvolid='5'
-opt_size=0
-opt_createdirs=''
+opt_syslog=''
+opt_verbose=''
+tmp_dir='/run/xbian-storage'
+root_dest='/run/root-dest'
 opt_mountpoint=${tmp_dir}
-#opt_snapdir='.btrfs/snapshot/'
-opt_snapdir=''
 opt_img=''
 opt_helper=''
-opt_cpmode='btrfs'
-opt_compress=''
+opt_name=''
+opt_exclude="XXXXXXXX"
+opt_quiet=''
+opt_size=''
+
+# Default dynamcally set program options/variables for BTRFS/ZFS
+
+opt_dev=''
+opt_rpool=''
+opt_clonename=''
+opt_command=''        # Will be set to snapshot if no command given
+opt_prefix=''         # Will be set dynamically to btrfs-auto-snap or zfs-auto-snap if not set by cmdline option
+opt_cpmode=''         # Will be set dynamically to btrfs or zfs if not set by cmdline option
+opt_fstype=''         # Will be set dynamically to btrfs or zfs
+
+PLATFORM_LOC=''
+PLATFORM_REM=''
+
+# Default program options for BTRFS
+
+opt_createdirs=''
+opt_runningcopyin='@' # what is name for snapshot which is normaly mounted as running filesystem (if SUBVOL/@running, then use "@running")
+opt_delim='@'
+#opt_snapdir='.btrfs/snapshot/'
+opt_snapdir=''
 #opt_remotecmd='rsh -l root media.private '
 opt_remotecmd=''
-
-# what is name for snapshot which is normaly mounted as running filesystem (if SUBVOL/@running, then use "@running")
-opt_runningcopyin='@'
-
-opt_delim='@'
-opt_command='snapshot'
+opt_compress=''
+opt_recompress=''
 opt_vroot=''
 opt_nocreate=''
 
-SNAPSHOT_COUNT='0'
-DESTROY_COUNT='0'
-WARNING_COUNT='0'
+# Default program options for ZFS
 
+opt_backup_full=''
+opt_backup_incremental=''
+opt_default_exclude=''
+opt_event='-'
+opt_setauto=''
+opt_skip_scrub=''
+opt_remove=''
+opt_fallback='0'
+opt_force=''
+opt_sendprefix=''
+opt_send='no'
+opt_atonce='-I'
+opt_create='0'
+opt_destroy='0'
+opt_rotation='rr'
+opt_base='day'
+opt_namechange='0'
+opt_factor='1'
+opt_limit='3'
+opt_includeall=''
+opt_sendtocmd='ssh -2 root@media -c arcfour,blowfish-cbc -i /var/root/.ssh/media.rsa'  # if pipe needs to be used, uncomment opt_pipe="|". arcfour or
+opt_buffer=''                                                                          # blowfish will reduce cpu load caused by ssh and mbuffer will
+#opt_buffer='mbuffer -q -m 250MB |'                                                    # boost network bandwidth and mitigate low and high peaks during transfer
+opt_pipe='|'
+
+# Global summary statistics.
+DESTROY_COUNT='0'
+SNAPSHOT_COUNT='0'
+WARNING_COUNT='0'
+CREATION_COUNT='0'
+SENT_COUNT='0'
+KEEP=''
+
+# Other global variables
+SNAPSHOTS_OLD_LOC=''
+SNAPSHOTS_OLD_REM=''
+CREATED_TARGETS=''
+ZFS_REMOTE_LIST=''
+FS_LOCAL_LIST=''
+TARGETS_DRECURSIVE=''
+TARGETS_DREGULAR=''
+MOUNTED_LIST_LOC=''
+MOUNTED_LIST_REM=''
+RC='99'
+
+# Kernel tweaks
 MY_FILE_MAX=80000
 MY_MIN_FREE_KBYTES=75000
-
-. /usr/local/include/xbian-config/modules/xbiancopy/functions
 
 print_usage ()
 {
@@ -74,18 +129,20 @@ print_usage ()
 
     command, is one of
 
-             list, snapshot, rename, destroy, listvol, rollback, createvol
-
-             xbiancopy [--no-create] [--tar] [[--img]] [[[--size]]] [[[[--fs-name]]]] source dest
-             backuphome [dest]
+             list, snapshot, destroy, rename, rollback, mount, umount
+             listvol [--exclude=name[,name...]]
+             createvol [--exclude] [--mount] name [mountpoint]
+             xbiancopy [--no-create] [--tar] [--img [--size]] [--fs-name=NAME] <srcdev|-> <destdev|destfile>
+             backuphome [destfile]
+             compress [--compress=TYPE] [--skip-scrub]
 
         If not given, snapshot is assumed.
 
-    name               Filesystem and volume names, or '//' for all subvolumes.
+    name               Filesystem and/or volume name, or '//' for all.
 
     Options
 
-    --dev              Device which is part of the btrfs filesystem (by default
+    --dev              Device which is part of the filesystem (by default
                        is the one mounted as rootfs).
     -d, --debug        Print debugging messages.
     -n, --dry-run      Print actions without actually doing anything.
@@ -93,25 +150,25 @@ print_usage ()
     -k, --keep=NUM     Keep NUM recent snapshots and destroy older snapshots.
     -l, --label=LAB    LAB is usually 'hourly', 'daily', or 'monthly' (default
                        is 'regular').
-    -p, --prefix=PRE   PRE is 'btrfs-auto-snap' by default.
-    -e, --name         Snapshot name. If specified, -l and -p are overridden
+    -p, --prefix=PRE   PRE is 'btrfs|zfs-auto-snap' by default.
+    -E, --name         Snapshot name. If specified, -l and -p are overridden
                        and --keep is not considered.
     -q, --quiet        Suppress warnings and notices at the console.
     -x, --exclude      Exclude those subvolumes from operations (useful with '//')
                             (comma separated list)
-    -s, --syslog       Write messages into the system log.
+    -g, --syslog       Write messages into the system log.
     -v, --verbose      Print info messages.
-    -i, --rootvolid    ID of root volume. All actions are handled in this 
-                       volume tree (default is 0)
-    -m, --mountpoint   Dir used to mount rootvolid. By default ${tmp_dir}
+    -m, --mountpoint   Dir used to mount filesystem. By default ${tmp_dir}
     -t,--dirs          Create snapshot directories if needed.
     --no-create        Doesn't auto create fs on 'xbiancopy'.
+    --compress=TYPE    TYPE is one of zlib, lzo, lz4 or zstd as compression on
+                       'compress' command or lzo by default.
     --tar              Use tar instead of btrfs send/receive on 'xbiancopy'.
     --img              Create img file instead of physical partition.
     --size             Target size of destination img file accepting 'human-
                        readable' sizes (1100M, 2G, ...).
     --fs-name=NAME     Cloned filesystem name (xbian-copy by default).
-" 
+"
 }
 
 print_log () # level, message, ...
@@ -147,7 +204,7 @@ print_log () # level, message, ...
                         ;;
                 (inf*)
                         # test -n "$opt_syslog" && logger -t "$opt_prefix" -p daemon.info "$*"
-                        test -n "$opt_verbose" && echo "$*"
+                        test -z "$opt_quiet" && test -n "$opt_verbose" && echo "$*"
                         ;;
                 (deb*)
                         # test -n "$opt_syslog" && logger -t "$opt_prefix" -p daemon.debug "$*"
@@ -162,285 +219,1924 @@ print_log () # level, message, ...
 
 do_run () # [argv]
 {
-        if [ -n "$opt_dry_run" ]
-        then
-                echo "... Running $*"
-                RC="$?"
-        else
-                eval $*
-                RC="$?"
-                if [ "$RC" -eq '0' ]
-                then
-                        print_log debug "$*"
-                else
-                        print_log warning "$* returned $RC"
-                fi
-        fi
-        return "$RC"
+	if [ -n "$opt_dry_run" ]; then
+		echo "... Running $*"
+		RC="$?"
+	else
+		eval $*
+		RC="$?"
+		if [ "$RC" -eq '0' ]; then
+			print_log debug "$*"
+		else
+			print_log warning "$* returned $RC"
+		fi
+	fi
+	return "$RC"
 }
 
-do_destroy ()
+do_unmount ()
 {
-        dSNAP="$1"
-        dPATH=''
-        dNAME=''
+	local TYPE="$1"
+	local FLAGS="$3"
+	local FSNAME="$4"
+	local SNAPNAME="$5"
+	local rsort_cmd='0'
+	local remote_cmd=''
 
-        dSNAP=$(eval echo "$1 | awk '{sub(/$opt_delim/,\"$opt_snapdir$opt_delim\")}; 1'")
+	case "$TYPE" in
+		(remote)
+			umount_list="$MOUNTED_LIST_REM"
+			remote_cmd="$opt_sendtocmd"
+			;;
+		(local)
+			umount_list="$MOUNTED_LIST_LOC"
+			;;
+	esac
 
-        print_log debug "Destroying $opt_mountpoint/$dSNAP"
-        if do_run "btrfs sub delete $opt_mountpoint/$dSNAP"; then
-                DESTROY_COUNT=$(( $DESTROY_COUNT + 1 ))
-        else
-                WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
-        fi
+	if [ -n "$SNAPNAME" ]; then
+		SNAPNAME="@$SNAPNAME"
+	else
+		rsort_cmd='1'
+	fi
+	umount_list=$(printf "%s\n" "$umount_list" | grep ^"$FSNAME$SNAPNAME" )
 
-        do_run "btrfs fi sync $opt_mountpoint/" >/dev/null
+	test -z "$umount_list" && return 0
+
+	# reverse sort the list if unmounting filesystem and not only snapshot
+	umount_list=$(printf "%s\n" "$umount_list" | awk -F'\t' '{print $2}')
+	test $rsort_cmd -eq '1' && umount_list=$(printf "%s\n" "$umount_list" | sort -r)
+
+	for kk in $umount_list; do
+		print_log debug "Trying to unmount '$kk'."
+		umount_cmd="umount '$kk'"
+		if ! do_run "$remote_cmd" "$umount_cmd"; then return "$RC"; fi
+		test "$FLAGS" != "-r" && break
+	done
+
+	return 0
 }
 
-do_snapshot ()
+is_member ()
+{
+	local ARRAY="$1"
+	local MEMBER="$2"
+	local ISMEMBER='1'
+	local mm=''
+
+	for mm in $ARRAY; do
+		if test "$mm" = "$MEMBER"; then
+			ISMEMBER='0'
+			break
+		fi
+	done
+
+	return "$ISMEMBER"
+}
+
+do_send ()
+{
+	local SENDTYPE="$1"
+	local SNAPFROM="$2"
+	local SNAPTO="$3"
+	local SENDFLAGS="$4"
+	local REMOTEFS="$5"
+	local list_child=''
+	local lq=''
+
+	if [ "$SENDFLAGS" = "-R" -a "$SENDTYPE" = "full" ]; then
+		# for full send with -R, target filesystem must be with no snapshots (including snapshots on child filesystems)
+		list_child=$(printf "%s\n" "$SNAPSHOTS_OLD_REM" | grep ^"$REMOTEFS/" )
+	fi
+	if [ "$SENDTYPE" = "full" ]; then
+		list_child=$(printf "%s\n%s\n" "$list_child" $(printf "%s\n" "$SNAPSHOTS_OLD_REM" | grep ^"$REMOTEFS@" ) )
+	fi
+
+	for ll in $list_child; do
+		if [ "$opt_destroy" -eq '1' ]; then
+			if do_destroy "remote" "$ll" ""; then
+				continue
+			fi
+		fi
+		print_log debug "Can't destroy remote objects $REMOTEFS ($ll). Can't continue with send-full. -X allowed?"
+		return 1
+	done
+
+	test -n "$opt_buffer" && lq="'"
+
+	test $SENDTYPE = "incr" && do_run "zfs send " "$SENDFLAGS" "$opt_atonce  $SNAPFROM   $SNAPTO" "$opt_pipe" "$opt_sendtocmd" "$lq$opt_buffer zfs recv  $opt_force -u $REMOTEFS$lq"
+	test $SENDTYPE = "full" && do_run "zfs send " "$SENDFLAGS" "$SNAPTO" "$opt_pipe" "$opt_sendtocmd" "$lq$opt_buffer zfs recv $opt_force -u $REMOTEFS$lq"
+
+	return "$RC"
+}
+
+do_getmountedfs ()
 {
 
-	for ii in $TARGETS
-	do
-		print_log debug "Snapshoting $ii."
+	local MOUNTED_TYPE="$1"
+	local MOUNTED_LIST=''
+	local remote_cmd=''
 
-		if [ ! -d $opt_mountpoint/$ii/$opt_snapdir -a -n "$opt_createdirs" ]; then
-                        print_log debug "Creating snapshot directory for $ii."
-                        mkdir -p $opt_mountpoint/$ii/$opt_snapdir
-                fi
-                if [ ! -d "$opt_mountpoint/$ii/$opt_snapdir$SNAPNAME" ]; then
-                        tmp_runningcopyin=$opt_runningcopyin
-                        z=$(findmnt -n | grep /$ii/ -m1 | awk '{print $2}'); z=${z##*\/}; z=${z%%]}
-                        [ -n "$z" ] && tmp_runningcopyin=$z 
-                        if do_run "btrfs sub snapshot $opt_mountpoint/$ii/$tmp_runningcopyin $opt_mountpoint/$ii/$opt_snapdir$SNAPNAME"; then
-                                SNAPSHOT_COUNT=$(( $SNAPSHOT_COUNT + 1 ))
-                                [ -e $opt_mountpoint/$ii/@last_good_known ] && do_run "btrfs sub delete $opt_mountpoint/$ii/@last_good_known"
-                                do_run "btrfs sub snapshot $opt_mountpoint/$ii/$opt_snapdir$SNAPNAME $opt_mountpoint/$ii/@last_good_known"
-                        else
-                                WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
-                        fi
-                else
-                        print_log warning "Snapshot or volume with this name already exists, skipping $ii/$opt_snapdir$SNAPNAME"
-                fi
+	case "$MOUNTED_TYPE" in
+		(remote)
+			remote_cmd="$opt_sendtocmd"
+			PLATFORM="$PLATFORM_REM"
+			;;
+		(local)
+			PLATFORM="$PLATFORM_LOC"
+			;;
+	esac
 
-                KEEP="$opt_keep"
-                test -z "$KEEP" && continue
-                if [ "$ii" = "." ]; then
-                        ii=""
-                else
-                        ii="$ii/"
-                fi
-                for jj in $SNAPSHOTS_OLD
-                do
-                        if [ -z "${jj#$ii$SNAPGLOB}" ]; then
-                                KEEP=$(( $KEEP - 1 ))
-                                test "$KEEP" -le '0' && do_destroy "$jj"
-                        fi
-                done
+	case "$PLATFORM" in
+		(Linux)
+			MOUNTED_LIST=$(eval $remote_cmd cat /proc/mounts | grep zfs | awk -F' ' '{OFS="\t"}{ORS="\n"}{print $1,$2}' )
+			;;
+		(Darwin)
+			MOUNTED_LIST=$(printf "%s\n%s\n" $(eval $remote_cmd zfs mount | awk -F' ' '{OFS="\t"}{ORS="\n"}{print $1,$2}') \
+				$(eval $remote_cmd mount -t zfs | grep @ | awk -F' ' '{OFS="\t"}{ORS="\n"}{print $1,$3}') )
+			;;
+	esac
 
-        done
+	printf "%s\n" "$MOUNTED_LIST" | sort
+}
+
+do_createfs ()
+{
+
+	local FS="$1"
+
+	for ii in $FS; do
+
+		print_log debug "checking: $opt_sendprefix/$ii"
+
+		if ! is_member "$ZFS_REMOTE_LIST" "$opt_sendprefix/$ii" -eq 0
+		then
+			print_log debug "creating: $opt_sendprefix/$ii"
+
+			if do_run "$opt_sendtocmd" "zfs create -p -o canmount=off -o snapdir=hidden $opt_sendprefix/$ii"
+			then
+				CREATION_COUNT=$(( $CREATION_COUNT + 1 ))
+				CREATED_TARGETS=$(printf "%s\n%s\n" "$CREATED_TARGETS" "$opt_sendprefix/$ii" )
+			fi
+		fi
+	done
 
 }
 
-do_remove_kpartx () 
+delete_rotation_hanoi ()
 {
-	[ -e /run/vars.xbiancopy.$$ ] && { . /run/vars.xbiancopy.$$; rm -f /run/vars.xbiancopy.$$; }
-	[ -n "$loopd" ] && { while ! kpartx -d $loopd &>/dev/null; do sleep 5; done; losetup -d $loopd &>/dev/null; }
-	[ -n "$file_max" -a "$(sysctl -n fs.file-max)" -eq "$MY_FILE_MAX" ] && sysctl -w fs.file-max=$file_max &>/dev/null
-	[ -n "$min_free_kbytes" -a "$(sysctl -n vm.min_free_kbytes)" -eq "$MY_MIN_FREE_KBYTES" ] && sysctl -w vm.min_free_kbytes=$min_free_kbytes &>/dev/null
+
+	local SND_RC="$1"
+	local FALLBACK="$2"
+	local FSNAME="$3"
+	local GLOB="$4"
+	local FLAGS="$5"
+	local SNAPNAME="$6"
+
+	local base_minute=$((60 * $opt_factor ))
+	local base_hour=$(($base_minute * 60))
+	local base_day=$(($base_hour * 24))
+	local base_week=$(($base_day * 7))
+	local base_month=$(($base_day * 31))
+	local base="base_$opt_base"
+
+	local opt_hbase=$(eval echo \$$base)
+
+	classify ()
+	{
+		rec ()
+		{
+			local class='0'
+			local nr="$1"
+			local sl='<<' # Workaround for joe editor
+			while test $(( 1 $sl $(($class)) )) -le $(($nr>>1)); do
+				class=$(($class+1))
+			done
+			bla=$(($nr - $(( 1 $sl $(($class)) )) ))
+			test "$bla" -eq '0' && echo $(($class+1)) || rec "$bla"
+		}
+
+		local creation="$1"
+		local creation_std=''
+		local snapdate=''
+
+		case $PLATFORM_LOC in
+			(Linux)
+				snapdate=$(echo "$creation" | awk -F'-' '{print $1"-"$2"-"$3" "$4}')
+				creation_std=$(($(env LC_ALL=C date -d "$snapdate" +%s ) /  $opt_hbase ))
+				;;
+			(Darwin)
+				creation_std=$(($(env LC_ALL=C date -j -f "%F-%H%M" "$creation" +%s ) / $opt_hbase ))
+				;;
+		esac
+
+		echo $(rec $creation_std)
+	}
+
+	destroy ()
+	{
+		local dlist="$1"
+		local dprefix="$2"
+		local dtype="$3"
+		local dFSNAME="$4"
+		local dFLAGS="$5"
+		local class=''
+		local previous_class='0'
+
+		tmp_table=$(printf "%s\n" "$dlist" |\
+			grep -e ^"$dprefix$FSNAME@$opt_prefix.$opt_label" |
+				while read name; do
+					echo "$(classify ${name#$dprefix$FSNAME@$opt_prefix${opt_label:+?$opt_label}?}) $name"
+				done | sort -k 1rn -k 2r | awk '{print $1"\t"$2}')
+
+		for mm in $tmp_table; do
+			class=$(echo "$mm" | awk -F'\t' '{print $1}')
+			if [ "$class" -eq "$previous_class" ]; then
+				do_destroy "$dtype" $(echo "$mm" | awk -F'\t' '{print $2}')  "$FLAGS"
+			fi
+			previous_class="$class"
+		done
+
+	}
+
+	if [ "$SND_RC" -eq '0' -a "$opt_send" != "no" -o "$opt_send" = "no" ]; then
+		destroy "$(printf "%s\n%s\n" "$SNAPSHOTS_OLD_LOC" "$FSNAME@$SNAPNAME" )" "" "local" "$FSNAME" "$FLAGS"
+		if [ "$opt_send" != "no" ]; then
+			destroy "$(printf "%s\n%s\n" "$SNAPSHOTS_OLD_REM" "$opt_sendprefix/$FSNAME@$SNAPNAME" )" "$opt_sendprefix/" "remote" "$FSNAME" "$FLAGS"
+		fi
+	fi
+
 }
 
-do_rename () 
+delete_rotation_rr ()
 {
-        dSNAP="$opt_mountpoint/$2"
-        sSNAP="$opt_mountpoint/$1"
 
-        dSNAP=$(eval echo "$dSNAP | awk '{sub(/$opt_delim/,\"$opt_snapdir$opt_delim\")}; 1'")
-        sSNAP=$(eval echo "$sSNAP | awk '{sub(/$opt_delim/,\"$opt_snapdir$opt_delim\")}; 1'")
+	local SND_RC="$1"
+	local FALLBACK="$2"
+	local FSNAME="$3"
+	local GLOB="$4"
+	local FLAGS="$5"
 
-        sPATH=$(basename $sSNAP)
-        sPATH=$(echo ${sSNAP%%$sPATH})
+	# Retain at most $opt_keep number of old snapshots of this filesystem,
+	# including the one that was just recently created.
+	if [ -z "$opt_keep" ]; then
+		print_log debug "Number of snapshots not specified. Keeping all."
+		return #continue
+	elif [ "$opt_send" != "no" ] && [ "$SND_RC" -ne '0' ]; then
+		print_log debug "Sending of filesystem was requested, but send failed. Ommiting destroy procedures."
+		return #continue
+	elif [ "$opt_send" != "no" -a -n "$opt_remove" ]; then
+		KEEP="$opt_remove"
+	else
+		KEEP="$opt_keep"
+	fi
+	print_log debug "Destroying local snapshots, keeping $KEEP."
 
-        dPATH=$(basename $dSNAP)
-        dPATH=$(echo ${dSNAP%%$dPATH})
+	# ASSERT: The old snapshot list is sorted by increasing age.
+	for jj in $SNAPSHOTS_OLD_LOC; do
+		# Check whether this is an old snapshot of the filesystem.
+		test -z "${jj#$FSNAME@$GLOB}" -o -z "${jj##$FSNAME@$opt_prefix*}" -a -n "$opt_remove" -a "$opt_send" != "no" && do_destroy "local" "$jj" "$FLAGS" "$KEEP"
+	done
 
-        print_log debug "Renaming from $sPATH to $dPATH"
+	if [ "$opt_send" = "no" ]; then
+		print_log debug "No sending option specified, skipping remote snapshot removal."
+		return #continue
+	elif [ "$sFLAGS" = "-R" ]; then
+		print_log debug "Replication specified, remote snapshots were removed while sending."
+		return #continue
+	elif [ "$opt_destroy" -eq '1' -a "$FALLBACK" -ne '0' -o "$opt_send" = "full" ]; then
+		print_log debug "Sent full copy, all remote snapshots were already destroyed."
+		return #continue
+	else
+		KEEP="$opt_keep"
+		print_log debug "Destroying remote snapshots, keeping $KEEP."
+	fi
 
-        if [ "$sPATH" != "$dPATH" ]; then
-                print_log error "Can't rename snapshot across volumes"
+	# ASSERT: The old snapshot list is sorted by increasing age.
+	for jj in $SNAPSHOTS_OLD_REM; do
+		# Check whether this is an old snapshot of the filesystem.
+		test -z "${jj#$opt_sendprefix/$FSNAME@$GLOB}" && do_destroy "remote" "$jj" "$FLAGS" "$KEEP"
+	done
+
+}
+
+do_snapshots () # properties, flags, snapname, oldglob, [targets...]
+{
+	local PROPS="$1"
+	local sFLAGS="$2"
+	local NAME="$3"
+	local GLOB="$4"
+	local TARGETS="$5"
+
+	if [ "$opt_fstype" = btrfs ]; then
+		for ii in $TARGETS; do
+			print_log debug "Snapshoting $ii."
+
+			if [ ! -d $opt_mountpoint/$ii/$opt_snapdir -a -n "$opt_createdirs" ]; then
+				print_log debug "Creating snapshot directory for $ii."
+				mkdir -p $opt_mountpoint/$ii/$opt_snapdir
+			fi
+			if [ ! -d "$opt_mountpoint/$ii/$opt_snapdir$opt_delim$NAME" ]; then
+				tmp_runningcopyin=$opt_runningcopyin
+				z=$(findmnt -n | grep /$ii/ -m1 | awk '{print $2}'); z=${z##*\/}; z=${z%%]}
+				[ -n "$z" ] && tmp_runningcopyin=$z
+				if do_run "btrfs sub snapshot $opt_mountpoint/$ii/$tmp_runningcopyin $opt_mountpoint/$ii/$opt_snapdir$opt_delim$NAME"; then
+					SNAPSHOT_COUNT=$(( $SNAPSHOT_COUNT + 1 ))
+					[ -e $opt_mountpoint/$ii/@last_good_known ] && do_run "btrfs sub delete $opt_mountpoint/$ii/@last_good_known"
+					do_run "btrfs sub snapshot $opt_mountpoint/$ii/$opt_snapdir$opt_delim$NAME $opt_mountpoint/$ii/@last_good_known"
+				else
+					WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
+				fi
+			else
+				print_log warning "Snapshot or volume with this name already exists, skipping $ii/$opt_snapdir$opt_delim$NAME"
+			fi
+
+			test -z "$opt_keep" && continue
+			KEEP="$opt_keep"
+			if [ "$ii" = "." ]; then
+				ii=""
+			else
+				ii="$ii/"
+			fi
+			for jj in $SNAPSHOTS_OLD_LOC; do
+				if [ -z "${jj#$ii$opt_delim$GLOB}" ]; then
+					do_destroy "local" "$jj" "" "$KEEP"
+				fi
+			done
+		done
+	else
+		local LAST_REMOTE=''
+		local FALLBACK=''
+		local NO_DEL=''
+
+		if test "$sFLAGS" = '-R'; then
+			FLAGS='-r'
+			SNexp='.*'
+		else
+			FLAGS=''
+		fi
+
+		for ii in $TARGETS; do
+			FALLBACK='0'
+			SND_RC='1'
+			NO_DEL='0'
+
+			print_log debug "Snapshooting $ii, PROPS=$PROPS, FLAGS=$FLAGS, NAME=$NAME"
+
+			if echo $SNAPSHOTS_OLD_LOC | grep -q "$ii@last_good_known"; then
+				do_run "zfs destroy $FLAGS '$ii@last_good_known'"
+			fi
+			if echo $SNAPSHOTS_OLD_LOC | grep -q "$ii@$NAME"; then
+				do_run "zfs destroy $FLAGS '$ii@$NAME'" && NO_DEL=1
+			fi
+			if ! do_run "zfs snapshot $PROPS $FLAGS '$ii@$NAME'"; then
+				continue
+			fi
+			do_run "zfs snapshot $PROPS $FLAGS '$ii@last_good_known'"
+
+			SNAPSHOT_COUNT=$(( $SNAPSHOT_COUNT + 1 ))
+
+			[ "$NO_DEL" -eq 0 ] || continue
+
+			if [ "$opt_send" = "incr" ]; then
+
+				LAST_REMOTE=$(printf "%s\n" "$SNAPSHOTS_OLD_REM" | grep ^"$opt_sendprefix/$ii@" | grep -m1 . | awk -F'@' '{print $2}')
+
+				# in case of -R and incremental send, receiving side needs to have $LAST_REMOTE snapshot for each replicated filesystem
+				if [ "$FLAGS" = "-r" ]; then
+					snaps_needed=$(( $(printf "%s\n" "$FS_LOCAL_LIST" | grep -c ^"$ii/") + 1 ))
+				else
+					snaps_needed='1'
+				fi
+
+				# remote filesystem just created. if -R run
+				if is_member "$CREATED_TARGETS" "$opt_sendprefix/$ii"; then
+					FALLBACK='2'
+				elif [ -z "$LAST_REMOTE" ]; then
+					# no snapshot on remote
+					FALLBACK='1'
+				elif [ "$snaps_needed" -ne $(printf "%s" "$SNAPSHOTS_OLD_REM" | grep -c -e ^"$opt_sendprefix/$ii$SNexp@$LAST_REMOTE" ) -o \
+					"$snaps_needed" -ne $(printf "%s" "$SNAPSHOTS_OLD_LOC" | grep -c -e ^"$ii$SNexp@$LAST_REMOTE" ) ]; then
+					FALLBACK='3'
+				else
+					FALLBACK='0'
+				fi
+
+				case "$FALLBACK" in
+					(1)
+						print_log info "Going back to full send, no snapshot exists at destination: $ii"
+						;;
+					(2)
+						print_log info "Going back to full send, remote filesystem was just created: $ii"
+						;;
+					(3)
+						if [ "$FLAGS" = "-r" ]; then
+							print_log info "Going back to full send, last snapshot on remote is not the last one for whole recursion: $opt_sendprefix/$ii@$LAST_REMOTE"
+						else
+							print_log info "Going back to full send, last snapshot on remote is not available on local: $opt_sendprefix/$ii@$LAST_REMOTE"
+						fi
+						;;
+					(0)
+						do_send "incr" "$ii@$LAST_REMOTE" "$ii@$NAME" "$sFLAGS" "$opt_sendprefix/$ii"
+						SND_RC="$?"
+						;;
+				esac
+			fi
+
+			if [ "$opt_send" = "full" -o "$FALLBACK" -ne '0' -a "$opt_fallback" -eq '1' ]; then
+				do_send "full" "" "$ii@$NAME" "$sFLAGS" "$opt_sendprefix/$ii"
+				SND_RC="$?"
+			fi
+			test "$SND_RC" -eq '0' && SENT_COUNT=$(( $SENT_COUNT + 1 ))
+
+			case $opt_rotation in
+				(rr)
+					delete_rotation_rr "$SND_RC" "$FALLBACK" "$ii" "$GLOB" "$FLAGS"
+					;;
+				(hanoi)
+					delete_rotation_hanoi "$SND_RC" "$FALLBACK" "$ii" "$GLOB" "$FLAGS" "$NAME"
+					;;
+			esac
+		done
+	fi
+}
+
+do_createvol () # fs[, mountpoint]
+{
+	if [ "$opt_fstype" = btrfs ]; then
+		btrfs sub create ${opt_mountpoint}/$1 >/dev/null
+		btrfs sub create ${opt_mountpoint}/$1/$opt_delim >/dev/null
+		if [ -n "$2" ]; then
+			mkdir -p "$2"
+			mo=",noauto"
+			[ -n "$opt_mount" ] && mo=''
+			if ! grep -qw "$2" /etc/fstab; then
+				[ -z "$opt_name" ] || echo "# --- Added by $opt_name, modify only if you know what you're doing ---" >> /etc/fstab
+				printf "%-29s \t%-23s xbian   subvol=$1/@,noatime,rw%-$((25-${#1}))s 0       0\n" '/dev/root' "$2" "$mo" >> /etc/fstab
+			fi
+			[ -n "$opt_mount" ] && mount "$2"
+		fi
+	else
+		zfs_pool=$(echo $ZPOOL_STATUS | grep ^pool: | awk '{print $2}')
+		mo='-o com.sun:auto-snapshot=true -o acltype=posixacl -o xattr=sa -o overlay=on'
+		[ -z "$opt_default_exclude" ] || mo="$(echo "$mo" | sed "s/auto-snapshot=true/auto-snapshot=false/g")"
+		[ -n "$2" ] || set -- $1 none
+		mo="$mo -o mountpoint=$2"
+		[ -z "$opt_mount" ] && mo="$mo -o canmount=noauto"
+		zfs create $mo $zfs_pool/$1
+	fi
+	if [ -n "$opt_default_exclude" ]; then
+		if grep -q EXCLUDESUB /etc/default/xbian-snap; then
+			if ! grep -q "EXCLUDESUB=.*$1" /etc/default/xbian-snap; then
+				sed -i "s/EXCLUDESUB=/EXCLUDESUB=$1,/g" /etc/default/xbian-snap
+				sed -i 's/[, \t]*$//' /etc/default/xbian-snap
+			fi
+		else
+			echo "EXCLUDESUB=$1" >> /etc/default/xbian-snap
+		fi
+	fi
+}
+
+do_destroy () # local/remote, fssnapname, flags, keep
+{
+	local DELTYPE="$1"
+	local FSSNAPNAME="$2"
+	local FLAGS="$3"
+	KEEP="$4"
+
+	if [ "$opt_fstype" = btrfs ]; then
+		FSSNAPNAME=$(eval echo "$FSSNAPNAME | awk '{sub(/$opt_delim/,\"$opt_snapdir$opt_delim\")}; 1'")
+
+		KEEP=$(( $KEEP - 1 ))
+		if [ "$KEEP" -le '0' ]; then
+			print_log debug "Destroying $opt_mountpoint/$FSSNAPNAME"
+			if do_run "btrfs sub delete $opt_mountpoint/$FSSNAPNAME"; then
+				DESTROY_COUNT=$(( $DESTROY_COUNT + 1 ))
+			else
+				WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
+			fi
+			do_run "btrfs fi sync $opt_mountpoint/" >/dev/null
+		fi
+	else
+		local FSNAME=$(echo $FSSNAPNAME | awk -F'@' '{print $1}')
+		local SNAPNAME=$(echo $FSSNAPNAME | awk -F'@' '{print $2}')
+		local remote_cmd=''
+
+		print_log debug "do_destroy: 1=$1 2=$2 3=$3 4=$4 FSNAME=$FSNAME SNAPNAME=$SNAPNAME"
+
+		if [ "$FSSNAPNAME" = "$FSNAME" -a "$FLAGS" = "-r" ]; then
+			if [ "$opt_destroy" -ne '1' ]; then
+				print_log warning "Filesystem $FSNAME destroy requested, but option -X not specified. Aborting."
+				return 1
+			else
+				KEEP='0'
+			fi
+		fi
+
+		KEEP=$(( $KEEP - 1 ))
+		if [ "$KEEP" -le '0' ]; then
+			if do_unmount "$DELTYPE" "" "$FLAGS" "$FSNAME" "$SNAPNAME"; then
+				if [ "$DELTYPE" = "remote" ]; then
+					remote_cmd="$opt_sendtocmd"
+				fi
+				if do_run "$remote_cmd" "zfs destroy $FLAGS '$FSSNAPNAME'"; then
+					DESTROY_COUNT=$(( $DESTROY_COUNT + 1 ))
+				else
+					WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
+				fi
+			fi
+		fi
+
+		return "$RC"
+	fi
+}
+
+do_rename () # sourcesnap, destsnap
+{
+	if [ "$opt_fstype" = btrfs ]; then
+		local dSNAP="$opt_mountpoint/$2"
+		local sSNAP="$opt_mountpoint/$1"
+
+		dSNAP=$(eval echo "$dSNAP | awk '{sub(/$opt_delim/,\"$opt_snapdir$opt_delim\")}; 1'")
+		sSNAP=$(eval echo "$sSNAP | awk '{sub(/$opt_delim/,\"$opt_snapdir$opt_delim\")}; 1'")
+
+		local sPATH=$(basename $sSNAP)
+		sPATH=$(echo ${sSNAP%%$sPATH})
+
+		local dPATH=$(basename $dSNAP)
+		dPATH=$(echo ${dSNAP%%$dPATH})
+
+		print_log debug "Renaming from $sPATH to $dPATH"
+
+		if [ "$sPATH" != "$dPATH" ]; then
+			print_log error "Can't rename snapshot across volumes"
+			exit 300
+		elif [ -d "$dSNAP" ]; then
+			print_log error "Destination name already exists!"
+			exit 301
+		elif [ ! -d "$sSNAP" ]; then
+			print_log error "Source name does not exist!"
+			exit 302
+		elif do_run "mv $sSNAP $dSNAP"; then
+			print_log debug "Rename ok"
+		else
+			WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
+		fi
+	else
+		local dFS=$(echo $2 | awk -F'@' '{print $1}')
+		local sFS=$(echo $1 | awk -F'@' '{print $1}')
+		local dNAME=$(echo $2 | awk -F'@' '{print $2}')
+		local sNAME=$(echo $1 | awk -F'@' '{print $2}')
+		local sLIST="$(env LC_ALL=C zfs list -r -H -t snapshot -S creation -o name)"
+
+		print_log debug "Renaming from $1 to $2"
+
+		if [ "$sFS" != "$dFS" ]; then
+			print_log error "Can't rename snapshot across file systems"
+			exit 300
+		elif echo $sLIST | grep -q "$2"; then
+			print_log error "Destination name already exists!"
+			exit 301
+		elif ! echo $sLIST | grep -q "$1"; then
+			print_log error "Source name does not exist!"
+			exit 302
+		elif do_run "zfs rename $1 $2"; then
+			print_log debug "Rename ok"
+		else
+			WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
+		fi
+	fi
+}
+
+do_rollback () # snapshot
+{
+	print_log debug "Rollback from $1"
+
+	if [ "$opt_fstype" = btrfs ]; then
+		local tmpd=$(mktemp -u)
+		tmpd=$(basename $tmpd)
+		do_rename $(dirname $1)/@ $(dirname $1)/@$tmpd
+		do_rename $1 $(dirname $1)/@
+		do_rename $(dirname $1)/@$tmpd $1_rollback
+	else
+		local sLIST="$(env LC_ALL=C zfs list -r -H -t snapshot -S creation -o name)"
+		if ! echo $sLIST | grep -q "$1"; then
+			print_log error "Snapshot does not exist!"
+			exit 302
+		fi
+		if do_run "zfs rollback -r $1"; then
+			if ! echo $sLIST | grep -q "$1_rollback"; then
+				do_run "zfs rename $1 $1_rollback"
+			else
+				WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
+			fi
+		else
+			WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
+			return "$RC"
+		fi
+	fi
+	echo "$MYNAME rollback" >> /var/run/reboot-required
+}
+
+do_mountsnap () # [snapshot[, mountpoint]]
+{
+	local mountpoint="$2"
+	local line
+	local snapshot
+	local sxml
+	local infiles
+
+	if [ -z "$1" -o "$1" = '//' ]; then
+		if [ -e /run/$MYNAME.mount ]; then
+			while read line; do
+				snapshot="$(echo "$line" | awk '{print $1}')"
+				mountpoint="$(echo "$line" | awk '{print $2}')"
+				if [ -n "$opt_helper" ]; then
+					echo "$(echo "$line" | awk '{print $1}')"
+				else
+					echo "$(echo "$line" | awk '{print $1}') on $(echo "$line" | awk '{print $2}')"
+				fi
+			done < /run/$MYNAME.mount
+		fi
+		return
+	fi
+
+	if [ -z "$mountpoint" ]; then
+		mountpoint="/run/$1"
+		mkdir -p "$mountpoint"
+	fi
+
+	if [ -e /run/$MYNAME.mount ] && grep -q "^$1" /run/$MYNAME.mount && [ "$(grep ^$1 /run/$MYNAME.mount | awk '{print $2}')" = "$mountpoint" ]; then
+		print_log info "snapshot $1 is already mounted on $(grep "^$1" /run/$MYNAME.mount | awk '{print $2}')."
+		return
+	fi
+
+	if [ "$opt_fstype" = btrfs ]; then
+		if mount -t btrfs /dev/root -o subvol=/$1,ro "$mountpoint" 2>/dev/null; then
+			echo "$1 $mountpoint" >>/run/$MYNAME.mount
+			print_log info "snapshot $1 mounted on $mountpoint."
+		else
+			print_log error "can not mount snapshot $1 on $mountpoint."
+			exit 124
+		fi
+	else
+		if mount -t zfs "$1" "$mountpoint" 2>/dev/null; then
+			echo "$1 $mountpoint" >>/run/$MYNAME.mount
+			print_log info "snapshot $1 mounted on $mountpoint."
+		else
+			print_log error "can not mount snapshot $1 on $mountpoint."
+			exit 124
+		fi
+	fi
+
+	if [ -n "$opt_helper" ]; then
+		for sxml in $(find /home/xbian -name sources.xml); do
+			grep -q "$1" $sxml && continue
+			infiles=0
+			while read; do
+				case "$REPLY" in
+					*"<files>")  infiles=1 ;;
+					*"</files>") infiles=0 ;;
+				esac
+				echo "$REPLY" >> $sxml.new
+				if [ "$infiles" = 1 -a -z "${REPLY##*$default pathversion*}" ]; then
+					echo "        <source>"                                     >> $sxml.new
+					echo "            <name>XBianSnap $1</name>"                >> $sxml.new
+					echo "            <path pathversion="1">$mountpoint</path>" >> $sxml.new
+					echo "            <allowsharing>true</allowsharing>"        >> $sxml.new
+					echo "        </source>"                                    >> $sxml.new
+					infiles=2
+				fi
+			done < $sxml
+			mv $sxml.new $sxml
+			chown xbian:xbian $sxml
+		done
+		xbmc-send.py --action=loadsources >/dev/null
+	fi
+}
+
+do_umountsnap () # [snapshot]
+{
+	local line
+
+	rmsource () # snapshot
+	{
+		local sxml
+		local infiles
+		local skip
+		local lbuf
+
+		if [ -n "$opt_helper" ]; then
+			for sxml in $(find /home/xbian -name sources.xml); do
+				grep -q "$1" $sxml || continue
+				infiles=0
+				skip=0
+				lbuf=''
+				while read; do
+					case "$REPLY" in
+						*"<files>")  infiles=1 ;;
+						*"</files>") infiles=0 ;;
+					esac
+					if [ "$infiles" = 1 ]; then
+						if [ "$skip" -gt 0 ]; then
+							(( skip-- ))
+							continue
+						elif [ -n "$lbuf" ]; then
+							if [ -z "${REPLY##*$"$1"*}" ]; then
+								skip=3
+								lbuf=''
+								continue
+							fi
+							echo "$lbuf" >> $sxml.new
+							lbuf=''
+						elif [ -z "${REPLY##*$"<source>"*}" ]; then
+							lbuf="$REPLY"
+							continue
+						fi
+					fi
+					echo "$REPLY" >> $sxml.new
+				done < $sxml
+				mv $sxml.new $sxml
+				chown xbian:xbian $sxml
+			done
+			xbmc-send.py --action=loadsources >/dev/null
+		fi
+	}
+
+	umsnap () # snapshot mountpoint delentry
+	{
+		if [ -n "$2" ]; then
+			if mountpoint -q "$2"; then
+				if umount "$2" 2>/dev/null; then
+					if [ -n "$1" ]; then
+						[ -n "$3" ] && sed -i "s%^$1.*%%g;/^$/d" /run/$MYNAME.mount
+						rmsource "$1"
+					fi
+					if [ "$(stat -c %s /run/$MYNAME.mount)" -eq 0 ]; then
+						rm -f /run/$MYNAME.mount
+					fi
+					if [ -n "$1" ]; then
+						print_log info "snapshot $1 unmounted from $2."
+					else
+						print_log info "$2 unmounted."
+					fi
+				else
+					if [ -n "$1" ]; then
+						print_log error "can not umount snapshot $1."
+					else
+						print_log error "can not umount $2."
+					fi
+					exit 125
+				fi
+			fi
+		elif [ -n "$1" ]; then
+			print_log info "snapshot $1 is not mounted."
+		fi
+	}
+
+	if [ -z "$1" -o "$1" = '//' ]; then
+		if [ -e /run/$MYNAME.mount ]; then
+			while read line; do
+				umsnap "$(echo "$line" | awk '{print $1}')" "$(echo "$line" | awk '{print $2}')"
+			done < /run/$MYNAME.mount
+			rm -f /run/$MYNAME.mount
+		else
+			rmsource "XBianSnap "
+		fi
+	else
+		umsnap "$1" "$(grep "^$1" /run/$MYNAME.mount 2>/dev/null | awk '{print $2}')" "1"
+	fi
+}
+
+do_xbiancopy ()
+{
+	XBIANCOPYLOG='/tmp/xbiancopy.log'
+	echo "$@" > $XBIANCOPYLOG
+	if [ "$BACKGROUND" == 1 ]; then
+		PIPECMD1="tee -a $XBIANCOPYLOG"
+		PIPECMD2=$PIPECMD1
+	else
+		PIPECMD1="dialog --progressbox \"Preparing devices and copying /boot\" 10 70"
+		PIPECMD2="dialog --gauge \"Cloning all subvolumes. Please wait...\" 10 70"
+	fi
+
+	file_max=$(sysctl -n fs.file-max)
+	sysctl -w fs.file-max=$MY_FILE_MAX >/dev/null
+	if [ "$(awk '/^MemTotal/{ print $2 }' /proc/meminfo)" -gt 600000 ]; then
+		min_free_kbytes=$(sysctl -n vm.min_free_kbytes)
+		sysctl -w vm.min_free_kbytes=$MY_MIN_FREE_KBYTES >/dev/null
+	fi
+
+	echo "fn=" >/run/vars.xbiancopy.$$
+
+	if [ -b "$2" ] && echo "$2" | grep -vq ".*[0-9]$"; then
+		opt_img="$2"
+	fi
+
+	if [ -n "$opt_img" ]; then
+		opt_nocreate=''				# Does not make sense here
+		opt_remotecmd=''			# Remote currently not supported
+	fi
+
+	case "$opt_recompress" in
+		'')
+			wmsg='Cloning'
+			;;
+		zlib|lzo|lz4|zstd|cleanup)
+			w4free=0
+			for v in $FS_LOCAL_LIST; do
+				if [ -z "$v" ] || ! echo "$v" | grep -qE "\.delete$|\.zlib$|\.lzo$|\.lz4$|\.zstd$"; then
+					continue
+				fi
+				sl=''
+				for s in $(find "${opt_mountpoint}/$v" -mindepth 1 -maxdepth 1 -type d); do
+					sl="$s $sl"
+					w4free=3
+				done
+				btrfs sub del -c $sl "${opt_mountpoint}/$v" >/dev/null
+				btrfs fi sync $opt_mountpoint
+			done
+			if [ "$opt_recompress" = cleanup ]; then
+				exit 0
+			fi
+			opt_nocreate='1'
+			opt_img=''
+			root_dest="$opt_mountpoint"
+			opt_compress="$opt_recompress"
+			opt_recompress=".$opt_recompress"
+			mount -o remount,compress-force=$opt_compress $opt_dev /
+			{
+				echo "start on started xbian-run"
+				echo "exec btrfs-auto-snapshot compress --compress=cleanup"
+				echo "post-start exec rm -f /etc/init/xbian-cleanup.conf"
+			} > /etc/init/xbian-cleanup.conf
+			wmsg='Compressing'
+			;;
+		*)
+			print_log error "wrong compression type $opt_recompress."
+			exit 5
+			;;
+	esac
+
+	set -o pipefail
+	(
+		if [ $# -ne 2 -a -z "$opt_recompress" ] || [ $# -ne 1 -a -n "$opt_recompress" ]; then
+			print_log error "wrong aruments list $@."
+			exit 5
+		fi
+		if [ -z "$opt_recompress" ] && [ "$(readlink -e $1)" = "$(readlink -e $2)" -a -n "$(readlink -e $1)" ]; then
+			print_log error "source ($1) and destination ($1) can not be the same."
+			exit 5
+		fi
+
+		if [ "$1" != "$opt_dev" -a "$1" != '/dev/root' -a "$1" != '//' ]; then
+			FS_LOCAL_LIST=$($MYNAME listvol --dev $1 //)
+			RC=$?
+			if [ "$RC" -ne 0 ]; then
+				exit $RC
+			fi
+		fi
+
+		if [ "$opt_fstype" = btrfs ]; then
+			if grep -q "rootflags=subvol=" /proc/cmdline; then
+				subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
+				snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootflags=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
+			fi
+			FS_LOCAL_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$FS_LOCAL_LIST" | sort | uniq)
+			snapextra=$(printf "%s\n%s\n" "@$snapextra" "@" | sort | uniq)
+		else
+			FS_LOCAL_LIST=$(printf "%s\n" "$FS_LOCAL_LIST" | grep -vw 'swap' | grep "$opt_rpool/" | sort | uniq)
+			snapextra='@'
+		fi
+		printf "FS_LOCAL_LIST='%s'\nsnapextra=%s\n" "$FS_LOCAL_LIST" "$snapextra" >>/run/vars.xbiancopy.$$
+
+		if [ -n "$opt_img" ]; then
+
+			if [ "$opt_img" = 'file' ]; then
+				fn=$(mapAndMountFn mount "$2")
+				if [ "$?" -ne 0 ]; then
+					print_log error "can not mount fs $(dirname $2).)"
+					exit 5
+				fi
+
+			        set -- $1 "$fn"
+			        sed -i "s%^fn=.*%fn=\"$2\"%g" /run/vars.xbiancopy.$$
+			        rm -f "$2"
+
+			        if ! touch "$2" 2>/dev/null; then
+					print_log error "can not create img file"
+					exit 5
+				fi
+			        if [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ]; then
+					print_log error "img file can not be created on the source filesystem."
+					exit 5
+				fi
+
+				if [ -z "$opt_size" ]; then
+					for v in $FS_LOCAL_LIST; do
+						[ -n "$v" ] || continue
+						for s in $snapextra; do
+							sv=$(btrfs-auto-snapshot volsize "$v/$s")
+							size=$((size+sv))
+						done
+					done
+					opt_size="$(($size*12/10/1024/1024))M"
+				fi
+				size="$(numfmt --from=iec $opt_size)"
+
+				if [ "$(df -B1 "$2" | tail -1 | awk '{print $4}')" -lt "$size" ]; then
+					print_log error "not enough free space on destination filesystem."
+					rm -f "$2"
+					exit 5
+				fi
+
+				chattr +CA "$2" 2>/dev/null
+				if ! truncate -s $size "$2"; then
+					print_log error "can't resize img file to needed size."
+					exit 5
+				fi
+			else
+				for m in $(findmnt -n | grep "$2" | awk '{print $1}'); do
+					umount -l "$m"
+				done
+				for s in $(swapon -s --noheadings | grep "$2" | awk '{print $1}'); do
+					swapoff "$s"
+				done
+			fi
+
+			config_offset_root=206848
+			if ! parted -s "$2" mklabel msdos \
+					|| ! echo "2048,$((config_offset_root-2048)),b,*," | sfdisk -uS -N1 -f -q "$2" >/dev/null 2>&1 \
+					|| ! echo "$config_offset_root,+,83,," | sfdisk -uS -N2 -f -q "$2" >/dev/null 2>&1; then
+				print_log error "can't create destination partitions."
+				exit 5
+			fi
+
+			modprobe -q loop
+			loopd=$(losetup -f)
+			losetup $loopd "$2"
+			kpartx -a $loopd && echo "loopd=$loopd" >>/run/vars.xbiancopy.$$
+			loopd=${loopd#/dev/}
+
+			timeout=0
+			while ! [ -L /dev/mapper/${loopd}p1 ]; do
+				timeout=$(($timeout+1))
+				if [ $timeout -gt 10 ]; then
+					print_log error "loop device not available."
+					exit 4
+				fi
+				sleep 1
+			done
+
+			if [ "$(xbian-arch)" = iMX6 ]; then
+				dd if=/etc/uboot-env/SPL of=/dev/$loopd bs=1K seek=1 2>/dev/null 1>&2
+				dd if=/etc/uboot-env/u-boot.img of=/dev/$loopd bs=1K seek=42 2>/dev/null 1>&2
+				mkfs.ext2 -L xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
+			else
+				mkfs.msdos -F 16 -n xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
+			fi
+
+			if ! mountpoint -q /boot && ! mount /boot 2>/dev/null; then
+				print_log error "can not mount source boot partition."
+				exit 5
+			fi
+
+			mkdir -p /run/boot-dest
+			if ! mount /dev/mapper/${loopd}p1 /run/boot-dest 2>/dev/null; then
+				print_log error "can not mount destination boot partition."
+				exit 5
+			fi
+
+			[ "$BACKGROUND" == 1 ] && cp -av /boot/* /run/boot-dest 2>&1 || cp -a /boot/* /run/boot-dest 2>/dev/null
+
+			if [ "$(xbian-arch)" = RPI ]; then
+				sed -i 's/^#initramfs /initramfs /' /run/boot-dest/config.txt
+			fi
+			if [ "$(xbian-arch)" = iMX6 ]; then
+				[ -e /boot/initramfs.gz.notinuse -a ! -e /boot/initramfs.gz ] && mv /run/boot-dest/initramfs.gz.notinuse /run/boot-dest/initramfs.gz
+			fi
+
+			while ! umount /run/boot-dest; do ! mountpoint -q /run/boot-dest && break; sleep 1; done; rmdir /run/boot-dest
+			sync
+
+			set -- $1 /dev/mapper/${loopd}p2
+		fi
+
+		if [ -z "$opt_recompress" ]; then
+			if eval $opt_remotecmd findmnt -n -S "$2" >/dev/null && ! eval $opt_remotecmd umount "$2" 2>/dev/null; then
+				print_log error "can not umount destination partition."
+				exit 5
+			fi
+
+			eval $opt_remotecmd rm -rf $root_dest
+			eval $opt_remotecmd mkdir -p $root_dest
+		fi
+
+		if [ -z "$opt_nocreate" ]; then
+			if [ "$opt_fstype" = btrfs ]; then
+				if ! eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1; then
+					print_log error "can not format destination partition $2."
+					exit 5
+				fi
+				echo "partuuid=$(eval $opt_remotecmd blkid -s UUID -o value $2)" >>/run/vars.xbiancopy.$$
+				osep=''
+				if [ -z "$opt_compress" ]; then
+					for PARM in "compress=" "compress-force="; do
+						p=$(findmnt -n ${opt_mountpoint} | tr ',' ' ' | awk -v a=".*$PARM" -v b="$PARM" "/$PARM/"'{ sub(a,b); print $1 }' 2>/dev/null)
+						[ -z "$p" ] || { opt_compress="$opt_compress$p"; osep=','; }
+					done
+				else
+					c=${opt_compress##*compress=}; c=${c##*compress-force=}
+					case "$c" in
+						zlib|lzo|lz4|zstd|compress)
+							! echo "$opt_compress" | grep -qE "^compress=|^compress-force=|^compress$" && opt_compress="compress=$c"
+							;;
+						*)
+							opt_compress="compress=lzo"; print_log warning "wrong compression specified, using default $opt_compress."
+							;;
+					esac
+					osep=','
+				fi
+
+				if ! eval $opt_remotecmd mount -o ${opt_compress}${osep}noatime,thread_pool=1 $2 $root_dest; then
+					if ! eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 $root_dest; then
+						print_log error "can not mount destination partition."
+						exit 6
+					fi
+					opt_compress="compress=lzo"; print_log warning "can not mount with compression specified, using default $opt_compress."
+				fi
+				echo "opt_compress=$opt_compress" >>/run/vars.xbiancopy.$$
+			else
+				if [ "$opt_img" = 'file' ]; then
+					puid="$2"
+				else
+					puid=$(blkid -s PARTUUID -o value $2)
+				fi
+				if ! eval $opt_remotecmd zpool create -f -o ashift=12 -O com.sun:auto-snapshot=false -O acltype=posixacl -O xattr=sa -O atime=off \
+						-O canmount=off -O compression=lz4 -O normalization=formD -O mountpoint=/ -R $root_dest $opt_clonename $puid 2>/dev/null; then
+					print_log error "can not create destination pool in $2."
+					exit 5
+				fi
+			fi
+		fi
+
+	) | eval "$PIPECMD1"
+
+	RC=$?
+	set +o pipefail
+	. /run/vars.xbiancopy.$$
+
+	if [ "$RC" -eq 0 ]; then
+
+		set -o pipefail
+		(
+			echo "$wmsg subvolumes $FS_LOCAL_LIST ($snapextra)" | sed ':a;N;$!ba;s/\n/, /g;s/, $//g' >> $XBIANCOPYLOG
+
+			if [ -n "$opt_recompress" ]; then
+				sl=''
+				for sv in $(for t in $TARGETS_DREGULAR $TARGETS_DRECURSIVE; do printf "%s\n" $SNAPSHOTS_OLD_LOC | grep "^$t" | grep -v "/${opt_delim}$"; done); do
+					sl="$sl ${opt_mountpoint}/$sv"
+					w4free=3
+				done
+				[ -z "$sl" ] || btrfs sub del -c $sl >/dev/null
+				btrfs fi sync $opt_mountpoint
+				while [ "$(df --output=used,avail ${opt_mountpoint} | tail -1 | awk '{print $2 - $1}')" -le 0 ]; do
+					((w4free--))
+					if [ "$w4free" -lt 0 ]; then
+						print_log error "not enough space available."
+						exit 16
+					fi
+					sleep 10
+				done
+				if [ -z "$opt_skip_scrub" ]; then
+					[ "$BACKGROUND" == 1 ] || printf "XXX\n0\n$(printf '\n %s %s/%s. Total <scrubbing>. Done <waiting>.' $wmsg - -)\nXXX\n"
+					if ! btrfs scrub start -Bq /; then
+						print_log error "data error on disk, compressing not possible."
+						exit 17
+					fi
+				fi
+			fi
+
+			set -o pipefail
+			for v in $FS_LOCAL_LIST; do
+				if [ -z "$v" ] || echo "$v" | grep -qE "\.delete$|\.zlib$|\.lzo$|\.lz4$|\.zstd$"; then
+					continue
+				fi
+				vd="${root_dest}/$v$opt_recompress"
+				vs="${opt_mountpoint}/$v"
+				if [ "$opt_fstype" = btrfs ]; then
+					eval $opt_remotecmd btrfs sub create "$vd"
+				fi
+				for s in $snapextra; do
+					[ -n "$s" ] || continue
+					[ "$BACKGROUND" == 1 ] || printf "XXX\n0\n$(printf '\n %s %s/%s. Total <calculating>. Done <waiting>.' $wmsg $v $s)\nXXX\n"
+					if [ "$opt_fstype" = btrfs ]; then
+						[ -e "${vs}/$s" ] || continue
+						[ -e "${vs}/$s.ro" ] && btrfs sub delete "${vs}/$s.ro" >/dev/null
+						btrfs sub snap -r "${vs}/$s" "${vs}/$s.ro" && sync && btrfs fi sync "${vs}/$s.ro"
+						siz=$(du -sxb "${vs}/$s.ro" | awk '{print $1}')
+					else
+						zfs destroy $v@ro 2>/dev/null
+						zfs snapshot $v@ro
+						siz=$(zfs list -Hpo refer,compressratio $v@ro | awk '{printf "%d", $1*$2*0.970}')
+					fi
+					[ "$siz" -gt 100000000 ] && ival=20 || ival=2
+					copy_volume () {
+						if [ "$opt_fstype" = btrfs ]; then
+							if [ "$1" = tar ]; then
+								eval $opt_remotecmd btrfs sub create "${vd}/$s" && eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" || exit 12
+								to='--warning=none --acls --xattrs'
+								nice -n 10 tar c $to -C ${vs}/$s.ro . | pv -i $ival -ns $siz | eval $opt_remotecmd nice -n 10 tar x $to -C "${vd}/$s"
+							else
+								nice -n 10 btrfs send "${vs}/$s.ro" | pv -i $ival -ns $siz | eval $opt_remotecmd nice -n 10 btrfs receive "${vd}"
+							fi
+						else
+							nice -n 10 zfs send --props $v@ro | pv -i $ival -ns $siz | eval $opt_remotecmd nice -n 10 zfs receive -u "$opt_clonename/${v#*/}"
+						fi
+					}
+					ar=0
+					( copy_volume $opt_cpmode ) 2>&1 | \
+						while read a; do
+							if [ -n "${a##*[!0-9]*}" ]; then
+								(( $a < $ar )) && a=100
+								if [ "$BACKGROUND" == 1 ]; then
+									echo "$(printf '%s %s/%s, %d of %d, %d%% done' $wmsg $v $s $((siz*a/100)) $siz $a)"
+								else
+									printf "XXX\n$a\n$(printf '\n %s %s/%s. Total %d. Done %d.' $wmsg $v $s $siz $((siz*a/100)))\nXXX\n"
+								fi
+								ar=$a
+							fi
+						done
+					[ "$?" -eq 0 ] || { [ "$BACKGROUND" == 1 ] && printf "%s\n" "$wmsg subvolume $v snapshot $s failed"; exit 10; }
+					if [ "$opt_fstype" = btrfs ]; then
+						if [ "$opt_cpmode" = tar ]; then
+							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" && sync && btrfs sub delete "${vs}/$s.ro" || exit 11
+						else
+							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s.ro" && sync && btrfs sub delete "${vs}/$s.ro" || exit 11
+							eval $opt_remotecmd nice -n 10 btrfs sub delete "${vd}/$s" 2>/dev/null
+							eval $opt_remotecmd nice -n 10 btrfs sub snap "${vd}/$s.ro" "${vd}/$s" && sync || exit 12
+							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" || exit 13
+							eval $opt_remotecmd nice -n 10 btrfs sub delete "${vd}/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "$vd" || exit 14
+						fi
+					else
+						zfs destroy "$v@ro"
+						eval $opt_remotecmd zfs destroy "$opt_clonename/${v#*/}@ro"
+					fi
+					[ "$BACKGROUND" == 1 ] && printf "%s\n" "Done processing subvolume $v snapshot $s"
+				done
+				[ "$BACKGROUND" == 1 ] && printf "%s\n" "Done processing subvolume $v"
+			done
+
+			if [ "$opt_fstype" = zfs ]; then
+				vdr="$(zpool get -H bootfs -o value "$opt_rpool" | sed "s%$opt_rpool%$opt_clonename%g")"
+				eval $opt_remotecmd zpool set bootfs=$vdr $opt_clonename
+				echo "vdr=$vdr" >>/run/vars.xbiancopy.$$
+			fi
+
+			if [ -n "$opt_recompress" ]; then
+				for v in $FS_LOCAL_LIST; do
+					if [ -z "$v" ] || echo "$v" | grep -qE "\.delete$|\.zlib$|\.lzo$|\.lz4$|\.zstd$"; then
+						continue
+					fi
+					vs="${opt_mountpoint}/$v"
+					mv "$vs" "${vs}.delete" && mv "${vs}$opt_recompress" "$vs" || exit 15
+				done
+				if ! mountpoint -q /boot && ! mount /boot 2>/dev/null; then
+					print_log error "can not mount boot partition."
+					exit 5
+				fi
+				if test -e /boot/cmdline.txt; then
+					sed -i "s/compress=[a-z4]*/compress=$opt_compress/g" /boot/cmdline.txt
+					sed -i "s/compress-force=[a-z4]*/compress-force=$opt_compress/g" /boot/cmdline.txt
+				fi
+				if test -e /boot/boot.scr.txt; then
+					sed -i "s/compress=[a-z4]*/compress=$opt_compress/g" /boot/boot.scr.txt
+					sed -i "s/compress-force=[a-z4]*/compress-force=$opt_compress/g" /boot/boot.scr.txt
+					( cd /boot; ./mks; )
+				fi
+				echo "$MYNAME xbiancopy --recompress" >> /var/run/reboot-required
+			fi
+
+			exit 0
+		) 2>&1 | eval "$PIPECMD2"
+
+		RC=$?
+		set +o pipefail
+	fi
+
+	. /run/vars.xbiancopy.$$ 2>/dev/null
+
+	loopd=${loopd#/dev/}
+	if [ "$RC" -eq 0 -a -n "$opt_img" ]; then
+		UUID=$(blkid -s UUID -o value /dev/mapper/${loopd}p1)
+		FSTABBOOT="$(printf "%-29s \t/boot                   xbian   noatime,rw,private                            0       1" UUID=$UUID)"
+		[ "$BACKGROUND" == 1 ] && echo "Setting UUID=$UUID for boot partition in /etc/fstab" >> $XBIANCOPYLOG
+		if [ "$opt_fstype" = btrfs ]; then
+			eval "$opt_remotecmd sed -i \"s%.*/boot.*%$FSTABBOOT%g\" $root_dest/root/@/etc/fstab"
+		else
+			eval $opt_remotecmd zfs mount $vdr
+			eval "$opt_remotecmd sed -i \"s%.*/boot.*%$FSTABBOOT%g\" $root_dest/etc/fstab"
+			eval $opt_remotecmd zfs unmount $vdr
+		fi
+	fi
+
+	if [ -z "$opt_recompress" ]; then
+		eval $opt_remotecmd umount $root_dest 2>/dev/null
+		eval $opt_remotecmd rmdir $root_dest 2>/dev/null
+	fi
+
+	if [ "$RC" -eq 0 -a -n "$opt_img" ]; then
+		mkdir -p /run/boot-dest
+		if mount /dev/mapper/${loopd}p1 /run/boot-dest 2>/dev/null; then
+			cmdroot=$(grep -o "root=[^ ]*" /proc/cmdline)
+			cmdcompr=$(grep -oE "(compress=|compress-force=)""[^ ]*" /boot/cmdline.txt)
+			if [ "$opt_fstype" = btrfs ]; then
+				if test -e /boot/cmdline.txt; then
+					[ "$BACKGROUND" == 1 ] && echo "Setting UUID=$partuuid for root partition in cmdline.txt" >> $XBIANCOPYLOG
+					sed -i "s%$cmdroot%root=UUID=$partuuid%" /run/boot-dest/cmdline.txt
+					[ -n "$opt_compress" ] && sed -i "s%$cmdcompr%$opt_compress%" /run/boot-dest/cmdline.txt
+				fi
+				if test -e /boot/boot.scr.txt; then
+					[ "$BACKGROUND" == 1 ] && echo "Setting UUID=$partuuid for root partition in boot.scr.txt" >> $XBIANCOPYLOG
+					sed -i "s%$cmdroot%root=UUID=$partuuid%" /run/boot-dest/boot.scr.txt
+					[ -n "$opt_compress" ] && sed -i "s%$cmdcompr%$opt_compress%" /run/boot-dest/boot.scr.txt
+					( cd /run/boot-dest; ./mks; )
+				fi
+			else
+				if test -e /boot/cmdline.txt; then
+					[ "$BACKGROUND" == 1 ] && echo "Setting ZFS=$opt_clonename for root partition in cmdline.txt" >> $XBIANCOPYLOG
+					sed -i "s%$cmdroot%root=ZFS=$opt_clonename%" /run/boot-dest/cmdline.txt
+				fi
+				if test -e /boot/boot.scr.txt; then
+					[ "$BACKGROUND" == 1 ] && echo "Setting ZFS=opt_clonename for root partition in boot.scr.txt" >> $XBIANCOPYLOG
+					( cd /run/boot-dest; sed -i "s%$cmdroot%root=ZFS=$opt_clonename%" boot.scr.txt; ./mks; )
+				fi
+			fi
+			while ! umount /run/boot-dest 2>/dev/null; do ! mountpoint -q /run/boot-dest && break; sleep 1; done; sync
+		fi
+		rmdir /run/boot-dest
+	fi
+
+	if [ "$RC" -eq 0 ]; then
+		success_msg="Operation sucessfully completed!"
+		if [ -z "$opt_helper" -a -e ${CONFIGPATH} ]; then
+			echo "$DATE" > ${CONFIGPATH}/$opt_command
+			chown xbian:xbian ${CONFIGPATH}/${opt_command}
+		fi
+	else
+		success_msg=$(printf "Sorry, operation failed with error #%03d!" $RC)
+		if [ -n "$fn" ]; then
+			[ "$BACKGROUND" = 1 ] && print_log info "Removing broken image file ${fn##*/}." >> $XBIANCOPYLOG
+			rm -f "$fn"
+		fi
+		if ps --no-headers -o command $PPID | grep -q 'xbian-config'; then
+			opt_helper=1
+		fi
+	fi
+
+	echo "$success_msg" >> $XBIANCOPYLOG
+	if [ -z "$opt_helper" -a "$BACKGROUND" = 0 ]; then
+		sizeX=79
+		sizeY=7
+		if [ "$RC" -eq 0 ]; then
+			. /etc/os-release
+			if dpkg --compare-versions "$VERSION_ID" lt "1.0"; then
+			        msg1="\n\n
+For users on xbian version below beta2 (beta1.1, beta1). beta2 and above\n
+handles this automaticaly. /etc/fstab file needs to be adapted for /home to\n
+be mounted properly on the new xbian copy. Do the following steps:\n
+\n
+1) mount -t btrfs -o subvol=root/@ LABEL=xbian-copy /mnt\n
+2) nano /mnt/etc/fstab\n
+3) change lines starting with LABEL=xbian-root-btrfs to LABEL=xbian-copy\n
+4) umount /mnt\n"
+				sizeY=$((sizeY+10))
+			fi
+
+			if [ -n "$opt_recompress" ]; then
+			        msg2="\n\n
+You have to to reboot system immediately for finishing operation\n
+and cleaning up disk."
+				sizeY=$((sizeY+4))
+			elif [ -z "$opt_img" ]; then
+			        msg2="\n\n
+Change /boot/cmdline.txt if you want to boot from the copy just created\n
+In this file, change\n
+$ro\n
+to\n
+$rn\n
+before you reboot."
+				sizeY=$((sizeY+8))
+			else
+			        msg2="\n\n
+The created img file can be flashed whenever required to sd-card,\n
+followed by plugging this card into your device and boot from it."
+				sizeY=$((sizeY+4))
+			fi
+
+		else
+			sizeX=44
+		fi
+		if [ -n "$opt_recompress" ]; then
+			dialog --yes-label ' Reboot ' --no-label ' Return ' --yesno "\n$success_msg$msg1$msg2" $sizeY $sizeX
+			case "$?" in
+				0) reboot ;;
+				*) ;;
+                        esac
+		else
+			dialog --clear --msgbox "\n$success_msg$msg1$msg2" $sizeY $sizeX
+		fi
+	fi
+
+	[ -e "/tmp/xbiancopy.running" ] && touch /tmp/xbiancopy.running.$(cat /tmp/xbiancopy.running)
+	exit $RC
+}
+
+do_backuphome ()
+{
+	BACKUPHOMELOG='/tmp/backuphome.log'
+	if [ "$BACKGROUND" == 1 ]; then
+		echo "$@" > $BACKUPHOMELOG
+		PIPECMD="tee -a $BACKUPHOMELOG"
+	else
+		PIPECMD="dialog --gauge \"Cloning home. Please wait...\" 10 60"
+	fi
+
+	fn=$(mapAndMountFn mount "$1")
+	if [ "$?" -ne 0 ]; then
+		print_log error "can not mount fs"
+		exit 5
+	fi
+
+	if [ "$(dirname "$fn")" = "/xbmc-backup" -o "$fn" = "//" ]; then
+		FILE="/xbmc-backup/temp/backup_home_$DATE.$opt_fstype.img.gz"
+		mkdir -p /xbmc-backup/temp
+		find /xbmc-backup -type f -print0 | xargs -0 rm -f || :
+	else
+		FILE="$fn"
+		rm -f "$FILE"
+	fi
+
+	packcmd=$(which lz4) || packcmd=gzip
+	touch "$FILE"
+	chattr +C "$FILE" 2>/dev/null
+	echo 999 >/tmp/backuphome.statusx
+
+	set -o pipefail
+	cpb () {
+		ar=0
+		while read a; do
+			echo "$a" | grep -q ^[0-9] && { (($a > $ar)) && ar=$a; echo "$a"; }
+		done | eval "$PIPECMD"
+	}
+	if [ "$opt_fstype" = btrfs ]; then
+		btrfs sub delete "${tmp_dir}/home/@ro" 2>/dev/null
+		btrfs sub snap -r "${tmp_dir}/home/@" "${tmp_dir}/home/@ro" && \
+		( btrfs send -v "${tmp_dir}/home/@ro" | pv -i 20 -n -s $(du -sxb ${tmp_dir}/home/@ro | awk '{printf "%d", $1*1.08}') | $packcmd -1 >> "$FILE") 2>&1 | cpb
+		RC=$?
+		btrfs sub delete "${tmp_dir}/home/@ro" && btrfs fi sync ${tmp_dir}
+	else
+		home_ds=$(zfs list -Ho name,mountpoint | grep /home$ | awk '{print $1}')
+		zfs destroy ${home_ds}@ro 2>/dev/null
+		zfs snapshot ${home_ds}@ro && \
+		( zfs send --props ${home_ds}@ro | pv -i 20 -n -s $(zfs list -Hpo refer,compressratio ${home_ds}@ro | awk '{printf "%d", $1*$2*0.970}') | $packcmd -1 >> "$FILE") 2>&1 | cpb
+		RC=$?
+		zfs destroy ${home_ds}@ro
+	fi
+	set +o pipefail
+
+	if [ "$RC" -ne 0 ]; then
+		rm -f "$FILE"
+		exit 1
+	fi
+
+	if [ "$(dirname "$fn")" = "/xbmc-backup" -o "$fn" = "//" ]; then
+		if [ "$fn" = "//" ]; then
+			mv "$FILE" /xbmc-backup/$(hostname)_$(basename "$FILE")
+		else
+			mv "$FILE" "$fn"
+		fi
+		rmdir /xbmc-backup/temp
+		mkdir -p /xbmc-backup/put_here_to_restore
+	fi
+
+	if [ -e "/tmp/backuphome.running" ]; then
+		touch /xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)
+	fi
+
+	if [ -e ${CONFIGPATH} ]; then
+		echo "$DATE" > ${CONFIGPATH}/$opt_command
+		chown xbian:xbian ${CONFIGPATH}/${opt_command}
+	fi
+}
+
+do_restorehome ()
+{
+	if [ ! -e "$1" ]; then
+		print_log error "Source file $1 does not exist."
+		exit 500
+	fi
+
+	fn="$1"
+	if [ "$(dirname "$fn")" = '/xbmc-backup/put_here_to_restore' ]; then
+		mv "$fn" "$fn.working"
+		fn="$fn.working"
+		opt_remove=1
+	fi
+
+	packcmd=''
+	for p in gunzip lz4; do
+		if $p -t "$fn" 2>/dev/null; then
+			packcmd=$p
+			break
+		fi
+	done
+	if [ -z "$packcmd" ]; then
+		print_log error "Source file $1 is not valid gzip or lz4 archive."
+		[ -z "$opt_remove" ] || rm -f "$fn"
+		exit 501
+	fi
+
+	if [ "$opt_fstype" = btrfs ]; then
+		btrfs sub delete ${tmp_dir}/home/@ro > /dev/null 2>&1
+		$packcmd -cd < "$fn" | btrfs receive -v ${tmp_dir}/home
+	else
+		home_ds=$(zfs list -Ho name,mountpoint | grep /home$ | awk '{print $1}')
+		homerestore_ds=$(echo $home_ds | sed "s/home/${opt_command}/g")
+		zfs destroy -r $homerestore_ds 2>/dev/null
+		$packcmd -cd < "$fn" | zfs receive -vu $homerestore_ds
+	fi
+	RC=$?
+
+	[ -z "$opt_remove" ] || rm -f "$fn"
+
+	if [ $? -ne 0 ]; then
+		print_log error "Restoring /home from $1 failed."
+		exit 502
+	fi
+
+	kodi_start=''
+	if pgrep 'xbmc.bin|kodi.bin' >/dev/null; then
+		kodi_start=1
+		service xbmc stop
+	fi
+	service zram-swap stop
+
+	home_mounts=''
+	for m in $(mount | awk '{print $3}' | grep "/home"); do home_mounts="$home_mounts $m"; done
+
+	locks=$(lsof | grep "/home" | awk '{print $2}' | sort | uniq)
+	i=0; sig='-SIGTERM'
+	while test "$locks" != ''; do
+		[ $i -gt 3 ] && sig='-SIGKILL'
+		for p in $locks; do
+			kill $sig $p
+		done
+		sleep 2
+		locks=$(lsof | grep "/home" | awk '{print $2}' | sort | uniq)
+		((i++))
+	done
+
+	for m in $(mount | awk '{print $3}' | grep "/home" | sort -r); do while mountpoint -q "$m"; do umount "$m" || sleep 1; done; done
+
+	if [ "$opt_fstype" = btrfs ]; then
+		btrfs sub delete ${tmp_dir}/home/@
+		btrfs sub snap ${tmp_dir}/home/@ro ${tmp_dir}/home/@
+		btrfs sub delete ${tmp_dir}/home/@ro
+	else
+		zfs rename $home_ds $home_ds.old
+		zfs rename $homerestore_ds $home_ds
+		zfs rollback $home_ds@ro && zfs destroy -r $home_ds.old
+		zfs destroy $home_ds@ro
+	fi
+
+	for m in $home_mounts; do
+		mount $m 2>/dev/null
+		if [ "$?" -ne 0 -a "$opt_fstype" = zfs ] && ! mountpoint $m >/dev/null; then
+			mount_ds=$(zfs list -Ho name,mountpoint | grep "$m$" | awk '{print $1}')
+			zfs mount $mount_ds
+		fi
+	done
+
+	service zram-swap start
+	[ -z "$kodi_start" ] || service xbmc start
+
+	print_log notice "Restoring /home from ${1##*/} was successful."
+}
+
+# /------------------------------------------------------------------\
+# |                 Main program from here to end                    |
+# \------------------------------------------------------------------/
+
+case "$MYNAME" in
+	xbian-compress)
+		;;
+	*)
+		if [ "$#" -eq '0' ]; then
+			print_log error "Argument list empty"
+			exit 104
+		fi
+esac
+
+PLATFORM_LOC=`uname`
+case "$PLATFORM_LOC" in
+        (Linux)
+                getopt_cmd='getopt'
+                ;;
+        (Darwin)
+                # macports path as default. Homebrew as fallback
+                getopt_cmd='/opt/local/bin/getopt'
+                if [ ! -f $getopt_cmd ]; then
+                        getopt_cmd='/usr/local/opt/gnu-getopt/bin/getopt'
+                fi
+                ;;
+        (*)
+                print_log error "Local system not known ($PLATFORM_LOC) - needs one of Darwin, Linux. Exiting."
                 exit 300
-        elif [ -d "$dSNAP" ]; then
-                print_log error "Destination name already exists!"
-                exit 301
-        elif [ ! -d "$sSNAP" ]; then
-                print_log error "Source name does not exists!"
-                exit 302
-        else
-                if do_run "mv $sSNAP $dSNAP"; then
-                        print_log debug "Rename ok"
-                else
-                        WARNING_COUNT=$(( $WARNING_COUNT + 1 ))
-                fi
-        fi 
-
-}
-
-if [ "$#" -eq '0' ]; then
-    print_log error "Argument list empty"
-    exit 104
-fi
+                ;;
+esac
 
 [ -e /etc/default/xbian-internals ] && . /etc/default/xbian-internals
-[ -z "$OPT_COPY_MODE" ] || opt_cpmode=$OPT_COPY_MODE
-[ -z "$OPT_COMPRESS" ] || opt_compress=$OPT_COMPRESS
+[ -z "$OPT_COPY_MODE" ] || opt_cpmode="$OPT_COPY_MODE"
+[ -z "$OPT_COMPRESS" ]  || opt_compress="$OPT_COMPRESS"
+[ -z "$OPT_REMOTECMD" ] || opt_remotecmd="OPT_REMOTECMD"
 
-stopt=${1%%-*}
-if [ "$1" != '//' -a "$stopt" != '' ]; then
-    opt_command="$1"
-    shift 1
+if [ "$1" != '//' -a "${1%%-*}" != '' ]; then
+	opt_command="$1"
+	shift 1
 else
-    opt_command='snapshot'
+	case "$MYNAME" in
+		btrfs-auto-snapshot|zfs-auto-snapshot|xbian-snapper)	opt_command='snapshot' ;;
+		xbian-compress)						opt_command='compress' ;;
+	esac
 fi
 
-
-GETOPT=$(getopt \
-        --longoptions=label:,prefix:,verbose,debug,rootvolid:,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,helper,tar,size:,fs-name:,exclude: \
-        --options=p:dvl:i:m:nhtsk:e:x: \
+GETOPT=$("$getopt_cmd" \
+        --longoptions=label:,prefix:,verbose,debug,help,quiet,mountdir:,dev:,dry-run,dirs,syslog,keep:,name:,no-create,img,helper,tar,size:,fs-name:,exclude:: \
+        --longoptions=default-exclude,skip-scrub,recursive,send-atonce,rotation:,local-only,event:,sep:,create,fallback,rollback,base:,factor: \
+        --longoptions=send-full:,send-incr:,remove-local:,destroy,include-all,mount,compress:: \
+        --options=rqgifXFRba:o:cp:dvl:m:nhtsk:e:x: \
         -- "$@" ) \
         || exit 128
 
 eval set -- ${GETOPT}
 
-while [ "$#" -gt '0' ]
-do
+while [ "$#" -gt '0' ]; do
+
         case "$1" in
-                (--img)
-                        opt_img=1
-                        shift 1
-                        ;;
-                (--helper)
-                        opt_helper=1
-                        shift 1
-                        ;;
-                (--exclude|-x)
-                        opt_exclude=$2
-                        shift 2
-                        ;;
-                (--no-create)
-                        opt_nocreate='1'
-                        shift 1
-                        ;;
-                (--tar)
-                        opt_cpmode='tar'
-                        shift 1
-                        ;;
-                (--fs-name)
-                        opt_clonename="$2"
-                        shift 2
-                        ;;
-                (--dev)
-                        opt_dev="$2"
-                        shift 2
-                        ;;
-                (--size)
-                        opt_size="$2"
-                        shift 2
-                        ;;
-                (-e|--name)
-                        opt_name="$2"
-                        shift 2
-                        ;;
-                (-d|--debug)
-                        opt_debug='1'
-                        opt_quiet=''
-                        opt_verbose='1'
-                        shift 1
-                        ;;
-                (-n|--dry-run)
-                        opt_dry_run='1'
-                        shift 1
-                        ;;
-                (-p|--prefix)
-                        opt_prefix="$2"
-                        shift 2
-                        ;;
-                (-v|--verbose)
-                        opt_verbose='1'
-                        shift 1
-                        ;;
-                (-s|--syslog)
-                        opt_syslog='1'
-                        shift 1
-                        ;;
-                (-l|--label)
-                        opt_label="$2"
-                        shift 2
-                        ;;
-                (-k|--keep)
-                        opt_keep="$2"
-                        shift 2
-                        ;;
-                (-i|--rootvolid)
-                        opt_rootvolid="$2"
-                        shift 2
-                        ;;
-                (-m|--mountpoint)
-                        opt_mountpoint="$2"
-                        shift 2
-                        ;;
-                (--dirs|-t)
-                        opt_createdirs='1'
-                        shift 1
-                        ;;
-                (-h)
-                        print_usage
-                        shift 1
-                        exit 
-                        ;;
-                (--)
-                        shift 1
-                        break
-                        ;;
-        esac
+		(-a|--base)
+			case $2 in
+				(day|week|month|hour|minute)
+					opt_base="$2"
+					;;
+				(*)
+					print_log error "The $1 parameter must be one of: minute, hour, day, week, month, year."
+					exit 244
+					;;
+			esac
+			shift 2
+			;;
+		(-b|--rollback)
+			opt_force='-F'
+			shift 1
+			;;
+		(-c|--create)
+			opt_create='1'
+			shift 1
+			;;
+		(-d|--debug)
+			opt_debug='1'
+			opt_quiet=''
+			opt_verbose='1'
+			shift 1
+			;;
+		(-E|--name)
+			opt_name="$2"
+			shift 2
+			;;
+		(-e|--event)
+			if [ "${#2}" -gt '1024' ]; then
+				print_log error "The $1 parameter must be less than 1025 characters."
+				exit 239
+			elif [ "${#2}" -gt '0' ]; then
+				opt_event="$2"
+			fi
+			shift 2
+			;;
+		(-F|--fallback)
+			opt_fallback='1'
+			shift 1
+			;;
+		(-f|--force)
+			opt_force='-F'
+			shift 1
+			;;
+		(-g|--syslog)
+			opt_syslog='1'
+			shift 1
+			;;
+		(-h|--help)
+			print_usage
+			exit 0
+			;;
+		(-i|--send-atonce)
+			opt_atonce='-i'
+			shift 1
+			;;
+		(-k|--keep)
+			if ! test "$2" -gt '0' 2>/dev/null; then
+				print_log error "The $1 parameter must be a positive integer."
+				exit 229
+			fi
+			opt_keep="$2"
+			shift 2
+			;;
+		(-l|--label)
+			opt_label="$2"
+			opt_namechange='1'
+			shift 2
+			;;
+		(-m|--mountpoint)
+			opt_mountpoint="$2"
+			shift 2
+			;;
+		(-n|--dry-run)
+			opt_dry_run='1'
+			shift 1
+			;;
+		(-o|--rotation)
+			case $2 in
+				(hanoi|rr)
+					opt_rotation="$2"
+					;;
+				(*)
+					print_log error "Rotation must be one of hanoi or rr."
+					exit 245
+					;;
+			esac
+			shift 2
+			;;
+		(-p|--prefix)
+			opt_prefix="$2"
+			while test "${#opt_prefix}" -gt '0'; do
+				case $opt_prefix in
+					([![:alnum:]_.:\ -]*)
+						print_log error "The $1 parameter must be alphanumeric."
+						exit 230
+						;;
+				esac
+				opt_prefix="${opt_prefix#?}"
+			done
+			opt_prefix="$2"
+			opt_namechange='1'
+			shift 2
+			;;
+		(-q|--quiet)
+			opt_debug=''
+			opt_quiet='1'
+			opt_verbose=''
+			shift 1
+			;;
+		(-R|--replication)
+			opt_recursive='-R'
+			opt_force='-F'
+			shift 1
+			;;
+		(-r|--recursive)
+			opt_recursive=' '
+			shift 1
+			;;
+		(-s|--skip-scrub)
+			opt_skip_scrub='1'
+			shift 1
+			;;
+		(-t|--dirs)
+			opt_createdirs='1'
+			shift 1
+			;;
+		(-v|--verbose)
+			opt_quiet=''
+			opt_verbose='1'
+			shift 1
+			;;
+		(-X|--destroy)
+			opt_destroy='1'
+			opt_force='-F'
+			shift 1
+			;;
+		(-x|--exclude)
+			if [ $"${2:0:1}" = '-' -o -z "$2" ]; then
+				opt_default_exclude='1'
+			else
+				opt_exclude=$2
+			fi
+			shift 2
+			;;
+		(--default-exclude)
+			opt_default_exclude='1'
+			shift 1
+			;;
+		(--dev)
+			[ -b "$2" ] && opt_dev="$2"
+			shift 2
+			;;
+		(--factor)
+			opt_factor="$2"
+			shift 2
+			;;
+		(--fs-name)
+			opt_clonename="$2"
+			shift 2
+			;;
+		(--helper)
+			opt_helper=1
+			shift 1
+			;;
+		(--include-all)
+			opt_includeall='1'
+			print_log debug "Not considering com.sun:auto-snapshot."
+			shift 1
+			;;
+		(--img)
+			opt_img='file'
+			shift 1
+			;;
+		(--local-only)
+			opt_sendtocmd=''
+			opt_buffer=''
+			shift 1
+			;;
+		(--no-create)
+			opt_nocreate='1'
+			shift 1
+			;;
+		(--mount)
+			opt_mount='1'
+			shift 1
+			;;
+		(--compress)
+			if [ $"${2:0:1}" = '-' -o -z "$2" ]; then
+				opt_compress='lzo'
+			else
+				opt_compress=$2
+			fi
+			shift 2
+			;;
+		(--remove-local)
+			if ! test "$2" -gt '0' 2>/dev/null; then
+				print_log error "The $1 parameter must be a positive integer."
+				exit 241
+			fi
+			opt_remove="$2"
+			shift 2
+			;;
+		(--send-full)
+			if [ -n "$opt_sendprefix" ]; then
+				print_log error "Only one of --send-incr and --send-full must be specified."
+				exit 239
+			fi
+			if [ -z "$2" ]; then
+				print_log error "Target filesystem needs to be specified with --send-full."
+				exit 243
+			fi
+			opt_sendprefix="$2"
+			opt_send='full'
+			shift 2
+			;;
+		(--send-incr)
+			opt_sendincr="$2"
+			if [ -n "$opt_sendprefix" ]; then
+				print_log error "Only one of --send-incr and --send-full must be specified."
+				exit 240
+			fi
+			if [ -z "$2" ]; then
+				print_log error "Target filesystem needs to be specified with --send-incr."
+				exit 242
+			fi
+			opt_sendprefix="$2"
+			opt_send='incr'
+			shift 2
+			;;
+		(--sep)
+			case "$2" in
+				([[:alnum:]_.:\ -])
+					:
+					;;
+				('')
+					print_log error "The $1 parameter must be non-empty."
+					exit 231
+					;;
+				(*)
+					print_log error "The $1 parameter must be one alphanumeric character."
+					exit 232
+					;;
+			esac
+			opt_sep="$2"
+			shift 2
+			;;
+		(--size)
+			opt_size="$2"
+			shift 2
+			;;
+		(--tar)
+			opt_cpmode='tar'
+			shift 1
+			;;
+		(--)
+			shift 1
+			break
+			;;
+	esac
 done
 
-[ "$opt_command" = xbiancopy ] && [ ! -e "$opt_dev" -o -z "$opt_dev" ] && opt_dev=$1
-
-[ ! -e "$opt_dev" -o -z "$opt_dev" ] && opt_dev="$(findmnt -n -o SOURCE -v /)"
-if [ "$(blkid -o value -s TYPE  $opt_dev)" != btrfs ]; then
-    print_log notice "Filesystem is not of type btrfs. Not taking any actions."
-    exit 0
+if [ "$opt_command" = xbiancopy -a -z "$opt_dev" ]; then
+	[ -b "$1" ] && opt_dev=$1 || opt_dev=$(findmnt -n -o SOURCE -v /)
 fi
+
+if [ -z "$opt_dev" ]; then
+	opt_dev="$(findmnt -n -o SOURCE -v /)"
+	if [ -n "${opt_dev##*/dev/*}" ]; then
+		opt_dev="${opt_dev%%/*}"
+	fi
+fi
+
+[ "$1" = '-' ] && { shift 1; set -- $opt_dev "$@"; }
+
+[ -z "$opt_clonename" ] && opt_clonename='xbian-copy'
+
+if [ "$(blkid -o value -s TYPE $opt_dev)" != btrfs -a -n "${opt_dev##*/dev/*}" ]; then
+	# These are the only times that `zpool status` or `zfs list` are invoked, so
+	# this program for Linux has a much better runtime complexity than the similar
+	# Solaris implementation.
+	ZPOOL_STATUS=$(env LC_ALL=C zpool status 2>&1)
+	if [ "$?" != 0 -o -z "${ZPOOL_STATUS##*no pools available*}" ]; then
+		print_log notice "Filesystem is not of type btrfs or zfs. Not taking any actions."
+		exit 0
+	fi
+
+	opt_fstype=zfs
+	[ -n "$opt_prefix" ] || opt_prefix='zfs-auto-snap'
+	opt_rpool="$(grep -o "ZFS=[^ ]*" /proc/cmdline | awk -F'=' '{print $2}')"
+	[ "$opt_clonename" = "$opt_rpool" ] && opt_clonename="$(printf "xbian-%02d.%03d" $(date +%y) $(date +%j))"
+	opt_cpmode='zfs'
+else
+	opt_fstype=btrfs
+	[ -n "$opt_prefix" ] || opt_prefix='btrfs-auto-snap'
+fi
+
+[ -n "$opt_cpmode" ] || opt_cpmode=$opt_fstype
+
+print_log debug "Using command $opt_command with arguments $@."
 
 if [ "$opt_command" = listvol ]; then
-    md=$(mktemp -d /run/lv-XXXXXXX)
-    trap "do_run umount $md; rmdir $md;" INT TERM EXIT
-    do_run mount -t btrfs $opt_dev $md
-    for lv in $(ls $md/); do
-        echo $lv
-    done
-    exit 0
+	if [ "$opt_fstype" = btrfs ]; then
+		md=$(mktemp -d /run/lv-XXXXXXX)
+		trap "do_run umount $md 2>/dev/null; rmdir $md;" INT TERM EXIT
+		do_run mount -t btrfs $opt_dev $md 2>/dev/null || { print_log error "unable to get list of volumes."; exit 102; }
+		for lv in $(ls $md/ | grep -vE "$(echo $opt_exclude | tr ',' '|')"); do
+			echo $lv
+		done
+	else
+		lv=$(env LC_ALL=C zfs list -H -t filesystem,volume -s name -o name) || { print_log error "zfs list $?: $lv"; exit 136; }
+		for s in $(echo $opt_exclude | tr ',' ' '); do
+			lv=$(printf "%s\n" "$lv" | grep -vw $s)
+		done
+		echo "$lv" | grep '/'
+	fi
+	exit 0
 elif [ "$opt_command" = volsize ]; then
-    md=$(mktemp -d /run/vs-XXXXXXX)
-    trap "do_run umount $md; rmdir $md;" INT TERM EXIT
-    do_run mount -t btrfs -o subvolid=0 $opt_dev $md
-    [ ! -d $md/$1 ] || printf "$(du -xsb $md/$1 | awk '{print $1}')\n"
-    exit 0
+	if [ "$opt_fstype" = btrfs ]; then
+		md=$(mktemp -d /run/vs-XXXXXXX)
+		trap "do_run umount $md 2>/dev/null; rmdir $md;" INT TERM EXIT
+		do_run mount -t btrfs $opt_dev $md 2>/dev/null
+		[ ! -d $md/$1 ] || printf "$(du -xsb $md/$1 | awk '{print $1}')\n"
+	else
+		do_run zfs list -Hpo used ${1%%/@} 2>/dev/null
+	fi
+	exit 0
+elif [ "$opt_command" = fstype ]; then
+	echo $opt_fstype
+	if [ "$opt_fstype" = btrfs ]; then
+		echo "/@"
+	else
+		echo "@"
+	fi
+	exit 0
 fi
 
-print_log debug "Using command $opt_command."
-
 if [ "$#" -eq '0' ]; then
-        if [ "$opt_command" != 'list' -a "$opt_command" != 'xbiancopy' -a "$opt_command" != 'backuphome' -a "$opt_command" != 'restorehome' ]; then
-                print_log error "The filesystem argument list is empty."
-                exit 133
-        else
-                set "//"
-        fi
+	case "$opt_command" in
+		list|xbiancopy|backuphome|restorehome|compress|mount|umount)
+			set "//"
+			;;
+		*)
+			print_log error "The argument list is empty."
+			exit 133
+			;;
+	esac
 fi
 
 if [ "$opt_delim" = '' ]; then
-        print_log error "Snapshot's name first character can't be empty - can be longer than one character. Default shoul be '@'. Don't use this character in volume names afterwards."
+        print_log error "Snapshot's name first character can't be empty - can be longer than one character. Default should be '@'. Don't use this character in volume names afterwards."
         exit 134
 fi
 
@@ -456,469 +2152,414 @@ fi
 DATE=$(date +%F-%H%M)
 CONFIGPATH='/home/xbian/.kodi/userdata/addon_data/plugin.xbianconfig'
 
-COUNTER='0'
+. /usr/local/include/xbian-config/modules/xbiancopy/functions
+
+do_exit ()
+{
+	[ -e /run/vars.xbiancopy.$$ ] && { . /run/vars.xbiancopy.$$; rm -f /run/vars.xbiancopy.$$; }
+	[ "$opt_fstype" = zfs ] && zpool list | grep -q "$opt_clonename" && [ "$opt_clonename" != "$opt_rpool" ] && zpool export $opt_clonename
+	[ -z "$opt_recompress" ] && { mountpoint -q $root_dest && umount -l $root_dest; rm -rf $root_dest 2>/dev/null; }
+	[ -n "$loopd" ] && { while ! kpartx -d $loopd 2>/dev/null; do sleep 5; done; losetup -d $loopd 2>/dev/null; loopd=''; }
+	[ -n "$file_max" -a "$(sysctl -n fs.file-max)" -eq "$MY_FILE_MAX" ] && sysctl -w fs.file-max=$file_max >/dev/null
+	[ -n "$min_free_kbytes" -a "$(sysctl -n vm.min_free_kbytes)" -eq "$MY_MIN_FREE_KBYTES" ] && sysctl -w vm.min_free_kbytes=$min_free_kbytes >/dev/null
+	while mountpoint -q ${opt_mountpoint}; do umount ${opt_mountpoint} >/dev/null && break; sleep 1; done
+	while mountpoint -q ${tmp_dir}; do umount ${tmp_dir} >/dev/null && break; sleep 1; done
+	rmdir "${tmp_dir}" 2>/dev/null
+	mapAndMountFn umount
+}
+
+COUNTER='12'
 while true; do
-        if $(mkdir "${tmp_dir}" > /dev/null 2>&1); then 
-                if ! $(mount -t btrfs -o subvol=/ $opt_dev $opt_mountpoint 2>/dev/null); then
-                        print_log error "unable to mount the filesystem"
-                        rmdir ${tmp_dir}
-                        exit 100
-                fi
-                trap "btrfs  fi sync ${opt_mountpoint} > /dev/null; \
-                    while ! umount ${opt_mountpoint} > /dev/null; do sleep 1; done; \
-                    rmdir '${tmp_dir}' > /dev/null; \
-                    mountpoint -q /tmp/btrfs-dest && umount -l /tmp/btrfs-dest; \
-                    mountpoint -q /tmp/btrfs-source && umount -l /tmp/btrfs-source; \
-                    do_remove_kpartx; mapAndMountFn umount; " INT TERM EXIT
+	if mkdir "$tmp_dir" 2>/dev/null; then
+		if [ "$opt_fstype" = btrfs ]; then
+			if ! mount -t btrfs -o noatime,subvol=/ $opt_dev $opt_mountpoint 2>/dev/null; then
+				print_log error "unable to mount the filesystem."
+				rmdir "${tmp_dir}"
+				exit 100
+			fi
+			trap "btrfs fi sync ${opt_mountpoint} 2>/dev/null; do_exit; " INT TERM EXIT
+		else
+			trap "do_exit; " INT TERM EXIT
+		fi
                 break
         fi
 
-        print_log error "another copy is running ... $COUNTER"
-        test "$COUNTER" -gt '11' && exit 99
-        sleep 5
-        COUNTER=$(( $COUNTER + 1 ))
+	print_log error "another copy is running ... $COUNTER"
+	test "$COUNTER" -lt '1' && exit 99
+	sleep 5
+	COUNTER=$(( $COUNTER - 1 ))
 done
 
-[ $(( $(df  "${tmp_dir}" | tail -1 | awk '{print $4}') * 100 /  $(df  "${tmp_dir}" | tail -1 | awk '{print $2}') )) -lt 30 ] && opt_keep=1 && echo "WARNING: Less than 30% of free space. Keeping only one single snapshot..." > /dev/stderr
+[ $(( $(df "$opt_mountpoint" | tail -1 | awk '{print $4}') * 100 / $(df "$opt_mountpoint" | tail -1 | awk '{print $2}') )) -lt 30 ] && opt_keep=1 && print_log warning "Less than 30% of free space. Keeping only one single snapshot..."
 #mdt=$(btrfs fi df "${tmp_dir}" | grep -m1 "Metadata, " | awk -F'=' '{print "("$2}' | grep -o "[\(0-9BKMGi\.]*" | sed 's/GiB/ * 1024 MiB/;s/MiB/ * 1024 KiB/;s/KiB/ * 1024/; s/$/ +\\/; $a0 )/1' | bc)
 #mdu=$(btrfs fi df "${tmp_dir}" | grep -m1 "Metadata, " | awk -F'=' '{print "("$3}' | grep -o "[\(0-9BKMGi\.]*" | sed 's/GiB/ * 1024 MiB/;s/MiB/ * 1024 KiB/;s/KiB/ * 1024/; s/$/ +\\/; $a0 )/1' | bc)
 #[ "$mdt" -gt 0 ] && [ $(( 100 - (mdu*100 / mdt) )) -lt 30 ] && opt_keep=1 && echo "WARNING: Less than 30% of free metadata space. Keeping only one single snapshot..." > /dev/stderr
-
-test -d $opt_mountpoint/$opt_snapdir && test -n "$opt_snapdir" && opt_vroot='1'
-
-DATE=$(date +%F-%H%M)
 
 case $(ps -o stat= -p $$) in
 	*+*) BACKGROUND=0 ;;
 	  *) BACKGROUND=1 ;;
 esac
 
-# The snapshot name after the @ symbol.
-SNAPNAME="$opt_delim$opt_prefix${opt_label:+$opt_sep$opt_label-$DATE}"
+if [ "$opt_fstype" = btrfs ]; then
+	test -d $opt_mountpoint/$opt_snapdir && test -n "$opt_snapdir" && opt_vroot='1'
 
-# The expression for matching old snapshots.  -YYYY-MM-DD-HHMM
-SNAPGLOB="$opt_delim$opt_prefix${opt_label:+?$opt_label}????????????????"
+	# The snapshot name after the @ symbol.
+	SNAPNAME="$opt_prefix${opt_label:+$opt_sep$opt_label}-$DATE"
 
-BTRFS_LIST=$(btrfs sub list ${opt_mountpoint} | grep -v "/" | awk '{print $9}' | sort)  \
-	|| { print_log error "unable to get list of volumes"; exit 102; }
+	# The expression for matching old snapshots.  -YYYY-MM-DD-HHMM
+	SNAPGLOB="$opt_prefix${opt_label:+?$opt_label}????????????????"
 
-for s in $(echo $opt_exclude | tr ',' ' '); do
-	BTRFS_LIST=$(printf "%s\n" "$BTRFS_LIST" | grep -vw $s)
-done
+	FS_LOCAL_LIST=$(btrfs sub list ${opt_mountpoint} | grep -v "/" | awk '{print $9}' | sort) \
+		|| { print_log error "unable to get list of volumes."; exit 102; }
 
-BTRFS_LIST=$(printf "%s\n" "$BTRFS_LIST")
-	test -n "$opt_vroot" && BTRFS_LIST=$(printf ".\n%s\n" "$BTRFS_LIST") 
+	for s in $(echo $opt_exclude | tr ',' ' '); do
+		FS_LOCAL_LIST=$(printf "%s\n" "$FS_LOCAL_LIST" | grep -vw $s)
+	done
 
-case $opt_command in 
-	(list|snapshot)
+	FS_LOCAL_LIST=$(printf "%s\n" "$FS_LOCAL_LIST")
+	test -n "$opt_vroot" && FS_LOCAL_LIST=$(printf ".\n%s\n" "$FS_LOCAL_LIST")
+else
+	ZFS_LIST=$(env LC_ALL=C zfs list -H -t filesystem,volume -s name -o name,com.sun:auto-snapshot,com.sun:auto-snapshot:"$opt_label",mountpoint,canmount,snapdir)\
+		|| { print_log error "zfs list $?: $ZFS_LIST."; exit 136; }
+
+	FS_LOCAL_LIST=$(echo "$ZFS_LIST" | awk -F'\t' '{print $1}')
+
+	for s in $(echo $opt_exclude | tr ',' ' '); do
+		FS_LOCAL_LIST=$(printf "%s\n" "$FS_LOCAL_LIST" | grep -vw $s)
+	done
+
+	# Get a list of pools that are being scrubbed.
+	ZPOOLS_SCRUBBING=$(echo "$ZPOOL_STATUS" | awk -F ': ' \
+		'$1 ~ /^ *pool$/ { pool = $2 } ; \
+		$1 ~ /^ *scan$/ && $2 ~ /scrub in progress/ { print pool }' \
+		| sort )
+
+	# Get a list of pools that cannot do a snapshot.
+	ZPOOLS_NOTREADY=$(echo "$ZPOOL_STATUS" | awk -F ': ' \
+		'$1 ~ /^ *pool$/ { pool = $2 } ; \
+		$1 ~ /^ *state$/ && $2 !~ /ONLINE|DEGRADED/ { print pool } ' \
+		| sort )
+
+	if [ -z "$opt_includeall" ]; then
+		# Get a list of datasets for which snapshots are not explicitly disabled.
+		CANDIDATES=$(echo "$ZFS_LIST" | awk -F '\t' \
+			'tolower($2) !~ /false/ && tolower($3) !~ /false/ {print $1}' )
+
+		for s in $(echo $opt_exclude | tr ',' ' '); do
+			CANDIDATES=$(printf "%s\n" "$CANDIDATES" | grep -vw $s)
+		done
+
+		# If the --default-exclude flag is set, then exclude all datasets that lack
+		# an explicit com.sun:auto-snapshot* property. Otherwise, include them.
+		if [ -n "$opt_default_exclude" ]; then
+			# Get a list of datasets for which snapshots are not explicitly enabled.
+			NOAUTO=$(echo "$ZFS_LIST" | awk -F '\t' \
+				'tolower($2) !~ /true/ && tolower($3) !~ /true/ {print $1}')
+		else
+			# Get a list of datasets for which snapshots are explicitly disabled.
+			NOAUTO=$(echo "$ZFS_LIST" | awk -F '\t' \
+				'tolower($2) ~ /false/ || tolower($3) ~ /false/ {print $1}')
+		fi
+	else
+		CANDIDATES=$FS_LOCAL_LIST
+	fi
+
+	# Initialize the list of datasets that will get a recursive snapshot.
+	TARGETS_DRECURSIVE=''
+	TARGETS_TMP_RECURSIVE=''
+
+	# Initialize the list of datasets that will get a non-recursive snapshot.
+	TARGETS_DREGULAR=''
+
+	for ii in $CANDIDATES; do
+		# Qualify dataset names so variable globbing works properly.
+		# Suppose ii=tanker/foo and jj=tank sometime during the loop.
+		# Just testing "$ii" != ${ii#$jj} would incorrectly match.
+		iii="$ii/"
+
+		# Exclude datasets that are not named on the command line.
+		IN_ARGS='0'
+		for jj in "$@"; do
+			if [ "$jj" = '//' -o "$jj" = "$ii" -o -n "$opt_recursive" -a -z "${ii##$jj/*}" ]; then
+				IN_ARGS=$(( $IN_ARGS + 1 ))
+			fi
+		done
+		if [ "$IN_ARGS" -eq '0' ]; then
+			continue
+		fi
+
+		# Exclude datasets in pools that cannot do a snapshot.
+		for jj in $ZPOOLS_NOTREADY; do
+			# Ibid regarding iii.
+			jjj="$jj/"
+
+			# Check whether the pool name is a prefix of the dataset name.
+			if [ "$iii" != "${iii#$jjj}" ]; then
+				print_log info "Excluding $ii because pool $jj is not ready."
+				continue 2
+			fi
+		done
+
+		# Exclude datasets in scrubbing pools if the --skip-scrub flag is set.
+		test -n "$opt_skip_scrub" && for jj in $ZPOOLS_SCRUBBING; do
+			# Ibid regarding iii.
+			jjj="$jj/"
+
+			# Check whether the pool name is a prefix of the dataset name.
+			if [ "$iii" != "${iii#$jjj}" ]; then
+				print_log info "Excluding $ii because pool $jj is scrubbing."
+				continue 2
+			fi
+		done
+
+		noauto_parent='0'
+		for jj in $NOAUTO; do
+			# Ibid regarding iii.
+			jjj="$jj/"
+
+			if [ "$jjj" = "$iii" ]; then
+				continue 2
+				# Check whether the candidate name is a prefix of any excluded dataset name.
+			elif [ "$jjj" != "${jjj#$iii}" ]; then
+				noauto_parent='1' && break
+			fi
+		done
+
+		# not scrubbing
+		if [ -z "$opt_recursive" -a "$1" != '//' -o "$noauto_parent" = '1' ]; then
+			print_log debug "Including $ii for regular snapshot."
+			TARGETS_DREGULAR=$(printf "%s\n%s\n" "$TARGETS_DREGULAR" "$ii" )
+			continue
+		fi
+
+		for jj in $TARGETS_TMP_RECURSIVE; do
+			# Ibid regarding iii.
+			jjj="$jj/"
+
+			# Check whether any included dataset is a prefix of the candidate name.
+			if [ "$iii" != "${iii#$jjj}" ]; then
+				print_log debug "Excluding $ii because $jj includes it recursively."
+				continue 2
+			fi
+		done
+
+		# Append this candidate to the recursive snapshot list because it:
+		#
+		#   * Does not have an exclusionary property.
+		#   * Is in a pool that can currently do snapshots.
+		#   * Does not have an excluded descendent filesystem.
+		#   * Is not the descendant of an already included filesystem.
+		#
+		print_log debug "Including $ii for recursive snapshot."
+		TARGETS_TMP_RECURSIVE=$( printf "%s\n%s\n" $TARGETS_TMP_RECURSIVE "$ii" )
+
+	done
+
+	# Linux lacks SMF and the notion of an FMRI event, but always set this property
+	# because the SUNW program does. The dash character is the default.
+	SNAPPROP="-o com.sun:auto-snapshot-desc='$opt_event'"
+
+	# if hanoi rotation was requested but prefix or label wasn't changed from default, change label to hanoi to avoid mixing of those backup sets.
+	if [ "$opt_namechange" -eq '0' ] && [ "$opt_rotation" = "hanoi" ]; then
+		opt_label="hanoi_regular"
+	fi
+
+	# The snapshot name after the @ symbol.
+	SNAPNAME="$opt_prefix${opt_label:+$opt_sep$opt_label}-$DATE"
+
+	# The expression for matching old snapshots.  -YYYY-MM-DD-HHMM
+	SNAPGLOB="$opt_prefix${opt_label:+?$opt_label}????????????????"
+fi
+
+case $opt_command in
+	(list|snapshot|compress)
 		# Count the number of times '//' appears on the command line.
 		SLASHIES='0'
-		for ii in "$@"
-		do
+		for ii in "$@"; do
 			test "$ii" = '//' && SLASHIES=$(( $SLASHIES + 1 ))
 		done
 
-		if [ "$#" -gt '1' -a "$SLASHIES" -gt '0' ]
-		then
+		if [ "$#" -gt '1' -a "$SLASHIES" -gt '0' ]; then
 			print_log error "The // must be the only argument if it is given."
 			exit 134
 		fi
 
 		# Verify that each argument exists
-		for ii in "$@"
-		do
+		for ii in "$@"; do
 			test "$ii" = '//' && continue 1
-			for jj in $BTRFS_LIST
-			do
+			for jj in $FS_LOCAL_LIST; do
 				test "$ii" = "$jj" && continue 2
 			done
-			print_log error "$ii is not existing volume."
+			print_log error "$ii is not a filesystem or volume."
 			exit 138
 		done
 
-		TARGETS=''
+		msg_to_log="Using $opt_rotation type rotation, with params keep: $opt_keep"
+		if test "$opt_rotation" = "hanoi"; then
+			msg_to_log=$(echo "$msg_to_log," "base: $opt_base")
+		fi
+		print_log debug "$msg_to_log."
 
-		for ii in "$@"
-		do
-			if [ "$ii" = '//' ]; then
-			    TARGETS=$BTRFS_LIST
-			    continue
+		if [ "$opt_fstype" = btrfs ]; then
+			if [ -n "$opt_snapdir" ]; then
+				SNAPSHOTS_OLD_LOC=$(btrfs sub list ${opt_mountpoint} | sort -k9r | grep ${opt_snapdir}${opt_delim} | awk '{print $9}' | awk -F"$opt_snapdir" '{print $1 $2}') \
+					|| { print_log error "unable to get list of snapshots"; exit 103; }
+			else
+				SNAPSHOTS_OLD_LOC=$(btrfs sub list ${opt_mountpoint} | sort -k9r | grep ${opt_delim} | awk '{print $9}') \
+					|| { print_log error "unable to get list of snapshots"; exit 103; }
 			fi
-			TARGETS=$(printf "%s\n%s" $TARGETS $ii)  
-		done
+
+			TARGETS_DREGULAR=''
+			for ii in "$@"; do
+				if [ "$ii" = '//' ]; then
+					TARGETS_DREGULAR=$FS_LOCAL_LIST
+					continue
+				fi
+				TARGETS_DREGULAR=$(printf "%s\n%s" $TARGETS_DREGULAR $ii)
+			done
+			test -n "$TARGETS_DREGULAR" && print_log info "Doing snapshots of $(echo $TARGETS_DREGULAR)"
+		else
+			test -n "$TARGETS_DREGULAR" && 	print_log info "Doing regular snapshots of $(echo $TARGETS_DREGULAR)"
+			test -n "$TARGETS_TMP_RECURSIVE" && print_log info "Doing recursive snapshots of $(echo $TARGETS_TMP_RECURSIVE)"
+
+			SNAPSHOTS_OLD_LOC=$(env LC_ALL=C zfs list -r -H -t snapshot -S creation -o name $(echo "$TARGETS_DREGULAR") $(echo "$TARGETS_TMP_RECURSIVE") ) \
+				|| { print_log error "zfs list $?: $SNAPSHOTS_OLD_LOC"; exit 137; }
+
+			test -n "$opt_dry_run" && print_log info "Doing a dry run. Not running these commands..."
+
+			# expand FS list if replication is not used
+			if [ "$opt_recursive" = ' ' -o "$1" = "//" ]; then
+				for ii in $TARGETS_TMP_RECURSIVE; do TARGETS_DRECURSIVE=$(printf "%s\n%s\n%s\n" "$TARGETS_DRECURSIVE" $(printf "$ii\n") $(printf "%s\n" "$FS_LOCAL_LIST" | grep ^"$ii/") ); done
+			else
+				TARGETS_DRECURSIVE="$TARGETS_TMP_RECURSIVE"
+			fi
+
+			MOUNTED_LIST_LOC=$(eval do_getmountedfs "local")
+
+			# initialize remote system parameters, filesystems, mounts and snapshots
+			if [ "$opt_send" != "no" ]; then
+				PLATFORM_REM=$(eval "$opt_sendtocmd" "uname")
+
+				case "$PLATFORM_REM" in
+					(Linux|Darwin|SunOS|FreeBSD)
+						;;
+					(*)
+						print_log error "Remote system not known ($PLATFORM_REM) - needs one of Darwin, Linux, SunOS, FreeBSD. Exiting."
+						exit 301
+						;;
+				esac
+
+				if [ -n $opt_limit ]; then
+					runs='1'
+					condition='1'
+					while [ $condition -eq '1' ]; do
+						load=$(eval "$opt_sendtocmd" "uptime")
+						load=$(echo ${load##*"load average"} | awk '{print $2}' | awk -F'.' '{print $1}')
+						if [ $load -ge $opt_limit -a $runs -lt '3' ]; then
+							print_log warning "Over load limit on remote machine. Going for sleep for 5 minutes. (run #$runs, load still $load)"
+							sleep 300
+						else
+							if [ $load -ge $opt_limit ]; then
+							    opt_send="no"
+							    opt_keep=''
+							    print_log warning "Over load limit on remote machine. Will not send to remote. (run #$runs, load still $load)"
+					                fi
+							condition='0'
+						fi
+						runs=$(( $runs + 1 ))
+					done
+				fi
+			fi
+
+			if [ "$opt_send" != "no" ]; then
+				MOUNTED_LIST_REM=$(eval do_getmountedfs "remote")
+
+				ZFS_REMOTE_LIST=$(eval "$opt_sendtocmd" zfs list -H -t filesystem,volume -s name -o name) \
+					|| { print_log error "$opt_sendtocmd zfs list $?: $ZFS_REMOTE_LIST"; exit 139; }
+
+				if [ "$opt_create" -eq '1' ]; then
+					do_createfs "$TARGETS_DREGULAR"
+					do_createfs "$TARGETS_DRECURSIVE"
+				fi
+
+				SNAPSHOTS_OLD_REM=$(eval "$opt_sendtocmd" zfs list -r -H -t snapshot -S creation -o name "$opt_sendprefix") \
+					|| { print_log error "zfs remote list $?: $SNAPSHOTS_OLD_REM"; exit 140; }
+			fi
+		fi
 		;;
 	(*)
 		;;
 esac
 
-if [ -n "$opt_snapdir" ]; then 
-    SNAPSHOTS_OLD=$(btrfs sub list ${opt_mountpoint} | sort -k9r | grep ${opt_snapdir}${opt_delim} | awk '{print $9}' | awk -F"$opt_snapdir" '{print $1 $2}') \
-    || { print_log error "unable to get list of snapshots"; exit 103; }
-else
-    SNAPSHOTS_OLD=$(btrfs sub list ${opt_mountpoint} | sort -k9r | grep ${opt_delim} | awk '{print $9}') \
-    || { print_log error "unable to get list of snapshots"; exit 103; }
-fi
-
 case $opt_command in
-        (createvol)
-                btrfs sub create ${opt_mountpoint}/$1
-                btrfs sub create ${opt_mountpoint}/$1/@
-                ;;
-        (list)
-                for t in $TARGETS; do
-                    printf "%s\n" $SNAPSHOTS_OLD | grep "$t/" | sort 
-                done
-                ;;
-        (snapshot)
-                do_snapshot
-                print_log notice "$SNAPNAME," \
-                        "$SNAPSHOT_COUNT created snapshots," \
-                        "$DESTROY_COUNT destroyed snapshots," \
-                        "$WARNING_COUNT warnings."
-                ;;
-        (destroy)
-                do_destroy "$1"
-                ;;
-        (rename)
-                do_rename "$1" "$2"
-                ;;
-        (rollback)
-		tmpd=$(mktemp -u)
-		tmpd=$(basename $tmpd)
-		do_rename $(dirname $1)/@ $(dirname $1)/@$tmpd
-		do_rename $1 $(dirname $1)/@
-		do_rename $(dirname $1)/@$tmpd $1_rollback
-		echo "$MYNAME rollback" >> /var/run/reboot-required
-                ;;
-	(xbiancopy)
-	        XBIANCOPYLOG='/tmp/xbiancopy.log'
-	        echo "$@" > $XBIANCOPYLOG
-	        if [ "$BACKGROUND" == 1 ]; then
-	            PIPECMD1="tee -a $XBIANCOPYLOG"
-	            PIPECMD2=$PIPECMD1
-	        else
-	            PIPECMD1="dialog --progressbox \"Preparing devices and copying /boot\" 10 70"
-	            PIPECMD2="dialog --gauge \"Cloning all subvolumes. Please wait...\" 10 70"
-	        fi
-	        file_max=$(sysctl -n fs.file-max)
-	        sysctl -w fs.file-max=$MY_FILE_MAX &>/dev/null
-	        if [ "$(awk '/^MemTotal/{ print $2 }' /proc/meminfo)" -gt 600000 ]; then
-	            min_free_kbytes=$(sysctl -n vm.min_free_kbytes)
-		    sysctl -w vm.min_free_kbytes=$MY_MIN_FREE_KBYTES &>/dev/null
-		fi
-		echo "fn=" >/run/vars.xbiancopy.$$
-	        set -o pipefail
-		(
-		    [ $# -ne 2 ] && { echo "wrong aruments list"; exit 5; }
-		    [ "$(readlink -e $1)" = "$(readlink -e $2)" ] && { echo "source and destination can not be the same block device"; exit 5; }
 
-		    if [ $opt_dev != $1 ]; then
-		        [ ! -b $1 ] && { echo "non existend source device"; exit 5; }
-		        BTRFS_LIST=$(btrfs-auto-snapshot listvol --dev $1 //)
-		    fi
-
-		    mkdir -p /tmp/btrfs-dest
-		    if [ -n "$opt_img" ]; then
-		        fn=$(mapAndMountFn mount $2)
-		        [ "$?" -eq 0 ] || { echo "can not mount fs"; exit 5; }
-		        set -- $1 $fn
-			echo "fn=$2" >/run/vars.xbiancopy.$$
-		        [ -e "$2" ] && rm -f "$2"; touch "$2" || { echo "can not create img file"; exit 5; }
-		        [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ] && { echo "img file can not be created on the source filesystem"; exit 5; }
-
-		        if grep -q "rootflags=subvol=" /proc/cmdline; then
-			    subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
-			    export subvolumeextra
-			    snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootflags=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
-		        fi
-		        BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
-		        snapextra=$(printf "%s\n%s\n" "@$snapextra" "@"| sort | uniq)
-		        if [ "$opt_size" = "0" ]; then
-			   for v in $BTRFS_LIST; do
-			        [ -n "$v" ] || continue
-			        export v="$v"
-			        for s in $snapextra; do
-			            sv=$(btrfs-auto-snapshot volsize "$v/$s")
-				    size=$((size+sv))
-			        done
-			   done
-			   size="$(($size*12/10/1024/1024))M"
-		        else
-			    size=$opt_size
-		        fi
-
-		        [ "$(printf "%s\n%s\n" $(df -h $2 | tail -1 | awk '{print $4}') "$size" | sort -rh | grep -m1 .)" = "$size" ] && { echo "not enough free space on destination filesystem"; exit 5; }
-		        chattr +CA $2 &>/dev/null; truncate -s $size $2 || { echo "can't resize img file to needed size"; exit 5; }
-		        modprobe -q loop
-
-		        parted -s $2 mklabel msdos
-
-		        config_offset_root=141312
-		        echo "2048,$((config_offset_root-2048)),b,*," | sfdisk -uS -N1 -f -q $2 > /dev/null 2>&1
-		        echo "$config_offset_root,+,83,," | sfdisk -uS -N2 -f -q $2 > /dev/null 2>&1
-		        loopd=$(losetup -f); losetup $loopd $2
-		        kpartx -a $loopd && echo "loopd=$loopd" >>/run/vars.xbiancopy.$$
-		        loopd=${loopd#/dev/}
-
-		        timeout=0
-		        while ! [ -L /dev/mapper/${loopd}p1 ]; do
-		            timeout=$(($timeout+1))
-		            [ $timeout -gt 10 ] && { echo "Loop device not available"; exit 4; }
-		            sleep 1;
-		        done
-
-		        if [ "$(xbian-arch)" = iMX6 ]; then
-		            dd if=/etc/uboot-env/SPL of=/dev/$loopd bs=1K seek=1 2>/dev/null 1>&2
-		            dd if=/etc/uboot-env/u-boot.img of=/dev/$loopd bs=1K seek=42 2>/dev/null 1>&2
-		            mkfs.ext2 -L xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
-		        else
-		            mkfs.msdos -F 16 -n xbianboot /dev/mapper/${loopd}p1 2>/dev/null 1>&2
-		        fi
-		        mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest || exit 5
-
-		        [ "$BACKGROUND" == 1 ] && cp -av /boot/* /tmp/btrfs-dest || cp -a /boot/* /tmp/btrfs-dest &>/dev/null
-		        sync
-
-		        if [ "$(xbian-arch)" = RPI ]; then
-		            sed -i 's/^#initramfs /initramfs /' /tmp/btrfs-dest/config.txt
-		        fi
-		        if [ "$(xbian-arch)" = iMX6 ]; then
-		            [ -e /boot/initramfs.gz.notinuse -a ! -e /boot/initramfs.gz ] && mv /tmp/btrfs-dest/initramfs.gz.notinuse /tmp/btrfs-dest/initramfs.gz
-		        fi
-
-		        while ! umount /tmp/btrfs-dest; do ! mountpoint -q /tmp/btrfs-dest && break; sleep 1; done; rmdir /tmp/btrfs-dest; sync
-		        set -- $1 /dev/mapper/${loopd}p2
-		    fi
-
-		    mkdir -p /tmp/btrfs-source
-		    mount -t btrfs -o noatime,subvol=/ $1 /tmp/btrfs-source
-		    eval $opt_remotecmd findmnt -n -S $2 >/dev/null && { eval $opt_remotecmd umount $2 || { echo "can not umount destination partition"; exit 5; }; }
-		    if [ -z "$opt_nocreate" ]; then
-		        eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1 || { echo "can not format destination $2"; exit 5; }
-		    fi
-		    eval $opt_remotecmd mkdir -p /tmp/btrfs-dest
-
-		    if [ -z "$opt_compress" ]; then
-		        for PARM in "compress=" "compress-force="; do
-		            p=$(findmnt -n / | tr ',' ' ' | awk -v a=".*$PARM" -v b="$PARM" "/$PARM/"'{ sub(a,b); print $1 }' 2>/dev/null)
-		            [ -z "$p" ] || opt_compress="$opt_compress$p,"
-		        done
-		    fi
-
-		    if ! eval $opt_remotecmd mount -o ${opt_compress}noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
-		        if ! eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 /tmp/btrfs-dest; then
-		            echo "can not mount destination partition"; exit 6
-		        fi
-		    fi
-
-		) | eval "$PIPECMD1"
-		rc=$?
-	        set +o pipefail
-	        . /run/vars.xbiancopy.$$
-
-		if [ "$rc" -eq 0 ]; then
-
-		    if grep -q "rootflags=subvol=" /proc/cmdline; then
-		        subvolumeextra=$(cat /proc/cmdline); subvolumeextra=${subvolumeextra#*rootflags=subvol=}; subvolumeextra=${subvolumeextra%%\/@*}
-		        export subvolumeextra
-		        snapextra=$(cat /proc/cmdline); snapextra=${snapextra#*rootflags=subvol=$subvolumeextra"/@"}; snapextra=${snapextra%%,*}
-		    fi
-
-		    set -o pipefail
-		    (
-		        BTRFS_LIST=$(printf "%s\n%s\n" "$subvolumeextra" "$BTRFS_LIST" | sort | uniq)
-		        snapextra=$(printf "%s\n%s\n" "@$snapextra" "@"| sort | uniq)
-		        echo "Cloning subvolumes $BTRFS_LIST ($snapextra)" | sed ':a;N;$!ba;s/\n/, /g;s/, $//g' >> $XBIANCOPYLOG
-		        set -o pipefail
-		        for v in $BTRFS_LIST; do
-		            [ -n "$v" ] || continue
-		            eval $opt_remotecmd btrfs sub create "/tmp/btrfs-dest/$v"
-		            export v="$v"
-		            for s in $snapextra; do
-		                [ -n "$s" ] || continue
-		                [ -e "/tmp/btrfs-source/$v/$s" ] || continue
-		                [ -e "/tmp/btrfs-source/$v/$s.ro" ] && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" &>/dev/null
-		                [ -e "/tmp/btrfs-source/$v/$s" ] || continue
-		                btrfs sub snap -r "/tmp/btrfs-source/$v/$s" "/tmp/btrfs-source/$v/$s.ro" && sync && btrfs fi sync "/tmp/btrfs-source/$v/$s.ro"
-		                if [ "$opt_cpmode" = tar ]; then
-		                    eval $opt_remotecmd btrfs sub create /tmp/btrfs-dest/$v/$s && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" || exit 12
-			        fi
-			        export siz=$(du -sxb "/tmp/btrfs-source/$v/$s.ro" | awk '{print $1}'); export sn=$s; export vln=$v;
-			        [ "$siz" -gt 100000000 ] && export ival=20 || export ival=2
-			        ar=0
-			        copy_volume () {
-			            if [ "$1" = tar ]; then
-			                to='--warning=none --acls --xattrs'
-			                nice -n 10 tar c $to -C /tmp/btrfs-source/$v/$s.ro . | pv -i $ival -n -s $siz | eval $opt_remotecmd nice -n 10 tar x $to -C "/tmp/btrfs-dest/$v/$s"
-			            else
-			                nice -n 10 btrfs send "/tmp/btrfs-source/$v/$s.ro" | pv -i $ival -n -s $siz | eval $opt_remotecmd nice -n 10 btrfs receive "/tmp/btrfs-dest/$v"
-			            fi
-			        }
-			        ( copy_volume $opt_cpmode ) 2>&1 | \
-			            while read a; do
-			                if [ "$BACKGROUND" == 1 ]; then
-			                    if ! echo "$a" | grep -q '@'; then
-			                        if (( $a > $ar )); then
-			                            echo "$(printf 'Cloning %s/%s, %d of %d, %d%% done' $v $s $((siz*a/100)) $siz $a)"
-			                            ar=$a
-			                        fi
-			                    fi
-			                else
-			                    printf "XXX\n$a\n$(printf '\n Cloning %s/%s. Total %d. Done %d' $v $s $siz $((siz*a/100)))\nXXX\n"
-			                fi
-			            done
-			        [ "$?" -eq 0 ] || { [ "$BACKGROUND" == 1 ] && printf "%s\n" "Copying subvolume $v snapshot $s failed"; exit 10; }
-			        if [ "$opt_cpmode" = tar ]; then
-		                    eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" && sync && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" || exit 11
-		                else
-		                    eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s.ro" && sync && btrfs sub delete "/tmp/btrfs-source/$v/$s.ro" || exit 11
-		                    eval $opt_remotecmd nice -n 10 btrfs sub snap "/tmp/btrfs-dest/$v/$s.ro" "/tmp/btrfs-dest/$v/$s" && sync || exit 12
-		                    eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v/$s" || exit 13
-		                    eval $opt_remotecmd nice -n 10 btrfs sub delete "/tmp/btrfs-dest/$v/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v" || exit 14
-		                    eval $opt_remotecmd nice -n 10 btrfs fi sync "/tmp/btrfs-dest/$v" || exit 14
-		                fi
-		                [ "$BACKGROUND" == 1 ] && printf "%s\n" "Done copying subvolume $v snapshot $s"
-		            done
-		           [ "$BACKGROUND" == 1 ] && printf "%s\n" "Done copying subvolume $v"
-		        done
-		        exit 0
-		    ) 2>&1 | eval "$PIPECMD2"
-		    rc=$?
-		    set +o pipefail
-		fi
-
-		(
-		    loopd=${loopd#/dev/}
-		    if [ "$rc" -eq 0 -a -n "$opt_img" ]; then
-		        UUID=$(blkid -s UUID -o value /dev/mapper/${loopd}p1)
-		        [ "$BACKGROUND" == 1 ] && echo "Setting UUID=$UUID for boot partition in /etc/fstab" >> $XBIANCOPYLOG
-		        eval $opt_remotecmd sed -i \'s%.*/boot%UUID=$UUID        /boot%g\' /tmp/btrfs-dest/root/@/etc/fstab
-		    fi
-
-		    eval $opt_remotecmd umount /tmp/btrfs-dest; eval $opt_remotecmd rmdir /tmp/btrfs-dest
-		    umount /tmp/btrfs-source; rmdir /tmp/btrfs-source
-
-		    if [ "$rc" -eq 0 -a -n "$opt_img" ]; then
-		        mkdir -p /tmp/btrfs-dest
-		        if mount /dev/mapper/${loopd}p1 /tmp/btrfs-dest; then
-		            z=$(grep -o "root=[^ ]*" /proc/cmdline)
-		            UUID=$(blkid -s UUID -o value /dev/mapper/${loopd}p2)
-		            if test -e /boot/cmdline.txt; then
-		                [ "$BACKGROUND" == 1 ] && echo "Setting UUID=$UUID for root partition in cmdline.txt" >> $XBIANCOPYLOG
-		                sed -i "s%$z%root=UUID=$UUID%" /tmp/btrfs-dest/cmdline.txt
-		            fi
-		            if test -e /boot/boot.scr.txt; then
-		                [ "$BACKGROUND" == 1 ] && echo "Setting UUID=$UUID for root partition in boot.scr.txt" >> $XBIANCOPYLOG
-		                ( cd /tmp/btrfs-dest; sed -i "s%$z%root=UUID=$UUID%" boot.scr.txt; ./mks; )
-		            fi
-		            while ! umount /tmp/btrfs-dest; do ! mountpoint -q /tmp/btrfs-dest && break; sleep 1; done; rmdir /tmp/btrfs-dest; sync
-		        fi
-		    fi
-		) &>/dev/null
-
-                if [ "$rc" -eq 0 ]; then
-		    success_msg="Done!"
-                    [ -z "$opt_helper" -a -e ${CONFIGPATH} ] && { echo "$DATE" > ${CONFIGPATH}/$opt_command; chown xbian:xbian ${CONFIGPATH}/${opt_command}; }
-                else
-		    success_msg="Fail!"
-                    if [ -n "$fn" ]; then
-                        [ "$BACKGROUND" == 1 ] && echo "Removing broken image file ${fn##*/}" >> $XBIANCOPYLOG
-                        rm -f "$fn"
-                    fi
-                fi
-
-		echo "$success_msg" >> $XBIANCOPYLOG
-		if [ -z "$opt_helper" ]; then
-		    dialog --clear --msgbox "$success_msg
- 
-for users on xbian version below beta2 (beta1.1, beta1). beta2 handles this automaticaly.
-/etc/fstab file needs to be adapted for /home to be mounted properly on the new xbian copy.
-do the following steps:
- 
-1) mount -t btrfs -o subvol=root/@ LABEL=xbian-copy /mnt
-2) nano /mnt/etc/fstab
-3) change all lines starting with LABEL=xbian-root-btrfs to LABEL=xbian-copy .......
-4) umount /mnt
- 
-for all users - change /boot/cmdline.txt if you want to boot from the copy just created. change root=LABEL=xbian-root-btrfs to root=LABEL=xbian-copy
- 
-if you created img file, cmdline.txt was updated automatically." 24 79
-		fi
-		[ -e "/tmp/xbiancopy.running" ] && touch /tmp/xbiancopy.running.$(cat /tmp/xbiancopy.running)
-		exit $rc
+	(createvol)
+		do_createvol "$@"
 		;;
-        (backuphome)
-	        BACKUPHOMELOG='/tmp/backuphome.log'
-	        if [ "$BACKGROUND" == 1 ]; then
-	            echo "$@" > $BACKUPHOMELOG
-	            PIPECMD="tee $BACKUPHOMELOG"
-	        else
-	            PIPECMD="dialog --gauge \"Cloning home. Please wait...\" 10 60"
-	        fi
-                fn=$(mapAndMountFn mount $1)
-                [ "$?" -eq 0 ] || { echo "can not mount fs"; exit 5; }
-                set -- $fn
-                if [ "$(dirname $1)" = "/xbmc-backup" -o "$1" = "//" ]; then
-                    FILE="/xbmc-backup/temp/backup_home_$DATE.img.gz"
-                    mkdir /xbmc-backup/temp
-                    find /xbmc-backup -type f -print0 | xargs -0 rm -f || :
-                else
-                    FILE="$1"
-                    [ -e $FILE ] && rm -rf $FILE
-                fi
-                packcmd=$(which lz4) || packcmd=gzip
-                btrfs sub snap -r "${tmp_dir}/home/@" "${tmp_dir}/home/@ro"
-                touch $FILE; chattr +C $FILE
-                echo 999>/tmp/backuphome.statusx
-                ( btrfs send -v "${tmp_dir}/home/@ro" | pv -i 20 -n -s $(du -sxb ${tmp_dir}/home/@ro | awk '{print $1}') | $packcmd -1 >> $FILE; echo $?>/tmp/backuphome.status) 2>&1 | eval "$PIPECMD"
-                btrfs sub delete "${tmp_dir}/home/@ro" && btrfs fi sync ${tmp_dir}
-                [ $(cat /tmp/backuphome.status) -eq 0 ] || { rm -f $FILE; exit 1; }
-                if [ "$(dirname $1)" = "/xbmc-backup" -o "$1" = "//" ]; then
-                    [ "$1" = "//" ] && mv $FILE /xbmc-backup/$(hostname)_backup_home_$DATE.img.gz || mv $FILE $1; rmdir /xbmc-backup/temp
-                    mkdir -p /xbmc-backup/put_here_to_restore
-                fi
-                [ -e "/tmp/backuphome.running" ] && touch /xbmc-backup/backuphome.running.$(cat /tmp/backuphome.running)
-                [ -e ${CONFIGPATH} ] && { echo "$DATE" > ${CONFIGPATH}/$opt_command; chown xbian:xbian ${CONFIGPATH}/${opt_command}; }
 
-                ;;
-        (restorehome)
-                [ -e $1 ] || exit 500
-                mv $1 $1.working
-                gunzip --suffix .working -t $1.working || lz4 -t $1.working || exit 500
-                btrfs sub delete ${tmp_dir}/home/@ro > /dev/null 2>&1
-                gunzip -cd < $1.working | btrfs receive -v ${tmp_dir}/home
-                [ $? -ne 0 ] && exit 1
-                rm -fr $1.working
-                { pgrep xbmc.bin >/dev/null || pgrep kodi.bin >/dev/null; } && { touch /run/start.xbmc; stop -q xbmc; }
-                stop -q zram-swap
+	(list)
+		for t in $TARGETS_DREGULAR $TARGETS_DRECURSIVE; do
+			printf "%s\n" $SNAPSHOTS_OLD_LOC | grep "^$t" | sort
+		done
+		;;
 
-                hm=""; for m in $(mount | awk '{print $3}'| grep "/home"); do hm=$hm" "$m; done
+	(snapshot)
+		do_snapshots "$SNAPPROP" ""               "$SNAPNAME" "$SNAPGLOB" "$TARGETS_DREGULAR"
+		do_snapshots "$SNAPPROP" "$opt_recursive" "$SNAPNAME" "$SNAPGLOB" "$TARGETS_DRECURSIVE"
+		print_log notice "$opt_delim$SNAPNAME," \
+			"$SNAPSHOT_COUNT created snapshots," \
+			"$SENT_COUNT sent snapshots," \
+			"$DESTROY_COUNT destroyed snapshots," \
+			"$CREATION_COUNT created filesystems," \
+			"$WARNING_COUNT warnings."
+		;;
 
-                locks=$(lsof | grep "/home" | awk '{print $2}' | sort | uniq)
-                i=0; sig='-SIGTERM' 
-                while test "$locks" != ''; do
-                    [ $i -gt 3 ] && sig='-SIGKILL'
-                    for p in $locks; do
-                        kill $sig $p
-                    done
-                    sleep 2
-                    locks=$(lsof | grep "/home" | awk '{print $2}' | sort | uniq)
-                    i=$((i+1))
-                done
+	(destroy)
+		do_destroy "local" "$@"
+		;;
 
-                for m in $(mount | awk '{print $3}' | grep "/home" | sort -r); do while mountpoint -q "$m"; do umount "$m" || sleep 1; done; done
+	(rename)
+		do_rename "$@"
+		;;
 
-                btrfs sub delete ${tmp_dir}/home/@
-                btrfs sub snap ${tmp_dir}/home/@ro ${tmp_dir}/home/@
-                btrfs sub delete ${tmp_dir}/home/@ro
-                for m in $hm; do mount $m; done
-                start zram-swap
-                [ -e /run/start.xbmc ] && { rm /run/start.xbmc; start -qn xbmc; }
-                ;;
-        (*)
-                print_log error "Wrong command."
-                exit 200
-                ;;
+	(rollback)
+		do_rollback "$@"
+		;;
+
+	(mount)
+		do_mountsnap "$@"
+		;;
+
+	(umount)
+		do_umountsnap "$@"
+		;;
+
+	(xbiancopy)
+		do_xbiancopy "$@"
+		;;
+
+	(compress)
+		if [ "$opt_fstype" = btrfs ]; then
+			opt_recompress=${opt_compress##*compress=}; opt_recompress=${opt_recompress##*compress-force=}
+			[ -n "$opt_recompress" ] || opt_recompress='lzo'
+			do_xbiancopy "$@"
+		else
+			print_log notice "Command '$opt_command' not available. Not taking any actions."
+		fi
+		;;
+
+	(backuphome)
+		do_backuphome "$@"
+		;;
+
+	(restorehome)
+		do_restorehome "$@"
+		;;
+
+	(*)
+		print_log error "Wrong command '$opt_command'."
+		exit 200
+		;;
 esac
 
 exit 0
