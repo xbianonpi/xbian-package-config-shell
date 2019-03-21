@@ -142,8 +142,7 @@ backupImgDestFn() {
             [ ! -b "$1" ] && { echo -1; exit 0; }
             ;;
         file)
-            f=$(echo $1 | sed 's/\\)/)/g;s/\\(/(/g;s/\\ / /g')
-            eval f=$(mapAndMountFn mount $f)
+            eval f=$1; eval f=$(mapAndMountFn mount $f)
             [ ! -e "$f" ] && fdel=1
             ! touch "$f" 2>/dev/null && { echo -1; mapAndMountFn umount; exit 0; }
             [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; mapAndMountFn umount; exit 0; }
@@ -186,8 +185,7 @@ backupHomePlanFn() {
 backupHomeDestFn() {
     [ -z "$1" ] && { awk -F'=' "/^HOMEDEST=/"'{print $2}' /etc/default/xbian-snap | tr -d \"; exit 0; }
     [ "$1" = "?" -o "$1" = "exp" ] && { . /etc/default/xbian-snap; echo $HOMEDEST; exit 0; }
-    f=$(echo $1 | sed 's/\\)/)/g;s/\\(/(/g;s/\\ / /g')
-    eval f=$(mapAndMountFn mount $f)
+    eval f=$1; eval f=$(mapAndMountFn mount $f)
     [ ! -e "$f" ] && fdel=1
     ! touch "$f" 2>/dev/null && { echo -1; mapAndMountFn umount; exit 0; }
     [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; mapAndMountFn umount; exit 0; }

@@ -296,7 +296,7 @@ function showCMDFn() {
         start)
             [ "$(xbian-config xbiancopy status)" -eq 0 ] && { echo "-3"; exit 0; }
             [ $# -lt 3 ] && { echo "-1"; exit 5; }
-            echo "$3" | grep -q ^'file:' && { img='--img'; echo p3=\"$3\" >/run/xc.tmp; . /run/xc.tmp; rm /run/xc.tmp; set -- $1 $2 ${p3##'file:'} $4 $5; }
+            echo "$3" | grep -q ^'file:' && { img='--img'; eval p3=$3; echo p3=\"$p3\" >/run/xc.tmp; . /run/xc.tmp; rm /run/xc.tmp; set -- $1 $2 ${p3##'file:'} $4 $5; }
             [ -n "$4" ] && label="--label=$4"
             [ -n "$5" ] && size="--size=$5"
             nice -n +1 btrfs-auto-snapshot xbiancopy $size $label $img $2 "$3" >/dev/null 2>&1 & pid=$!
@@ -316,7 +316,8 @@ function showCMDFn() {
             ;;
         homestart)
             [ "$(xbian-config backuphome status)" -eq 0 ] && { echo "-3"; exit 0; }
-            nice -n +1 btrfs-auto-snapshot backuphome "$2" >/dev/null 2>&1 & pid=$!
+            eval p2=$2
+            nice -n +1 btrfs-auto-snapshot backuphome "$p2" >/dev/null 2>&1 & pid=$!
             echo $pid > /tmp/backuphome.running
             echo $pid
             ;;
