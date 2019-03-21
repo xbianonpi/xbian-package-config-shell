@@ -142,7 +142,8 @@ backupImgDestFn() {
             [ ! -b "$1" ] && { echo -1; exit 0; }
             ;;
         file)
-            echo f=\"$(mapAndMountFn mount $1)\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
+            f=$(echo $1 | sed 's/\\)/)/g;s/\\(/(/g;s/\\ / /g')
+            eval f=$(mapAndMountFn mount $f)
             [ ! -e "$f" ] && fdel=1
             ! touch "$f" 2>/dev/null && { echo -1; mapAndMountFn umount; exit 0; }
             [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; mapAndMountFn umount; exit 0; }
@@ -152,7 +153,7 @@ backupImgDestFn() {
         *)
             { echo -1; exit 0; }
     esac
-    eval sed -i 's\@IMGDEST=.*@IMGDEST=\"$1\"@' /etc/default/xbian-snap
+    eval sed -i 's\|IMGDEST=.*\|IMGDEST=\"$1\"\|' /etc/default/xbian-snap
     echo 1
 }
 backupImgKeepFn() {
@@ -185,13 +186,14 @@ backupHomePlanFn() {
 backupHomeDestFn() {
     [ -z "$1" ] && { awk -F'=' "/^HOMEDEST=/"'{print $2}' /etc/default/xbian-snap | tr -d \"; exit 0; }
     [ "$1" = "?" -o "$1" = "exp" ] && { . /etc/default/xbian-snap; echo $HOMEDEST; exit 0; }
-    echo f=\"$(mapAndMountFn mount $1)\" > /run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
+    f=$(echo $1 | sed 's/\\)/)/g;s/\\(/(/g;s/\\ / /g')
+    eval f=$(mapAndMountFn mount $f)
     [ ! -e "$f" ] && fdel=1
     ! touch "$f" 2>/dev/null && { echo -1; mapAndMountFn umount; exit 0; }
     [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; mapAndMountFn umount; exit 0; }
     [ -n "$fdel" ] && rm "$f"
     mapAndMountFn umount
-    eval sed -i 's\@HOMEDEST=.*@HOMEDEST=\"$1\"@' /etc/default/xbian-snap
+    eval sed -i 's\|HOMEDEST=.*\|HOMEDEST=\"$1\"\|' /etc/default/xbian-snap
     echo 1
 }
 backupHomeKeepFn() {
