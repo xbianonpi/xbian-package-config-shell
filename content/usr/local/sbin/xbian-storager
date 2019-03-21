@@ -1067,6 +1067,22 @@ do_xbiancopy ()
 
 	case "$opt_recompress" in
 		'')
+			if [ -n "opt_exclude" ]; then
+				cat << \EOF >> /etc/init/xbian-restore.conf
+start on startup or mountall
+script
+	for p in transmission tvheadend; do
+		if [ -e "/var/lib/dpkg/info/xbian-package-$p.postinst" ]; then
+			(
+				. "/var/lib/dpkg/info/xbian-package-$p.postinst"
+				eval type '${p}_storage' >/dev/null 2>&1 && eval '${p}_storage'
+			)
+		fi
+	done
+end script
+post-start exec rm -f /etc/init/xbian-restore.conf
+EOF
+			fi
 			wmsg='Cloning'
 			;;
 		zlib|lzo|lz4|zstd|cleanup)
@@ -1523,6 +1539,7 @@ do_xbiancopy ()
 		fi
 	fi
 
+	rm -f /etc/init/xbian-restore.conf
 	echo "$success_msg" >> $XBIANCOPYLOG
 	if [ -z "$opt_helper" -a "$BACKGROUND" = 0 ]; then
 		sizeX=79

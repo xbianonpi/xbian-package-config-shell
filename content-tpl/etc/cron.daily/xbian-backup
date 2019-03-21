@@ -28,11 +28,14 @@ while initctl list | grep -q "xbian-xbmc-player.*start/" && status xbmc-screensa
 done
 
 if [ "$IMGPLAN" = "$DWM" -a "$IMGTYPE" = file ]; then
-	nice -n +1 btrfs-auto-snapshot xbiancopy --img '-' "$IMGDEST" >/dev/null 2>&1
+	if [ -n "$IMGEXCLUDE" ]; then
+		IMGEXCLUDE="--exclude=$IMGEXCLUDE"
+	fi
+	nice -n +1 xbian-storager xbiancopy --img '-' $IMGEXCLUDE "$IMGDEST" >/dev/null 2>&1
 	xbian-config xbiancopy doclean "$(xbian-config xbiancopy imgdest)" $IMGKEEP
 fi
 
 if [ "$HOMEPLAN" = "$DWM" ]; then
-	nice -n +1 btrfs-auto-snapshot backuphome "$HOMEDEST" >/dev/null 2>&1
+	nice -n +1 xbian-storager backuphome "$HOMEDEST" >/dev/null 2>&1
 	xbian-config xbiancopy doclean "$(xbian-config xbiancopy homedest)" $HOMEKEEP
 fi

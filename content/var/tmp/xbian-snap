@@ -16,7 +16,7 @@ KEEPMONTHS=0
 ENABLEDAPT=yes
 KEEPAPT=10
 
-# exclude those subvolumes by default for btrfs-auto-snapshot operations (comma separated list)
+# exclude those subvolumes for scheduled generated snapshots (comma separated list)
 EXCLUDESUB=
 
 # Comma separated mount options for mounting IMGDEST and HOMEDEST shares
@@ -36,6 +36,9 @@ IMGDEST=notset
 
 # how many images should be kept (0 means unlimited)
 IMGKEEP=0
+
+# exclude those subvolumes for scheduled generated image backups (comma separated list)
+IMGEXCLUDE=
 
 # auto backup of /home should be run: none/daily/weekly/monthly
 HOMEPLAN=none
