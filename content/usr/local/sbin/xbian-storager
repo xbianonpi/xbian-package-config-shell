@@ -25,6 +25,7 @@
 # Place, Suite 330, Boston, MA  02111-1307  USA
 
 MYNAME=${0##*/}
+MYPATH=$0
 
 # Default common program options
 
@@ -122,6 +123,33 @@ RC='99'
 # Kernel tweaks
 MY_FILE_MAX=80000
 MY_MIN_FREE_KBYTES=75000
+
+# Error declarations
+E_ARG_LIST=70
+E_SAME_DEVICE=71
+E_MOUNT_FS=72
+E_CREATE_FS=73
+E_SAME_FS=74
+E_SPACE_AVAIL=75
+E_RESIZE_FILE=76
+E_CREATE_PART=77
+E_LOOP_DEV=78
+
+E_COMPR_TYPE=79
+E_CLEAN_FS=80
+
+E_MOUNT_SRC_BOOT=81
+E_MOUNT_DEST_BOOT=82
+E_MOUNT_DEST=83
+E_FORMAT_DEST=84
+E_CREATE_POOL=85
+
+E_SUB_CREATE=86
+E_COPY_DATA=87
+E_SUB_DELETE=88
+E_SUP_SNAP=89
+E_BTRFS_SYNC=90
+E_SUB_MOVE=91
 
 print_usage ()
 {
@@ -1073,7 +1101,7 @@ do_xbiancopy ()
 			;;
 		*)
 			print_log error "wrong compression type $opt_recompress."
-			exit 5
+			exit $E_COMPR_TYPE
 			;;
 	esac
 
@@ -1081,11 +1109,11 @@ do_xbiancopy ()
 	(
 		if [ $# -ne 2 -a -z "$opt_recompress" ] || [ $# -ne 1 -a -n "$opt_recompress" ]; then
 			print_log error "wrong aruments list $@."
-			exit 5
+			exit $E_ARG_LIST
 		fi
 		if [ -z "$opt_recompress" ] && [ "$(readlink -e $1)" = "$(readlink -e $2)" -a -n "$(readlink -e $1)" ]; then
-			print_log error "source ($1) and destination ($1) can not be the same."
-			exit 5
+			print_log error "source ($1) and destination ($2) can not be the same."
+			exit $E_SAME_DEVICE
 		fi
 
 		if [ "$1" != "$opt_dev" -a "$1" != '/dev/root' -a "$1" != '//' ]; then
@@ -1115,7 +1143,7 @@ do_xbiancopy ()
 				fn=$(mapAndMountFn mount "$2")
 				if [ "$?" -ne 0 ]; then
 					print_log error "can not mount fs $(dirname $2).)"
-					exit 5
+					exit $E_MOUNT_FS
 				fi
 
 			        set -- $1 "$fn"
@@ -1124,11 +1152,11 @@ do_xbiancopy ()
 
 			        if ! touch "$2" 2>/dev/null; then
 					print_log error "can not create img file"
-					exit 5
+					exit $E_CREATE_FS
 				fi
 			        if [ "$(df -P "$2" | tail -1 | awk '{print $1}')" = "$(readlink -e $1)" ]; then
 					print_log error "img file can not be created on the source filesystem."
-					exit 5
+					exit $E_SAME_FS
 				fi
 
 				if [ -z "$opt_size" ]; then
@@ -1146,13 +1174,13 @@ do_xbiancopy ()
 				if [ "$(df -B1 "$2" | tail -1 | awk '{print $4}')" -lt "$size" ]; then
 					print_log error "not enough free space on destination filesystem."
 					rm -f "$2"
-					exit 5
+					exit $E_SPACE_AVAIL
 				fi
 
 				chattr +CA "$2" 2>/dev/null
 				if ! truncate -s $size "$2"; then
 					print_log error "can't resize img file to needed size."
-					exit 5
+					exit $E_RESIZE_FILE
 				fi
 			else
 				for m in $(findmnt -n | grep "$2" | awk '{print $1}'); do
@@ -1168,7 +1196,7 @@ do_xbiancopy ()
 					|| ! echo "2048,$((config_offset_root-2048)),b,*," | sfdisk -uS -N1 -f -q "$2" >/dev/null 2>&1 \
 					|| ! echo "$config_offset_root,+,83,," | sfdisk -uS -N2 -f -q "$2" >/dev/null 2>&1; then
 				print_log error "can't create destination partitions."
-				exit 5
+				exit $E_CREATE_PART
 			fi
 
 			modprobe -q loop
@@ -1182,7 +1210,7 @@ do_xbiancopy ()
 				timeout=$(($timeout+1))
 				if [ $timeout -gt 10 ]; then
 					print_log error "loop device not available."
-					exit 4
+					exit $E_LOOP_DEV
 				fi
 				sleep 1
 			done
@@ -1197,13 +1225,13 @@ do_xbiancopy ()
 
 			if ! mountpoint -q /boot && ! mount /boot 2>/dev/null; then
 				print_log error "can not mount source boot partition."
-				exit 5
+				exit $E_MOUNT_SRC_BOOT
 			fi
 
 			mkdir -p /run/boot-dest
 			if ! mount /dev/mapper/${loopd}p1 /run/boot-dest 2>/dev/null; then
 				print_log error "can not mount destination boot partition."
-				exit 5
+				exit $E_MOUNT_DEST_BOOT
 			fi
 
 			[ "$BACKGROUND" == 1 ] && cp -av /boot/* /run/boot-dest 2>&1 || cp -a /boot/* /run/boot-dest 2>/dev/null
@@ -1224,7 +1252,7 @@ do_xbiancopy ()
 		if [ -z "$opt_recompress" ]; then
 			if eval $opt_remotecmd findmnt -n -S "$2" >/dev/null && ! eval $opt_remotecmd umount "$2" 2>/dev/null; then
 				print_log error "can not umount destination partition."
-				exit 5
+				exit $E_MOUNT_DEST
 			fi
 
 			eval $opt_remotecmd rm -rf $root_dest
@@ -1235,7 +1263,7 @@ do_xbiancopy ()
 			if [ "$opt_fstype" = btrfs ]; then
 				if ! eval $opt_remotecmd mkfs.btrfs -O skinny-metadata -m single -L $opt_clonename -f $2 2>&1; then
 					print_log error "can not format destination partition $2."
-					exit 5
+					exit $E_FORMAT_DEST
 				fi
 				echo "partuuid=$(eval $opt_remotecmd blkid -s UUID -o value $2)" >>/run/vars.xbiancopy.$$
 				osep=''
@@ -1260,7 +1288,7 @@ do_xbiancopy ()
 				if ! eval $opt_remotecmd mount -o ${opt_compress}${osep}noatime,thread_pool=1 $2 $root_dest; then
 					if ! eval $opt_remotecmd mount -o compress=lzo,noatime,thread_pool=1 $2 $root_dest; then
 						print_log error "can not mount destination partition."
-						exit 6
+						exit $E_MOUNT_DEST
 					fi
 					opt_compress="compress=lzo"; print_log warning "can not mount with compression specified, using default $opt_compress."
 				fi
@@ -1274,7 +1302,7 @@ do_xbiancopy ()
 				if ! eval $opt_remotecmd zpool create -f -o ashift=12 -O com.sun:auto-snapshot=false -O acltype=posixacl -O xattr=sa -O atime=off \
 						-O canmount=off -O compression=lz4 -O normalization=formD -O mountpoint=/ -R $root_dest $opt_clonename $puid 2>/dev/null; then
 					print_log error "can not create destination pool in $2."
-					exit 5
+					exit $E_CREATE_POOL
 				fi
 			fi
 		fi
@@ -1303,7 +1331,7 @@ do_xbiancopy ()
 					((w4free--))
 					if [ "$w4free" -lt 0 ]; then
 						print_log error "not enough space available."
-						exit 16
+						exit $E_SPACE_AVAIL
 					fi
 					sleep 10
 				done
@@ -1311,7 +1339,7 @@ do_xbiancopy ()
 					[ "$BACKGROUND" == 1 ] || printf "XXX\n0\n$(printf '\n %s %s/%s. Total <scrubbing>. Done <waiting>.' $wmsg - -)\nXXX\n"
 					if ! btrfs scrub start -Bq /; then
 						print_log error "data error on disk, compressing not possible."
-						exit 17
+						exit $E_CLEAN_FS
 					fi
 				fi
 			fi
@@ -1343,7 +1371,7 @@ do_xbiancopy ()
 					copy_volume () {
 						if [ "$opt_fstype" = btrfs ]; then
 							if [ "$1" = tar ]; then
-								eval $opt_remotecmd btrfs sub create "${vd}/$s" && eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" || exit 12
+								eval $opt_remotecmd btrfs sub create "${vd}/$s" && eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" || exit $E_SUB_CREATE
 								to='--warning=none --acls --xattrs'
 								nice -n 10 tar c $to -C ${vs}/$s.ro . | pv -i $ival -ns $siz | eval $opt_remotecmd nice -n 10 tar x $to -C "${vd}/$s"
 							else
@@ -1366,16 +1394,16 @@ do_xbiancopy ()
 								ar=$a
 							fi
 						done
-					[ "$?" -eq 0 ] || { [ "$BACKGROUND" == 1 ] && printf "%s\n" "$wmsg subvolume $v snapshot $s failed"; exit 10; }
+					[ "$?" -eq 0 ] || { [ "$BACKGROUND" == 1 ] && printf "%s\n" "$wmsg subvolume $v snapshot $s failed"; exit $E_COPY_DATA; }
 					if [ "$opt_fstype" = btrfs ]; then
 						if [ "$opt_cpmode" = tar ]; then
-							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" && sync && btrfs sub delete "${vs}/$s.ro" || exit 11
+							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" && sync && btrfs sub delete "${vs}/$s.ro" || exit $E_SUB_DELETE
 						else
-							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s.ro" && sync && btrfs sub delete "${vs}/$s.ro" || exit 11
+							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s.ro" && sync && btrfs sub delete "${vs}/$s.ro" || exit $E_SUB_DELETE
 							eval $opt_remotecmd nice -n 10 btrfs sub delete "${vd}/$s" 2>/dev/null
-							eval $opt_remotecmd nice -n 10 btrfs sub snap "${vd}/$s.ro" "${vd}/$s" && sync || exit 12
-							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" || exit 13
-							eval $opt_remotecmd nice -n 10 btrfs sub delete "${vd}/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "$vd" || exit 14
+							eval $opt_remotecmd nice -n 10 btrfs sub snap "${vd}/$s.ro" "${vd}/$s" && sync || exit $E_SUB_SNAP
+							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" || exit $E_BTRFS_SYNC
+							eval $opt_remotecmd nice -n 10 btrfs sub delete "${vd}/$s.ro" && eval $opt_remotecmd nice -n 10 btrfs fi sync "$vd" || exit $E_SUB_DELETE
 						fi
 					else
 						zfs destroy "$v@ro"
@@ -1398,11 +1426,11 @@ do_xbiancopy ()
 						continue
 					fi
 					vs="${opt_mountpoint}/$v"
-					mv "$vs" "${vs}.delete" && mv "${vs}$opt_recompress" "$vs" || exit 15
+					mv "$vs" "${vs}.delete" && mv "${vs}$opt_recompress" "$vs" || exit $E_SUB_MOVE
 				done
 				if ! mountpoint -q /boot && ! mount /boot 2>/dev/null; then
 					print_log error "can not mount boot partition."
-					exit 5
+					exit $E_MOUNT_SRC_BOOT
 				fi
 				if test -e /boot/cmdline.txt; then
 					sed -i "s/compress=[a-z4]*/compress=$opt_compress/g" /boot/cmdline.txt
@@ -1483,7 +1511,9 @@ do_xbiancopy ()
 			chown xbian:xbian ${CONFIGPATH}/${opt_command}
 		fi
 	else
-		success_msg=$(printf "Sorry, operation failed with error #%03d!" $RC)
+		RC_NAME=$(awk -F= "/E_.*=$RC/"'{print $1}' $MYPATH)
+		[ -n "$RC_NAME" ] || RC_NAME=$(printf "#%03d" $RC)
+		success_msg=$(printf "Operation failed with error %s!" $RC_NAME)
 		if [ -n "$fn" ]; then
 			[ "$BACKGROUND" = 1 ] && print_log info "Removing broken image file ${fn##*/}." >> $XBIANCOPYLOG
 			rm -f "$fn"
