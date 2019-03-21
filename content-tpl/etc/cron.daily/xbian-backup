@@ -6,7 +6,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 [ "$ENABLEDSCHEDULE" = yes ] || exit 0
 
-DWM="${0##*.}"; DWM="${DWM%%/*}"
+DWM=$(realpath -s $0); DWM="${DWM##*.}"; DWM="${DWM%%/*}"
 
 if [ -n "$EXCLUDESUB" ]; then
 	EXCLUDESUB="--exclude=$EXCLUDESUB"
