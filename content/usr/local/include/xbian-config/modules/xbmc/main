@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#Copyright 2012 - 2013 CurlyMo & mk01 <development@xbian.org>
+#Copyright 2012 - 2019 CurlyMo, mk01 & mkreisl <development@xbian.org>
 #
 #This file is part of XBian - XBMC on the Raspberry Pi.
 #
@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(webserver tvoff tvexiton haltoff usbsync usbauto usbshare priority uuidname hddspin sharerw);
+ARGUMENTS=(webserver tvoff exitoff haltoff tvexiton priority usbauto usbsync usbshare sharerw uuidname hddspin);
 
 #|------------------------------------|
 #|          Include files             |
@@ -97,7 +97,8 @@ function showCMDFn() {
 		;;
                 tvoff)
                     if [ $# -gt 1 ]; then
-                        setXBMCtvoffFn $2 $3
+                        shift 1
+                        setXBMCtvoffFn $@
                     else
                         getXBMCtvoffFn
                     fi
@@ -115,6 +116,14 @@ function showCMDFn() {
                         setXBMChaltoffFn $2
                     else
                         getXBMChaltoffFn
+                    fi
+                    echo $((1-$?))
+                ;;
+                exitoff)
+                    if [ $# -gt 1 ]; then
+                        setXBMCexitoffFn $2
+                    else
+                        getXBMCexitoffFn
                     fi
                     echo $((1-$?))
                 ;;
