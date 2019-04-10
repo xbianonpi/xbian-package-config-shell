@@ -251,8 +251,8 @@ function showGUIFn() {
                             sed -i "s%setenv fstype.*%setenv fstype btrfs%" /boot/boot.scr.txt
                         elif [ "$tt" = zfs ]; then
                             cmd=$(grep -wm1 ^'setenv baseconfig' /boot/boot.scr.txt | sed "s%^setenv baseconfig \+%%g;s% \+% \n%g" | grep -vE 'rootfstype=|root=|nfsroot=|rootflags=' | tr -d '\n')
-                            cmd=$(echo "root=ZFS=$tc rootfstype=zfs $cmd")
-                            sed -i "s%setenv fstype.*%setenv fstype other%" /boot/boot.scr.txt
+                            cmd=$(echo "root=ZFS=$tc $cmd")
+                            sed -i "s%setenv fstype.*%setenv fstype zfs%" /boot/boot.scr.txt
                         fi
                         [ -e /boot/boot.scr.txt.$tt ] || cp -a /boot/boot.scr.txt /boot/boot.scr.txt.$tt
                         sed -i "0,/^setenv baseconfig.*/s%%setenv baseconfig $cmd%" /boot/boot.scr.txt
