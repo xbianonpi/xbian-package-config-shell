@@ -124,6 +124,8 @@ RC='99'
 MY_FILE_MAX=80000
 MY_MIN_FREE_KBYTES=75000
 
+OPT_OFFSET_ROOT=206848
+
 # Error declarations
 E_ARG_LIST=70
 E_SAME_DEVICE=71
@@ -1207,7 +1209,8 @@ EOF
 				done
 			fi
 
-			config_offset_root=206848
+			config_offset_root=$(( $(parted -s $(findmnt -no SOURCE /boot 2>/dev/null) unit s print 2>/dev/null | awk '/^[ ]*1/{printf "%d", $3}') + 2049 ))
+			[ "$config_offset_root" -lt "$OPT_OFFSET_ROOT" ] && config_offset_root=$OPT_OFFSET_ROOT
 			if ! parted -s "$2" mklabel msdos \
 					|| ! echo "2048,$((config_offset_root-2048)),b,*," | sfdisk -uS -N1 -f -q "$2" >/dev/null 2>&1 \
 					|| ! echo "$config_offset_root,+,83,," | sfdisk -uS -N2 -f -q "$2" >/dev/null 2>&1; then
