@@ -1530,7 +1530,7 @@ EOF
 			chown xbian:xbian ${CONFIGPATH}/${opt_command}
 		fi
 	else
-		RC_NAME=$(awk -F= "/E_.*=$RC/"'{print $1}' $MYPATH)
+		RC_NAME=$(awk -F= "/^E_.*=$RC/"'{print $1}' $MYPATH)
 		[ -n "$RC_NAME" ] || RC_NAME=$(printf "#%03d" $RC)
 		success_msg=$(printf "Operation failed with error %s!" $RC_NAME)
 		if [ -n "$fn" ]; then
@@ -1584,7 +1584,7 @@ followed by plugging this card into your device and boot from it."
 			fi
 
 		else
-			sizeX=44
+			sizeX=50
 		fi
 		if [ -n "$opt_recompress" ]; then
 			dialog --yes-label ' Reboot ' --no-label ' Return ' --yesno "\n$success_msg$msg1$msg2" $sizeY $sizeX
