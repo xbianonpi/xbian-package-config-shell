@@ -2,10 +2,7 @@
 
 CONFD="/usr/local/include/xbian-config/config"
 
-if [ $1 = "configure" ]; then
-
-    find /usr/local/bin -lname /usr/local/bin/busybox -exec rm {} +
-    /usr/local/bin/busybox --list | grep -v 'udhcp\|rpm\|rpm2cpio' | xargs -L1 -I%% sh -c 'which %% >/dev/null || ln -s /usr/local/bin/busybox /usr/local/bin/%%'
+if [ "$1" = configure ]; then
 
     date > /home/xbian/xbian-config-update.log
 
@@ -101,7 +98,10 @@ EOF
 
     dpkg-trigger --no-await trigger-xbian-package-config-shell
 
-elif [ $1 = "triggered" ]; then
+elif [ "$1" = triggered ]; then
+    find /usr/local/bin -lname /usr/local/bin/busybox -exec rm {} +
+    /usr/local/bin/busybox --list | grep -v 'udhcp\|rpm\|rpm2cpio' | xargs -L1 -I%% sh -c 'which %% >/dev/null || ln -s /usr/local/bin/busybox /usr/local/bin/%%'
+
     [ -e /var/tmp/samba ] && mv /var/tmp/samba /etc/default/
     . /etc/default/samba
     if [ "$RUN_MODE" = inetd ]; then
