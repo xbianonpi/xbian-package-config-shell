@@ -44,15 +44,12 @@ def show_package_versions():
         for package in sorted(packages):
             pkg = cache[package.name]
             try:
-                if package.installed:
-                   vinst=package.installed.version
-                else:
-                   vinst="notinstalled"
-                print ("{}/{} {} upgradeable to {}".format(
-                    package.name,
-                    pkg.candidate.origins[0].archive,
-                    #pkg.candidate.origins[0].component,
-                    vinst, package.candidate.version, ))
+                if package.installed and package.installed.version != package.candidate.version:
+                   print ("{}/{} {} upgradeable to {}".format(
+                      package.name,
+                      pkg.candidate.origins[0].archive,
+                      #pkg.candidate.origins[0].component,
+                      package.installed.version, package.candidate.version, ))
             except:
                 if package.installed:
                    vinst=package.installed.version
