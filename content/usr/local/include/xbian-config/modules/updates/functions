@@ -121,9 +121,9 @@ function updatePackagesFn() {
 	if [ $1 -eq 1 ]; then
 		LC_ALL=C.UTF-8 eval apt-get $COMMAND -s $LIST>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		{ rm -f /tmp/aptupdates; LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval apt-get $COMMAND -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST 2>&1; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
+		{ rm -f /tmp/aptupdates; LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval apt-get $COMMAND -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST 2>&1; [ "$COMMAND" = dist-upgrade ] && apt-get install --reinstall xbian-update; } | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
 	elif [ $1 -eq 2 ]; then
-		{ LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval nohup apt-get $COMMAND -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; echo -e "Refreshing package lists... \c"; retrieveUpdateListFn; } >/tmp/aptstatus &
+		{ LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval nohup apt-get $COMMAND -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; [ "$COMMAND" = dist-upgrade ] && apt-get install --reinstall xbian-update; echo -e "Refreshing package lists... \c"; retrieveUpdateListFn; } >/tmp/aptstatus &
 	fi
         # Returncode only correct on simulation (1) and on real operation (0)
         getAptErrorCodeFn
