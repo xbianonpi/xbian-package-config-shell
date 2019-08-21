@@ -15,11 +15,47 @@ RemoveJobs()
 
 pgrep $BASENAME >/dev/null && exit 0 || :
 
-if grep -q 'Package: openvpn$' /var/lib/dpkg/status; then
-    ! grep -q ^tun /etc/modules && modprobe tun && echo tun >> /etc/modules
-    ! grep -q "xbian.*/usr/sbin/openvpn.*/usr/bin/killall" /etc/sudoers.d/openvpn 2>/dev/null && \
-        echo "xbian ALL=(ALL) NOPASSWD: /usr/sbin/openvpn, /usr/bin/killall" >> /etc/sudoers.d/openvpn
-fi
+for p in $(grep -E '^Package: openvpn$|^Package: x2goserver$' /var/lib/dpkg/status); do
+    case $p in
+        *openvpn)
+            ! grep -q ^tun /etc/modules && modprobe tun && echo tun >> /etc/modules
+            ! grep -q "xbian.*/usr/sbin/openvpn.*/usr/bin/killall" /etc/sudoers.d/openvpn 2>/dev/null && \
+                echo "xbian ALL=(ALL) NOPASSWD: /usr/sbin/openvpn, /usr/bin/killall" >> /etc/sudoers.d/openvpn
+        ;;
+        *x2goserver)
+            x2goserver=1
+            if [ ! -e /etc/init/x2goserver.conf ]; then
+cat << \EOF > /etc/init/x2goserver.conf
+description "The X2Go daemon is responsible for post-session clean-ups"
+author      "mkreisl mkreisl@xbian.org"
+
+env DAEMON=/usr/sbin/x2gocleansessions
+env XSOCKDIR=/tmp/.X11-unix
+
+start on remote-filesystems
+stop on starting rc RUNLEVEL=[06]
+
+pre-start script
+    test -e $DAEMON || { stop; exit 0; }
+    [ -d $XSOCKDIR ] || { mkdir $XSOCKDIR; chmod 1777 $XSOCKDIR; }
+end script
+
+script
+    $DAEMON
+    sleep 365d
+end script
+
+pre-stop exec pkill -f $DAEMON
+EOF
+                rm -fr /etc/init.d/x2goserver
+                ln -s /lib/init/upstart-job /etc/init.d/x2goserver
+                pkill -f /usr/sbin/x2gocleansessions
+            fi
+        ;;
+    esac
+done
+
+[ -n "$x2goserver" ] || rm -f /etc/init/x2goserver.conf /etc/init.d/x2goserver
 
 if [ "$1" != run -o "$(xbian-config updates progress)" != 0 ]; then
     RemoveJobs
