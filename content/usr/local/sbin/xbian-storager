@@ -1318,15 +1318,17 @@ EOF
 				else
 					puid=$(blkid -s PARTUUID -o value $2)
 				fi
-				if ! eval $opt_remotecmd zpool create -f -o ashift=12 -O com.sun:auto-snapshot=false -O acltype=posixacl -O xattr=sa -O atime=off \
-						-O canmount=off -O compression=lz4 -O normalization=formD -O mountpoint=/ -R $root_dest $opt_clonename $puid 2>/dev/null; then
+				if ! eval $opt_remotecmd zpool create -df -o ashift=12 -O com.sun:auto-snapshot=false -O acltype=posixacl -O xattr=sa -O atime=off \
+						-O canmount=off -O normalization=formD -O mountpoint=/ -R $root_dest $opt_clonename $puid; then
 					print_log error "can not create destination pool in $2."
 					exit $E_CREATE_POOL
 				fi
+				zpool upgrade $opt_clonename &>/dev/null
+				zfs set compression=lz4 $opt_clonename &>/dev/null
 			fi
 		fi
 
-	) | eval "$PIPECMD1"
+	) 2>&1 | eval "$PIPECMD1"
 
 	RC=$?
 	set +o pipefail

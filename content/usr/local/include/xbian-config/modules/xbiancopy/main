@@ -114,7 +114,9 @@ function showGUIFn() {
                 [ "$?" -eq 0 ] && (
                     puid=$(blkid -s PARTUUID -o value $DEST)
                     echo -n "Creating root pool $tc in $DEST ($puid) ... "
-                    zpool create -f -o ashift=12 -O com.sun:auto-snapshot=false -O acltype=posixacl -O xattr=sa -O atime=off -O canmount=off -O compression=lz4 -O normalization=formD -O mountpoint=/ -R $tm $tc /dev/disk/by-partuuid/$puid 2>&1 || exit 3
+                    zpool create -df -o ashift=12 -O com.sun:auto-snapshot=false -O acltype=posixacl -O xattr=sa -O atime=off -O canmount=off -O normalization=formD -O mountpoint=/ -R $tm $tc /dev/disk/by-partuuid/$puid 2>&1 || exit 3
+                    zpool upgrade $tc &>/dev/null
+                    zfs set compression=lz4 $tc &>/dev/null
                     if [ -z "$zr" ]; then
                         echo -en "ok\nCreating filesystem dataset to act as a container ... "
                         zfs create -o canmount=off -o com.sun:auto-snapshot=true -o acltype=posixacl -o xattr=sa -o mountpoint=none $tc/root 2>&1 || exit 4
