@@ -1087,10 +1087,10 @@ EOF
 			fi
 			wmsg='Cloning'
 			;;
-		zlib|lzo|lz4|zstd|cleanup)
+		zlib|lzo|lz4|zstd|none|cleanup)
 			w4free=0
 			for v in $FS_LOCAL_LIST; do
-				if [ -z "$v" ] || ! echo "$v" | grep -qE "\.delete$|\.zlib$|\.lzo$|\.lz4$|\.zstd$"; then
+				if [ -z "$v" ] || ! echo "$v" | grep -qE "\.delete$|\.zlib$|\.lzo$|\.lz4$|\.zstd$|\.none$"; then
 					continue
 				fi
 				sl=''
