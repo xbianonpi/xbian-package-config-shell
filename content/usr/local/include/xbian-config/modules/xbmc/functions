@@ -92,7 +92,6 @@ function setXBMCexitoffFn() {
     [ "$1" -gt 0 ] && v='yes' || v='no'
     sed -i "s/XBMCOFF=.*/XBMCOFF=$v/g" /etc/default/xbmc
     grep -q "XBMCOFF=$v" /etc/default/xbmc
-    echo $((1-$?))
 }
 
 function getXBMChaltoffFn() {
@@ -106,7 +105,6 @@ function setXBMChaltoffFn() {
     [ "$1" -gt 0 ] && v='yes' || v='no'
     sed -i "s/SCROFFHALT=.*/SCROFFHALT=$v/g" /etc/default/xbmc
     grep -q "SCROFFHALT=$v" /etc/default/xbmc
-    echo $((1-$?))
 }
 
 function getXBMCtvonFn() {
@@ -120,7 +118,6 @@ function setXBMCtvonFn() {
     [ "$1" -gt 0 ] && v='yes' || v='no'
     sed -i "s/XBMCEXITON=.*/XBMCEXITON=$v/g" /etc/default/xbmc
     grep -q "XBMCEXITON=$v" /etc/default/xbmc
-    echo $((1-$?))
 }
 
 function getXBMCpriorityFn() {
