@@ -57,7 +57,7 @@ done
 
 [ -n "$x2goserver" ] || rm -f /etc/init/x2goserver.conf /etc/init.d/x2goserver
 
-if [ "$1" != run -o "$(xbian-config updates progress)" != 0 ]; then
+if [ "$1" != run -o "$(xbian-config updates progress 2>/dev/null)" != 0 ]; then
     RemoveJobs
     echo "$PROGNAME run" | at -M now + 5min &>/dev/null
     exit 0
