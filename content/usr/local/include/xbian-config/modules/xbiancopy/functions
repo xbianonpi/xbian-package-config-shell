@@ -83,13 +83,13 @@ mapAndMountFn() {
                         getcredentials $server $type
 
                         [ -z "$user" ] && usep='' || usep='@'
-                        [ -z "$pass" ] && sopt='' || sopt=",password_stdin"
-                        [ -z "$port" ] && popt='' || popt=",port=$port"
+                        [ -z "$pass" ] && sopt='' || sopt="password_stdin,"
+                        [ -z "$port" ] && popt='' || popt="port=$port,"
                         logger -t $(basename $0) "xbiancopy serv=$serv, port=$port, user=$log_user, pass=$log_pass"
 
                         modprobe -q fuse
-                        [ -z "$mopt" ] || mopt=",$mopt"
-                        echo $pass | sshfs $user$usep$serv:$path -o nonempty$sopt$popt$mopt $mountpath &>/dev/null
+                        opts=$sopt$popt$mopt; opts=${opts%,}
+                        echo $pass | sshfs $user$usep$serv:$path -o $opts $mountpath &>/dev/null
                     ;;
                     *)
                         false
