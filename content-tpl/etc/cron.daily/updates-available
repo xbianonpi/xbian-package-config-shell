@@ -37,6 +37,7 @@ stop on starting rc RUNLEVEL=[06]
 
 pre-start script
     test -e $DAEMON || { stop; exit 0; }
+    test -L /dev/fd || ln -s /proc/self/fd /dev/fd
     [ -d $XSOCKDIR ] || { mkdir $XSOCKDIR; chmod 1777 $XSOCKDIR; }
 end script
 
