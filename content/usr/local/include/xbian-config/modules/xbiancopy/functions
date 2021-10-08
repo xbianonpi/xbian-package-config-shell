@@ -61,7 +61,7 @@ mapAndMountFn() {
                 [ "$type" = cifs ] && type="smb"
                 server=$(echo "$2" | cut -f 3 -d '/')
                 pf="/$(echo "$2" | cut -f 4- -d '/')"
-                eval path=${pf%/*}
+                path=${pf%/*}
                 name=${pf##*/}
                 logger -t $(basename $0) "xbiancopy type=$type, server=$server, path=$path, name=$name"
                 mkdir -p $mountpath
@@ -71,12 +71,12 @@ mapAndMountFn() {
                         getcredentials $server $type
                         logger -t $(basename $0) "xbiancopy user=$log_user, pass=$log_pass"
                         [ -z "$mopt" ] || mopt=",$mopt"
-                        mount -t cifs "//"$server$path -o username=$user,password=$pass,actimeo=120$mopt $mountpath &>/dev/null
+                        mount -t cifs "//"$server"$path" -o username=$user,password=$pass,actimeo=120$mopt $mountpath &>/dev/null
                     ;;
                     nfs)
                         eval mopt=$(awk -F'OPTS=' "/^NFSOPTS=/"'{print $2}' /etc/default/xbian-snap)
                         [ -z "$mopt" ] || mopt="-o $mopt"
-                        mount -t $type $mopt $server:$path $mountpath &>/dev/null
+                        mount -t $type $mopt $server:"$path" $mountpath &>/dev/null
                     ;;
                     ssh|sftp)
                         eval mopt=$(awk -F'OPTS=' "/^SSHFSOPTS=/"'{print $2}' /etc/default/xbian-snap)
@@ -89,7 +89,7 @@ mapAndMountFn() {
 
                         modprobe -q fuse
                         opts=$sopt$popt$mopt; opts=${opts%,}
-                        echo $pass | sshfs $user$usep$serv:$path -o $opts $mountpath &>/dev/null
+                        echo $pass | sshfs $user$usep$serv:"$path" -o $opts $mountpath &>/dev/null
                     ;;
                     *)
                         false
@@ -142,7 +142,7 @@ backupImgDestFn() {
             [ ! -b "$1" ] && { echo -1; exit 0; }
             ;;
         file)
-            eval f=$1; eval f=$(mapAndMountFn mount $f)
+            echo f=\"$(mapAndMountFn mount $(echo $1 | sed 's/\\)/)/g;s/\\(/(/g;s/\\ / /g'))\" >/run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
             [ ! -e "$f" ] && fdel=1
             ! touch "$f" 2>/dev/null && { echo -1; mapAndMountFn umount; exit 0; }
             [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; mapAndMountFn umount; exit 0; }
@@ -185,7 +185,7 @@ backupHomePlanFn() {
 backupHomeDestFn() {
     [ -z "$1" ] && { awk -F'=' "/^HOMEDEST=/"'{print $2}' /etc/default/xbian-snap | tr -d \"; exit 0; }
     [ "$1" = "?" -o "$1" = "exp" ] && { . /etc/default/xbian-snap; echo $HOMEDEST; exit 0; }
-    eval f=$1; eval f=$(mapAndMountFn mount $f)
+    echo f=\"$(mapAndMountFn mount $(echo $1 | sed 's/\\)/)/g;s/\\(/(/g;s/\\ / /g'))\" >/run/xbiancopy.tmp; . /run/xbiancopy.tmp; rm /run/xbiancopy.tmp
     [ ! -e "$f" ] && fdel=1
     ! touch "$f" 2>/dev/null && { echo -1; mapAndMountFn umount; exit 0; }
     [ "$(df -P "$f" | tail -1 | awk '{print $f}')" = "$(readlink -e /dev/root)" ] && { [ -n "$fdel" ] && rm "$f"; echo -2; mapAndMountFn umount; exit 0; }
