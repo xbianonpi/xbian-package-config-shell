@@ -101,7 +101,7 @@ function showGUIFn() {
                 tc=${DEST##zfs:}; DEST=${tc##*,}; tc=${tc%,*}; [ "$tc" = "$DEST" ] && tc="${HOSTNAME%%.*}"
                 zr=$tc/root # zr='' it if we want to have a separate root container
                 case $(xbian-arch revision) in
-                    rpi2|rpi3) km=linux-zfs-bcm2836 ;;
+                    rpi[234])  km=linux-zfs-bcm2836 ;;
                     imx6)      km=linux-zfs-armmp ;;
                     *)         return 1 ;;
                 esac
