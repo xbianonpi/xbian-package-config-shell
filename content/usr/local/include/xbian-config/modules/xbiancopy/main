@@ -181,7 +181,7 @@ function showGUIFn() {
                     for d in $dirs; do
                         echo "processing $d" >> /tmp/xbiancopy.log
                         mountpoint -q $d || continue
-                        mkdir -p $tm/$d && ar=0 && ( export LC_ALL=C; cd $tm && tar c --one-file-system $to $d | pv -ns $(du -sxBk $d | awk '{print $1*980}') | tar x $to -v >/run/f.txt; cps 10 1; exit $?) 2>&1 | \
+                        mkdir -p $tm/$d && ar=0 && ( export LC_ALL=C; cd $tm && tar c --one-file-system $to $d | pv -ns $(du -sxb $d | awk '{print $1}') | tar x $to -v >/run/f.txt; cps 10 1; exit $?) 2>&1 | \
                             while read a; do
                                 echo "$a" | grep -q ^[0-9] && { (($a > $ar)) && ar=$a; printf "XXX\n$ar\n$(printf "Copying %s\n %-.64s" $d $(tail -1 /run/f.txt))\nXXX\n"; } || echo "$a" >>/tmp/xbiancopy.log
                             done | dialog --gauge "Copying $d ..." 10 70
