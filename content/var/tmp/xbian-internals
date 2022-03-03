@@ -24,3 +24,12 @@ OPT_COPY_MODE=
 #                  type may be specified as zlib, lzo, lz4, zstd
 #
 OPT_COMPRESS=
+
+# Since it is nearly impossible to determine the exact size of the
+# required image due to metadata and other imponderables, a dynamic
+# adjustment is used. The value is set for each run so that the
+# free space in the image is around 100M
+# Possible values: Any positive integer, and KMG can be included
+#                  as a size specification. Default is 300M
+#
+OPT_SIZEADJ=
