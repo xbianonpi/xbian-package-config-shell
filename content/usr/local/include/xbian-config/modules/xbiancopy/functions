@@ -71,12 +71,12 @@ mapAndMountFn() {
                         getcredentials $server $type
                         logger -t $(basename $0) "xbiancopy user=$log_user, pass=$log_pass"
                         [ -z "$mopt" ] || mopt=",$mopt"
-                        mount -t cifs "//"$server"$path" -o username=$user,password=$pass,actimeo=120$mopt $mountpath &>/dev/null
+                        eval mount -t cifs "//"$server"$path" -o username=$user,password=$pass,actimeo=120$mopt $mountpath &>/dev/null
                     ;;
                     nfs)
                         eval mopt=$(awk -F'OPTS=' "/^NFSOPTS=/"'{print $2}' /etc/default/xbian-snap)
                         [ -z "$mopt" ] || mopt="-o $mopt"
-                        mount -t $type $mopt $server:"$path" $mountpath &>/dev/null
+                        eval mount -t $type $mopt $server:"$path" $mountpath &>/dev/null
                     ;;
                     ssh|sftp)
                         eval mopt=$(awk -F'OPTS=' "/^SSHFSOPTS=/"'{print $2}' /etc/default/xbian-snap)
@@ -89,7 +89,7 @@ mapAndMountFn() {
 
                         modprobe -q fuse
                         opts=$sopt$popt$mopt; opts=${opts%,}
-                        echo $pass | sshfs $user$usep$serv:"$path" -o $opts $mountpath &>/dev/null
+                        echo $pass | eval sshfs $user$usep$serv:"$path" -o $opts $mountpath &>/dev/null
                     ;;
                     *)
                         false
