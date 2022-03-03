@@ -45,6 +45,7 @@ opt_name=''
 opt_exclude="XXXXXXXX"
 opt_quiet=''
 opt_size=''
+opt_sizeadj='300M'
 
 # Default dynamcally set program options/variables for BTRFS/ZFS
 
@@ -1177,15 +1178,17 @@ EOF
 					exit $E_SAME_FS
 				fi
 
+				size=$(numfmt --from=iec -- $opt_sizeadj)
+				size_fix=105
 				if [ -z "$opt_size" ]; then
 					for v in $FS_LOCAL_LIST; do
 						[ -n "$v" ] || continue
 						for s in $snapextra; do
-							sv=$(btrfs-auto-snapshot volsize "$v/$s")
+							sv=$(xbian-storager volsize "$v/$s")
 							size=$((size+sv))
 						done
 					done
-					opt_size="$(($size*12/10/1024/1024))M"
+					opt_size="$(($size*$size_fix/100/1024/1024))M"
 				fi
 				size="$(numfmt --from=iec $opt_size)"
 
@@ -1365,6 +1368,40 @@ EOF
 				fi
 			fi
 
+			optimize_size () {
+				if [ "$opt_fstype" = btrfs ]; then
+					size=$(df -h | grep -m1 "$root_dest" | awk '{print $4}')
+					grep -q "No space left on device" /tmp/fs.receive.log && outofspace=y
+				else
+					zfs list -o space $opt_clonename
+					size=$(zfs list -Ho space $opt_clonename | awk '{print $2}')
+					grep -q "out of space" /tmp/fs.receive.log && outofspace=y
+				fi
+
+				[ "$BACKGROUND" == 1 ] && printf "Space remaining in %s: %s (%s)\n" "$(basename "$fn")" $size $opt_sizeadj
+
+				size_avail=$(numfmt --from=iec $size)
+
+				opt_sizeadj=$(numfmt --from=iec -- $opt_sizeadj)
+				if [ "$size_avail" -gt "$(numfmt --from=iec 150M)" -a "$1" -eq 0 ]; then
+					opt_sizeadj=$((opt_sizeadj-50*1024*1024))
+					[ "$BACKGROUND" == 1 ] && printf "Space remaining in %s is too high,\n decrease the size by 50M on the next pass\n" "$(basename "$fn")"
+				elif [ "$size_avail" -lt "$(numfmt --from=iec 50M)" -a "$1" -eq 0 ] || [ -n "$outofspace" ]; then
+					opt_sizeadj=$((opt_sizeadj+100*1024*1024))
+					[ "$BACKGROUND" == 1 ] && printf "Space remaining in %s is critical or even out of space,\n increase the size by 100M on the next pass\n" "$(basename "$fn")"
+				else
+					opt_sizeadj=''
+				fi
+				if [ -n "$opt_sizeadj" ] && [ -e /etc/default/xbian-internals ]; then
+				        opt_sizeadj=$(numfmt --to=iec -- $opt_sizeadj)
+					if grep -q "OPT_SIZEADJ=" /etc/default/xbian-internals; then
+						sed -i "s/OPT_SIZEADJ=.*/OPT_SIZEADJ=$opt_sizeadj/g" /etc/default/xbian-internals
+					else
+						echo "OPT_SIZEADJ=$opt_sizeadj" >> /etc/default/xbian-internals
+					fi
+				fi
+			}
+
 			set -o pipefail
 			for v in $FS_LOCAL_LIST; do
 				if [ -z "$v" ] || echo "$v" | grep -qE "\.delete$|\.zlib$|\.lzo$|\.lz4$|\.zstd$"; then
@@ -1396,11 +1433,12 @@ EOF
 								to='--warning=none --acls --xattrs'
 								nice -n 10 tar c $to -C ${vs}/$s.ro . | pv -i $ival -ns $siz | eval $opt_remotecmd nice -n 10 tar x $to -C "${vd}/$s"
 							else
-								nice -n 10 btrfs send "${vs}/$s.ro" | pv -i $ival -ns $siz | eval $opt_remotecmd nice -n 10 btrfs receive "${vd}"
+								nice -n 10 btrfs send "${vs}/$s.ro" 2>/tmp/fs.send.log | pv -i $ival -ns $siz | eval $opt_remotecmd nice -n 10 btrfs receive "${vd}" 2>/tmp/fs.receive.log
 							fi
 						else
-							nice -n 10 zfs send --props $v@ro | pv -i $ival -ns $siz | eval $opt_remotecmd nice -n 10 zfs receive -u "$opt_clonename/${v#*/}"
+							nice -n 10 zfs send --props -v $v@ro 2>/tmp/fs.send.log | pv -i $ival -ns $siz | eval $opt_remotecmd nice -n 10 zfs receive -suv "$opt_clonename/${v#*/}" 2>/tmp/fs.receive.log
 						fi
+						echo "ps=\"${PIPESTATUS[*]}\"" >/run/ps.xbiancopy
 					}
 					ar=0
 					( copy_volume $opt_cpmode ) 2>&1 | \
@@ -1415,7 +1453,13 @@ EOF
 								ar=$a
 							fi
 						done
-					[ "$?" -eq 0 ] || { [ "$BACKGROUND" == 1 ] && printf "%s\n" "$wmsg subvolume $v snapshot $s failed"; exit $E_COPY_DATA; }
+					. /run/ps.xbiancopy && rm -f /run/ps.xbiancopy
+					for RC in $ps; do
+						if [ "$RC" -ne 0 ]; then
+							optimize_size $RC
+							[ "$BACKGROUND" == 1 ] && printf "%s\n" "$wmsg subvolume $v snapshot $s failed (ps=$ps)"; exit $E_COPY_DATA
+						fi
+					done
 					if [ "$opt_fstype" = btrfs ]; then
 						if [ "$opt_cpmode" = tar ]; then
 							eval $opt_remotecmd nice -n 10 btrfs fi sync "${vd}/$s" && sync && btrfs sub delete "${vs}/$s.ro" || exit $E_SUB_DELETE
@@ -1435,12 +1479,13 @@ EOF
 				[ "$BACKGROUND" == 1 ] && printf "%s\n" "Done processing subvolume $v"
 			done
 
+			optimize_size $RC
+
 			if [ "$opt_fstype" = zfs ]; then
 				vdr="$(zpool get -H bootfs -o value "$opt_rpool" | sed "s%$opt_rpool%$opt_clonename%g")"
 				eval $opt_remotecmd zpool set bootfs=$vdr $opt_clonename
 				echo "vdr=$vdr" >>/run/vars.xbiancopy.$$
 			fi
-
 			if [ -n "$opt_recompress" ]; then
 				for v in $FS_LOCAL_LIST; do
 					if [ -z "$v" ] || echo "$v" | grep -qE "\.delete$|\.zlib$|\.lzo$|\.lz4$|\.zstd$"; then
@@ -1813,7 +1858,8 @@ esac
 [ -e /etc/default/xbian-internals ] && . /etc/default/xbian-internals
 [ -z "$OPT_COPY_MODE" ] || opt_cpmode="$OPT_COPY_MODE"
 [ -z "$OPT_COMPRESS" ]  || opt_compress="$OPT_COMPRESS"
-[ -z "$OPT_REMOTECMD" ] || opt_remotecmd="OPT_REMOTECMD"
+[ -z "$OPT_REMOTECMD" ] || opt_remotecmd="$OPT_REMOTECMD"
+[ -z "$OPT_SIZEADJ" ]   || opt_sizeadj="$OPT_SIZEADJ"
 
 if [ "$1" != '//' -a "${1%%-*}" != '' ]; then
 	opt_command="$1"
@@ -2165,7 +2211,7 @@ elif [ "$opt_command" = volsize ]; then
 		do_run mount -t btrfs $opt_dev $md 2>/dev/null
 		[ ! -d $md/$1 ] || printf "$(du -xsb $md/$1 | awk '{print $1}')\n"
 	else
-		do_run zfs list -Hpo used ${1%%/@} 2>/dev/null
+		do_run zfs list -Hpo space ${1%%/@} 2>/dev/null | awk '{printf "%d\n", $5}'
 	fi
 	exit 0
 elif [ "$opt_command" = fstype ]; then
