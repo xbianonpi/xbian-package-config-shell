@@ -567,10 +567,18 @@ def getNetwork(storage, filter, interface):
 
     n1 = s1[1].split(" ")
     n2 = s2[1].split(" ")
-    pRX = int(n2[1])
-    cRX = int(n1[1])
-    pTX = int(n2[9])
-    cTX = int(n1[9])
+    try:
+      cRX = int(n1[1])
+      cTX = int(n1[9])
+    except:
+      cRX = 0
+      cTX = 0
+    try:
+      pRX = int(n2[1])
+      pTX = int(n2[9])
+    except:
+      pRX = 0
+      pTX = 0
     cRX = cRX + 4294967295 if cRX < pRX else cRX
     cTX = cTX + 4294967295 if cTX < pTX else cTX
     dRX = cRX - pRX
