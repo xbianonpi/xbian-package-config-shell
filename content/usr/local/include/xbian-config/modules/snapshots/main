@@ -1,0 +1,146 @@
+#!/bin/bash
+#
+#Copyright 2022 Ikem <ikem.krueger@gmail.com>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+
+#|------------------------------------|
+#|          Global variables          |
+#|------------------------------------|
+
+# The arguments this module accepts
+ARGUMENTS=(listvol listsnap create delete rollback);
+
+#|------------------------------------|
+#|          Include files             |
+#|------------------------------------|
+
+source $BASEPATH/modules/snapshots/functions
+if [ $GUIMODE -eq 1 ]; then
+        source $BASEPATH/modules/snapshots/dialogs
+fi
+
+#|------------------------------------|
+#|           Main program             |
+#|------------------------------------|
+
+# Executes the GUI version of this module
+function showGUIFn() {
+	MENU=()
+	MENU+=("1,\Zn$(_ snapshots.create.name)");
+	MENU+=("2,\Zn$(_ snapshots.delete.name)");
+	MENU+=("3,\Zn$(_ snapshots.rollback.name)");
+	createTableFn "menu"\
+	"#;\Zb"$(_ services.label.action)\
+	"${MENU[@]}";
+
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 11
+
+	if [ $? -eq 0 ]; then
+		case $RETURN in
+			1) # Create
+				showCreateSnapshotDlg;;
+			2) # Delete
+				showDeleteSnapshotDlg;;
+			3) # Rollback
+				showRollbackSnapshotDlg;;
+		esac
+	fi
+}
+
+# Executes the command line version of this module
+#  $1 Argument [String]
+#  $2 Volume [String]
+#  $3 Snapshot [String]
+# Returns
+#  *listvol
+#  - Volumes [Array]
+#  *listsnap [String]
+#  - Snapshots [Array]
+#  *create [String]
+#  - 1: Success
+#  - 0: Failed
+#  *delete [String] [String]
+#  - 1: Success
+#  - 0: Failed
+#  *rollback [String] [String]
+#  - 1: Success
+#  - 0: Failed
+function showCMDFn() {
+	case $1 in
+		"listvol")
+			shift;
+			listVolumeFn;
+		;;
+		"listsnap")
+			shift;
+			if [ $# -eq 1 ]; then
+				listSnapshotsFn $1;
+			else
+				echo 0;
+			fi
+		;;
+		"create")
+			shift;
+			if [ $# -eq 1 ]; then
+				snapshotVolumeFn $1;
+				RETURN=$?;
+				if [ $RETURN -eq 1 ]; then
+					echo 1;
+				elif [ $RETURN -eq 2 ]; then
+					echo -1;
+				else
+					echo 0;
+				fi
+			else
+				echo 0;
+			fi
+		;;
+		"delete")
+			shift;
+			if [ $# -eq 2 ]; then
+				destroyVolumeFn $1 $2;
+				RETURN=$?;
+				if [ $RETURN -eq 1 ]; then
+					echo 1;
+				elif [ $RETURN -eq 2 ]; then
+					echo -1;
+				else
+					echo 0;
+				fi
+			else
+				echo 0;
+			fi
+		;;
+		"rollback")
+			shift;
+			if [ $# -eq 2 ]; then
+				rollbackVolumeFn $1 $2;
+				RETURN=$?;
+				if [ $RETURN -eq 1 ]; then
+					echo 1;
+				elif [ $RETURN -eq 2 ]; then
+					echo -1;
+				else
+					echo 0;
+				fi
+			else
+				echo 0;
+			fi
+		;;
+	esac
+}
