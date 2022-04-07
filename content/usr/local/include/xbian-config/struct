@@ -28,3 +28,6 @@
 5.4:enableauto
 6:xbiancopy
 7:backuphome
+8:snapshots
+8.1:snapshot
+8.2:rollback

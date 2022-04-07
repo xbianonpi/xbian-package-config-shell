@@ -1337,3 +1337,36 @@ msgstr "Wollen Sie die Änderungen wirklich anwenden?"
 
 msgid "xbian-config.common.badentry"
 msgstr "Das eingegebene Datum ist nicht korrekt"
+
+msgid "xbian-config.snapshots.name"
+msgstr "Snapschüsse"
+
+msgid "xbian-config.snapshots.description"
+msgstr "Schnappschüsse verwalten"
+
+msgid "xbian-config.snapshot.name"
+msgstr "Schnappschuss"
+
+msgid "xbian-config.snapshot.description"
+msgstr "Schnappschuss von einem Volume erzeugen"
+
+msgid "xbian-config.snapshot.success"
+msgstr "Schnappschuss des Volume '%s' erfolgreich."
+
+msgid "xbian-config.snapshot.failed"
+msgstr "Schnappschuss des Volume '%s' fehlgeschlagen!"
+
+msgid "xbian-config.rollback.name"
+msgstr "Zurückrollen"
+
+msgid "xbian-config.rollback.description"
+msgstr "Zu einem Schnappschuss von einem Volume zurückrollen"
+
+msgid "xbian-config.rollback.label.snapshot"
+msgstr "Schnappschuss"
+
+msgid "xbian-config.rollback.success"
+msgstr "Zurückrollen des Volume '%s' erfolgreich."
+
+msgid "xbian-config.rollback.failed"
+msgstr "Zurückrollen des Volume '%s' fehlgeschlagen!"

@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+#Copyright 2022 Ikem <ikem.krueger@gmail.com>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+
+#|------------------------------------|
+#|          Global variables          |
+#|------------------------------------|
+
+# The arguments this module accepts
+ARGUMENTS=();
+
+#|------------------------------------|
+#|          Include files             |
+#|------------------------------------|
+
+source $BASEPATH/modules/snapshots/functions
+if [ $GUIMODE -eq 1 ]; then
+	source $BASEPATH/modules/snapshot/dialogs
+fi
+
+#|------------------------------------|
+#|           Main program             |
+#|------------------------------------|
+
+# Executes the GUI version of this module
+function showGUIFn() {
+	if [ $? -eq 0 ]; then
+		VOLUMES=($(listVolumeFn));
+
+		selectVolumeDlg;
+
+		if [ $? -eq 0 ]; then
+			if [ ! -z $RETURN ]; then
+				VOLUME=${VOLUMES[$(($RETURN-1))]};
+
+				snapshotVolumeFn $VOLUME;
+
+				if [ $? -eq 0 ]; then
+					showSnapshotSuccessDlg $VOLUME;
+				fi
+
+				if [ $? -eq 1 ]; then
+					showSnapshotFailedDlg $VOLUME;
+				fi
+			fi
+		fi
+	fi
+}
+
+# Executes the command line version of this module
+function showCMDFn() {
+	echo;
+}

@@ -1325,3 +1325,36 @@ msgstr "Are you sure to apply modification?"
 
 msgid "xbian-config.common.badentry"
 msgstr "Data you have enter is not correct"
+
+msgid "xbian-config.snapshots.name"
+msgstr "Snapshots"
+
+msgid "xbian-config.snapshots.description"
+msgstr "Manage snapshots"
+
+msgid "xbian-config.snapshot.name"
+msgstr "Snapshot"
+
+msgid "xbian-config.snapshot.description"
+msgstr "Create snapshot of a volume"
+
+msgid "xbian-config.snapshot.success"
+msgstr "Snapshot of volume '%s' successful."
+
+msgid "xbian-config.snapshot.failed"
+msgstr "Snapshot of volume '%s' failed!"
+
+msgid "xbian-config.rollback.name"
+msgstr "Rollback"
+
+msgid "xbian-config.rollback.description"
+msgstr "Rollback to a snapshot of a volume"
+
+msgid "xbian-config.rollback.label.snapshot"
+msgstr "Snapshot"
+
+msgid "xbian-config.rollback.success"
+msgstr "Rollback of volume '%s' successful."
+
+msgid "xbian-config.rollback.failed"
+msgstr "Rollback of volume '%s' failed!"
