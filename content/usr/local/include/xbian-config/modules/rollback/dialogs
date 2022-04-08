@@ -60,14 +60,14 @@ function selectSnapshotDlg() {
 }
 
 function showRollbackSuccessDlg() {
-	wrapTxtFn "$(printf "$(_  rollback.success)" "$1")" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_ rollback.success)" "$1")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showRollbackFailedDlg() {
-	wrapTxtFn "$(printf "$(_  rollback.failed)" "$1")" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(printf "$(_ rollback.failed)" "$1")" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
