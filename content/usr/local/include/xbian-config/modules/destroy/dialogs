@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+#Copyright 2022 Ikem <ikem.krueger@gmail.com>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+
+function selectVolumeDlg() {
+	MENU=();
+	X=0;
+
+	IFS=$ORIGINALIFS;
+	for VOLUME in ${VOLUMES[@]}; do
+		((X++));
+
+		MENU+=($X",\Zn$VOLUME,off");
+	done;
+
+	createTableFn "radio" \
+	"#,\ZbVolume"\
+	"${MENU[@]}"
+
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
+
+	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
+}
+
+function selectSnapshotDlg() {
+	SNAPSHOTS=$1
+	MENU=();
+
+	X=0;
+
+	IFS=$ORIGINALIFS;
+	for SNAPSHOT in ${SNAPSHOTS[@]}; do
+		((X++));
+
+		MENU+=($X",\Zn$SNAPSHOT,off");
+	done;
+
+	createTableFn "radio" \
+	"#,\Zb$(_ rollback.label.snapshot)"\
+	"${MENU[@]}"
+
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
+
+	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
+}
+
+function showDestroySuccessDlg() {
+	wrapTxtFn "$(printf "$(_ destroy.success)" "$1")" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showDestroyFailedDlg() {
+	wrapTxtFn "$(printf "$(_ destroy.failed)" "$1")" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}

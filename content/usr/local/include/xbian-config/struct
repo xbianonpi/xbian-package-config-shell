@@ -31,3 +31,4 @@
 8:snapshots
 8.1:snapshot
 8.2:rollback
+8.3:destroy

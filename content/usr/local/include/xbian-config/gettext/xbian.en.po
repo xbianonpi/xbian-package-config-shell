@@ -1358,3 +1358,15 @@ msgstr "Rollback of volume '%s' successful."
 
 msgid "xbian-config.rollback.failed"
 msgstr "Rollback of volume '%s' failed!"
+
+msgid "xbian-config.destroy.name"
+msgstr "Destroy"
+
+msgid "xbian-config.destroy.description"
+msgstr "Destroy a snapshot of a volume"
+
+msgid "xbian-config.destroy.success"
+msgstr "Snapshot successful destroyed."
+
+msgid "xbian-config.destroy.failed"
+msgstr "Snapshot destroying failed!"

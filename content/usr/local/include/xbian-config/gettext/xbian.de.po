@@ -1370,3 +1370,15 @@ msgstr "Zurückrollen des Volume '%s' erfolgreich."
 
 msgid "xbian-config.rollback.failed"
 msgstr "Zurückrollen des Volume '%s' fehlgeschlagen!"
+
+msgid "xbian-config.destroy.name"
+msgstr "Zerstören"
+
+msgid "xbian-config.destroy.description"
+msgstr "Zerstören eines Snapschuss von einem Volume"
+
+msgid "xbian-config.destroy.success"
+msgstr "Schnappschuss erfolgreich zerstört."
+
+msgid "xbian-config.destroy.failed"
+msgstr "Schnappschusszerstörung fehlgeschlagen!"

@@ -54,3 +54,15 @@ function rollbackVolumeFn() {
 
 	return $?;
 }
+
+# Destroy snapshot
+#  $1 [String] Volume
+#  $2 [String] Snapshot
+# Returns
+#  - 0: Success
+#  - 1: Error
+function destroyVolumeFn() {
+	btrfs-auto-snapshot destroy $1/@$2 >> /var/log/btrfs-auto-snapshot.log 2>&1;
+
+	return $?;
+}

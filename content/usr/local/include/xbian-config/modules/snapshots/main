@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(listvol list snapshot rollback);
+ARGUMENTS=(listvol list snapshot rollback destroy);
 
 #|------------------------------------|
 #|          Include files             |
@@ -55,6 +55,9 @@ function showGUIFn() {
 #  - 1: Success
 #  - 0: Failed
 #  *rollback [String] [String]
+#  - 1: Success
+#  - 0: Failed
+#  *destroy [String] [String]
 #  - 1: Success
 #  - 0: Failed
 function showCMDFn() {
@@ -91,6 +94,22 @@ function showCMDFn() {
 			shift;
 			if [ $# -eq 2 ]; then
 				rollbackVolumeFn $1 $2;
+				RETURN=$?;
+				if [ $RETURN -eq 1 ]; then
+					echo 1;
+				elif [ $RETURN -eq 2 ]; then
+					echo -1;
+				else
+					echo 0;
+				fi
+			else
+				echo 0;
+			fi
+		;;
+		"destroy")
+			shift;
+			if [ $# -eq 2 ]; then
+				destroyVolumeFn $1 $2;
 				RETURN=$?;
 				if [ $RETURN -eq 1 ]; then
 					echo 1;
