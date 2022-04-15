@@ -39,7 +39,28 @@ fi
 
 # Executes the GUI version of this module
 function showGUIFn() {
-	echo;
+	MENU=()
+	#MENU+=("5,\ZnRollback"$(_ services.label.delete));
+	MENU+=("1,\ZnCreate");
+	MENU+=("2,\ZnDelete");
+	MENU+=("3,\ZnRollback");
+	createTableFn "menu"\
+	"#;\Zb"$(_ services.label.action)\
+	"${MENU[@]}";
+	
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 11
+	
+	if [ $? -eq 0 ]; then
+		case $RETURN in
+			1) # Create
+				showCreateSnapshotDlg;;
+			2) # Delete
+				showDeleteSnapshotDlg;;
+			3) # Rollback
+				showRollbackDlg;;
+		esac
+	fi
 }
 
 # Executes the command line version of this module

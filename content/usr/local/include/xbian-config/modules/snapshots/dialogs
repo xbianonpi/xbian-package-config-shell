@@ -16,3 +16,182 @@
 #
 #You should have received a copy of the GNU General Public License along
 #with XBian. If not, see <http://www.gnu.org/licenses/>
+
+function showCreateSnapshotDlg() {
+	IFS=$'\n' # TODO: this doesn't look right...
+
+	VOLUMES=($(listVolumeFn));
+
+	selectVolumeDlg;
+
+	if [ $? -eq 0 ]; then
+		if [ ! -z $RETURN ]; then
+			VOLUME=${VOLUMES[$(($RETURN-1))]};
+
+			snapshotVolumeFn $VOLUME;
+
+			if [ $? -eq 0 ]; then
+				showSnapshotSuccessDlg $VOLUME;
+			fi
+
+			if [ $? -eq 1 ]; then
+				showSnapshotFailedDlg $VOLUME;
+			fi
+		fi
+	fi
+}
+
+function showSnapshotSuccessDlg() {
+	wrapTxtFn "$(printf "$(_ snapshot.success)" "$1")" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showSnapshotFailedDlg() {
+	wrapTxtFn "$(printf "$(_ snapshot.failed)" "$1")" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showDeleteSnapshotDlg() {
+	VOLUMES=($(listVolumeFn));
+
+	selectVolumeDlg;
+
+	if [ $? -eq 0 ]; then
+		if [ ! -z $RETURN ]; then
+			VOLUME=${VOLUMES[$(($RETURN-1))]};
+	
+			IFS=$ORIGINALIFS;
+
+			SNAPSHOTS=($(listSnapshotsFn $VOLUME));
+
+			selectSnapshotDlg $SNAPSHOTS;
+
+			if [ $? -eq 0 ]; then
+				if [ ! -z $RETURN ]; then
+
+					SNAPSHOT=${SNAPSHOTS[$(($RETURN-1))]};
+
+					destroyVolumeFn $VOLUME $SNAPSHOT;
+
+					if [ $? -eq 0 ]; then
+						showDestroySuccessDlg $VOLUME;
+					fi
+
+					if [ $? -eq 1 ]; then
+						showDestroyFailedDlg $VOLUME;
+					fi
+				fi
+			fi
+		fi
+	fi
+}
+
+function showDestroySuccessDlg() {
+	wrapTxtFn "$(printf "$(_ destroy.success)" "$1")" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showDestroyFailedDlg() {
+	wrapTxtFn "$(printf "$(_ destroy.failed)" "$1")" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showRollbackDlg() {
+	VOLUMES=($(listVolumeFn));
+
+	selectVolumeDlg;
+
+	if [ $? -eq 0 ]; then
+		if [ ! -z $RETURN ]; then
+			VOLUME=${VOLUMES[$(($RETURN-1))]};
+
+			IFS=$ORIGINALIFS;
+
+			SNAPSHOTS=($(listSnapshotsFn $VOLUME));
+
+			selectSnapshotDlg $SNAPSHOTS;
+
+			if [ $? -eq 0 ]; then
+				if [ ! -z $RETURN ]; then
+
+					SNAPSHOT=${SNAPSHOTS[$(($RETURN-1))]};
+
+					rollbackVolumeFn $VOLUME $SNAPSHOT;
+
+					if [ $? -eq 0 ]; then
+						showRollbackSuccessDlg $VOLUME;
+						askForRebootFn;
+					fi
+
+					if [ $? -eq 1 ]; then
+						showRollbackFailedDlg $VOLUME;
+					fi
+				fi
+			fi
+		fi
+	fi
+}
+
+function showRollbackSuccessDlg() {
+	wrapTxtFn "$(printf "$(_ rollback.success)" "$1")" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showRollbackFailedDlg() {
+	wrapTxtFn "$(printf "$(_ rollback.failed)" "$1")" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function selectVolumeDlg() {
+	MENU=();
+	X=0;
+
+	IFS=$ORIGINALIFS;
+	for VOLUME in ${VOLUMES[@]}; do
+		((X++));
+
+		MENU+=($X",\Zn$VOLUME,off");
+	done;
+
+	createTableFn "radio" \
+	"#,\ZbVolume"\
+	"${MENU[@]}"
+
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
+
+	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
+}
+
+function selectSnapshotDlg() {
+	SNAPSHOTS=$1
+	MENU=();
+
+	X=0;
+
+	IFS=$ORIGINALIFS;
+	for SNAPSHOT in ${SNAPSHOTS[@]}; do
+		((X++));
+
+		MENU+=($X",\Zn$SNAPSHOT,off");
+	done;
+
+	createTableFn "radio" \
+	"#,\Zb$(_ rollback.label.snapshot)"\
+	"${MENU[@]}"
+
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
+
+	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
+}
