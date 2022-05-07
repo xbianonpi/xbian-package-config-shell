@@ -21,17 +21,18 @@
 function updateAptMirrorsFn() {
 	src="$(cat /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null| grep '^deb.*xbian.*\|^mirror.*xbian.*'  | awk '{print $2}' | sort | uniq)"
 	[ -z "$src" ] && URL=$APTBASE || URL=$src
+	echo "$URL" | grep -q $APTBASE || URL="$APTBASE $URL"
 
 	rm -f $BASEPATH/config/aptmirror.new
 	for a in $URL; do    
 	    a=$(echo $a | sed 's%mirror://%http://%')
 	    a=${a%%/mirror.txt}; a=${a%%/}
-	    wget --spider $a/mirror.txt >/dev/null 2>&1 || return 1
-	    wget -O - $a/mirror.txt >> $BASEPATH/config/aptmirror.new 2>/dev/null
+	    wget --spider $a/mirror.txt >/dev/null 2>&1 || continue
+	    wget -O - $a/mirror.txt >> $BASEPATH/config/aptmirror.new 2>/dev/null || continue
+	    cat $BASEPATH/config/aptmirror.new | sort | uniq > $BASEPATH/config/aptmirror
+	    return 0
 	done
-
-	cat $BASEPATH/config/aptmirror.new | sort | uniq > $BASEPATH/config/aptmirror
-	return 0
+	return 1
 }
 
 function localPackageDBOutdatedFn() {
@@ -60,7 +61,7 @@ function downloadPackageListFn() {
 			IFS=$'\ ';
 			rm -f $BASEPATH/config/pkglist.new
 			err=0
-			cat /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null| grep '^deb.*xbian.*\|^mirror.*xbian.*' | awk '{print "dists/"$3"/{"$4","$5"}/binary-armhf/Packages"}' | \
+			cat /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null| grep '^deb.*xbian.*\|^mirror.*xbian.*' | awk '{print "dists/"$3"/{"$4","$5","$6","$7"}/binary-armhf/Packages"}' | \
 			while read m; do
 			    m=$(eval echo $m)
 			    for n in $m; do
