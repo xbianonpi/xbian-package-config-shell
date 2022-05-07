@@ -21,7 +21,7 @@
 # Returns
 #  - $KERNELS [Array]
 function getInstalledKernelsFn() {
-	KERNELS=($(ls -Al /boot/*.img | awk '{print $9}' | grep -iv kernel.img));
+	KERNELS=($(ls -Al /boot/*.img | awk '{print $9}' | grep -ivE "kernel.img|kernel8.img"));
 	return ${#KERNELS[@]};
 }
 
@@ -29,7 +29,7 @@ function getInstalledKernelsFn() {
 # Returns
 #  - $KERNELV [Array]
 function getInstalledKernelVersionsFn() {
-	KERNELS=($(ls -Al /boot/*.img | awk '{print $9}' | grep -iv kernel.img));
+	KERNELS=($(ls -Al /boot/*.img | awk '{print $9}' | grep -ivE "kernel.img|kernel8.img"));
 	KERNELV=();
 	for VALUE in ${KERNELS[@]}; do
 		KERNEL=${VALUE##*/};
@@ -43,8 +43,8 @@ function getInstalledKernelVersionsFn() {
 # Returns
 #  - $CURRENTKERNEL [String]
 function getCurrentKernelVersionFn() {
-	CKERNEL=$(ls -Al /boot/kernel.img | awk '{print $5}');
-	NKERNEL=$(ls -Al /boot/*.img | grep -w $CKERNEL | awk '{print $9}' | grep -iv kernel.img);
+	CKERNEL=$(ls -Al /boot/kernel*.img | grep -E "kernel.img|kernel8.img" | awk '{print $5}');
+	NKERNEL=$(ls -Al /boot/*.img | grep -w $CKERNEL | awk '{print $9}' | grep -vE "kernel.img|kernel8.img");
 	if [ -z $NKERNEL ]; then
 		CURRENTKERNEL=$(uname -r | sed -e 's/+//g');
 	else
@@ -65,7 +65,7 @@ function setKernelVersionFn() {
 	KERNEL=$1;
 
 	NKERNEL=$(ls -Al $KERNEL | awk '{print $5}');
-	CKERNEL=$(ls -Al /boot/kernel.img | awk '{print $5}');
+	CKERNEL=$(ls -Al /boot/kernel*.img | grep -E "kernel.img|kernel8.img" | awk '{print $5}');
 	if [ $NKERNEL -eq $CKERNEL ]; then
 		return 2;
 	else
