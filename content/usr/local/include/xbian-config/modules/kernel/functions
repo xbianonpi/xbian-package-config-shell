@@ -119,7 +119,7 @@ initRamFn() {
             ;;
         *)
             eval sed -i 's/FORCEINITRAM=.*/FORCEINITRAM=$1/' /etc/default/xbian-initramfs
-            [ -x /etc/xbian-initramfs/initram.switcher.sh ] && /etc/xbian-initramfs/initram.switcher.sh update
+            [ -x /etc/xbian-initramfs/initram.switcher.sh ] && /etc/xbian-initramfs/initram.switcher.sh update >/dev/null
             echo "1"
             ;;
     esac
