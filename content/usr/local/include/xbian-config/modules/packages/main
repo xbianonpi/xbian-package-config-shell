@@ -307,22 +307,18 @@ function showCMDFn() {
 				echo -1;
 			fi
 		;;
-		installtest)
-			if [ $# -eq 2 ]; then
+		installtest|install)
+			if [ $# -ge 2 ]; then
+				[ "$1" == "install" ] && fn=2 || fn=1
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
+					shift
 					getAllPackagesFn;
-					if [ $(echo ${PACKAGES[*]} | grep -c -o $2) -eq 1 ]; then
-						getPackageInformationFn $2;
-						installPackageFn 1 ${PKGINFO[0]};
-						RETURN=$?;
-						case $RETURN in
-							0)
-								echo 1;
-							;;
-							*)
-								echo $(($RETURN+1));
-							;;
-						esac
+					if [ $(echo ${PACKAGES[*]} | grep -c -o $1) -eq 1 ]; then
+						getPackageInformationFn $1;
+						[ "$2" == "-" ] && shift
+						shift
+						installPackageFn $fn ${PKGINFO[0]} $@;
+						echo $(($?+1));
 					else
 						echo -2;
 					fi
@@ -333,74 +329,15 @@ function showCMDFn() {
 				echo -1;
 			fi
 		;;
-		install)
+		removetest|remove)
 			if [ $# -eq 2 ]; then
+				[ "$1" == "remove" ] && fn=2 || fn=1
 				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
 					getAllPackagesFn;
 					if [ $(echo ${PACKAGES[*]} | grep -c -o $2) -eq 1 ]; then
 						getPackageInformationFn $2;
-						installPackageFn 2 ${PKGINFO[0]};
-						RETURN=$?;
-						case $RETURN in
-							0)
-								echo 1;
-							;;
-							*)
-								echo $(($RETURN+1));
-							;;
-						esac
-					else
-						echo -2;
-					fi
-				else
-					echo -3;
-				fi
-			else
-				echo -1;
-			fi
-		;;
-		removetest)
-			if [ $# -eq 2 ]; then
-				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
-					getAllPackagesFn;
-					if [ $(echo ${PACKAGES[*]} | grep -c -o $2) -eq 1 ]; then
-						getPackageInformationFn $2;
-						removePackageFn 1 ${PKGINFO[0]}
-						RETURN=$?;
-						case $RETURN in
-							0)
-								echo 1;
-							;;
-							*)
-								echo $(($RETURN+1));
-							;;
-						esac	
-					else
-						echo -2;
-					fi
-				else
-					echo -3;
-				fi
-			else
-				echo -1;
-			fi
-		;;
-		remove)
-			if [ $# -eq 2 ]; then
-				if [ -f "$BASEPATH/config/pkglist" ] && [ -f "$BASEPATH/config/aptmirror" ]; then
-					getAllPackagesFn;
-					if [ $(echo ${PACKAGES[*]} | grep -c -o $2 ) -eq 1 ]; then
-						getPackageInformationFn $2;
-						removePackageFn 2 ${PKGINFO[0]};
-						RETURN=$?;
-						case $RETURN in
-							0)
-								echo 1;
-							;;
-							*)
-								echo $(($RETURN+1));
-							;;
-						esac
+						removePackageFn $fn ${PKGINFO[0]}
+						echo $(($?+1));
 					else
 						echo -2;
 					fi
