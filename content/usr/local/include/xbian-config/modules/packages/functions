@@ -90,9 +90,9 @@ function installPackageFn() {
 	if [ $cmd -eq 1 ]; then
 		LC_ALL=C.UTF-8 eval apt-get install -s $@ &>/tmp/aptstatus
 	elif [ $cmd -eq 0 ]; then
-		LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $@ &>/tmp/aptstatus
+		LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval apt-get install -y --allow-change-held-packages -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $@ &>/tmp/aptstatus
 	elif [ $cmd -eq 2 ]; then
-		LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval nohup apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $@ &>/tmp/aptstatus &
+		LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval nohup apt-get install -y --allow-change-held-packages -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $@ &>/tmp/aptstatus &
 	fi
 	# Returncode only correct on simulation (1) on real operation (0,2) probably useless
 	getAptErrorCodeFn;
