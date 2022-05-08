@@ -452,7 +452,7 @@ function readNetworkConfigurationFn() {
 		CONTENT=$(echo -e "$TFILEIFACES" | grep -A20 "iface $1 inet " | sed '1d;/\(iface\|auto\|allow-hotplug\)/,$d')
 
 		# 1: Extract and print dhcp, static, manual or disable mode
-		MODE=$(echo -e "$TFILEIFACES" | awk "/iface $1 inet /"'{ print $4 }')
+		MODE=$(echo -e "$TFILEIFACES" | awk "/iface $1 inet /"'{ print $4; nextfile }')
 		[ -z "$MODE" ] && MODE=disable
 		echo "mode $MODE"
 
