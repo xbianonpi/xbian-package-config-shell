@@ -22,7 +22,7 @@
 #|------------------------------------|
 
 # The arguments this module accepts
-ARGUMENTS=(select update list initramfs);
+ARGUMENTS=(select update list initramfs capability);
 
 #|------------------------------------|
 #|          Include files             |
@@ -76,6 +76,12 @@ function showGUIFn() {
 #  - * Current kernel version
 #  *List [Array]
 #  - * Installed kernel versions
+#  *Capability
+#  - * System ist 64bit capable: 0/1
+#  - * System is running 64bit Kernel: 0/1
+#  - * Kernel package required to change architecture: linux-image-bcm2836/7
+#  - * ZFS module package required to change architecture: linux-zfs-bcm2836/7 or -
+
 function showCMDFn() {
 	case $1 in
 		"select")
@@ -123,6 +129,20 @@ function showCMDFn() {
 		;;
 		initramfs)
 			initRamFn $2
+		;;
+		capability)
+			lscpu | grep -qE "Cortex-A53|Cortex-A72" && echo 1 || echo 0
+			if [ "$(uname -m)" = aarch64 ]; then
+				echo 1
+				toPackage=bcm2836
+				fromPackage=bcm2837
+			else
+				echo 0
+				toPackage=bcm2837
+				fromPackage=bcm2836
+			fi
+			echo "linux-image-$toPackage"
+			dpkg-query -s linux-zfs-$fromPackage 2>/dev/null | grep -q "Status: install" && echo linux-zfs-$toPackage || echo '-'
 		;;
 
 	esac 
