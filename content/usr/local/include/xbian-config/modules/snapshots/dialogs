@@ -188,16 +188,16 @@ function selectVolumeDlg() {
 	for VOLUME in ${VOLUMES[@]}; do
 		((X++));
 
-		MENU+=($X",\Zn$VOLUME,off");
+		MENU+=($X",\Zn$VOLUME");
 	done;
 
-	createTableFn "radio" \
+	createTableFn "menu" \
 	"#,\ZbVolume"\
 	"${MENU[@]}"
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
 
-	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
 }
 
 function selectSnapshotDlg() {
@@ -210,14 +210,14 @@ function selectSnapshotDlg() {
 	for SNAPSHOT in ${SNAPSHOTS[@]}; do
 		((X++));
 
-		MENU+=($X",\Zn$SNAPSHOT,off");
+		MENU+=($X",\Zn$SNAPSHOT");
 	done;
 
-	createTableFn "radio" \
+	createTableFn "menu" \
 	"#,\Zb$(_ snapshots.rollback.label.snapshot)"\
 	"${MENU[@]}"
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
 
-	showRadioDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
 }
