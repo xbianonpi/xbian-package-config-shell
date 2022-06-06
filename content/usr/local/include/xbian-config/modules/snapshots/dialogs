@@ -33,11 +33,11 @@ function showCreateSnapshotDlg() {
 			if [ $? -eq 0 ]; then
 				SNAPSHOT=$(getLastSnapshotFn $VOLUME)
 
-				showCreateSnapshotSuccessDlg $VOLUME $SNAPSHOT;
+				showCreateSnapshotSuccessDlg;
 			fi
 
 			if [ $? -eq 1 ]; then
-				showCreateSnapshotFailedDlg $VOLUME;
+				showCreateSnapshotFailedDlg;
 			fi
 		fi
 	fi
@@ -46,14 +46,14 @@ function showCreateSnapshotDlg() {
 }
 
 function showCreateSnapshotSuccessDlg() {
-	wrapTxtFn "$(printf "$(_ snapshots.create.success)" "$1" "$2")" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ snapshots.create.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showCreateSnapshotFailedDlg() {
-	wrapTxtFn "$(printf "$(_ snapshots.create.failed)" "$1")" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ snapshots.create.failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -93,11 +93,11 @@ function showDeleteSnapshotDlg() {
 						destroyVolumeFn $VOLUME $SNAPSHOT;
 
 						if [ $? -eq 0 ]; then
-							showDeleteSnapshotSuccessDlg $SNAPSHOT;
+							showDeleteSnapshotSuccessDlg;
 						fi
 
 						if [ $? -eq 1 ]; then
-							showDeleteSnapshotFailedDlg $SNAPSHOT;
+							showDeleteSnapshotFailedDlg;
 						fi
 					fi
 				fi
@@ -109,14 +109,14 @@ function showDeleteSnapshotDlg() {
 }
 
 function showDeleteSnapshotSuccessDlg() {
-	wrapTxtFn "$(printf "$(_ snapshots.delete.success)" "$1")" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ snapshots.delete.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showDeleteSnapshotFailedDlg() {
-	wrapTxtFn "$(printf "$(_ snapshots.delete.failed)" "$1")" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ snapshots.delete.failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
@@ -149,13 +149,13 @@ function showRollbackSnapshotDlg() {
 						rollbackVolumeFn $VOLUME $SNAPSHOT;
 
 						if [ $? -eq 0 ]; then
-							showRollbackSnapshotSuccessDlg $VOLUME $SNAPSHOT;
+							showRollbackSnapshotSuccessDlg;
 
 							askForRebootFn;
 						fi
 
 						if [ $? -eq 1 ]; then
-							showRollbackSnapshotFailedDlg $VOLUME;
+							showRollbackSnapshotFailedDlg;
 						fi
 					fi
 				fi
@@ -167,14 +167,14 @@ function showRollbackSnapshotDlg() {
 }
 
 function showRollbackSnapshotSuccessDlg() {
-	wrapTxtFn "$(printf "$(_ snapshots.rollback.success)" "$1" "$2")" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ snapshots.rollback.success)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT
 }
 
 function showRollbackSnapshotFailedDlg() {
-	wrapTxtFn "$(printf "$(_ snapshots.rollback.failed)" "$1")" $(($DEFAULTWIDTH-4));
+	wrapTxtFn "$(_ snapshots.rollback.failed)" $(($DEFAULTWIDTH-4));
 	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
 	valignTxtFn "$CENTEREDTXT"
 	showMsgDlg "$ALIGNEDTXT" $HEIGHT

@@ -1339,10 +1339,10 @@ msgid "xbian-config.snapshots.create.description"
 msgstr "Create snapshot of a volume"
 
 msgid "xbian-config.snapshots.create.success"
-msgstr "Snapshot of volume '%s' created. Snapshot: '%s'"
+msgstr "Snapshot created successfully."
 
 msgid "xbian-config.snapshots.create.failed"
-msgstr "Snapshot of volume '%s' failed!"
+msgstr "Creating snapshot failed!"
 
 msgid "xbian-config.snapshots.fetch.failed"
 msgstr "No snapshots available!"
@@ -1354,10 +1354,10 @@ msgid "xbian-config.snapshots.delete.description"
 msgstr "Delete a snapshot of a volume"
 
 msgid "xbian-config.snapshots.delete.success"
-msgstr "Snapshot '%s' successful deleted."
+msgstr "Snapshot successfully deleted."
 
 msgid "xbian-config.snapshots.delete.failed"
-msgstr "Deleting of snapshot '%s' failed!"
+msgstr "Deleting of snapshot failed!"
 
 msgid "xbian-config.snapshots.rollback.name"
 msgstr "Rollback"
@@ -1369,7 +1369,7 @@ msgid "xbian-config.snapshots.rollback.label.snapshot"
 msgstr "Snapshot"
 
 msgid "xbian-config.snapshots.rollback.success"
-msgstr "Rollback of volume '%s' to snapshot '%s' successful."
+msgstr "Rollback to snapshot successful."
 
 msgid "xbian-config.snapshots.rollback.failed"
-msgstr "Rollback of volume '%s' failed!"
+msgstr "Rollback to snapshot failed!"

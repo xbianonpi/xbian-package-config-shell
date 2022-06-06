@@ -1351,10 +1351,10 @@ msgid "xbian-config.snapshots.create.description"
 msgstr "Schnappschuss von einem Volume erzeugen"
 
 msgid "xbian-config.snapshots.create.success"
-msgstr "Schnappschuss des Volume '%s' erzeugt. Schnappschuss: %s"
+msgstr "Schnappschuss erfolgreich erzeugt."
 
 msgid "xbian-config.snapshots.create.failed"
-msgstr "Schnappschuss des Volume '%s' fehlgeschlagen!"
+msgstr "Erzeugung des Schnappschuss fehlgeschlagen!"
 
 msgid "xbian-config.snapshots.fetch.failed"
 msgstr "Keine Schnappschüsse vorhanden!"
@@ -1366,10 +1366,10 @@ msgid "xbian-config.snapshots.delete.description"
 msgstr "Löschen eines Snapschuss von einem Volume"
 
 msgid "xbian-config.snapshots.delete.success"
-msgstr "Schnappschuss '%s' erfolgreich gelöscht."
+msgstr "Schnappschuss erfolgreich gelöscht."
 
 msgid "xbian-config.snapshots.delete.failed"
-msgstr "Löschen des Schnappschuss '%s' fehlgeschlagen!"
+msgstr "Löschen des Schnappschuss fehlgeschlagen!"
 
 msgid "xbian-config.snapshots.rollback.name"
 msgstr "Zurückrollen"
@@ -1381,7 +1381,7 @@ msgid "xbian-config.snapshots.rollback.label.snapshot"
 msgstr "Schnappschuss"
 
 msgid "xbian-config.snapshots.rollback.success"
-msgstr "Zurückrollen des Volume '%s' zu Schnappschuss '%s' erfolgreich."
+msgstr "Zurückrollen zum Schnappschuss erfolgreich."
 
 msgid "xbian-config.snapshots.rollback.failed"
-msgstr "Zurückrollen des Volume '%s' fehlgeschlagen!"
+msgstr "Zurückrollen zum Schnappschuss fehlgeschlagen!"
