@@ -197,7 +197,7 @@ function selectVolumeDlg() {
 
 	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
 
-	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+8));
 }
 
 function selectSnapshotDlg() {
