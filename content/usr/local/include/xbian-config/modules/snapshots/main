@@ -47,7 +47,7 @@ function showGUIFn() {
 	"#;\Zb"$(_ services.label.action)\
 	"${MENU[@]}";
 
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+11));
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
 	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} 11
 
 	if [ $? -eq 0 ]; then
