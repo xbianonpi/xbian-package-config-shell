@@ -219,7 +219,7 @@ function selectVolumeDlg() {
 	"#;\ZbVolume"\
 	"${MENU[@]}"
 
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
 
 	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
 }
