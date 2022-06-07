@@ -88,16 +88,20 @@ function showDeleteSnapshotDlg() {
 
 				if [ $? -eq 0 ]; then
 					if [ ! -z $RETURN ]; then
-						SNAPSHOT=${SNAPSHOTS[$(($RETURN-1))]};
-
-						destroyVolumeFn $VOLUME $SNAPSHOT;
+						showConfirmDeleteSnapshotDlg
 
 						if [ $? -eq 0 ]; then
-							showDeleteSnapshotSuccessDlg;
-						fi
+							SNAPSHOT=${SNAPSHOTS[$(($RETURN-1))]};
 
-						if [ $? -eq 1 ]; then
-							showDeleteSnapshotFailedDlg;
+							destroyVolumeFn $VOLUME $SNAPSHOT;
+
+							if [ $? -eq 0 ]; then
+								showDeleteSnapshotSuccessDlg;
+							fi
+
+							if [ $? -eq 1 ]; then
+								showDeleteSnapshotFailedDlg;
+							fi
 						fi
 					fi
 				fi
@@ -106,6 +110,14 @@ function showDeleteSnapshotDlg() {
 	fi
 
 	showGUIFn;
+}
+
+function showConfirmDeleteSnapshotDlg() {
+	wrapTxtFn "$(_ snapshots.delete.confirmation)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showConfirmDlg "$ALIGNEDTXT" $HEIGHT
+	return $?;
 }
 
 function showDeleteSnapshotSuccessDlg() {
@@ -144,18 +156,22 @@ function showRollbackSnapshotDlg() {
 
 				if [ $? -eq 0 ]; then
 					if [ ! -z $RETURN ]; then
-						SNAPSHOT=${SNAPSHOTS[$(($RETURN-1))]};
-
-						rollbackVolumeFn $VOLUME $SNAPSHOT;
+						showConfirmRollbackSnapshotDlg
 
 						if [ $? -eq 0 ]; then
-							showRollbackSnapshotSuccessDlg;
+							SNAPSHOT=${SNAPSHOTS[$(($RETURN-1))]};
 
-							askForRebootFn;
-						fi
+							rollbackVolumeFn $VOLUME $SNAPSHOT;
 
-						if [ $? -eq 1 ]; then
-							showRollbackSnapshotFailedDlg;
+							if [ $? -eq 0 ]; then
+								showRollbackSnapshotSuccessDlg;
+
+								askForRebootFn;
+							fi
+
+							if [ $? -eq 1 ]; then
+								showRollbackSnapshotFailedDlg;
+							fi
 						fi
 					fi
 				fi
@@ -164,6 +180,14 @@ function showRollbackSnapshotDlg() {
 	fi
 
 	showGUIFn;
+}
+
+function showConfirmRollbackSnapshotDlg() {
+	wrapTxtFn "$(_ snapshots.rollback.confirmation)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showConfirmDlg "$ALIGNEDTXT" $HEIGHT
+	return $?;
 }
 
 function showRollbackSnapshotSuccessDlg() {
@@ -195,9 +219,9 @@ function selectVolumeDlg() {
 	"#;\ZbVolume"\
 	"${MENU[@]}"
 
-	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
 
-	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+8));
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
 }
 
 function selectSnapshotDlg() {

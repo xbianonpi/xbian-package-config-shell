@@ -1353,6 +1353,9 @@ msgstr "Delete"
 msgid "xbian-config.snapshots.delete.description"
 msgstr "Delete a snapshot of a volume"
 
+msgid "xbian-config.snapshots.delete.confirmation"
+msgstr "Delete snapshot?"
+
 msgid "xbian-config.snapshots.delete.success"
 msgstr "Snapshot successfully deleted."
 
@@ -1367,6 +1370,9 @@ msgstr "Rollback to a snapshot of a volume"
 
 msgid "xbian-config.snapshots.rollback.label.snapshot"
 msgstr "Snapshot"
+
+msgid "xbian-config.snapshots.rollback.confirmation"
+msgstr "Rollback to snapshot?"
 
 msgid "xbian-config.snapshots.rollback.success"
 msgstr "Rollback to snapshot successful."

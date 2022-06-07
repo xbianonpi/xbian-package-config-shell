@@ -1365,6 +1365,9 @@ msgstr "Löschen"
 msgid "xbian-config.snapshots.delete.description"
 msgstr "Löschen eines Snapschuss von einem Volume"
 
+msgid "xbian-config.snapshots.delete.confirmation"
+msgstr "Schnappschuss löschen?"
+
 msgid "xbian-config.snapshots.delete.success"
 msgstr "Schnappschuss erfolgreich gelöscht."
 
@@ -1379,6 +1382,9 @@ msgstr "Zu einem Schnappschuss von einem Volume zurückrollen"
 
 msgid "xbian-config.snapshots.rollback.label.snapshot"
 msgstr "Schnappschuss"
+
+msgid "xbian-config.snapshots.rollback.confirmation"
+msgstr "Zum Schnappschuss zurückrollen?"
 
 msgid "xbian-config.snapshots.rollback.success"
 msgstr "Zurückrollen zum Schnappschuss erfolgreich."
