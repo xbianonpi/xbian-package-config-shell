@@ -1325,3 +1325,57 @@ msgstr "Are you sure to apply modification?"
 
 msgid "xbian-config.common.badentry"
 msgstr "Data you have enter is not correct"
+
+msgid "xbian-config.snapshots.name"
+msgstr "Snapshots"
+
+msgid "xbian-config.snapshots.description"
+msgstr "Manage snapshots"
+
+msgid "xbian-config.snapshots.create.name"
+msgstr "Create"
+
+msgid "xbian-config.snapshots.create.description"
+msgstr "Create snapshot of a volume"
+
+msgid "xbian-config.snapshots.create.success"
+msgstr "Snapshot created successfully."
+
+msgid "xbian-config.snapshots.create.failed"
+msgstr "Creating snapshot failed!"
+
+msgid "xbian-config.snapshots.fetch.failed"
+msgstr "No snapshots available!"
+
+msgid "xbian-config.snapshots.delete.name"
+msgstr "Delete"
+
+msgid "xbian-config.snapshots.delete.description"
+msgstr "Delete a snapshot of a volume"
+
+msgid "xbian-config.snapshots.delete.confirmation"
+msgstr "Delete snapshot?"
+
+msgid "xbian-config.snapshots.delete.success"
+msgstr "Snapshot successfully deleted."
+
+msgid "xbian-config.snapshots.delete.failed"
+msgstr "Deleting of snapshot failed!"
+
+msgid "xbian-config.snapshots.rollback.name"
+msgstr "Rollback"
+
+msgid "xbian-config.snapshots.rollback.description"
+msgstr "Rollback to a snapshot of a volume"
+
+msgid "xbian-config.snapshots.rollback.label.snapshot"
+msgstr "Snapshot"
+
+msgid "xbian-config.snapshots.rollback.confirmation"
+msgstr "Rollback to snapshot?"
+
+msgid "xbian-config.snapshots.rollback.success"
+msgstr "Rollback to snapshot successful."
+
+msgid "xbian-config.snapshots.rollback.failed"
+msgstr "Rollback to snapshot failed!"

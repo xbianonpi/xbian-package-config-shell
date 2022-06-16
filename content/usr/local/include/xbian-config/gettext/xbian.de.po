@@ -1337,3 +1337,57 @@ msgstr "Wollen Sie die Änderungen wirklich anwenden?"
 
 msgid "xbian-config.common.badentry"
 msgstr "Das eingegebene Datum ist nicht korrekt"
+
+msgid "xbian-config.snapshots.name"
+msgstr "Snapschüsse"
+
+msgid "xbian-config.snapshots.description"
+msgstr "Schnappschüsse verwalten"
+
+msgid "xbian-config.snapshots.create.name"
+msgstr "Erzeugen"
+
+msgid "xbian-config.snapshots.create.description"
+msgstr "Schnappschuss von einem Volume erzeugen"
+
+msgid "xbian-config.snapshots.create.success"
+msgstr "Schnappschuss erfolgreich erzeugt."
+
+msgid "xbian-config.snapshots.create.failed"
+msgstr "Erzeugung des Schnappschuss fehlgeschlagen!"
+
+msgid "xbian-config.snapshots.fetch.failed"
+msgstr "Keine Schnappschüsse vorhanden!"
+
+msgid "xbian-config.snapshots.delete.name"
+msgstr "Löschen"
+
+msgid "xbian-config.snapshots.delete.description"
+msgstr "Löschen eines Snapschuss von einem Volume"
+
+msgid "xbian-config.snapshots.delete.confirmation"
+msgstr "Schnappschuss löschen?"
+
+msgid "xbian-config.snapshots.delete.success"
+msgstr "Schnappschuss erfolgreich gelöscht."
+
+msgid "xbian-config.snapshots.delete.failed"
+msgstr "Löschen des Schnappschuss fehlgeschlagen!"
+
+msgid "xbian-config.snapshots.rollback.name"
+msgstr "Zurückrollen"
+
+msgid "xbian-config.snapshots.rollback.description"
+msgstr "Zu einem Schnappschuss von einem Volume zurückrollen"
+
+msgid "xbian-config.snapshots.rollback.label.snapshot"
+msgstr "Schnappschuss"
+
+msgid "xbian-config.snapshots.rollback.confirmation"
+msgstr "Zum Schnappschuss zurückrollen?"
+
+msgid "xbian-config.snapshots.rollback.success"
+msgstr "Zurückrollen zum Schnappschuss erfolgreich."
+
+msgid "xbian-config.snapshots.rollback.failed"
+msgstr "Zurückrollen zum Schnappschuss fehlgeschlagen!"
