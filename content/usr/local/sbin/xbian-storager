@@ -1774,12 +1774,15 @@ do_restorehome ()
 		exit 502
 	fi
 
-	kodi_start=''
-	if pgrep 'xbmc.bin|kodi.bin' >/dev/null; then
-		kodi_start=1
+	service_resume=''
+	if service xbmc status | grep -q running; then
+		service_resume='xbmc'
 		service xbmc stop
 	fi
-	service zram-swap stop
+	if service zram-swap status | grep -q running; then
+		service_resume="zram-swap $service_resume"
+		service zram-swap stop
+	fi
 
 	home_mounts=''
 	for m in $(mount | awk '{print $3}' | grep "/home"); do home_mounts="$home_mounts $m"; done
@@ -1817,8 +1820,7 @@ do_restorehome ()
 		fi
 	done
 
-	service zram-swap start
-	[ -z "$kodi_start" ] || service xbmc start
+	for s in $service_resume; do service $s start; done
 
 	print_log notice "Restoring /home from ${1##*/} was successful."
 }
