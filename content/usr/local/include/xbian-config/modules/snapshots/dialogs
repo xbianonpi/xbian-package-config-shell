@@ -1,0 +1,247 @@
+#!/bin/bash
+#
+#Copyright 2022 Ikem <ikem.krueger@gmail.com>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+
+function showCreateSnapshotDlg() {
+	IFS=$'\n'
+
+	VOLUMES=($(listVolumeFn));
+
+	selectVolumeDlg;
+
+	if [ $? -eq 0 ]; then
+		if [ ! -z $RETURN ]; then
+			VOLUME=${VOLUMES[$(($RETURN-1))]};
+
+			snapshotVolumeFn $VOLUME;
+
+			if [ $? -eq 0 ]; then
+				SNAPSHOT=$(getLastSnapshotFn $VOLUME)
+
+				showCreateSnapshotSuccessDlg;
+			fi
+
+			if [ $? -eq 1 ]; then
+				showCreateSnapshotFailedDlg;
+			fi
+		fi
+	fi
+
+	showGUIFn;
+}
+
+function showCreateSnapshotSuccessDlg() {
+	wrapTxtFn "$(_ snapshots.create.success)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showCreateSnapshotFailedDlg() {
+	wrapTxtFn "$(_ snapshots.create.failed)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showNoSnapshotAvailableDlg() {
+	wrapTxtFn "$(_ snapshots.fetch.failed)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showDeleteSnapshotDlg() {
+	IFS=$'\n'
+
+	VOLUMES=($(listVolumeFn));
+
+	selectVolumeDlg;
+
+	if [ $? -eq 0 ]; then
+		if [ ! -z $RETURN ]; then
+			VOLUME=${VOLUMES[$(($RETURN-1))]};
+
+			IFS=$ORIGINALIFS;
+
+			SNAPSHOTS=($(listSnapshotsFn $VOLUME));
+
+			if [ ${#SNAPSHOTS[@]} -eq 0 ]; then
+				showNoSnapshotAvailableDlg;
+			else
+				selectSnapshotDlg $SNAPSHOTS; # TODO: multi delete with progressbar dialog
+
+				if [ $? -eq 0 ]; then
+					if [ ! -z $RETURN ]; then
+						showConfirmDeleteSnapshotDlg
+
+						if [ $? -eq 0 ]; then
+							SNAPSHOT=${SNAPSHOTS[$(($RETURN-1))]};
+
+							destroyVolumeFn $VOLUME $SNAPSHOT;
+
+							if [ $? -eq 0 ]; then
+								showDeleteSnapshotSuccessDlg;
+							fi
+
+							if [ $? -eq 1 ]; then
+								showDeleteSnapshotFailedDlg;
+							fi
+						fi
+					fi
+				fi
+			fi
+		fi
+	fi
+
+	showGUIFn;
+}
+
+function showConfirmDeleteSnapshotDlg() {
+	wrapTxtFn "$(_ snapshots.delete.confirmation)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showConfirmDlg "$ALIGNEDTXT" $HEIGHT
+	return $?;
+}
+
+function showDeleteSnapshotSuccessDlg() {
+	wrapTxtFn "$(_ snapshots.delete.success)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showDeleteSnapshotFailedDlg() {
+	wrapTxtFn "$(_ snapshots.delete.failed)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showRollbackSnapshotDlg() {
+	IFS=$'\n'
+
+	VOLUMES=($(listVolumeFn));
+
+	selectVolumeDlg;
+
+	if [ $? -eq 0 ]; then
+		if [ ! -z $RETURN ]; then
+			VOLUME=${VOLUMES[$(($RETURN-1))]};
+
+			IFS=$ORIGINALIFS;
+
+			SNAPSHOTS=($(listSnapshotsFn $VOLUME));
+
+			if [ ${#SNAPSHOTS[@]} -eq 0 ]; then
+				showNoSnapshotAvailableDlg;
+			else
+				selectSnapshotDlg $SNAPSHOTS;
+
+				if [ $? -eq 0 ]; then
+					if [ ! -z $RETURN ]; then
+						showConfirmRollbackSnapshotDlg
+
+						if [ $? -eq 0 ]; then
+							SNAPSHOT=${SNAPSHOTS[$(($RETURN-1))]};
+
+							rollbackVolumeFn $VOLUME $SNAPSHOT;
+
+							if [ $? -eq 0 ]; then
+								showRollbackSnapshotSuccessDlg;
+
+								askForRebootFn;
+							fi
+
+							if [ $? -eq 1 ]; then
+								showRollbackSnapshotFailedDlg;
+							fi
+						fi
+					fi
+				fi
+			fi
+		fi
+	fi
+
+	showGUIFn;
+}
+
+function showConfirmRollbackSnapshotDlg() {
+	wrapTxtFn "$(_ snapshots.rollback.confirmation)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showConfirmDlg "$ALIGNEDTXT" $HEIGHT
+	return $?;
+}
+
+function showRollbackSnapshotSuccessDlg() {
+	wrapTxtFn "$(_ snapshots.rollback.success)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function showRollbackSnapshotFailedDlg() {
+	wrapTxtFn "$(_ snapshots.rollback.failed)" $(($DEFAULTWIDTH-4));
+	centerTxtFn "$WRAPPEDTXT" $(($DEFAULTWIDTH-4));
+	valignTxtFn "$CENTEREDTXT"
+	showMsgDlg "$ALIGNEDTXT" $HEIGHT
+}
+
+function selectVolumeDlg() {
+	MENU=();
+	X=0;
+
+	IFS=$ORIGINALIFS;
+	for VOLUME in ${VOLUMES[@]}; do
+		((X++));
+
+		MENU+=($X",\Zn$VOLUME");
+	done;
+
+	createTableFn "menu" \
+	"#;\ZbVolume"\
+	"${MENU[@]}"
+
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+7));
+
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
+}
+
+function selectSnapshotDlg() {
+	SNAPSHOTS=$1
+	MENU=();
+
+	X=0;
+
+	IFS=$ORIGINALIFS;
+	for SNAPSHOT in ${SNAPSHOTS[@]}; do
+		((X++));
+
+		MENU+=($X",\Zn$SNAPSHOT");
+	done;
+
+	createTableFn "menu" \
+	"#;\Zb$(_ snapshots.rollback.label.snapshot)"\
+	"${MENU[@]}"
+
+	centerTxtFn "$HEADER" $(($DEFAULTWIDTH+6));
+
+	showMenuDlg "$CENTEREDTXT" "$ROWS" ${#MENU[@]} $((${#MENU[@]}+9));
+}

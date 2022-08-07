@@ -1,0 +1,76 @@
+#!/bin/bash
+#
+#Copyright 2022 Ikem <ikem.krueger@gmail.com>
+#
+#This file is part of XBian - XBMC on the Raspberry Pi.
+#
+#XBian is free software: you can redistribute it and/or modify it under the
+#terms of the GNU General Public License as published by the Free Software
+#Foundation, either version 3 of the License, or (at your option) any later
+#version.
+#
+#XBian is distributed in the hope that it will be useful, but WITHOUT ANY
+#WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+#FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+#details.
+#
+#You should have received a copy of the GNU General Public License along
+#with XBian. If not, see <http://www.gnu.org/licenses/>
+
+# List the volumes with snapshots
+# Returns
+#  - $VOLUMES [Array]
+function listVolumeFn() {
+	btrfs-auto-snapshot listvol|grep -vE 'System|Volume|Information';
+}
+
+# List the volume snapshots
+#  $1 [String] Volume
+# Returns
+#  - $SNAPSHOTS [Array]
+function listSnapshotsFn() {
+	btrfs-auto-snapshot list $1|tail -n +2|sed -r 's,.*/@(.*),\1,';
+}
+
+# Get the volumes last snapshot
+#  $1 [String] Volume
+# Returns
+#  - $SNAPSHOT String
+function getLastSnapshotFn() {
+	listSnapshotsFn $1|grep "regular"|tail -n1
+}
+
+# Create snapshot
+#  $1 [String] Volume
+# Returns
+#  - 0: Success
+#  - 1: Error
+function snapshotVolumeFn() {
+	btrfs-auto-snapshot snapshot $1 >> /var/log/btrfs-auto-snapshot.log;
+
+	return $?;
+}
+
+# Destroy snapshot
+#  $1 [String] Volume
+#  $2 [String] Snapshot
+# Returns
+#  - 0: Success
+#  - 1: Error
+function destroyVolumeFn() {
+	btrfs-auto-snapshot destroy $1/@$2 >> /var/log/btrfs-auto-snapshot.log;
+
+	return $?;
+}
+
+# Rollback to snapshot
+#  $1 [String] Volume
+#  $2 [String] Snapshot
+# Returns
+#  - 0: Success
+#  - 1: Error
+function rollbackVolumeFn() {
+	btrfs-auto-snapshot rollback $1/@$2 >> /var/log/btrfs-auto-snapshot.log;
+
+	return $?;
+}
