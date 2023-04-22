@@ -98,7 +98,7 @@ function updatePackagesFn() {
 	LIST=""
 	OPTS=""
 	if [ "$2" = 'distupgrade' ]; then
-		COMMAND="dist-upgrade"
+		COMMAND="dist-upgrade $(apt-cache pkgnames polkitd-pkla)"
 		OPTS="--allow-downgrades"
 	else
 		COMMAND="install"
