@@ -89,9 +89,9 @@ function getPackageVersionFn() {
 function updateAptFn() {
         apt-get -q clean
         if [ "$1" = speak ]; then
-                apt-get update 2>&1 | tee /tmp/aptstatus 
+                apt-get update --allow-releaseinfo-change 2>&1 | tee /tmp/aptstatus
         else
-        	apt-get update 2>&1 >/tmp/aptstatus
+                apt-get update --allow-releaseinfo-change 2>&1 >/tmp/aptstatus
         fi
         rm -f /tmp/aptupdates
         touch /var/lib/apt/periodic/update-stamp
