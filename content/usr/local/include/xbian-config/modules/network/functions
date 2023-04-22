@@ -144,7 +144,7 @@ setInterfaceWlanCredentials() {
 
 		# Create buffer for holding configuration
 		WLANBUFFER="\n    wireless-power off\n"
-		n=$(echo "$3" | sed 's%\\%\\\\%g' )
+		n=$(echo -en "$3" | sed 's%\\%\\\\%g' )
 		k=$(echo "$4" | sed 's%\\%\\\\%g' )
 		case $2 in
 			WEP)  WLANBUFFER+="    wireless-essid $n\n    nwireless-key $k" ;;
@@ -547,6 +547,7 @@ function scanWLANNetworksFn() {
 				[ "${WLAN[2]}" = "on" -a "${WLAN[1]}" = "Open" ] && WLAN[1]="WEP";
 				[ "${WLAN[3]}" = '' ] && WLAN[3]=0;
 				((X++));
+				WLAN[0]=$(echo ${WLAN[0]} | sed "s/,/\\\u002c/g")
 				WNETWORKS[$X]="${WLAN[0]},${WLAN[1]},${WLAN[2]},${WLAN[3]}";
 			fi
 			WLAN=();
