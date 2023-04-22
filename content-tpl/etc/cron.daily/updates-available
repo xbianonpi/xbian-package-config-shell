@@ -15,12 +15,36 @@ RemoveJobs()
 
 [ "$(pgrep -f $BASENAME -c)" -le 1 ] || exit 0
 
-for p in $(grep -E '^Package: openvpn$|^Package: x2goserver$' /var/lib/dpkg/status); do
+for p in $(grep -E '^Package: openvpn$|^Package: x2goserver$|^Package: rsyslog$' /var/lib/dpkg/status); do
     case $p in
         *openvpn)
             ! grep -q ^tun /etc/modules && modprobe tun && echo tun >> /etc/modules
             ! grep -q "xbian.*/usr/sbin/openvpn.*/usr/bin/killall" /etc/sudoers.d/openvpn 2>/dev/null && \
                 echo "xbian ALL=(ALL) NOPASSWD: /usr/sbin/openvpn, /usr/bin/killall" >> /etc/sudoers.d/openvpn
+        ;;
+        *rsyslog)
+            rsyslog=1
+            if [ ! -e /etc/init/rsyslog.conf ] && [ ! -e /etc/init.d/rsyslog ]; then
+cat << \EOF > /etc/init/rsyslog.conf
+description "enhanced syslogd"
+author      "mkreisl mkreisl@xbian.org"
+
+start on started xbian-run
+stop on starting rc RUNLEVEL=[06]
+
+#respawn
+
+env DAEMON=/usr/sbin/rsyslogd
+
+pre-start script
+    test -e $DAEMON || { stop; exit 0; }
+end script
+
+script
+    $DAEMON -n -iNONE
+end script
+EOF
+            fi
         ;;
         *x2goserver)
             x2goserver=1
@@ -56,6 +80,7 @@ EOF
 done
 
 [ -n "$x2goserver" ] || rm -f /etc/init/x2goserver.conf /etc/init.d/x2goserver
+[ -n "$rsyslog" ] || rm -f /etc/init/rsyslog.conf
 
 if [ "$1" != run -o "$(xbian-config updates progress 2>/dev/null)" != 0 ]; then
     RemoveJobs
