@@ -35,6 +35,8 @@ env XSOCKDIR=/tmp/.X11-unix
 start on remote-filesystems
 stop on starting rc RUNLEVEL=[06]
 
+console none
+
 pre-start script
     test -e $DAEMON || { stop; exit 0; }
     test -L /dev/fd || ln -s /proc/self/fd /dev/fd
@@ -42,11 +44,8 @@ pre-start script
 end script
 
 script
-    $DAEMON
-    sleep 365d
+    $DAEMON -d
 end script
-
-pre-stop exec pkill -f $DAEMON
 EOF
                 rm -fr /etc/init.d/x2goserver
                 ln -s /lib/init/upstart-job /etc/init.d/x2goserver
