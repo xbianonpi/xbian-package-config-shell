@@ -222,7 +222,7 @@ function showCMDFn() {
 					case "$2" in
 						query)   STATUS=$(/usr/local/sbin/xbian-update-repo query) ;;
 						prepare) /usr/local/sbin/xbian-update-repo; apt-get update --allow-releaseinfo-change &>/tmp/aptstatus && STATUS=1 || STATUS=-2 ;;
-						execute) updatePackagesFn 2 $1; STATUS=$(($?+1)) ;;
+						execute) updatePackagesFn 2 $1; STATUS=$(($?+1)); sleep 3 ;;
 						finish)  rm -f /usr/local/sbin/xbian-update-repo; STATUS=1 ;;
 						*)       STATUS=-3 ;;
 					esac
