@@ -13,7 +13,7 @@ RemoveJobs()
     done  
 }
 
-pgrep $BASENAME >/dev/null && exit 0 || :
+[ "$(pgrep -f $BASENAME -c)" -le 1 ] || exit 0
 
 for p in $(grep -E '^Package: openvpn$|^Package: x2goserver$' /var/lib/dpkg/status); do
     case $p in
