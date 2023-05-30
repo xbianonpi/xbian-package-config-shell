@@ -21,6 +21,8 @@
 #|          Global variables          |
 #|------------------------------------|
 
+IFACES_CONFIG=/etc/network/interfaces
+
 # The arguments this module accepts
 ARGUMENTS=(list status dhcp static credentials scan restart progress type);
 
