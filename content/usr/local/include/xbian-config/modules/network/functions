@@ -21,14 +21,14 @@
 setAuto() {
     case $1 in
         eth?|wlan?|ra?)
-            grep -q "^auto.*lo" /etc/network/interfaces || sed -i 's/^iface.*lo/auto lo\n&/' /etc/network/interfaces
-            sed -i "/^auto /s/ $1//g;/^auto$/d" /etc/network/interfaces
-            if grep -q "^allow-hotplug.*$1" /etc/network/interfaces; then
-                sed -i "s/^allow-hotplug.*$1/auto $1\n&/" /etc/network/interfaces
-            elif grep -q "^iface.*$1" /etc/network/interfaces; then
-                sed -i "s/^iface.*$1/auto $1\n&/" /etc/network/interfaces
+            grep -q "^auto.*lo" $IFACES_CONFIG || sed -i 's/^iface.*lo/auto lo\n&/' $IFACES_CONFIG
+            sed -i "/^auto /s/ $1 / /g;/^auto /s/ $1$//g;/^auto$/d" $IFACES_CONFIG
+            if grep -qw "^allow-hotplug.*$1" $IFACES_CONFIG; then
+                sed -i "s/^allow-hotplug.*$1\b/auto $1\n&/" $IFACES_CONFIG
+            elif grep -q "^iface.*$1\s" $IFACES_CONFIG; then
+                sed -i "s/^iface.*$1\s/auto $1\n&/" $IFACES_CONFIG
             else
-                sed -i "1 i\auto $1" /etc/network/interfaces
+                sed -i "1 i\auto $1" $IFACES_CONFIG
             fi
         ;;
 
@@ -42,7 +42,7 @@ setAuto() {
 resAuto() {
     case $1 in
         eth?|wlan?|ra?)
-            sed -i "/^auto /s/ $1//g;/^auto$/d" /etc/network/interfaces
+            sed -i "/^auto /s/ $1 / /g;/^auto /s/ $1$//g;/^auto$/d" $IFACES_CONFIG
         ;;
 
         *)
@@ -55,8 +55,8 @@ resAuto() {
 setInterfaceDisableFn() {
     case $1 in
         eth?|wlan?|ra?)
-            sed -i "s%^allow-hotplug.*$1%#allow-hotplug $1%" /etc/network/interfaces
-            sed -i "s%^iface.*$1%#iface $1%" /etc/network/interfaces
+            sed -i "s%^allow-hotplug.*$1\b%#allow-hotplug $1%" $IFACES_CONFIG
+            sed -i "s%^iface.*$1\b%#iface $1%" $IFACES_CONFIG
             resAuto $1
             pkill -f "(dhclient|wpa_supplicant|wpa_cli).*$1" &>/dev/null
             ;;
@@ -70,10 +70,10 @@ setInterfaceDisableFn() {
 
 fetchInterfaceData() {
     # Interface already present, store it + any subsequent ifaces in an buffer
-    IFACETMP=$(grep -A100 "^iface $1 inet " /etc/network/interfaces | sed '1d');
+    IFACETMP=$(grep -A100 "^iface $1 inet " $IFACES_CONFIG | sed '1d');
 
     # Remove what's now in the buffer from the file
-    sed -i "/^iface $1 inet /,+100d" /etc/network/interfaces
+    sed -i "/^iface $1 inet /,+100d" $IFACES_CONFIG
 
     # Extract subsequent ifaces to a separate buffer
     MORE=$(echo -e "$IFACETMP" | sed -n '/\(^allow-hotplug.*\|^iface.*\|^auto.*\)/,$p')
@@ -81,7 +81,7 @@ fetchInterfaceData() {
     [ -n "$ME" ] && ME="\n"$ME
 }
 
-# Gets wlan credentials from current /etc/network/interfaces or
+# Gets wlan credentials from current $IFACES_CONFIG or
 # from file /etc/wpa_supplicant/wpa_supplicant.conf and stores
 # them into global variable WLANKEY and SSID
 # Arguments
@@ -153,24 +153,24 @@ setInterfaceWlanCredentials() {
 			*)    return 2 ;;
 		esac
 
-		IFACE="$(grep -m1 "^iface $1" /etc/network/interfaces)"
+		IFACE="$(grep -w -m1 "^iface $1" $IFACES_CONFIG)"
 		if [ -n "$IFACE" ]; then
 
 			# Extract DHCP or Static
 			MODE=$(echo $IFACE | awk "/inet /"'{ print $4 }')
 
-			# Fill buffer ME and MORE from /etc/network/interfaces
+			# Fill buffer ME and MORE from $IFACES_CONFIG
 			fetchInterfaceData $1; ME=$(echo -e "$ME" | sed '/\(.*wireless.*\|.*wpa.*\)/d')
 
 			# Re-add current interface withouth previous cruft and re-add subsequent interfaces
-	                echo -e "iface $1 inet $MODE$WLANBUFFER$ME\n\n$MORE" >> /etc/network/interfaces
+	                echo -e "iface $1 inet $MODE$WLANBUFFER$ME\n\n$MORE" >> $IFACES_CONFIG
 
 		else
 			# Interface not present, add it to the end
-			echo -e "\nallow-hotplug $1\niface $1 inet dhcp$WLANBUFFER" >> /etc/network/interfaces
+			echo -e "\nallow-hotplug $1\niface $1 inet dhcp$WLANBUFFER" >> $IFACES_CONFIG
 		fi
-		sed -i -n '/^$/N;/\n$/D;p' /etc/network/interfaces
-		chmod 0600 /etc/network/interfaces
+		sed -i -n '/^$/N;/\n$/D;p' $IFACES_CONFIG
+		chmod 0600 $IFACES_CONFIG
 		return 1;
 	else
 		return 0;
@@ -184,26 +184,26 @@ setInterfaceDhcpFn() {
 	isValidInterfaceFn "$1"
 	if [ $? -eq 1 ]; then
 		# We have to save current configuration for later (restart interface needs this file for shutting down interface properly)
-		cp /etc/network/interfaces /run/interfaces.xbian
+		cp $IFACES_CONFIG /run/interfaces.xbian
 
-		sed -i "s/^#iface $1/iface $1/" /etc/network/interfaces
-		sed -i "s/^#allow hotplug $1/allow hotplug $1/" /etc/network/interfaces
-		if grep -q "^iface $1" /etc/network/interfaces; then
+		sed -i "s/^#iface $1\b/iface $1/" $IFACES_CONFIG
+		sed -i "s/^#allow hotplug $1\b/allow hotplug $1/" $IFACES_CONFIG
+		if grep -qw "^iface $1" $IFACES_CONFIG; then
 
-			# Fill buffer ME and MORE from /etc/network/interfaces
+			# Fill buffer ME and MORE from $IFACES_CONFIG
 			fetchInterfaceData $1; ME=$(echo -e "$ME" | sed '/\(.*address.*\|.*netmask.*\|.*gateway.*\)/d')
 
 			# Re-add current interface withouth previous cruft and re-add subsequent interfaces
-	                echo -e "iface $1 inet dhcp$ME\n\n$MORE" >> /etc/network/interfaces
+	                echo -e "iface $1 inet dhcp$ME\n\n$MORE" >> $IFACES_CONFIG
 
 		else
 			# Interface not present, add it to the end
-			echo -e "\nallow-hotplug $1\niface $1 inet dhcp" >> /etc/network/interfaces
+			echo -e "\nallow-hotplug $1\niface $1 inet dhcp" >> $IFACES_CONFIG
 
 		fi
-		sed -i "s%#allow-hotplug.*$1%allow-hotplug $1%" /etc/network/interfaces
-		sed -i -n '/^$/N;/\n$/D;p' /etc/network/interfaces
-		chmod 0600 /etc/network/interfaces
+		sed -i "s%#allow-hotplug.*$1\b%allow-hotplug $1%" $IFACES_CONFIG
+		sed -i -n '/^$/N;/\n$/D;p' $IFACES_CONFIG
+		chmod 0600 $IFACES_CONFIG
 		return 1;
 	else
 		return 0;
@@ -331,14 +331,14 @@ setInterfaceStaticFn() {
 		fi
 
 		# We have to save current configuration for later (restart interface needs this file for shutting down interface properly)
-		cp /etc/network/interfaces /run/interfaces.xbian
+		cp $IFACES_CONFIG /run/interfaces.xbian
 
-		sed -i "s/^#iface $1/iface $1/" /etc/network/interfaces
-		sed -i "s/^#allow hotplug $1/allow hotplug $1/" /etc/network/interfaces
-		# Process /etc/network/interfaces
-		if grep -q "^iface $1" /etc/network/interfaces; then
+		sed -i "s/^#iface $1\b/iface $1/" $IFACES_CONFIG
+		sed -i "s/^#allow hotplug $1\b/allow hotplug $1/" $IFACES_CONFIG
+		# Process $IFACES_CONFIG
+		if grep -q "^iface $1" $IFACES_CONFIG; then
 
-			# Fill buffer ME and MORE from /etc/network/interfaces
+			# Fill buffer ME and MORE from $IFACES_CONFIG
 			fetchInterfaceData $1; ME=$(echo -e "$ME" | sed '/\(.*address.*\|.*netmask.*\|.*gateway.*\)/d')
 
 			if [ "$7" = disable ]; then
@@ -348,16 +348,16 @@ setInterfaceStaticFn() {
 				ME=''; BUFFERIFACES=''
 			fi
 			# Re-add current interface withouth previous cruft and re-add subsequent interfaces
-	                echo -e "iface $1 inet $method$ME$BUFFERIFACES\n\n$MORE" >> /etc/network/interfaces
+	                echo -e "iface $1 inet $method$ME$BUFFERIFACES\n\n$MORE" >> $IFACES_CONFIG
 
 		elif [ "$7" != disable ]; then
 			# Interface not present, add it to the end
-			echo -e "\n${hashed}allow-hotplug $1\niface $1 inet $method$BUFFERIFACES" >> /etc/network/interfaces
+			echo -e "\n${hashed}allow-hotplug $1\niface $1 inet $method$BUFFERIFACES" >> $IFACES_CONFIG
 
 		fi
-		sed -i "s%.*allow-hotplug.*$1%${hashed}allow-hotplug $1%" /etc/network/interfaces
-		sed -i -n '/^$/N;/\n$/D;p' /etc/network/interfaces
-		chmod 0600 /etc/network/interfaces
+		sed -i "s%.*allow-hotplug.*$1%${hashed}allow-hotplug $1%" $IFACES_CONFIG
+		sed -i -n '/^$/N;/\n$/D;p' $IFACES_CONFIG
+		chmod 0600 $IFACES_CONFIG
 
 		if [ "$7" = disable ]; then
 			setInterfaceDisableFn $1
@@ -445,8 +445,8 @@ function isValidInterfaceFn() {
 function readNetworkConfigurationFn() {
 	isValidInterfaceFn "$1"
 	if [ $? -eq 1 ]; then
-		# Read network configuration from /etc/network/interfaces
-		TFILEIFACES=$(sed 's/^[ \t]*//;s/[ \t]*$//;s/^#.*//' /etc/network/interfaces)
+		# Read network configuration from $IFACES_CONFIG
+		TFILEIFACES=$(sed 's/^[ \t]*//;s/[ \t]*$//;s/^#.*//' $IFACES_CONFIG)
 
 		# Place everything after matching iface in a variable and delete (possible) subsequent ifaces from variable
 		CONTENT=$(echo -e "$TFILEIFACES" | grep -A20 "iface $1 inet " | sed '1d;/\(iface\|auto\|allow-hotplug\)/,$d')
@@ -592,10 +592,10 @@ function scanWLANNetworksFn() {
 #  @: Process id of the ifup process
 #  0: Process ifup not running
 function restartAdapterFn() {
-	[ -e /run/interfaces.xbian ] && { mv /etc/network/interfaces /etc/network/interfaces.new; mv /run/interfaces.xbian /etc/network/interfaces; }
+	[ -e /run/interfaces.xbian ] && { mv $IFACES_CONFIG $IFACES_CONFIG.new; mv /run/interfaces.xbian $IFACES_CONFIG; }
 	ifdown $1 >&/dev/null; ifdown --force $1 >&/dev/null
 	pkill -f "(dhclient|wpa_supplicant|wpa_cli).*$1" &>/dev/null
-	[ -e /etc/network/interfaces.new ] && { mv /etc/network/interfaces.new /etc/network/interfaces; chmod 0600 /etc/network/interfaces; }
+	[ -e $IFACES_CONFIG.new ] && { mv $IFACES_CONFIG.new $IFACES_CONFIG; chmod 0600 $IFACES_CONFIG; }
 	{ sleep 0.5; nohup ifup $1; } &>/tmp/ifupstatus &
 	p=$!; echo $p > /run/ifup.pid
 	return $p
@@ -611,7 +611,7 @@ function restartAdapterFn() {
 #  3: Failed to connected to network
 function getConnectStatusFn() {
 	if [ -f /tmp/ifupstatus ]; then
-		if grep -qwE "^iface $1.*(static|manual)" /etc/network/interfaces && ! ip a | grep -qw "$1.*DORMANT"; then
+		if grep -qwE "^iface $1.*(static|manual)" $IFACES_CONFIG && ! ip a | grep -qw "$1.*DORMANT"; then
 			STATUS=2;
 		elif grep -qw "bound" /tmp/ifupstatus; then
 			STATUS=2;
