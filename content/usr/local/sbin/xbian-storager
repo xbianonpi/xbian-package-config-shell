@@ -1370,17 +1370,16 @@ EOF
 
 			optimize_size () {
 				if [ "$opt_fstype" = btrfs ]; then
-					size=$(df -h | grep -m1 "$root_dest" | awk '{print $4}')
+					size_avail=$(df -B1 | grep -m1 "$root_dest" | awk '{print $4}')
 					grep -q "No space left on device" /tmp/fs.receive.log && outofspace=y
 				else
 					zfs list -o space $opt_clonename
-					size=$(zfs list -Ho space $opt_clonename | awk '{print $2}')
+					size_avail=$(zfs list -Hpo space $opt_clonename | awk '{print $2}')
 					grep -q "out of space" /tmp/fs.receive.log && outofspace=y
 				fi
 
-				[ "$BACKGROUND" == 1 ] && printf "Space remaining in %s: %s (%s)\n" "$(basename "$fn")" $size $opt_sizeadj
+				[ "$BACKGROUND" == 1 ] && printf "Space remaining in %s: %s (%s)\n" "$(basename "$fn")" $(numfmt --to=iec $size_avail) $opt_sizeadj
 
-				size_avail=$(numfmt --from=iec $size)
 
 				opt_sizeadj=$(numfmt --from=iec -- $opt_sizeadj)
 				if [ "$size_avail" -gt "$(numfmt --from=iec 150M)" -a "$1" -eq 0 ]; then
@@ -2211,7 +2210,11 @@ elif [ "$opt_command" = volsize ]; then
 		md=$(mktemp -d /run/vs-XXXXXXX)
 		trap "do_run umount $md 2>/dev/null; rmdir $md;" INT TERM EXIT
 		do_run mount -t btrfs $opt_dev $md 2>/dev/null
-		[ ! -d $md/$1 ] || printf "$(du -xsb $md/$1 | awk '{print $1}')\n"
+		if command -v compsize >/dev/null; then
+			[ ! -d $md/$1 ] || printf "$(compsize $md/$1 -b | awk '/^TOTAL/{print $3}')\n"
+		else
+			[ ! -d $md/$1 ] || printf "$(du -xsb $md/$1 | awk '{print $1}')\n"
+		fi
 	else
 		do_run zfs list -Hpo space ${1%%/@} 2>/dev/null | awk '{printf "%d\n", $5}'
 	fi
