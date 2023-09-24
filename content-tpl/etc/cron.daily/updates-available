@@ -32,7 +32,8 @@ author      "mkreisl mkreisl@xbian.org"
 start on started xbian-run
 stop on starting rc RUNLEVEL=[06]
 
-#respawn
+console none
+respawn
 
 env DAEMON=/usr/sbin/rsyslogd
 
@@ -40,9 +41,7 @@ pre-start script
     test -e $DAEMON || { stop; exit 0; }
 end script
 
-script
-    $DAEMON -n -iNONE
-end script
+exec $DAEMON -n -iNONE
 EOF
             fi
         ;;
@@ -67,9 +66,7 @@ pre-start script
     [ -d $XSOCKDIR ] || { mkdir $XSOCKDIR; chmod 1777 $XSOCKDIR; }
 end script
 
-script
-    $DAEMON -d
-end script
+exec $DAEMON -d
 EOF
                 rm -fr /etc/init.d/x2goserver
                 ln -s /lib/init/upstart-job /etc/init.d/x2goserver
