@@ -44,7 +44,7 @@ function getInstalledKernelVersionsFn() {
 #  - $CURRENTKERNEL [String]
 function getCurrentKernelVersionFn() {
 	CKERNEL=$(ls -Al /boot/kernel*.img | grep -E "kernel.img|kernel8.img" | awk '{print $5}');
-	NKERNEL=$(ls -Al /boot/*.img | grep -w $CKERNEL | awk '{print $9}' | grep -vE "kernel.img|kernel8.img");
+	NKERNEL=$(ls -Al /boot/*.img | grep -w $CKERNEL 2>/dev/null | awk '{print $9}' | grep -vE "kernel.img|kernel8.img");
 	if [ -z $NKERNEL ]; then
 		CURRENTKERNEL=$(uname -r | sed -e 's/+//g');
 	else
