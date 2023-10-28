@@ -70,14 +70,10 @@ function setEnableRepo() {
 }
 
 function retrieveUpdateListFn() {
-        if [[ "$(apt-get -v 2>/dev/null | grep ^apt | awk '{ print $2 }')" > "1.1" ]]; then
-		# apt shipped with Debian Stretch has newer [src]pkgcache.bin database format (v5)
-		# Unfortunately xbian-apt-show-versions is linked against older apt library (v4)
-		# so we have do use a bit slower python version until new version is available
-		xbian-apt-show-versions.py -nu >/tmp/aptupdates 2>>/tmp/aptstatus
-	else
-		xbian-apt-show-versions -nu >/tmp/aptupdates 2>/dev/null
-	fi
+	# apt shipped with Debian Stretch has newer [src]pkgcache.bin database format (v5)
+	# Unfortunately xbian-apt-show-versions is linked against older apt library (v4)
+	# so we have do use a bit slower python version until new version is available
+	xbian-apt-show-versions.py -nu >/tmp/aptupdates 2>>/tmp/aptstatus
 }
 
 function getAllPackagesLisFn() {
