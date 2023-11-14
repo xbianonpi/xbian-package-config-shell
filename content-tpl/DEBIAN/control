@@ -4,7 +4,7 @@ Version: __DATE__
 Section: utils
 Essential: No
 Priority: optional
-Architecture: armhf
+Architecture: all
 Pre-Depends: anacron, openbsd-inetd, psmisc
 Replaces: xbian-package-config, xbian-update
 Depends: ipcalc, xbian-package-xbianhome, parted, wget, bc, gettext, dialog, btrfs-progs, kpartx, f2fs-tools, xbian-package-xbmc-scripts (>= 1.0.11), at, python3-apt, pv, sshfs
