@@ -33,3 +33,9 @@ OPT_COMPRESS=
 #                  as a size specification. Default is 300M
 #
 OPT_SIZEADJ=
+
+# Here you can specify parameters that should be kept in the
+# /boot/cmdline.txt file. Please note that parameters that require
+# an argument must end with an =.
+#
+OPT_CMDLINE_ARGS='partswap vnc cma= ip= cnet= modules-load= usb-storage.quirks='
