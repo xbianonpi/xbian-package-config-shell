@@ -77,7 +77,7 @@ function showGUIFn() {
 #  *List [Array]
 #  - * Installed kernel versions
 #  *Capability
-#  - * System ist 64bit capable: 0/1
+#  - * System is 64bit capable: 0/1/2
 #  - * System is running|having already 64bit Kernel: 0/1
 #  - * Kernel package required to change architecture: linux-image-bcm2836/7
 #  - * ZFS module package required to change architecture: linux-zfs-bcm2836/7 or -
@@ -150,14 +150,21 @@ function showCMDFn() {
 			initRamFn $2
 		;;
 		capability)
-			lscpu | grep -qE "Cortex-A53|Cortex-A72" && echo 1 || echo 0
-			if [ "$(uname -m)" = aarch64 ] || dpkg -l | dpkg -l | grep -E "^hi.[ \t]linux-image-bcm2837|^ii.[ \t]linux-image-bcm2837"; then
+			SPECS="$(lscpu | awk '/Model\ name:/{print $3}') $(dpkg --print-architecture)"
+			if echo $SPECS | grep -qE "Cortex-A53 armhf|Cortex-A72 armhf"; then
 				echo 1
-				toPackage=bcm2836
-				fromPackage=bcm2837
+			elif echo $SPECS | grep -qE "Cortex-A76|arm64"; then
+				echo 2
 			else
 				echo 0
-				toPackage=bcm2837
+			fi
+			if [ "$(uname -m)" = aarch64 ] || dpkg -l | grep -qE "^[hi]i.[ \t]linux-image-bcm2837|^[hi]i.[ \t]linux-image-bcm2710"; then
+				echo 1
+				toPackage=bcm2836
+				fromPackage=bcm2710
+			else
+				echo 0
+				toPackage=bcm2710
 				fromPackage=bcm2836
 			fi
 			echo "linux-image-$toPackage"
