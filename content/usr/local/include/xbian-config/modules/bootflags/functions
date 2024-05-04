@@ -29,7 +29,7 @@ function getBootFlagsFn() {
 
 function updateBootFlagsFn() {
 	[[ "$CMDLINE" =~ "splash" ]] && SPLASH=1 || SPLASH=0;
-	LOGLEVEL=$(sed -ne 's/.*loglevel=\([0-9]\{1\}\).*/\1/p' $CMDLINE);
+	LOGLEVEL=$(echo $CMDLINE | sed -ne 's/.*loglevel=\([0-9]\{1\}\).*/\1/p');
 	[[ "$CMDLINE" =~ "quiet" ]] && QUIET=1 || QUIET=0;
 	[[ "$CMDLINE" =~ "logo.nologo" ]] && LOGO=1 || LOGO=0;
 	for KEY in ${!BOOTFLAGS[*]}; do
@@ -53,7 +53,7 @@ function updateBootFlagsFn() {
 					if [ $LOGO -eq 0 ]; then
 						sed -i 's/$/ logo.nologo/g' /boot/cmdline.txt
 					fi
-					if [ $CONSOLE != "tty2" ]; then
+					if [ "$CONSOLE" != "tty2" ]; then
 						if [ $(grep -c console /boot/cmdline.txt) -eq 0 ]; then
 							sed -i 's/$/ console=tty2/g' /boot/cmdline.txt
 						else
@@ -77,7 +77,7 @@ function updateBootFlagsFn() {
 					if [ $LOGO -ge 0 ]; then
 						sed -i 's/ logo.nologo//g' /boot/cmdline.txt
 					fi
-					if [ $CONSOLE == "tty2" ]; then
+					if [ "$CONSOLE" == "tty2" ]; then
 						if [ $(grep -c console /boot/cmdline.txt) -eq 0 ]; then
 							sed -i 's/$/ console=tty1/g' /boot/cmdline.txt
 						else
@@ -108,7 +108,7 @@ function updateBootFlagsFn() {
 					if [ $LOGO -eq 0 ]; then
 						ERROR=1;
 					fi
-					if [ $CONSOLE != "tty2" ]; then
+					if [ "$CONSOLE" != "tty2" ]; then
 						ERROR=1;
 					fi
 				;;
@@ -128,7 +128,7 @@ function updateBootFlagsFn() {
 					if [ $LOGO -ge 1 ]; then
 						ERROR=1;
 					fi
-					if [ $CONSOLE == "tty2" ]; then
+					if [ "$CONSOLE" == "tty2" ]; then
 						ERROR=1;
 					fi
 				;;
