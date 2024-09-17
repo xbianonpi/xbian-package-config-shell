@@ -1339,7 +1339,7 @@ msgid "xbian-config.common.badentry"
 msgstr "Das eingegebene Datum ist nicht korrekt"
 
 msgid "xbian-config.snapshots.name"
-msgstr "Snapschüsse"
+msgstr "Schnapschüsse"
 
 msgid "xbian-config.snapshots.description"
 msgstr "Schnappschüsse verwalten"
@@ -1363,7 +1363,7 @@ msgid "xbian-config.snapshots.delete.name"
 msgstr "Löschen"
 
 msgid "xbian-config.snapshots.delete.description"
-msgstr "Löschen eines Snapschuss von einem Volume"
+msgstr "Löschen eines Schnapschuss von einem Volume"
 
 msgid "xbian-config.snapshots.delete.confirmation"
 msgstr "Schnappschuss löschen?"
