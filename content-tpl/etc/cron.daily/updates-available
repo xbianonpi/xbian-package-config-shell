@@ -15,7 +15,7 @@ RemoveJobs()
 
 [ "$(pgrep -f $BASENAME -c)" -le 1 ] || exit 0
 
-for p in $(grep -E '^Package: openvpn$|^Package: x2goserver$|^Package: rsyslog$' /var/lib/dpkg/status); do
+for p in $(awk '/^Package: openvpn$|^Package: x2goserver$|^Package: rsyslog$/{print $2}' /var/lib/dpkg/status); do
     case $p in
         *openvpn)
             ! grep -q ^tun /etc/modules && modprobe tun && echo tun >> /etc/modules
@@ -43,6 +43,7 @@ end script
 
 exec $DAEMON -n -iNONE
 EOF
+                ln -s /lib/init/upstart-job /etc/init.d/rsyslog
             fi
         ;;
         *x2goserver)
