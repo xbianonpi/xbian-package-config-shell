@@ -1378,7 +1378,7 @@ EOF
 					grep -q "out of space" /tmp/fs.receive.log && outofspace=y
 				fi
 
-				[ "$BACKGROUND" == 1 ] && printf "Space remaining in %s: %s (%s)\n" "$(basename "$fn")" $(numfmt --to=iec $size_avail) $opt_sizeadj
+				[ "$BACKGROUND" == 1 ] && printf "Space remaining in %s: %s (%s)\n" "$(basename "$fn")" $(numfmt --to-unit=Mi --suffix=M $size_avail) $opt_sizeadj
 
 
 				opt_sizeadj=$(numfmt --from=iec -- $opt_sizeadj)
@@ -1392,7 +1392,7 @@ EOF
 					opt_sizeadj=''
 				fi
 				if [ -n "$opt_sizeadj" ] && [ -e /etc/default/xbian-internals ]; then
-				        opt_sizeadj=$(numfmt --to=iec -- $opt_sizeadj)
+				        opt_sizeadj=$(numfmt --to-unit=Mi --suffix=M $opt_sizeadj)
 					if grep -q "OPT_SIZEADJ=" /etc/default/xbian-internals; then
 						sed -i "s/OPT_SIZEADJ=.*/OPT_SIZEADJ=$opt_sizeadj/g" /etc/default/xbian-internals
 					else
