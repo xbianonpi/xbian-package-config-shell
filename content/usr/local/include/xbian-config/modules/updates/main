@@ -220,11 +220,46 @@ function showCMDFn() {
 			if [ -x /usr/local/sbin/xbian-update-repo ]; then
 				if [ $# -eq 2 ]; then
 					case "$2" in
-						query)   STATUS=$(/usr/local/sbin/xbian-update-repo query) ;;
-						prepare) /usr/local/sbin/xbian-update-repo; apt-get update --allow-releaseinfo-change &>/tmp/aptstatus && STATUS=1 || STATUS=-2 ;;
-						execute) updatePackagesFn 2 $1; STATUS=$(($?+1)); sleep 3 ;;
-						finish)  rm -f /usr/local/sbin/xbian-update-repo; STATUS=1 ;;
-						*)       STATUS=-3 ;;
+						query)
+							STATUS=$(/usr/local/sbin/xbian-update-repo query)
+						;;
+						prepare)
+							/usr/local/sbin/xbian-update-repo; apt-get update --allow-releaseinfo-change &>/tmp/aptstatus && STATUS=1 || STATUS=-2
+						;;
+						execute)
+							updatePackagesFn 1 $1; STATUS=$(($?+1))
+							if [ "$STATUS" = 1 ]; then
+								updatePackagesFn 2 $1
+								. /etc/default/xbian-internals; sleep 3
+								[ "$OPT_UPGRADE" != keep ] && touch /run/noreboot && \
+									echo 'stop xbmc; stop cron; stop anacron; for i in $(seq 10); do pgrep splash-daemon || break; sleep 0.5; done; xbian-config updates distupgrade progress' | at now + 3min &>/dev/null
+							fi
+						;;
+						progress)
+							STATUS=$(showCMDFn progress stats) 2>/dev/null
+							if [ "$STATUS" != 0 ]; then
+							        STATS=$(echo $STATUS | awk '{ print $2}')
+							        PERCENT=$(echo $STATS | awk -F'/' '{printf "%d", ($1/$2)*100}')
+							        [ -n "$PERCENT" ] || PERCENT=1
+								splash --msgtxt="distribution upgrade $STATS" --percentage=$PERCENT
+								echo xbian-config updates distupgrade progress | at now + 3min &>/dev/null
+								STATUS=1
+							else
+								splash --msgtxt="upgrade done, reboot in 120s" --percentage=5
+								rm -f /usr/local/sbin/xbian-update-repo
+								echo "sync; echo b >/proc/sysrq-trigger" | at now + 2min &>/dev/null
+								STATUS=1
+							fi
+						;;
+						refresh)
+							STATUS=$(retrieveUpdateListFn)
+						;;
+						finish)
+							rm -f /usr/local/sbin/xbian-update-repo; STATUS=1
+						;;
+						*)
+							STATUS=-3
+						;;
 					esac
 					echo $STATUS
 				else
@@ -291,7 +326,13 @@ function showCMDFn() {
 		;;
 		progress)
 			if [ -e /run/lock/xbian-config-updatedb ] || pgrep "apt-get|dpkg" &>/dev/null || pgrep -f "xbian-apt-show-versions" &>/dev/null; then
-				echo 1;
+				if [ x"$2" = x"stats" ]; then
+					DONE=$(( (( $(grep ^Setting /tmp/aptstatus | wc -l) + $(grep ^Unpacking /tmp/aptstatus | wc -l) )) / 2 ))
+					MUST=$(echo $(grep -i "newly installed" /tmp/aptstatus | awk '{print $1+$3}') $(grep -i "reinstalled" /tmp/aptstatus | awk '{print $6}') | awk '{print $1+$2+$3+$4}')
+					echo 1 $DONE/$MUST
+				else
+					echo 1
+				fi
 			else
 				[ x"$2" = x"lock" ] && touch /run/lock/xbian-config-updatedb
 				echo 0;

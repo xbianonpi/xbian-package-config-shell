@@ -94,7 +94,16 @@ function updatePackagesFn() {
 	LIST=""
 	OPTS=""
 	if [ "$2" = 'distupgrade' ]; then
-		COMMAND="dist-upgrade $(apt-cache pkgnames polkitd-pkla)"
+		case "$(xbian-arch os)" in
+			bookworm|trixie)
+				COMMAND="dist-upgrade"
+				REINST="libpam-elogind xbian-update"
+			;;
+			*)
+				COMMAND="dist-upgrade $(apt-cache pkgnames polkitd-pkla)"
+				REINST="xbian-update"
+			;;
+		esac
 		OPTS="--allow-downgrades"
 	else
 		COMMAND="install"
@@ -117,11 +126,16 @@ function updatePackagesFn() {
 	fi
 
 	if [ $1 -eq 1 ]; then
-		LC_ALL=C.UTF-8 eval apt-get $COMMAND -s $LIST &>/tmp/aptstatus
+		LC_ALL=C eval apt-get $COMMAND -s $LIST &>/tmp/aptstatus
 	elif [ $1 -eq 0 ]; then
-		{ rm -f /tmp/aptupdates; LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval apt-get $COMMAND -y $OPTS -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST && { [ "$COMMAND" != dist-upgrade ] || apt-get install --reinstall xbian-update; } } 2>&1 | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
+		{ rm -f /tmp/aptupdates; LC_ALL=C DEBIAN_FRONTEND=noninteractive eval apt-get $COMMAND -y $OPTS -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST && { [ "$COMMAND" != dist-upgrade ] || { for pk in $REINST; do apt-get install -y --reinstall $pk; done; } } } 2>&1 | tee /tmp/aptstatus | dialog --progressbox $(tput lines) $(tput cols)
 	elif [ $1 -eq 2 ]; then
-		{ LC_ALL=C.UTF-8 DEBIAN_FRONTEND=noninteractive eval nohup apt-get $COMMAND -y $OPTS -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST && { [ "$COMMAND" == 'install' ] || apt-get install --reinstall xbian-update && echo -e "Refreshing package lists... \c" && retrieveUpdateListFn; } } &>/tmp/aptstatus &
+		if [ "$COMMAND" = 'install' ]; then
+			{ LC_ALL=C DEBIAN_FRONTEND=noninteractive eval nohup apt-get $COMMAND -y $OPTS -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST; } &>/tmp/aptstatus &
+		else
+		        echo -e "#!/bin/bash\ntouch /run/lock/xbian-config-updatedb; LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get $COMMAND -y $OPTS -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" $LIST && { { for pk in $REINST; do apt-get install -y --reinstall \$pk; done; } && echo -e "Refreshing package lists..." && xbian-config updates distupgrade refresh; }; rm -f /run/lock/xbian-config-updatedb" >/tmp/distupgrade.sh
+		        chmod +x /tmp/distupgrade.sh; /tmp/distupgrade.sh &>/tmp/aptstatus &
+		fi
 	fi
         # Returncode only correct on simulation (1) and on real operation (0)
         getAptErrorCodeFn
